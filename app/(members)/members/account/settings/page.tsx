@@ -33,7 +33,7 @@ export default function SettingsPage() {
   async function loadSettings() {
     const { data: ns } = await supabase
       .from("notification_settings")
-      .select("*")
+      .select("*") as any
       .eq("user_id", user!.id)
       .single();
     if (ns) setNotifSettings({
