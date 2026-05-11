@@ -20,7 +20,7 @@ export default function AdminEditProductPage() {
     setForm({ name:p.name??"", description:p.description??"", price:String(p.price??""), stock:String(p.stock??""), is_active:p.is_active??true, images:p.images?.length?p.images:[""] });
     setLoading(false);
   }
-  function upd(k,v){setForm(p=>({...p,[k]:v}));}
+  function upd(k: string, v: any){setForm(p=>({...p,[k]:v}));}
   async function handleSave(){
     if(!form.name||!form.price){setError("Name and price required.");return;}
     setSaving(true);setError("");setSuccess("");
@@ -38,7 +38,7 @@ export default function AdminEditProductPage() {
     await fetch("/api/admin/products?id=" + params.id, {method:"DELETE"});
     router.push("/admin/shop");
   }
-  const inp={width:"100%",background:"#243520",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"10px 14px",color:"#F0EAD6",fontFamily:B,fontSize:"14px",outline:"none",boxSizing:"border-box"};
+  const inp={width:"100%",background:"#243520",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"10px 14px",color:"#F0EAD6",fontFamily:B,fontSize:"14px",outline:"none",boxSizing:"border-box" as const};
   const lbl={fontFamily:B,fontSize:"11px",color:"#5A7A50",letterSpacing:"1px",textTransform:"uppercase",display:"block",marginBottom:"6px"};
   return(
     <div style={{display:"flex",flexDirection:"column",gap:"20px",maxWidth:"640px"}}>

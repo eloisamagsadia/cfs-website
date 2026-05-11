@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import AddToCartButton from "@/components/public/AddToCartButton";
@@ -15,19 +15,20 @@ const CAT_COLORS: Record<string, string> = {
 };
 
 export async function generateMetadata({ params }: { params: { category: string; id: string } }): Promise<Metadata> {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data: p } = await supabase.from("products").select("name, description").eq("id", params.id).single();
+  const supabase = createAdminClient();
+  const { data: pRaw } = await (((supabase.from("products") as any) as any) as any).select("name, description").eq("id", params.id).single();
+  const p = pRaw as any;
   return { title: p?.name ?? "Product", description: p?.description ?? "" };
 }
 
 export default async function ProductDetailPage({ params }: { params: { category: string; id: string } }) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   const user = userId ? { id: userId } : null;
 
   const [{ data: product, error: productError }, { data: category }] = await Promise.all([
-    supabase.from("products").select("*, product_categories(name,slug)").eq("id", params.id).single(),
-    supabase.from("product_categories").select("*").eq("slug", params.category).single(),
+    (((supabase.from("products") as any) as any) as any).select("*, product_categories(name,slug)").eq("id", params.id).single(),
+    (((supabase.from("product_categories") as any) as any) as any).select("*").eq("slug", params.category).single(),
   ]);
   if (productError) console.error("Product query error:", productError);
 

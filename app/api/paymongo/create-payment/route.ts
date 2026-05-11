@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPaymentLink, tocentavos } from "@/lib/paymongo";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

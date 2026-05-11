@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(req: NextRequest) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -12,12 +12,13 @@ export async function POST(req: NextRequest) {
 
   // Use admin client to bypass RLS on promo_codes table
   const admin = createAdminClient();
-  const { data: promo, error } = await admin
+  const { data: promoRaw, error } = await admin
     .from("promo_codes")
     .select("*")
     .eq("code", code.trim().toUpperCase())
     .single();
 
+  const promo = promoRaw as any;
   if (error || !promo) return NextResponse.json({ error: "Invalid promo code" }, { status: 404 });
 
   if (!promo.is_active) return NextResponse.json({ error: "This code is no longer active" }, { status: 400 });

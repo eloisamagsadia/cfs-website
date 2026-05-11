@@ -8,7 +8,7 @@ import {
   MAX_IMAGE_SIZE, MAX_DOCUMENT_SIZE, MAX_VIDEO_SIZE,
   type R2Folder,
 } from "@/lib/r2";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { auth } from "@clerk/nextjs/server";
 
 const ALLOWED_FOLDERS: R2Folder[] = [
@@ -27,7 +27,7 @@ async function optimizeImage(buffer: Buffer, mimeType: string): Promise<{ buffer
 }
 
 export async function POST(req: NextRequest) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

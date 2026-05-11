@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import { BADGE_ICONS, BADGE_COLORS } from "@/lib/badges";
 import type { Metadata } from "next";
@@ -11,10 +11,10 @@ export default async function BadgesPage() {
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
 
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const [{ data: allBadges }, { data: earned }] = await Promise.all([
-    supabase.from("badges").select("*").order("threshold_value", { ascending: true }),
-    supabase.from("user_badges").select("*, badges(*)").eq("user_id", userId),
+    ((supabase.from("badges") as any) as any).select("*").order("threshold_value", { ascending: true }),
+    (((supabase.from("user_badges") as any) as any) as any).select("*, badges(*)").eq("user_id", userId),
   ]);
 
   const earnedIds = new Set((earned ?? []).map((e:any) => e.badge_id));

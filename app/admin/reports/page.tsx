@@ -1,4 +1,4 @@
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Transparency Reports" };
@@ -6,10 +6,11 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 export default async function AdminReportsPage() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data: reports } = await supabase
+  const supabase = createAdminClient();
+  const { data: reportsRaw } = await supabase
     .from("transparency_reports").select("*")
     .order("year", { ascending: false }).order("quarter", { ascending: false });
+  const reports = (reportsRaw ?? []) as any[];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>

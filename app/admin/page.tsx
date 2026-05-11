@@ -1,4 +1,4 @@
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title:"Admin Dashboard" };
@@ -7,7 +7,7 @@ const B="var(--font-barlow,'Barlow',sans-serif)";
 const S="var(--font-dm-serif,'DM Serif Display',serif)";
 
 export default async function AdminDashboard() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
 
   const [
     { count: members },
@@ -17,15 +17,16 @@ export default async function AdminDashboard() {
     { data: recentOrders },
     { data: recentMembers },
   ] = await Promise.all([
-    supabase.from("profiles").select("*",{count:"exact",head:true}),
-    supabase.from("orders").select("*",{count:"exact",head:true}).eq("payment_status","paid"),
-    supabase.from("events").select("*",{count:"exact",head:true}).eq("status","upcoming"),
-    supabase.from("transparency_reports").select("*",{count:"exact",head:true}),
-    supabase.from("orders").select("id,total,payment_status,order_status,created_at").order("created_at",{ascending:false}).limit(5),
-    supabase.from("profiles").select("id,display_name,created_at").order("created_at",{ascending:false}).limit(5),
+    (((supabase.from("profiles") as any) as any) as any).select("*",{count:"exact",head:true}),
+    (((supabase.from("orders") as any) as any) as any).select("*",{count:"exact",head:true}).eq("payment_status","paid"),
+    (((supabase.from("events") as any) as any) as any).select("*",{count:"exact",head:true}).eq("status","upcoming"),
+    (((supabase.from("transparency_reports") as any) as any) as any).select("*",{count:"exact",head:true}),
+    (((supabase.from("orders") as any) as any) as any).select("id,total,payment_status,order_status,created_at").order("created_at",{ascending:false}).limit(5),
+    (((supabase.from("profiles") as any) as any) as any).select("id,display_name,created_at").order("created_at",{ascending:false}).limit(5),
   ]);
 
-  const { data: revenue } = await supabase.from("orders").select("total").eq("payment_status","paid");
+  const { data: revenueRaw } = await (((supabase.from("orders") as any) as any) as any).select("total").eq("payment_status","paid");
+  const revenue = revenueRaw as any;
   const totalRevenue = (revenue ?? []).reduce((s:number,o:any)=>s+Number(o.total),0);
 
   const stats = [

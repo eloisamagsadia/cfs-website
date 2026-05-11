@@ -13,8 +13,8 @@ async function requireAdmin() {
 export async function GET(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data, error } = await supabase
+  const admin = createAdminClient();
+  const { data, error } = await admin
     .from("transparency_reports").select("*")
     .order("year", { ascending: false }).order("quarter", { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
   const { title, year, quarter, content, pdf_url, summary, is_published } = body;
   if (!title?.trim()) return NextResponse.json({ error: "Title is required" }, { status: 400 });
   if (!year || !quarter) return NextResponse.json({ error: "Year and quarter are required" }, { status: 400 });
-  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data, error } = await admin.from("transparency_reports").insert({
+  const admin = createAdminClient();
+  const { data, error } = await (admin.from("transparency_reports") as any).insert({
     title: title.trim(), year: Number(year), quarter: Number(quarter),
     content: content?.trim() || null, pdf_url: pdf_url?.trim() || null,
     summary: summary?.trim() || null, is_published: !!is_published,
@@ -56,8 +56,8 @@ export async function PATCH(req: NextRequest) {
     payload.is_published = updates.is_published;
     if (updates.is_published) payload.published_at = new Date().toISOString();
   }
-  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data, error } = await admin.from("transparency_reports").update(payload).eq("id", id).select().single();
+  const admin = createAdminClient();
+  const { data, error } = await (admin.from("transparency_reports") as any).update(payload).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ report: data });
 }
@@ -68,8 +68,8 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ error: "Report ID required" }, { status: 400 });
-  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { error } = await admin.from("transparency_reports").delete().eq("id", id);
+  const admin = createAdminClient();
+  const { error } = await (admin.from("transparency_reports") as any).delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ success: true });
 }

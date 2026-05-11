@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

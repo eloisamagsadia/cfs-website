@@ -4,7 +4,7 @@ const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
 const FILTERS=["ALL","ACTIVE","INACTIVE","EXPIRED","USED UP"];
 export default function AdminCodesPage() {
-  const [codes,setCodes]=useState([]);
+  const [codes,setCodes]=useState<any[]>([]);
   const [filter,setFilter]=useState("ALL");
   const [search,setSearch]=useState("");
   const [form,setForm]=useState({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:""});
@@ -21,21 +21,21 @@ export default function AdminCodesPage() {
   async function saveCode(){
     if(!form.code||!form.discount_value)return;
     setSaving(true);
-    await supabase.from("promo_codes").insert({code:form.code,discount_type:form.discount_type,discount_value:Number(form.discount_value),max_uses:form.max_uses?Number(form.max_uses):null,expires_at:form.expires_at||null,is_active:true});
+    await fetch("/api/admin/codes", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({code:form.code,discount_type:form.discount_type,discount_value:Number(form.discount_value),max_uses:form.max_uses?Number(form.max_uses):null,expires_at:form.expires_at||null,is_active:true}) });
     setForm({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:""});
     await loadCodes();
     setSaving(false);
   }
-  async function toggleActive(id,current){
-    await supabase.from("promo_codes").update({is_active:!current}).eq("id",id);
+  async function toggleActive(id: string, current: boolean){
+    await fetch(`/api/admin/codes?id=${id}`, { method: "PATCH", headers: {"Content-Type":"application/json"}, body: JSON.stringify({is_active:!current}) });
     loadCodes();
   }
-  async function deleteCode(id){
+  async function deleteCode(id: string){
     if(!confirm("Delete this code?"))return;
-    await supabase.from("promo_codes").delete().eq("id",id);
+    await fetch(`/api/admin/codes?id=${id}`, { method: "DELETE" });
     loadCodes();
   }
-  function getStatus(c){
+  function getStatus(c: any){
     if(!c.is_active)return"INACTIVE";
     if(c.expires_at&&new Date(c.expires_at)<new Date())return"EXPIRED";
     if(c.max_uses&&(c.used_count??0)>=c.max_uses)return"USED UP";
@@ -47,7 +47,7 @@ export default function AdminCodesPage() {
     if(search&&!c.code.toLowerCase().includes(search.toLowerCase()))return false;
     return true;
   });
-  const inp={background:"#243520",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"10px 12px",color:"#F0EAD6",fontFamily:B,fontSize:"13px",outline:"none",width:"100%",boxSizing:"border-box"};
+  const inp={background:"#243520",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"10px 12px",color:"#F0EAD6",fontFamily:B,fontSize:"13px",outline:"none",width:"100%",boxSizing:"border-box" as const};
   const SC={ACTIVE:"#3CCE2A",INACTIVE:"#5A7A50",EXPIRED:"#F04060","USED UP":"#F07228"};
   const SB={ACTIVE:"#1A3D14",INACTIVE:"#243520",EXPIRED:"#3D0A18","USED UP":"#3D1A0A"};
   return(

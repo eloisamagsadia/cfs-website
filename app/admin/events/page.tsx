@@ -1,4 +1,4 @@
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Manage Events" };
@@ -7,8 +7,9 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 const SC: any = { upcoming: "#3CCE2A", ongoing: "#F5C82A", completed: "#5A7A50", cancelled: "#F04060" };
 
 export default async function AdminEventsPage() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data: events } = await supabase.from("events").select("*, event_registrations(id)").order("date", { ascending: false });
+  const supabase = createAdminClient();
+  const { data: eventsRaw } = await (((supabase.from("events") as any) as any) as any).select("*, event_registrations(id)").order("date", { ascending: false });
+  const events = eventsRaw as any;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>

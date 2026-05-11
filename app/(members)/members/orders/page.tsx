@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title:"My Orders" };
@@ -9,7 +9,7 @@ const payColors:Record<string,string>={paid:"#3CCE2A",pending:"#F5C82A",failed:"
 const orderColors:Record<string,string>={processing:"#F07228",shipped:"#8EE440",delivered:"#3CCE2A",cancelled:"#F04060",pending:"#F5C82A"};
 
 export default async function MyOrdersPage() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
 

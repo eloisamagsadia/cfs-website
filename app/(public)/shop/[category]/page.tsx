@@ -1,15 +1,17 @@
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
 const COLORS:Record<string,string>={apparel:"#F07228",photocards:"#F5C82A",accessories:"#8EE440",bundles:"#F04060",default:"#3CCE2A"};
 export default async function ShopCategoryPage({ params }:{ params:{ category:string } }) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data: allCategories } = await supabase.from("product_categories").select("*");
+  const supabase = createAdminClient();
+  const { data: allCategoriesRaw } = await (((supabase.from("product_categories") as any) as any) as any).select("*");
+  const allCategories = allCategoriesRaw as any;
   const category = (allCategories ?? []).find((c:any) => c.slug === params.category);
   if (!category) notFound();
-  const { data: products } = await supabase.from("products").select("*").eq("category_id", category.id).eq("is_active", true).order("created_at",{ascending:false});
+  const { data: productsRaw } = await (((supabase.from("products") as any) as any) as any).select("*").eq("category_id", category.id).eq("is_active", true).order("created_at",{ascending:false});
+  const products = productsRaw as any;
   const accent = COLORS[params.category] ?? COLORS.default;
   return (
     <div style={{minHeight:"100vh",background:"#0F1A0B"}}>

@@ -1,17 +1,18 @@
 import { auth } from "@clerk/nextjs/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect, notFound } from "next/navigation";
 import MemberProfile from "@/components/community/MemberProfile";
 import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { userId: string } }): Promise<Metadata> {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data: profile } = await supabase.from("profiles").select("display_name").eq("id", params.userId).single();
+  const supabase = createAdminClient();
+  const { data: profileRaw } = await (((supabase.from("profiles") as any) as any) as any).select("display_name").eq("id", params.userId).single();
+  const profile = profileRaw as any;
   return { title: profile?.display_name ?? "Member Profile" };
 }
 
 export default async function MemberProfilePage({ params }: { params: { userId: string } }) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
 
@@ -24,25 +25,25 @@ export default async function MemberProfilePage({ params }: { params: { userId: 
     { count: followingCount },
     { data: badges },
   ] = await Promise.all([
-    supabase.from("profiles").select("*").eq("id", params.userId).single(),
+    (((supabase.from("profiles") as any) as any) as any).select("*").eq("id", params.userId).single(),
     // Their own posts
-    supabase.from("community_posts")
+    (((supabase.from("community_posts") as any) as any) as any)
       .select("*, profiles:user_id(id,display_name,avatar_url), community_reactions(id,user_id,reaction_type), community_comments(id), community_reposts(id,user_id)")
       .eq("user_id", params.userId).eq("is_hidden", false)
       .order("created_at", { ascending: false }).limit(20),
     // Their reposts
-    supabase.from("community_reposts")
+    (((supabase.from("community_reposts") as any) as any) as any)
       .select("*, community_posts(*, profiles:user_id(id,display_name,avatar_url), community_reactions(id,user_id,reaction_type), community_comments(id), community_reposts(id,user_id))")
       .eq("user_id", params.userId)
       .order("created_at", { ascending: false }).limit(20),
     // Am I following them?
-    supabase.from("community_follows").select("follower_id").eq("follower_id", userId).eq("following_id", params.userId).maybeSingle(),
+    (((supabase.from("community_follows") as any) as any) as any).select("follower_id").eq("follower_id", userId).eq("following_id", params.userId).maybeSingle(),
     // Their followers count
-    supabase.from("community_follows").select("*", { count: "exact", head: true }).eq("following_id", params.userId),
+    (((supabase.from("community_follows") as any) as any) as any).select("*", { count: "exact", head: true }).eq("following_id", params.userId),
     // Their following count
-    supabase.from("community_follows").select("*", { count: "exact", head: true }).eq("follower_id", params.userId),
+    (((supabase.from("community_follows") as any) as any) as any).select("*", { count: "exact", head: true }).eq("follower_id", params.userId),
     // Their badges
-    supabase.from("user_badges").select("*, badges(name, icon_url, description)").eq("user_id", params.userId),
+    (((supabase.from("user_badges") as any) as any) as any).select("*, badges(name, icon_url, description)").eq("user_id", params.userId),
   ]);
 
   if (!profile) notFound();

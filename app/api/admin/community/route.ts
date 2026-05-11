@@ -13,7 +13,7 @@ async function requireAdmin() {
 export async function GET(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const admin = createAdminClient();
   const { searchParams } = new URL(req.url);
   const limit = Number(searchParams.get("limit") ?? 50);
   // No is_hidden filter — admin sees ALL posts
@@ -35,8 +35,8 @@ export async function PATCH(req: NextRequest) {
   const payload: Record<string, any> = {};
   if (is_pinned !== undefined) payload.is_pinned = is_pinned;
   if (is_hidden !== undefined) payload.is_hidden = is_hidden;
-  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data, error } = await admin.from("community_posts").update(payload).eq("id", id).select().single();
+  const admin = createAdminClient();
+  const { data, error } = await (admin.from("community_posts") as any).update(payload).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ post: data });
 }
@@ -47,8 +47,8 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ error: "Post ID required" }, { status: 400 });
-  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { error } = await admin.from("community_posts").delete().eq("id", id);
+  const admin = createAdminClient();
+  const { error } = await (admin.from("community_posts") as any).delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ success: true });
 }

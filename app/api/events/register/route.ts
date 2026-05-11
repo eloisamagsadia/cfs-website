@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { checkAndAwardBadges } from "@/lib/badges";
 
 export async function POST(req: NextRequest) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Login required" }, { status: 401 });
 
@@ -12,12 +12,14 @@ export async function POST(req: NextRequest) {
   if (!event_id) return NextResponse.json({ error: "Missing event_id" }, { status: 400 });
 
   // Check event exists
-  const { data: event } = await supabase.from("events").select("*").eq("id", event_id).single();
+  const { data: eventRaw } = await (((supabase.from("events") as any) as any) as any).select("*").eq("id", event_id).single();
+  const event = eventRaw as any;
   if (!event) return NextResponse.json({ error: "Event not found" }, { status: 404 });
 
   // Check members only
   if (event.is_members_only) {
-    const { data: profile } = await supabase.from("profiles").select("role").eq("id", userId).single();
+    const { data: profileRaw } = await (((supabase.from("profiles") as any) as any) as any).select("role").eq("id", userId).single();
+  const profile = profileRaw as any;
     if (!profile || profile.role === "guest") {
       return NextResponse.json({ error: "Members only event" }, { status: 403 });
     }
@@ -45,7 +47,7 @@ export async function POST(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   // Notify user
-  await admin.from("notifications").insert({
+  await (admin.from("notifications") as any).insert({
     user_id: userId, type: "event_reminder",
     title: `You're registered for ${event.title}! 🎫`,
     message: `Your registration is confirmed. See you on ${new Date(event.date).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}!`,

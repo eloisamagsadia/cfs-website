@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { createClient } from "@/lib/supabase/client";
+
 import { useRouter } from "next/navigation";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -10,7 +10,7 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 export default function SettingsPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
-  const supabase = createClient();
+
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -31,27 +31,27 @@ export default function SettingsPage() {
   }, [isLoaded, user]);
 
   async function loadSettings() {
-    const { data: ns } = await supabase
-      .from("notification_settings")
-      .select("*")
-      .eq("user_id", user!.id)
-      .single();
-    // @ts-ignore
-    if (ns) setNotifSettings({
-      email_community_replies: ns.email_community_replies ?? true,
-      email_event_reminders: ns.email_event_reminders ?? true,
-      email_order_updates: ns.email_order_updates ?? true,
-      email_badge_earned: ns.email_badge_earned ?? true,
-      email_new_follower: ns.email_new_follower ?? false,
+    const res = await fetch(`/api/profile/notifications?userId=${user!.id}`);
+    const n = await res.json();
+    if (n && !n.error) setNotifSettings({
+      email_community_replies: n.email_community_replies ?? true,
+      email_event_reminders: n.email_event_reminders ?? true,
+      email_order_updates: n.email_order_updates ?? true,
+      email_badge_earned: n.email_badge_earned ?? true,
+      email_new_follower: n.email_new_follower ?? false,
     });
     setLoading(false);
   }
 
   async function saveNotifications() {
     setSaving(true); setError(""); setSuccess("");
-    const { error: err } = await supabase
-      .from("notification_settings")
-      .upsert({ user_id: user!.id, ...notifSettings });
+    const res = await fetch(`/api/profile/notifications`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: user!.id, ...notifSettings }),
+    });
+    const data = await res.json();
+    const err = data.error ? { message: data.error } : null;
     setSaving(false);
     if (err) { setError(err.message); return; }
     setSuccess("Notification preferences saved!");

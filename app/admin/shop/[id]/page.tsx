@@ -13,7 +13,7 @@ export default function AdminEditProductPage() {
   const [form, setForm] = useState({ name:"", description:"", price:"", stock:"", is_active:true, images:[""] });
   useEffect(() => { loadProduct(); }, []);
   async function loadProduct() {
-    const { data, error } = await supabase.from("products").select("*").eq("id", params.id).single();
+    const res = await fetch(`/api/admin/products?id=${params.id}`); const json = await res.json(); const data = json.product; const error = json.error;
     if (error || !data) { setError("RLS error: " + error?.message); setLoading(false); return; }
     setForm({ name:data.name??"", description:data.description??"", price:String(data.price??""), stock:String(data.stock??""), is_active:data.is_active??true, images:data.images?.length?data.images:[""] });
     setLoading(false);
@@ -22,14 +22,14 @@ export default function AdminEditProductPage() {
   async function handleSave(){
     if(!form.name||!form.price){setError("Name and price required.");return;}
     setSaving(true);setError("");setSuccess("");
-    const{error:err}=await supabase.from("products").update({name:form.name,description:form.description||null,price:Number(form.price),stock:Number(form.stock)||0,is_active:form.is_active,images:form.images.filter(Boolean)}).eq("id",params.id as string);
+    const res=await fetch(`/api/admin/products?id=${params.id}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:form.name,description:form.description||null,price:Number(form.price),stock:Number(form.stock)||0,is_active:form.is_active,images:form.images.filter(Boolean)})}); const{error:err}=await res.json();
     setSaving(false);
     if(err){setError(err.message);return;}
     setSuccess("Saved!");setTimeout(()=>setSuccess(""),3000);
   }
   async function handleDelete(){
     if(!confirm("Delete this product?"))return;
-    await supabase.from("products").delete().eq("id",params.id as string);
+    await fetch(`/api/admin/products?id=${params.id}`,{method:"DELETE"});
     router.push("/admin/shop");
   }
   const inp={width:"100%",background:"#243520",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"10px 14px",color:"#F0EAD6",fontFamily:B,fontSize:"14px",outline:"none",boxSizing:"border-box" as const};

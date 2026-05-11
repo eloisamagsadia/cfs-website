@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Transparency Reports — CFS" };
@@ -11,7 +11,7 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 const QUARTER_LABELS: Record<number, string> = { 1: "JAN–MAR", 2: "APR–JUN", 3: "JUL–SEP", 4: "OCT–DEC" };
 
 export default async function ReportsPage() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { data: reports } = await supabase
     .from("transparency_reports")
     .select("id, title, year, quarter, summary, published_at, is_published, fund_breakdown")
@@ -20,7 +20,7 @@ export default async function ReportsPage() {
     .order("quarter", { ascending: false });
 
   const display = reports ?? [];
-  const years = [...new Set(display.map((r: any) => r.year))];
+  const years = Array.from(new Set(display.map((r: any) => r.year)));
 
   // Compute totals from fund_breakdown for each report
   function getTotals(r: any) {

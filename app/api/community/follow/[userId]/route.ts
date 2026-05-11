@@ -3,21 +3,22 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(req: NextRequest, { params }: { params: { userId: string } }) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const admin = createAdminClient();
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (userId === params.userId)
     return NextResponse.json({ error: "Cannot follow yourself" }, { status: 400 });
 
-  await supabase.from("community_follows").insert({
+  await (((supabase.from("community_follows") as any) as any) as any).insert({
     follower_id: userId, following_id: params.userId,
   });
 
   // Notify using admin client (bypasses RLS)
-  const { data: follower } = await supabase
-    .from("profiles").select("display_name").eq("id", userId).single();
-  await admin.from("notifications").insert({
+  const { data: followerRaw } = await (supabase
+    .from("profiles") as any).select("display_name").eq("id", userId).single();
+  const follower = followerRaw as any;
+  await (admin.from("notifications") as any).insert({
     user_id: params.userId,
     type: "new_follower",
     title: "New follower!",
@@ -29,11 +30,11 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: { userId: string } }) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  await supabase.from("community_follows").delete()
+  await (((supabase.from("community_follows") as any) as any) as any).delete()
     .eq("follower_id", userId).eq("following_id", params.userId);
 
   return NextResponse.json({ following: false });

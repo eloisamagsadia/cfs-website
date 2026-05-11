@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -13,8 +13,9 @@ export default async function DashboardPage() {
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
 
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", userId).single();
+  const supabase = createAdminClient();
+  const { data: profileRaw } = await (((supabase.from("profiles") as any) as any) as any).select("*").eq("id", userId).single();
+  const profile = profileRaw as any;
 
   const [
     { count: eventsCount },
@@ -22,10 +23,10 @@ export default async function DashboardPage() {
     { count: badgesCount },
     { count: notifCount },
   ] = await Promise.all([
-    supabase.from("event_registrations").select("*", { count:"exact", head:true }).eq("user_id", userId),
-    supabase.from("orders").select("*", { count:"exact", head:true }).eq("user_id", userId),
-    supabase.from("user_badges").select("*", { count:"exact", head:true }).eq("user_id", userId),
-    supabase.from("notifications").select("*", { count:"exact", head:true }).eq("user_id", userId).eq("is_read", false),
+    (((supabase.from("event_registrations") as any) as any) as any).select("*", { count:"exact", head:true }).eq("user_id", userId),
+    (((supabase.from("orders") as any) as any) as any).select("*", { count:"exact", head:true }).eq("user_id", userId),
+    (((supabase.from("user_badges") as any) as any) as any).select("*", { count:"exact", head:true }).eq("user_id", userId),
+    (((supabase.from("notifications") as any) as any) as any).select("*", { count:"exact", head:true }).eq("user_id", userId).eq("is_read", false),
   ]);
 
   const stats = [

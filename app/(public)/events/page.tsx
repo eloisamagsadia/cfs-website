@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = { title: "Events — CFS" };
 
@@ -18,7 +18,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }
 const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 
 export default async function EventsPage() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { data: events } = await supabase
     .from("events")
     .select("*")

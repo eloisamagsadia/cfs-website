@@ -1,4 +1,4 @@
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Manage Shop" };
@@ -6,7 +6,7 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 export default async function AdminShopPage() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { data: products } = await supabase
     .from("products")
     .select("*, product_categories(name)")

@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import EventRegisterButton from "@/components/public/EventRegisterButton";
@@ -10,19 +10,20 @@ const S = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data: event } = await supabase.from("events").select("title, description").eq("id", params.id).single();
+  const supabase = createAdminClient();
+  const { data: eventRaw } = await (((supabase.from("events") as any) as any) as any).select("title, description").eq("id", params.id).single();
+  const event = eventRaw as any;
   return { title: event?.title ?? "Event", description: event?.description ?? "" };
 }
 
 export default async function EventDetailPage({ params }: { params: { id: string } }) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   const user = userId ? { id: userId } : null;
 
   const [{ data: event }, { count: regCount }] = await Promise.all([
-    supabase.from("events").select("*").eq("id", params.id).single(),
-    supabase.from("event_registrations").select("*", { count: "exact", head: true }).eq("event_id", params.id),
+    (((supabase.from("events") as any) as any) as any).select("*").eq("id", params.id).single(),
+    (((supabase.from("event_registrations") as any) as any) as any).select("*", { count: "exact", head: true }).eq("event_id", params.id),
   ]);
 
   if (!event) notFound();

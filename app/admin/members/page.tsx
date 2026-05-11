@@ -1,15 +1,11 @@
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { Metadata } from "next";
 import AdminMembersClient from "./AdminMembersClient";
 
 export const metadata: Metadata = { title: "Manage Members" };
 
 export default async function AdminMembersPage() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const admin = createAdminClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const admin = createAdminClient();
 
   const { data: members } = await admin
     .from("profiles")

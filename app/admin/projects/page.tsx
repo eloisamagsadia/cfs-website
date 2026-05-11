@@ -1,4 +1,4 @@
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Manage Projects" };
@@ -7,8 +7,9 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 const SC: any = { ongoing: "#3CCE2A", completed: "#5A7A50" };
 
 export default async function AdminProjectsPage() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data: projects } = await supabase.from("projects").select("*").order("created_at", { ascending: false });
+  const supabase = createAdminClient();
+  const { data: projectsRaw } = await (((supabase.from("projects") as any) as any) as any).select("*").order("created_at", { ascending: false });
+  const projects = projectsRaw as any;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>

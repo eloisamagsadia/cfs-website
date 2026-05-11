@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const admin = createAdminClient();
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -18,13 +18,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   if (existing) {
     // Undo repost
-    await supabase.from("community_reposts").delete()
+    await (((supabase.from("community_reposts") as any) as any) as any).delete()
       .eq("post_id", params.id).eq("user_id", userId);
     return NextResponse.json({ reposted: false });
   }
 
   // Create repost
-  await supabase.from("community_reposts").insert({
+  await (((supabase.from("community_reposts") as any) as any) as any).insert({
     post_id: params.id, user_id: userId,
   });
 
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (post && post.user_id !== userId) {
     const { data: reposter } = await supabase
       .from("profiles").select("display_name").eq("id", userId).single();
-    await admin.from("notifications").insert({
+    await (admin.from("notifications") as any).insert({
       user_id: post.user_id,
       type: "community_reply",
       title: "Someone reposted your post!",
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 }
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

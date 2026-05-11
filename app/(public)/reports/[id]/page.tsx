@@ -1,4 +1,4 @@
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -31,22 +31,23 @@ function renderMarkdown(text: string): string {
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data: r } = await supabase.from("transparency_reports").select("title").eq("id", params.id).single();
+  const supabase = createAdminClient();
+  const { data: rRaw } = await (((supabase.from("transparency_reports") as any) as any) as any).select("title").eq("id", params.id).single();
+  const r = rRaw as any;
   return { title: r?.title ?? "Transparency Report" };
 }
 
 export default async function ReportDetailPage({ params }: { params: { id: string } }) {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
 
-  const { data: report } = await supabase
+  const { data: reportRaw } = await supabase
     .from("transparency_reports")
     .select("*")
     .eq("id", params.id)
     .eq("is_published", true)
     .single();
-
-  if (!report) notFound();
+  if (!reportRaw) notFound();
+  const report = reportRaw as any;
 
   // fund_breakdown can be either:
   // A) { total_inflow, total_outflow, remaining, inflow: [], outflow: [] }  ← our seeded data

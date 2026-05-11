@@ -13,7 +13,7 @@ export default async function CommunityPage() {
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
 
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
 
   const [
     { data: profile },
@@ -21,8 +21,8 @@ export default async function CommunityPage() {
     { data: categories },
     { count: statsCount },
   ] = await Promise.all([
-    supabase.from("profiles").select("*").eq("id", userId).single(),
-    supabase.from("community_posts")
+    (((supabase.from("profiles") as any) as any) as any).select("*").eq("id", userId).single(),
+    (((supabase.from("community_posts") as any) as any) as any)
       .select("*, profiles:user_id(id,display_name,avatar_url), community_reactions(id,user_id,reaction_type), community_comments(id), community_reposts(id,user_id)")
       .eq("is_hidden", false)
       .order("created_at", { ascending: false })

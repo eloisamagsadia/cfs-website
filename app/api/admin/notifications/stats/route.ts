@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const admin = createAdminClient();
 
   const [
     { count: total },
@@ -22,10 +22,10 @@ export async function GET(req: NextRequest) {
     { data: byTypeRaw },
     { data: recent },
   ] = await Promise.all([
-    admin.from("notifications").select("*", { count: "exact", head: true }),
-    admin.from("notifications").select("*", { count: "exact", head: true }).eq("is_read", true),
-    admin.from("notifications").select("type, is_read"),
-    admin.from("notifications").select("*").order("created_at", { ascending: false }).limit(20),
+    (admin.from("notifications") as any).select("*", { count: "exact", head: true }),
+    (admin.from("notifications") as any).select("*", { count: "exact", head: true }).eq("is_read", true),
+    (admin.from("notifications") as any).select("type, is_read"),
+    (admin.from("notifications") as any).select("*").order("created_at", { ascending: false }).limit(20),
   ]);
 
   const totalCount = total ?? 0;

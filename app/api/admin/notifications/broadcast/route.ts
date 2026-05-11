@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const admin = createAdminClient();
   const { title, message, type, target, targetUserId, eventId, link } = await req.json();
 
   if (!title?.trim() || !message?.trim())
@@ -36,14 +36,14 @@ export async function POST(req: NextRequest) {
         .select("id")
         .neq("id", userId); // don't notify yourself
 
-      const rows = (profiles ?? []).map(p => ({ ...notifBase, user_id: p.id }));
-      if (rows.length > 0) await admin.from("notifications").insert(rows);
+      const rows = ((profiles ?? []) as any[]).map((p: any) => ({ ...notifBase, user_id: p.id }));
+      if (rows.length > 0) await (admin.from("notifications") as any).insert(rows);
       return NextResponse.json({ sent: rows.length, target: "all" });
     }
 
     // Send to specific member
     if (target === "member" && targetUserId) {
-      await admin.from("notifications").insert({ ...notifBase, user_id: targetUserId });
+      await (admin.from("notifications") as any).insert({ ...notifBase, user_id: targetUserId });
       return NextResponse.json({ sent: 1, target: "member" });
     }
 
@@ -55,11 +55,11 @@ export async function POST(req: NextRequest) {
         .eq("event_id", eventId)
         .neq("payment_status", "cancelled");
 
-      const rows = (regs ?? [])
+      const rows = ((regs ?? []) as any[])
         .filter(r => r.user_id !== userId)
         .map(r => ({ ...notifBase, type: "event_reminder", user_id: r.user_id }));
 
-      if (rows.length > 0) await admin.from("notifications").insert(rows);
+      if (rows.length > 0) await (admin.from("notifications") as any).insert(rows);
       return NextResponse.json({ sent: rows.length, target: "event" });
     }
 

@@ -3,12 +3,12 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextRequest, NextResponse } from "next/server";
 import { nanoid } from "nanoid";
 import { r2, R2_BUCKET, R2_PUBLIC_URL, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from "@/lib/r2";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
   // 1. Auth check
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

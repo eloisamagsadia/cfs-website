@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title:"My Codes" };
@@ -8,7 +8,7 @@ const B="var(--font-barlow,'Barlow',sans-serif)";
 
 export default async function CodesPage() {
   const { userId } = auth();
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   
   if (!userId) redirect("/sign-in");
 

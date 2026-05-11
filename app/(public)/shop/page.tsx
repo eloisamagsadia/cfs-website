@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = { title: "Shop — CFS" };
 
@@ -29,7 +29,7 @@ function CategoryIcon({ name, color }: { name: string; color: string }) {
 const CAT_COLORS = ["#3CCE2A","#F07228","#F5C82A","#F04060","#8EE440","#3CCE2A","#F07228","#F5C82A"];
 
 export default async function ShopPage() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { data: cats } = await supabase
     .from("product_categories")
     .select("*")

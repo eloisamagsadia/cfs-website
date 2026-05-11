@@ -1,5 +1,5 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -12,9 +12,9 @@ export default async function AccountPage() {
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
 
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const [{ data: profile }, clerkUser] = await Promise.all([
-    supabase.from("profiles").select("*").eq("id", userId).single(),
+    ((((supabase.from("profiles") as any) as any) as any) as any).select("*").eq("id", userId).single(),
     currentUser(),
   ]);
 

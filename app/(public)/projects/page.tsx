@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Projects — CFS" };
@@ -23,7 +23,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export default async function ProjectsPage() {
-  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createAdminClient();
   const { data: projects } = await supabase
     .from("projects")
     .select("*")
