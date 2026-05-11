@@ -33,9 +33,10 @@ export default function SettingsPage() {
   async function loadSettings() {
     const { data: ns } = await supabase
       .from("notification_settings")
-      .select("*") as any
+      .select("*")
       .eq("user_id", user!.id)
       .single();
+    // @ts-ignore
     if (ns) setNotifSettings({
       email_community_replies: ns.email_community_replies ?? true,
       email_event_reminders: ns.email_event_reminders ?? true,
