@@ -1,0 +1,70 @@
+import { createClient as createAdminClient } from "@supabase/supabase-js";
+import Link from "next/link";
+import type { Metadata } from "next";
+export const metadata: Metadata = { title: "Manage Shop" };
+const R = "var(--font-righteous,'Righteous',sans-serif)";
+const B = "var(--font-barlow,'Barlow',sans-serif)";
+
+export default async function AdminShopPage() {
+  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const { data: products } = await supabase
+    .from("products")
+    .select("*, product_categories(name)")
+    .order("created_at", { ascending: false });
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+        <div>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>SHOP</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>{products?.length ?? 0} products</p>
+        </div>
+        <Link href="/admin/shop/create" style={{ textDecoration: "none", position: "relative", display: "inline-block" }}>
+          <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#F0EAD6", padding: "8px 18px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>+ ADD PRODUCT</span>
+        </Link>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: "10px" }}>
+        {(products ?? []).map((p: any) => (
+          <div key={p.id} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            <div style={{ height: "140px", background: "#243520", overflow: "hidden" }}>
+              {p.images?.[0]
+                ? <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "32px" }}>🛍</div>
+              }
+            </div>
+            <div style={{ padding: "14px", flex: 1 }}>
+              <div style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "1px", marginBottom: "4px" }}>{p.name}</div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontFamily: R, fontSize: "14px", color: "#F07228" }}>₱{Number(p.price).toLocaleString()}</span>
+                <span style={{ fontFamily: B, fontSize: "11px", color: p.stock > 0 ? "#3CCE2A" : "#F04060" }}>
+                  {p.stock > 0 ? `${p.stock} in stock` : "OUT OF STOCK"}
+                </span>
+              </div>
+              <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", marginTop: "4px" }}>
+                {p.product_categories?.name ?? "Uncategorized"}
+              </div>
+              {!p.is_active && (
+                <div style={{ marginTop: "6px", display: "inline-block", background: "#2C1010", border: "1px solid #F04060", borderRadius: "4px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#F04060" }}>
+                  INACTIVE
+                </div>
+              )}
+            </div>
+            {/* Edit button */}
+            <div style={{ padding: "0 14px 14px" }}>
+              <Link href={`/admin/shop/${p.id}/edit`} style={{ textDecoration: "none", display: "block", textAlign: "center", fontFamily: B, fontSize: "11px", color: "#8AAA78", border: "1px solid #2C4820", borderRadius: "6px", padding: "6px", letterSpacing: "1px" }}>
+                ✏ EDIT
+              </Link>
+            </div>
+          </div>
+        ))}
+        {!products?.length && (
+          <div style={{ gridColumn: "1/-1", background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A50" }}>
+            NO PRODUCTS YET
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,303 @@
+"use client";
+import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import ReactionBar from "./ReactionBar";
+
+const R = "var(--font-righteous,'Righteous',sans-serif)";
+const B = "var(--font-barlow,'Barlow',sans-serif)";
+
+const QUICK_EMOJIS = ["❤️","🔥","😍","🥺","😂","👏","🎉","✨"];
+
+function timeAgo(date: string) {
+  const diff = Date.now() - new Date(date).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return `${days}d ago`;
+  return new Date(date).toLocaleDateString("en-PH",{month:"short",day:"numeric"});
+}
+
+function renderContent(content: string) {
+  return content
+    .replace(/@(\w+)/g,`<span style="color:#3CCE2A;font-weight:600;">@$1</span>`)
+    .replace(/#(\w+)/g,`<span style="color:#F5C82A;font-weight:600;">#$1</span>`);
+}
+
+function Avatar({ profile, size = 36, ring = false }: { profile: any; size?: number; ring?: boolean }) {
+  const inner = (
+    <div style={{ width: ring ? size - 4 : size, height: ring ? size - 4 : size, borderRadius: "50%", background: "#1A3D14", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+      {profile?.avatar_url
+        ? <img src={profile.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        : <span style={{ fontFamily: R, fontSize: (ring ? size - 4 : size) * 0.38, color: "#3CCE2A" }}>{(profile?.display_name ?? "M")[0].toUpperCase()}</span>
+      }
+    </div>
+  );
+  if (!ring) return <div style={{ width: size, height: size, borderRadius: "50%", flexShrink: 0, overflow: "hidden", border: "2px solid #2C4820" }}>{inner}</div>;
+  return (
+    <div style={{ width: size, height: size, borderRadius: "50%", background: "linear-gradient(135deg,#3CCE2A,#F07228)", padding: "2px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      {inner}
+    </div>
+  );
+}
+
+interface PostDetailProps {
+  post: any;
+  initialComments: any[];
+  currentUser: any;
+}
+
+export default function PostDetail({ post, initialComments, currentUser }: PostDetailProps) {
+  const [comments, setComments] = useState(initialComments);
+  const [commentText, setCommentText] = useState("");
+  const [replyTo, setReplyTo] = useState<{ id: string; name: string } | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [expandedReplies, setExpandedReplies] = useState<Record<string, boolean>>({});
+  const [commentLikes, setCommentLikes] = useState<Record<string, boolean>>({});
+  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
+  const commentInputRef = useRef<HTMLTextAreaElement>(null);
+  const replyInputRef = useRef<HTMLInputElement>(null);
+
+  const profile = post.profiles ?? {};
+  const topComments = comments.filter(c => !c.parent_comment_id);
+  const getReplies = (id: string) => comments.filter(c => c.parent_comment_id === id);
+  const content = post.content ?? "";
+  const isLong = content.length > 300;
+
+  useEffect(() => { if (replyTo) replyInputRef.current?.focus(); }, [replyTo]);
+
+  async function submitComment(text: string, parentId: string | null = null) {
+    if (!text.trim()) return;
+    setSubmitting(true);
+    const res = await fetch(`/api/community/posts/${post.id}/comments`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: text, parent_comment_id: parentId }),
+    });
+    const { comment } = await res.json();
+    if (comment) {
+      setComments(prev => [...prev, { ...comment, profiles: { id: currentUser.id, display_name: currentUser.display_name, avatar_url: currentUser.avatar_url } }]);
+      setCommentText(""); setReplyText(""); setReplyTo(null);
+    }
+    setSubmitting(false);
+  }
+
+  async function deleteComment(commentId: string) {
+    if (!confirm("Delete this comment?")) return;
+    await fetch(`/api/community/posts/${post.id}/comments?commentId=${commentId}`, { method: "DELETE" });
+    setComments(prev => prev.filter(c => c.id !== commentId));
+  }
+
+  function addEmoji(emoji: string) {
+    if (replyTo) { setReplyText(p => p + emoji); replyInputRef.current?.focus(); }
+    else { setCommentText(p => p + emoji); commentInputRef.current?.focus(); }
+  }
+
+  const CommentItem = ({ comment, level = 0 }: { comment: any; level?: number }) => {
+    const cp = comment.profiles ?? {};
+    const replies = getReplies(comment.id);
+    const isLiked = commentLikes[comment.id];
+    const isOwner = comment.user_id === currentUser.id;
+    const showReplies = expandedReplies[comment.id];
+
+    return (
+      <div style={{ marginLeft: level > 0 ? "42px" : 0, marginBottom: "14px" }}>
+        <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+          <Avatar profile={cp} size={level > 0 ? 28 : 36} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {/* Bubble */}
+            <div style={{ background: "#243520", borderRadius: level > 0 ? "4px 12px 12px 12px" : "4px 12px 12px 12px", padding: "10px 14px", marginBottom: "5px" }}>
+              <div style={{ fontFamily: R, fontSize: "12px", color: "#F0EAD6", letterSpacing: "0.5px", marginBottom: "4px" }}>{cp.display_name ?? "Member"}</div>
+              <div
+                style={{ fontFamily: B, fontSize: "13px", color: "#C8C0A8", lineHeight: 1.65, wordBreak: "break-word", whiteSpace: "pre-wrap" }}
+                dangerouslySetInnerHTML={{ __html: renderContent(comment.content) }}
+              />
+            </div>
+            {/* Actions */}
+            <div style={{ display: "flex", gap: "12px", alignItems: "center", paddingLeft: "4px" }}>
+              <button onClick={() => setCommentLikes(p => ({ ...p, [comment.id]: !p[comment.id] }))} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "13px", padding: 0 }}>
+                {isLiked ? "❤️" : "🤍"}
+              </button>
+              <span style={{ fontFamily: B, fontSize: "10px", color: "#3A5A30" }}>{timeAgo(comment.created_at)}</span>
+              {level === 0 && (
+                <button onClick={() => setReplyTo({ id: comment.id, name: cp.display_name ?? "Member" })} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "11px", color: "#5A7A50", padding: 0 }}>Reply</button>
+              )}
+              {isOwner && (
+                <button onClick={() => deleteComment(comment.id)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "11px", color: "#3A5A30", padding: 0 }}>Delete</button>
+              )}
+            </div>
+
+            {/* Replies toggle */}
+            {replies.length > 0 && level === 0 && (
+              <button onClick={() => setExpandedReplies(p => ({ ...p, [comment.id]: !p[comment.id] }))} style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "11px", color: "#3CCE2A", padding: "6px 0 0 4px" }}>
+                <div style={{ width: "24px", height: "1px", background: "#2C4820" }} />
+                {showReplies ? "Hide replies" : `View ${replies.length} repl${replies.length > 1 ? "ies" : "y"}`}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Expanded replies */}
+        {showReplies && replies.map(r => <CommentItem key={r.id} comment={r} level={1} />)}
+
+        {/* Reply input */}
+        {replyTo?.id === comment.id && (
+          <div style={{ marginLeft: "46px", marginTop: "8px", display: "flex", gap: "8px", alignItems: "center" }}>
+            <Avatar profile={currentUser} size={26} />
+            <div style={{ flex: 1, background: "#243520", border: "1.5px solid #3CCE2A", borderRadius: "20px", padding: "6px 14px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <input ref={replyInputRef} value={replyText} onChange={e => setReplyText(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); submitComment(replyText, comment.id); } if (e.key === "Escape") setReplyTo(null); }}
+                placeholder={`Reply to ${cp.display_name ?? "Member"}...`}
+                style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "#F0EAD6", fontFamily: B, fontSize: "13px" }}
+              />
+              {replyText.trim() && (
+                <button onClick={() => submitComment(replyText, comment.id)} disabled={submitting} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: R, fontSize: "11px", color: "#3CCE2A", letterSpacing: "1px", padding: 0 }}>SEND</button>
+              )}
+            </div>
+            <button onClick={() => setReplyTo(null)} style={{ background: "none", border: "none", color: "#5A7A50", cursor: "pointer", fontSize: "16px" }}>✕</button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ maxWidth: "680px", margin: "0 auto" }}>
+      {/* Back */}
+      <Link href="/members/community" style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", textDecoration: "none", letterSpacing: "1px", display: "flex", alignItems: "center", gap: "6px", marginBottom: "16px" }}>
+        <svg width="6" height="10" viewBox="0 0 6 10"><path d="M5 1L1 5L5 9" stroke="#5A7A50" strokeWidth="1.5" fill="none" strokeLinecap="round" /></svg>
+        BACK TO FEED
+      </Link>
+
+      {/* Single unified card */}
+      <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", overflow: "hidden" }}>
+
+        {/* ── POST HEADER ── */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "16px 18px" }}>
+          <Avatar profile={profile} size={44} ring />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: R, fontSize: "14px", color: "#F0EAD6", letterSpacing: "0.5px" }}>{profile.display_name ?? "Member"}</div>
+            <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{timeAgo(post.created_at)}</div>
+          </div>
+          {post.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F5C82A", background: "#3D3000", border: "1px solid #F5C82A40", borderRadius: "4px", padding: "2px 8px" }}>📌 PINNED</span>}
+        </div>
+
+        {/* ── POST CONTENT ── */}
+        <div style={{ padding: "0 18px 14px" }}>
+          <div
+            style={{ fontFamily: B, fontSize: "15px", color: "#D8D0B8", lineHeight: 1.8, whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+            dangerouslySetInnerHTML={{ __html: renderContent(expanded || !isLong ? content : content.slice(0, 300) + "...") }}
+          />
+          {isLong && (
+            <button onClick={() => setExpanded(e => !e)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "12px", color: "#5A7A50", padding: "2px 0 0" }}>
+              {expanded ? "see less" : "see more"}
+            </button>
+          )}
+        </div>
+
+        {/* ── IMAGES ── */}
+        {post.images?.length > 0 && (
+          <div style={{ marginBottom: "0" }}>
+            {post.images.length === 1 ? (
+              <img src={post.images[0]} alt="" onClick={() => setLightboxImg(post.images[0])}
+                style={{ width: "100%", maxHeight: "480px", objectFit: "cover", display: "block", cursor: "zoom-in" }} />
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2px" }}>
+                {post.images.slice(0, 4).map((img: string, i: number) => (
+                  <div key={i} style={{ position: "relative" }}>
+                    <img src={img} alt="" onClick={() => setLightboxImg(img)}
+                      style={{ width: "100%", height: "200px", objectFit: "cover", display: "block", cursor: "zoom-in" }} />
+                    {i === 3 && post.images.length > 4 && (
+                      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <span style={{ fontFamily: R, fontSize: "22px", color: "#fff" }}>+{post.images.length - 4}</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── REACTIONS ── */}
+        <div style={{ padding: "4px 18px 0" }}>
+          <ReactionBar
+            postId={post.id}
+            reactions={post.community_reactions ?? []}
+            currentUserId={currentUser.id}
+            commentCount={comments.length}
+            onCommentClick={() => commentInputRef.current?.focus()}
+          />
+        </div>
+
+        {/* ── DIVIDER ── */}
+        <div style={{ borderTop: "1px solid #2C4820", margin: "12px 18px 0" }} />
+
+        {/* ── COMMENTS ── */}
+        <div style={{ padding: "14px 18px" }}>
+          {topComments.length > 0 && (
+            <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", marginBottom: "14px" }}>
+              {comments.length} comment{comments.length !== 1 ? "s" : ""}
+            </div>
+          )}
+
+          {topComments.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "20px 0 10px", fontFamily: B, fontSize: "13px", color: "#3A5A30" }}>
+              No comments yet — be the first! 💬
+            </div>
+          ) : (
+            topComments.map(c => <CommentItem key={c.id} comment={c} />)
+          )}
+        </div>
+
+        {/* ── COMMENT INPUT ── */}
+        <div style={{ borderTop: "1px solid #2C4820", padding: "12px 18px 16px", background: "#131E10" }}>
+          {/* Quick emoji bar */}
+          <div style={{ display: "flex", gap: "6px", marginBottom: "10px" }}>
+            {QUICK_EMOJIS.map(emoji => (
+              <button key={emoji} onClick={() => addEmoji(emoji)}
+                style={{ background: "#243520", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "4px 7px", cursor: "pointer", fontSize: "16px", transition: "transform 0.1s" }}
+                onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.25)")}
+                onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}>
+                {emoji}
+              </button>
+            ))}
+          </div>
+
+          {/* Input row */}
+          <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
+            <Avatar profile={currentUser} size={34} />
+            <div style={{ flex: 1, background: "#243520", border: "1.5px solid #2C4820", borderRadius: "20px", padding: "9px 16px", display: "flex", alignItems: "flex-end", gap: "8px" }}>
+              <textarea
+                ref={commentInputRef}
+                value={commentText}
+                onChange={e => { setCommentText(e.target.value); e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 100) + "px"; }}
+                onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submitComment(commentText); } }}
+                placeholder="Add a comment..."
+                rows={1}
+                style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "#F0EAD6", fontFamily: B, fontSize: "13px", resize: "none", lineHeight: 1.5, maxHeight: "100px", overflow: "auto" }}
+              />
+              {commentText.trim() && (
+                <button onClick={() => submitComment(commentText)} disabled={submitting}
+                  style={{ background: "none", border: "none", cursor: "pointer", fontFamily: R, fontSize: "12px", color: "#3CCE2A", letterSpacing: "1px", padding: "0 0 1px", flexShrink: 0, opacity: submitting ? 0.5 : 1 }}>
+                  POST
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Lightbox */}
+      {lightboxImg && (
+        <div onClick={() => setLightboxImg(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.93)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, cursor: "zoom-out" }}>
+          <img src={lightboxImg} alt="" style={{ maxWidth: "90vw", maxHeight: "90vh", objectFit: "contain", borderRadius: "8px" }} />
+          <button onClick={() => setLightboxImg(null)} style={{ position: "absolute", top: "20px", right: "24px", background: "none", border: "none", color: "#F0EAD6", fontSize: "28px", cursor: "pointer" }}>✕</button>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,94 @@
+import { auth } from "@clerk/nextjs/server";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+export const metadata: Metadata = { title:"My Codes" };
+const R="var(--font-righteous,'Righteous',sans-serif)";
+const B="var(--font-barlow,'Barlow',sans-serif)";
+
+export default async function CodesPage() {
+  const { userId } = auth();
+  const supabase = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  
+  if (!userId) redirect("/sign-in");
+
+  const { data: userCodes } = await supabase
+    .from("user_promo_codes")
+    .select("*, promo_codes(*)")
+    .eq("user_id", userId);
+
+  const codes = (userCodes ?? []).map((uc:any) => ({
+    ...uc.promo_codes,
+    assigned_at: uc.assigned_at,
+  }));
+
+  const getStatus = (code:any) => {
+    if (!code.is_active) return { label:"INACTIVE", color:"#5A7A50" };
+    if (code.expires_at && new Date(code.expires_at) < new Date()) return { label:"EXPIRED", color:"#F04060" };
+    if (code.max_uses && code.used_count >= code.max_uses) return { label:"USED UP", color:"#F04060" };
+    return { label:"ACTIVE", color:"#3CCE2A" };
+  };
+
+  return (
+    <div style={{ display:"flex", flexDirection:"column", gap:"20px" }}>
+      <div>
+        <h1 style={{ fontFamily:R, fontSize:"1.6rem", color:"#F0EAD6", letterSpacing:"3px", marginBottom:"4px" }}>MY CODES</h1>
+        <p style={{ fontFamily:B, fontSize:"13px", color:"#8AAA78" }}>Promo codes assigned to your account</p>
+      </div>
+
+      {codes.length === 0 ? (
+        <div style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"48px 24px", textAlign:"center" }}>
+          <div style={{ fontSize:"40px", marginBottom:"12px" }}>🎟</div>
+          <div style={{ fontFamily:R, fontSize:"14px", color:"#5A7A50", letterSpacing:"2px" }}>NO CODES YET</div>
+          <div style={{ fontFamily:B, fontSize:"13px", color:"#5A7A50", marginTop:"8px" }}>Promo codes will appear here when assigned by the admin.</div>
+        </div>
+      ) : (
+        <div style={{ display:"flex", flexDirection:"column", gap:"10px" }}>
+          {codes.map((code:any) => {
+            const status = getStatus(code);
+            return (
+              <div key={code.id} style={{ background:"#1A2614", border:`2px solid ${status.color === "#3CCE2A" ? "#2C4820" : "#2C2020"}`, borderRadius:"12px", padding:"20px 22px" }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"12px" }}>
+                  {/* Code display */}
+                  <div>
+                    <div style={{ fontFamily:R, fontSize:"22px", color:status.color, letterSpacing:"4px", marginBottom:"4px" }}>{code.code}</div>
+                    <div style={{ display:"flex", gap:"8px", alignItems:"center" }}>
+                      <span style={{ fontFamily:R, fontSize:"10px", color:status.color, background:`${status.color}20`, border:`1px solid ${status.color}40`, borderRadius:"20px", padding:"2px 10px", letterSpacing:"1px" }}>
+                        {status.label}
+                      </span>
+                      <span style={{ fontFamily:R, fontSize:"12px", color:"#F5C82A", letterSpacing:"1px" }}>
+                        {code.discount_type === "percent" ? `${code.discount_value}% OFF` : `₱${code.discount_value} OFF`}
+                      </span>
+                    </div>
+                  </div>
+                  {/* Copy button */}
+                  {status.label === "ACTIVE" && (
+                    <button
+                      onClick={() => navigator.clipboard?.writeText(code.code)}
+                      style={{ fontFamily:R, fontSize:"11px", background:"#1A3D14", border:"1.5px solid #2C4820", borderRadius:"6px", color:"#3CCE2A", padding:"8px 16px", cursor:"pointer", letterSpacing:"1px" }}
+                    >
+                      COPY
+                    </button>
+                  )}
+                </div>
+                <div style={{ display:"flex", gap:"16px", flexWrap:"wrap" }}>
+                  {code.expires_at && (
+                    <span style={{ fontFamily:B, fontSize:"12px", color:"#5A7A50" }}>
+                      Expires: {new Date(code.expires_at).toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"})}
+                    </span>
+                  )}
+                  {code.max_uses && (
+                    <span style={{ fontFamily:B, fontSize:"12px", color:"#5A7A50" }}>
+                      Uses: {code.used_count}/{code.max_uses}
+                    </span>
+                  )}
+                  <span style={{ fontFamily:B, fontSize:"12px", color:"#5A7A50" }}>Use at Shop checkout</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,115 @@
+"use client";
+import { useState, useEffect } from "react";
+const R="var(--font-righteous,'Righteous',sans-serif)";
+const B="var(--font-barlow,'Barlow',sans-serif)";
+const FILTERS=["ALL","ACTIVE","INACTIVE","EXPIRED","USED UP"];
+export default function AdminCodesPage() {
+  const [codes,setCodes]=useState([]);
+  const [filter,setFilter]=useState("ALL");
+  const [search,setSearch]=useState("");
+  const [form,setForm]=useState({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:""});
+  const [saving,setSaving]=useState(false);
+  useEffect(()=>{loadCodes();},[]);
+  async function loadCodes(){
+    const res=await fetch("/api/admin/codes"); const d=await res.json(); setCodes(d.codes??[]);
+  }
+  function generateCode(){
+    const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const code="CFS"+Array.from({length:6},()=>chars[Math.floor(Math.random()*chars.length)]).join("");
+    setForm(p=>({...p,code}));
+  }
+  async function saveCode(){
+    if(!form.code||!form.discount_value)return;
+    setSaving(true);
+    await supabase.from("promo_codes").insert({code:form.code,discount_type:form.discount_type,discount_value:Number(form.discount_value),max_uses:form.max_uses?Number(form.max_uses):null,expires_at:form.expires_at||null,is_active:true});
+    setForm({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:""});
+    await loadCodes();
+    setSaving(false);
+  }
+  async function toggleActive(id,current){
+    await supabase.from("promo_codes").update({is_active:!current}).eq("id",id);
+    loadCodes();
+  }
+  async function deleteCode(id){
+    if(!confirm("Delete this code?"))return;
+    await supabase.from("promo_codes").delete().eq("id",id);
+    loadCodes();
+  }
+  function getStatus(c){
+    if(!c.is_active)return"INACTIVE";
+    if(c.expires_at&&new Date(c.expires_at)<new Date())return"EXPIRED";
+    if(c.max_uses&&(c.used_count??0)>=c.max_uses)return"USED UP";
+    return"ACTIVE";
+  }
+  const filtered=codes.filter(c=>{
+    const s=getStatus(c);
+    if(filter!=="ALL"&&s!==filter)return false;
+    if(search&&!c.code.toLowerCase().includes(search.toLowerCase()))return false;
+    return true;
+  });
+  const inp={background:"#243520",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"10px 12px",color:"#F0EAD6",fontFamily:B,fontSize:"13px",outline:"none",width:"100%",boxSizing:"border-box"};
+  const SC={ACTIVE:"#3CCE2A",INACTIVE:"#5A7A50",EXPIRED:"#F04060","USED UP":"#F07228"};
+  const SB={ACTIVE:"#1A3D14",INACTIVE:"#243520",EXPIRED:"#3D0A18","USED UP":"#3D1A0A"};
+  return(
+    <div style={{display:"flex",flexDirection:"column",gap:"20px"}}>
+      <div>
+        <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#F0EAD6",letterSpacing:"3px",marginBottom:"4px"}}>PROMO CODES</h1>
+        <p style={{fontFamily:B,fontSize:"13px",color:"#8AAA78"}}>{codes.length} total · {codes.filter(c=>getStatus(c)==="ACTIVE").length} active</p>
+      </div>
+      <div style={{background:"#1A2614",border:"2px solid #2C4820",borderRadius:"12px",padding:"20px"}}>
+        <div style={{fontFamily:R,fontSize:"13px",color:"#F5C82A",letterSpacing:"2px",marginBottom:"14px"}}>GENERATE NEW CODE</div>
+        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"14px"}}>
+          <div style={{display:"flex",gap:"10px"}}>
+            <input value={form.code} onChange={e=>setForm(p=>({...p,code:e.target.value.toUpperCase()}))} placeholder="CODE (e.g. CFS2026)" style={{...inp,flex:1,letterSpacing:"2px",fontFamily:R}}/>
+            <button onClick={generateCode} style={{background:"#3D3000",border:"2px solid #F5C82A",borderRadius:"6px",color:"#F5C82A",padding:"10px 20px",cursor:"pointer",fontFamily:R,fontSize:"12px",letterSpacing:"1.5px",whiteSpace:"nowrap",flexShrink:0}}>✦ GENERATE</button>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"10px"}}>
+            <select value={form.discount_type} onChange={e=>setForm(p=>({...p,discount_type:e.target.value}))} style={inp}>
+              <option value="percent">Percent (%)</option>
+              <option value="fixed">Fixed (₱)</option>
+            </select>
+            <input type="number" value={form.discount_value} onChange={e=>setForm(p=>({...p,discount_value:e.target.value}))} placeholder="10" style={inp}/>
+            <input type="number" value={form.max_uses} onChange={e=>setForm(p=>({...p,max_uses:e.target.value}))} placeholder="Max uses (blank=∞)" style={inp}/>
+            <input type="date" value={form.expires_at} onChange={e=>setForm(p=>({...p,expires_at:e.target.value}))} style={inp}/>
+          </div>
+        </div>
+        <button onClick={saveCode} disabled={saving||!form.code} style={{fontFamily:R,fontSize:"12px",background:saving||!form.code?"#243520":"#F5C82A",color:saving||!form.code?"#5A7A50":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px 24px",cursor:"pointer",letterSpacing:"1.5px"}}>
+          {saving?"SAVING...":"SAVE CODE ✦"}
+        </button>
+      </div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"10px"}}>
+        <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
+          {FILTERS.map(f=>(
+            <button key={f} onClick={()=>setFilter(f)} style={{fontFamily:R,fontSize:"11px",letterSpacing:"1px",background:filter===f?"#1A3D14":"transparent",border:`1.5px solid ${filter===f?"#3CCE2A":"#2C4820"}`,color:filter===f?"#3CCE2A":"#5A7A50",borderRadius:"20px",padding:"5px 14px",cursor:"pointer"}}>{f}</button>
+          ))}
+        </div>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search code..." style={{...inp,width:"220px"}}/>
+      </div>
+      <div style={{background:"#1A2614",border:"2px solid #2C4820",borderRadius:"12px",overflow:"hidden"}}>
+        <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",background:"#243520",borderBottom:"2px solid #2C4820",padding:"10px 18px",gap:"0"}}>
+          {["CODE","DISCOUNT","USES","EXPIRES","STATUS","ACTIONS"].map(h=>(
+            <div key={h} style={{fontFamily:B,fontSize:"11px",color:"#5A7A50",letterSpacing:"1.5px"}}>{h}</div>
+          ))}
+        </div>
+        {filtered.length===0?(
+          <div style={{padding:"48px",textAlign:"center",fontFamily:R,fontSize:"13px",color:"#5A7A50",letterSpacing:"2px"}}>NO CODES FOUND</div>
+        ):filtered.map(c=>{
+          const status=getStatus(c);
+          return(
+            <div key={c.id} style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",padding:"12px 18px",borderBottom:"1px solid #2C4820",alignItems:"center",gap:"0"}}>
+              <div style={{fontFamily:R,fontSize:"15px",color:"#F5C82A",letterSpacing:"2px"}}>{c.code}</div>
+              <div style={{fontFamily:R,fontSize:"13px",color:"#F07228"}}>{c.discount_type==="percent"?`${c.discount_value}% OFF`:`₱${c.discount_value} OFF`}</div>
+              <div style={{fontFamily:B,fontSize:"12px",color:"#8AAA78"}}>{c.used_count??0}/{c.max_uses??"∞"}</div>
+              <div style={{fontFamily:B,fontSize:"12px",color:"#8AAA78"}}>{c.expires_at?new Date(c.expires_at).toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"}):"Never"}</div>
+              <div><span style={{fontFamily:R,fontSize:"10px",color:SC[status],background:SB[status],border:`1.5px solid ${SC[status]}40`,borderRadius:"20px",padding:"2px 10px",letterSpacing:"1px"}}>{status}</span></div>
+              <div style={{display:"flex",gap:"6px"}}>
+                <button onClick={()=>toggleActive(c.id,c.is_active)} style={{background:"#3D3000",border:"1.5px solid #F5C82A",borderRadius:"6px",color:"#F5C82A",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>{c.is_active?"⏸":"▶"}</button>
+                <button onClick={()=>deleteCode(c.id)} style={{background:"#3D0A18",border:"1.5px solid #F04060",borderRadius:"6px",color:"#F04060",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>🗑</button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

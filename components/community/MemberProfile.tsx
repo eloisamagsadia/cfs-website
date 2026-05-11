@@ -1,0 +1,125 @@
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import PostCard from "./PostCard";
+
+const R = "var(--font-righteous,'Righteous',sans-serif)";
+const B = "var(--font-barlow,'Barlow',sans-serif)";
+
+interface MemberProfileProps {
+  profile: any;
+  timeline: any[];
+  currentUserId: string;
+  isFollowing: boolean;
+  followersCount: number;
+  followingCount: number;
+  badges: any[];
+  isOwnProfile: boolean;
+}
+
+export default function MemberProfile({
+  profile, timeline, currentUserId, isFollowing: initialFollowing,
+  followersCount: initFollowers, followingCount, badges, isOwnProfile,
+}: MemberProfileProps) {
+  const [isFollowing, setIsFollowing] = useState(initialFollowing);
+  const [followersCount, setFollowersCount] = useState(initFollowers);
+  const [loading, setLoading] = useState(false);
+  const [tab, setTab] = useState<"posts" | "reposts">("posts");
+
+  const posts = timeline.filter(p => !p.repost_of);
+  const reposts = timeline.filter(p => !!p.repost_of);
+  const display = tab === "posts" ? posts : reposts;
+
+  async function toggleFollow() {
+    if (loading) return;
+    setLoading(true);
+    const method = isFollowing ? "DELETE" : "POST";
+    await fetch(`/api/community/follow/${profile.id}`, { method });
+    setIsFollowing(!isFollowing);
+    setFollowersCount(prev => isFollowing ? prev - 1 : prev + 1);
+    setLoading(false);
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "0", maxWidth: "680px", margin: "0 auto" }}>
+      <Link href="/members/community/members" style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", textDecoration: "none", letterSpacing: "1px", display: "flex", alignItems: "center", gap: "6px", marginBottom: "16px" }}>
+        <svg width="6" height="10" viewBox="0 0 6 10"><path d="M5 1L1 5L5 9" stroke="#5A7A50" strokeWidth="1.5" fill="none" strokeLinecap="round" /></svg>
+        BACK TO MEMBERS
+      </Link>
+
+      <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", marginBottom: "12px" }}>
+        {/* Cover with avatar inside */}
+        <div style={{ background: "linear-gradient(135deg,#1A3D14 0%,#2C6420 50%,#F07228 100%)", borderRadius: "14px 14px 0 0", padding: "16px 20px 0", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(60,206,42,0.12) 1.5px,transparent 1.5px)", backgroundSize: "18px 18px" }} />
+          <div style={{ height: "48px" }} />
+          <div style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+            <div style={{ width: "76px", height: "76px", borderRadius: "50%", background: "linear-gradient(135deg,#3CCE2A,#F07228)", padding: "3px", border: "4px solid #1A2614" }}>
+              <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#1A2614", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                {profile.avatar_url
+                  ? <img src={profile.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : <span style={{ fontFamily: R, fontSize: "28px", color: "#3CCE2A" }}>{(profile.display_name ?? "M")[0].toUpperCase()}</span>
+                }
+              </div>
+            </div>
+            <div style={{ paddingBottom: "10px" }}>
+              {!isOwnProfile ? (
+                <button onClick={toggleFollow} disabled={loading} style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: `2px solid ${isFollowing ? "rgba(255,255,255,0.3)" : "#3CCE2A"}`, background: isFollowing ? "rgba(0,0,0,0.3)" : "#3CCE2A", color: isFollowing ? "#F0EAD6" : "#080F06", cursor: "pointer", opacity: loading ? 0.7 : 1 }}>
+                  {loading ? "..." : isFollowing ? "Following" : "Follow"}
+                </button>
+              ) : (
+                <Link href="/members/account" style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: "2px solid rgba(255,255,255,0.2)", color: "#F0EAD6", textDecoration: "none", display: "block", background: "rgba(0,0,0,0.2)" }}>
+                  Edit Profile
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Info */}
+        <div style={{ padding: "14px 20px 20px" }}>
+          <div style={{ fontFamily: R, fontSize: "20px", color: "#F0EAD6", letterSpacing: "1px", marginBottom: "4px" }}>{profile.display_name ?? "Member"}</div>
+          {profile.bio && <div style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78", lineHeight: 1.6, marginBottom: "12px" }}>{profile.bio}</div>}
+          <div style={{ display: "flex", gap: "24px", marginBottom: "12px" }}>
+            {[{ label:"Posts", value:posts.length },{ label:"Reposts", value:reposts.length },{ label:"Followers", value:followersCount },{ label:"Following", value:followingCount }].map(s => (
+              <div key={s.label}>
+                <div style={{ fontFamily: R, fontSize: "17px", color: "#F0EAD6" }}>{s.value}</div>
+                <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+          {badges.length > 0 && (
+            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+              {badges.map((ub: any) => (
+                <div key={ub.id} title={ub.badges?.description ?? ""} style={{ background: "#243520", border: "1px solid #2C4820", borderRadius: "6px", padding: "3px 8px", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <span style={{ fontSize: "12px" }}>🏅</span>
+                  <span style={{ fontFamily: B, fontSize: "10px", color: "#8AAA78" }}>{ub.badges?.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Tabs */}
+        <div style={{ display: "flex", borderTop: "1px solid #2C4820" }}>
+          {(["posts","reposts"] as const).map(t => (
+            <button key={t} onClick={() => setTab(t)} style={{ flex: 1, padding: "12px", background: "none", border: "none", borderBottom: tab === t ? "2px solid #3CCE2A" : "2px solid transparent", cursor: "pointer", fontFamily: R, fontSize: "12px", color: tab === t ? "#3CCE2A" : "#5A7A50", letterSpacing: "1.5px" }}>
+              {t.toUpperCase()} ({t === "posts" ? posts.length : reposts.length})
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Posts/Reposts */}
+      {display.length === 0 ? (
+        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", padding: "48px 24px", textAlign: "center" }}>
+          <div style={{ fontSize: "32px", marginBottom: "10px" }}>{tab === "posts" ? "📝" : "🔁"}</div>
+          <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A50", letterSpacing: "2px" }}>NO {tab.toUpperCase()} YET</div>
+        </div>
+      ) : (
+        display.map((post: any) => (
+          <PostCard key={`${post.id}-${post.repost_of ?? "post"}`} post={post} currentUserId={currentUserId} />
+        ))
+      )}
+    </div>
+  );
+}
