@@ -190,7 +190,7 @@ export default function HomePage() {
 
           <div style={{ animation:"cfs-fade-up .6s ease .15s both", marginBottom:"16px" }}>
             <img
-              src="/Colet_Fan_Suporta_Logo.png"
+              src="https://media.coletfs.com/stickers/Colet_Fan_Suporta_Logo.png"
               alt="Colet Fan Suporta"
 style={{
     width: "clamp(280px,60vw,520px)",
