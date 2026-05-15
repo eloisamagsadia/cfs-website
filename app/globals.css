@@ -181,3 +181,167 @@
   33%       { transform: translateY(-4px) rotate(2deg); }
   66%       { transform: translateY(-2px) rotate(-1deg); }
 }
+
+/* Navbar styles */
+.nav-link { position: relative; transition: color 0.2s; }
+.nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1.5px; background: #3CCE2A; border-radius: 2px; transition: width 0.2s; }
+.nav-link:hover { color: #F0EAD6 !important; }
+.nav-link:hover::after { width: 100%; }
+.cfs-logo:hover .cfs-logo-inner { border-color: #3CCE2A !important; }
+
+/* ── Responsive ── */
+.desktop-sidebar { display: block; }
+.mobile-only { display: none; }
+
+@media (max-width: 768px) {
+  .desktop-sidebar { display: none !important; }
+  .mobile-only { display: block !important; }
+}
+
+/* Navbar mobile */
+@media (max-width: 768px) {
+  .nav-links { display: none !important; }
+}
+
+/* Community page mobile */
+@media (max-width: 768px) {
+  .community-sidebar { display: none !important; }
+  .community-layout { flex-direction: column !important; }
+}
+
+/* Mobile nav fix */
+@media (max-width: 768px) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+/* Event detail page mobile */
+@media (max-width: 768px) {
+  .event-detail-grid {
+    grid-template-columns: 1fr !important;
+    padding: 20px 16px !important;
+  }
+  .event-register-card {
+    position: static !important;
+  }
+}
+
+/* Footer */
+.footer-social { color: #3A5230; transition: color 0.2s; }
+.footer-social:hover { color: #3CCE2A; }
+
+@media (min-width: 769px) {
+  .event-card-actions {
+    width: auto !important;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .members-table-desktop { display: none !important; }
+  .members-cards-mobile { display: flex !important; }
+}
+@media (min-width: 769px) {
+  .members-cards-mobile { display: none !important; }
+}
+
+@media (max-width: 768px) {
+  .tiers-template-card .tiers-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .ticket-template-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .edit-event-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .letter-card {
+    flex-direction: column-reverse !important;
+  }
+  .letter-thumbnail {
+    width: 100% !important;
+    height: 180px !important;
+  }
+}
+
+/* ── Site-wide Animations ── */
+
+/* Page fade-in */
+@keyframes page-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-fade-up 0.4s ease forwards;
+}
+
+/* Staggered children */
+.stagger > * { opacity: 0; animation: page-fade-up 0.4s ease forwards; }
+.stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger > *:nth-child(4) { animation-delay: 0.20s; }
+.stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger > *:nth-child(6) { animation-delay: 0.30s; }
+.stagger > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger > *:nth-child(8) { animation-delay: 0.40s; }
+
+/* Card hover lift */
+.card-hover {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* Skeleton loader */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.8; }
+}
+.skeleton {
+  background: #1A2614;
+  border-radius: 6px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+.skeleton-text { height: 14px; margin-bottom: 8px; border-radius: 4px; }
+.skeleton-title { height: 24px; margin-bottom: 12px; border-radius: 4px; width: 60%; }
+.skeleton-card { height: 120px; border-radius: 12px; }
+.skeleton-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; }
+
+/* Button press */
+.btn-press {
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+.btn-press:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
+
+/* Smooth image load */
+.img-fade {
+  transition: opacity 0.3s ease;
+}
+.img-fade[src] { opacity: 1; }
+
+/* Green glow on focus */
+input:focus, textarea:focus, select:focus {
+  border-color: #3CCE2A !important;
+  box-shadow: 0 0 0 2px rgba(60,206,42,0.15);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}

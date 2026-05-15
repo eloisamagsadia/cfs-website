@@ -3,7 +3,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import AddToCartButton from "@/components/public/AddToCartButton";
+import ProductImageGallery from "@/components/public/ProductImageGallery";
 import type { Metadata } from "next";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const S = "var(--font-dm-serif,'DM Serif Display',serif)";
@@ -66,33 +70,8 @@ export default async function ProductDetailPage({ params }: { params: { category
 
           {/* Left: Images */}
           <div>
-            {/* Main image */}
-            <div style={{ position: "relative", padding: "4px 4px 8px 0", marginBottom: "10px" }}>
-              <div style={{ position: "absolute", bottom: 0, right: 0, width: "calc(100% - 4px)", height: "calc(100% - 4px)", borderRadius: "12px", background: "#080F06" }}/>
-              <div style={{ position: "relative", background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden", zIndex: 1, height: "420px" }}>
-                {images[0]
-                  ? <img src={images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
-                  : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "72px" }}>🛍</div>
-                }
-                {!inStock && (
-                  <div style={{ position: "absolute", inset: 0, background: "rgba(8,15,6,0.7)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontFamily: R, fontSize: "16px", color: "#F04060", letterSpacing: "2px", background: "#3D0A18", border: "2px solid #F04060", borderRadius: "8px", padding: "10px 20px" }}>OUT OF STOCK</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* Thumbnail row */}
-            {images.length > 1 && (
-              <div style={{ display: "flex", gap: "8px", overflowX: "auto" }}>
-                {images.map((img, i) => (
-                  <div key={i} style={{ width: "80px", height: "80px", borderRadius: "8px", overflow: "hidden", border: "2px solid #2C4820", flexShrink: 0 }}>
-                    <img src={img} alt={`${product.name} ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} loading="lazy"/>
-                  </div>
-                ))}
-              </div>
-            )}
+            <ProductImageGallery images={images} productName={product.name} inStock={inStock} accentColor={accentColor} />
           </div>
-
           {/* Right: Info */}
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             {/* Category badge */}
@@ -154,8 +133,8 @@ export default async function ProductDetailPage({ params }: { params: { category
             <div style={{ background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "12px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
               {[
                 { icon: "🚚", text: "Ships within 3-5 business days" },
-                { icon: "📦", text: "Free shipping for orders over ₱1,500" },
-                { icon: "🔒", text: "Secure checkout via PayMongo" },
+                { icon: "📦", text: "Shipping fee based on region and weight" },
+                { icon: "🔒", text: "Secure checkout" },
               ].map(({ icon, text }) => (
                 <div key={text} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   <span style={{ fontSize: "14px" }}>{icon}</span>

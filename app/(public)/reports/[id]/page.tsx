@@ -2,6 +2,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const S = "var(--font-dm-serif,'DM Serif Display',serif)";

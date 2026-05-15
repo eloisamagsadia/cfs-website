@@ -1,10 +1,16 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 import AdminMembersClient from "./AdminMembersClient";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 
 export const metadata: Metadata = { title: "Manage Members" };
 
 export default async function AdminMembersPage() {
+  const { sessionClaims } = auth();
+  const callerRole = (sessionClaims?.metadata as any)?.role ?? "member";
   const admin = createAdminClient();
 
   const { data: members } = await admin
@@ -28,5 +34,5 @@ export default async function AdminMembersPage() {
     post_count: countMap[m.id] ?? 0,
   }));
 
-  return <AdminMembersClient members={enriched} />;
+  return <AdminMembersClient members={enriched} callerRole={callerRole} />;
 }

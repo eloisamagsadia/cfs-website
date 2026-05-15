@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = { title: "Events — CFS" };
+export const dynamic = "force-dynamic";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const S = "var(--font-dm-serif,'DM Serif Display',serif)";
@@ -19,7 +20,7 @@ const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV
 
 export default async function EventsPage() {
   const supabase = createAdminClient();
-  const { data: events } = await supabase
+  const { data: events } = await (supabase as any)
     .from("events")
     .select("*")
     .order("date", { ascending: true });
@@ -51,7 +52,7 @@ export default async function EventsPage() {
           </p>
 
           {/* Stats */}
-          <div style={{ display: "flex", justifyContent: "center", gap: "12px", flexWrap: "wrap" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, auto)", justifyContent: "center", gap: "12px" }}>
             {[
               { label: "TOTAL EVENTS", value: String(display.length), color: "#F0EAD6" },
               { label: "UPCOMING",     value: String(upcoming),       color: "#F5C82A" },
@@ -76,7 +77,7 @@ export default async function EventsPage() {
           </div>
         )}
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: "16px", alignItems: "stretch" }}>
+        <div className="stagger" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: "16px", alignItems: "stretch" }}>
           {display.map((event: any) => {
             const d = new Date(event.date);
             const status = STATUS_CONFIG[event.status] ?? STATUS_CONFIG.upcoming;

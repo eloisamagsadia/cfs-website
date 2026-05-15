@@ -73,7 +73,13 @@ export default function AdminCommunityPage() {
       <div>
         <h2 style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "2px", marginBottom: "12px" }}>ALL POSTS</h2>
         {loading ? (
-          <div style={{ fontFamily: R, color: "#5A7A50", letterSpacing: "2px", padding: "40px", textAlign: "center" }}>LOADING...</div>
+<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
+      <div className="skeleton skeleton-title" />
+      <div className="skeleton skeleton-card" />
+      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
+      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
+      <div className="skeleton skeleton-card" />
+    </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {posts.map((p: any) => (

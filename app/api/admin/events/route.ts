@@ -6,7 +6,7 @@ async function requireAdmin() {
   const { userId, sessionClaims } = auth();
   if (!userId) return null;
   const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== "admin") return null;
+  if (!["admin", "super_admin"].includes(role ?? "")) return null;
   return userId;
 }
 
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const admin = createAdminClient();
-  const { data, error } = await (admin.from("events") as any).select("*, event_registrations(id)").order("date", { ascending: false });
+  const { data, error } = await (admin.from("events") as any).select("*").order("date", { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ events: data ?? [] });
 }
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await req.json();
-  const { title, description, date, location, map_url, capacity, price, is_members_only, banner_url, status, category_id } = body;
+  const { title, description, date, location, map_url, capacity, price, is_members_only, banner_url, status, category_id, sponsor_access_at, member_access_at } = body;
   if (!title?.trim()) return NextResponse.json({ error: "Title is required" }, { status: 400 });
   if (!date) return NextResponse.json({ error: "Date is required" }, { status: 400 });
   const admin = createAdminClient();
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     location: location?.trim() || null, map_url: map_url?.trim() || null,
     capacity: capacity ? Number(capacity) : null, price: Number(price ?? 0),
     is_members_only: !!is_members_only, banner_url: banner_url?.trim() || null,
-    status: status || "upcoming", category_id: category_id || null,
+    status: status || "upcoming", category_id: category_id || null, sponsor_access_at: sponsor_access_at || null, member_access_at: member_access_at || null,
   }).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ event: data }, { status: 201 });
@@ -55,6 +55,8 @@ export async function PATCH(req: NextRequest) {
   if (updates.is_members_only !== undefined) payload.is_members_only = updates.is_members_only;
   if (updates.banner_url !== undefined) payload.banner_url = updates.banner_url?.trim() || null;
   if (updates.status !== undefined) payload.status = updates.status;
+  if (updates.sponsor_access_at !== undefined) payload.sponsor_access_at = updates.sponsor_access_at || null;
+  if (updates.member_access_at !== undefined) payload.member_access_at = updates.member_access_at || null;
   const admin = createAdminClient();
   const { data, error } = await (admin.from("events") as any).update(payload).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

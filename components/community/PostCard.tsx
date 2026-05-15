@@ -34,6 +34,30 @@ function renderContent(content: string) {
     .replace(/#(?![0-9A-Fa-f]{3,6}\b)(\w+)/g, `<span style="color:#F5C82A;font-weight:600;">#$1</span>`);
 }
 
+
+const PLATFORM_COLORS: Record<string, string> = {
+  youtube: "#FF0000",
+  tiktok: "#69C9D0",
+  instagram: "#E1306C",
+  drive: "#4285F4",
+  unknown: "#5A7A50",
+};
+
+const PLATFORM_LABELS: Record<string, string> = {
+  youtube: "YouTube",
+  tiktok: "TikTok",
+  instagram: "Instagram",
+  drive: "Google Drive",
+  unknown: "Video",
+};
+
+const ROLE_BADGES: Record<string, { label: string; color: string; bg: string }> = {
+  super_admin: { label: "⚡ SUPER ADMIN", color: "#F5C82A", bg: "#3D3000" },
+  admin:       { label: "🛡 ADMIN",       color: "#F07228", bg: "#3D1A0A" },
+  moderator:   { label: "🔧 MOD",         color: "#69C9D0", bg: "#0A2A2A" },
+  sponsor:     { label: "✦ SPONSOR",      color: "#B47FE3", bg: "#2A1A3D" },
+};
+
 const COMMENT_REACTIONS = ["❤️","👍","😂","😮","🔥","🥺"];
 
 interface PostCardProps {
@@ -164,7 +188,14 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
           </div>
         </div>
         <div style={{ flex: 1 }}>
-          <div style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "0.5px" }}>{profile.display_name ?? "Member"}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "0.5px" }}>{profile.display_name ?? "Member"}</span>
+              {profile.role && ROLE_BADGES[profile.role] && (
+                <span style={{ fontFamily: R, fontSize: "9px", color: ROLE_BADGES[profile.role].color, background: ROLE_BADGES[profile.role].bg, borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>
+                  {ROLE_BADGES[profile.role].label}
+                </span>
+              )}
+            </div>
           <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
             <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{timeAgo(post.created_at)}</span>
             {post.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F5C82A", background: "#3D3000", borderRadius: "4px", padding: "1px 5px" }}>📌</span>}
@@ -240,6 +271,22 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
               ))}
             </div>
           )}
+        </div>
+      )}
+
+
+      {/* ── VIDEO EMBED ── */}
+      {post.video_embed_url && (
+        <div style={{ margin: "0 16px 10px", borderRadius: "10px", overflow: "hidden", border: "1.5px solid #2C4820", position: "relative" }}>
+          <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 2, background: PLATFORM_COLORS[post.video_platform] ?? "#5A7A50", borderRadius: "6px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#fff", fontWeight: 700 }}>
+            {PLATFORM_LABELS[post.video_platform] ?? "Video"}
+          </div>
+          <iframe
+            src={post.video_embed_url}
+            style={{ width: "100%", height: "280px", border: "none", display: "block" }}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </div>
       )}
 

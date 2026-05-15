@@ -4,11 +4,44 @@ import { useState } from "react";
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-export default function AdminMembersClient({ members }: { members: any[] }) {
+const ROLES = ["super_admin", "admin", "moderator", "sponsor", "member"];
+
+const ROLE_COLORS: Record<string, string> = {
+  super_admin: "#F5C82A",
+  admin: "#F07228",
+  moderator: "#69C9D0",
+  sponsor: "#B47FE3",
+  member: "#3CCE2A",
+  guest: "#5A7A50",
+};
+
+const ROLE_LABELS: Record<string, string> = {
+  super_admin: "SUPER ADMIN",
+  admin: "ADMIN",
+  moderator: "MOD",
+  sponsor: "SPONSOR",
+  member: "MEMBER",
+  guest: "GUEST",
+};
+
+function timeAgo(date: string) {
+  const diff = Date.now() - new Date(date).getTime();
+  const days = Math.floor(diff / 86400000);
+  if (days === 0) return "Today";
+  if (days < 30) return `${days}d ago`;
+  if (days < 365) return `${Math.floor(days / 30)}mo ago`;
+  return `${Math.floor(days / 365)}y ago`;
+}
+
+export default function AdminMembersClient({ members, callerRole }: { members: any[], callerRole: string }) {
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"all" | "admin" | "member" | "banned">("all");
+  const [filter, setFilter] = useState<string>("all");
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [localMembers, setLocalMembers] = useState(members);
+  const [selectedMember, setSelectedMember] = useState<any>(null);
+  const [sponsorCount, setSponsorCount] = useState(members.filter(m => m.role === "sponsor").length);
+
+  const isSuperAdmin = callerRole === "super_admin";
 
   const filtered = localMembers.filter(m => {
     const q = search.toLowerCase();
@@ -22,16 +55,21 @@ export default function AdminMembersClient({ members }: { members: any[] }) {
     return matchSearch && matchFilter;
   });
 
-  async function toggleRole(member: any) {
+  async function changeRole(member: any, newRole: string) {
     setLoadingId(member.id);
-    const newRole = member.role === "admin" ? "member" : "admin";
     const res = await fetch("/api/admin/members/role", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ targetUserId: member.id, role: newRole }),
     });
+    const data = await res.json();
     if (res.ok) {
       setLocalMembers(prev => prev.map(m => m.id === member.id ? { ...m, role: newRole } : m));
+      if (member.role === "sponsor" && newRole !== "sponsor") setSponsorCount(p => p - 1);
+      if (newRole === "sponsor" && member.role !== "sponsor") setSponsorCount(p => p + 1);
+      if (selectedMember?.id === member.id) setSelectedMember({ ...selectedMember, role: newRole });
+    } else {
+      alert(data.error);
     }
     setLoadingId(null);
   }
@@ -42,102 +80,119 @@ export default function AdminMembersClient({ members }: { members: any[] }) {
     const res = await fetch("/api/admin/members/ban", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: member.id, banned: newBanned }),
+      body: JSON.stringify({ targetUserId: member.id, banned: newBanned }),
     });
     if (res.ok) {
       setLocalMembers(prev => prev.map(m => m.id === member.id ? { ...m, is_banned: newBanned } : m));
+      if (selectedMember?.id === member.id) setSelectedMember({ ...selectedMember, is_banned: newBanned });
     }
     setLoadingId(null);
   }
 
-  const totalAdmins  = localMembers.filter(m => m.role === "admin").length;
-  const totalBanned  = localMembers.filter(m => m.is_banned).length;
-  const totalMembers = localMembers.length;
+  const counts = {
+    total: localMembers.length,
+    super_admin: localMembers.filter(m => m.role === "super_admin").length,
+    admin: localMembers.filter(m => m.role === "admin").length,
+    moderator: localMembers.filter(m => m.role === "moderator").length,
+    sponsor: sponsorCount,
+    member: localMembers.filter(m => m.role === "member").length,
+    banned: localMembers.filter(m => m.is_banned).length,
+  };
+
+  // Can caller change this member's role?
+  function canChangeRole(target: any) {
+    if (target.role === "super_admin" && !isSuperAdmin) return false;
+    if (["admin"].includes(target.role) && !isSuperAdmin) return false;
+    return true;
+  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-
       {/* Header */}
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>MEMBERS</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>{totalMembers} registered members</p>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>{counts.total} registered members</p>
       </div>
 
       {/* Stats */}
-      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
         {[
-          { label: "TOTAL", value: totalMembers, color: "#F0EAD6" },
-          { label: "ADMINS", value: totalAdmins, color: "#F07228" },
-          { label: "MEMBERS", value: totalMembers - totalAdmins - totalBanned, color: "#3CCE2A" },
-          { label: "BANNED", value: totalBanned, color: "#F04060" },
+          { label: "TOTAL", value: counts.total, color: "#F0EAD6" },
+          { label: "SUPER ADMIN", value: counts.super_admin, color: ROLE_COLORS.super_admin },
+          { label: "ADMIN", value: counts.admin, color: ROLE_COLORS.admin },
+          { label: "MOD", value: counts.moderator, color: ROLE_COLORS.moderator },
+          { label: "SPONSOR", value: counts.sponsor, color: ROLE_COLORS.sponsor },
+          { label: "MEMBER", value: counts.member, color: ROLE_COLORS.member },
+          { label: "BANNED", value: counts.banned, color: "#F04060" },
         ].map(s => (
-          <div key={s.label} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", padding: "12px 20px" }}>
-            <div style={{ fontFamily: R, fontSize: "1.3rem", color: s.color }}>{s.value}</div>
-            <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", letterSpacing: "1.5px" }}>{s.label}</div>
+          <div key={s.label} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", padding: "10px 16px", textAlign: "center" }}>
+            <div style={{ fontFamily: R, fontSize: "1.2rem", color: s.color }}>{s.value}</div>
+            <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A50", letterSpacing: "1.5px" }}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Search + filter */}
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-        <input
-          value={search} onChange={e => setSearch(e.target.value)}
+        <input value={search} onChange={e => setSearch(e.target.value)}
           placeholder="Search by name or ID..."
-          style={{ flex: 1, minWidth: "200px", background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "10px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }}
-        />
-        <div style={{ display: "flex", gap: "6px" }}>
-          {(["all","admin","member","banned"] as const).map(f => (
+          style={{ flex: 1, minWidth: "200px", background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "10px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }} />
+        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+          {["all", ...ROLES, "banned"].map(f => (
             <button key={f} onClick={() => setFilter(f)}
-              style={{ fontFamily: R, fontSize: "11px", background: filter === f ? "#1A3D14" : "transparent", border: `1.5px solid ${filter === f ? "#3CCE2A" : "#2C4820"}`, color: filter === f ? "#3CCE2A" : "#5A7A50", borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px" }}>
-              {f.toUpperCase()}
+              style={{ fontFamily: R, fontSize: "10px", background: filter === f ? "#1A3D14" : "transparent", border: `1.5px solid ${filter === f ? (ROLE_COLORS[f] ?? "#3CCE2A") : "#2C4820"}`, color: filter === f ? (ROLE_COLORS[f] ?? "#3CCE2A") : "#5A7A50", borderRadius: "6px", padding: "5px 12px", cursor: "pointer", letterSpacing: "1px" }}>
+              {f === "all" ? "ALL" : ROLE_LABELS[f] ?? f.toUpperCase()}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Table */}
-      <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
-        {/* Header */}
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1.2fr 0.8fr 0.6fr 0.6fr 0.8fr", background: "#243520", padding: "12px 20px" }}>
-          {["MEMBER", "ID", "ROLE", "POSTS", "BADGES", "ACTIONS"].map(h => (
+      {/* Table — desktop only */}
+      <div className="members-table-desktop" style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", background: "#243520", padding: "12px 20px" }}>
+          {["MEMBER", "ROLE", "JOINED", "POSTS", "BADGES", "ACTIONS"].map(h => (
             <span key={h} style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", letterSpacing: "1.5px" }}>{h}</span>
           ))}
         </div>
 
         {filtered.length === 0 && (
-          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#3A5A30" }}>
-            No members found.
-          </div>
+          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#3A5A30" }}>No members found.</div>
         )}
 
         {filtered.map((m: any, i: number) => {
           const isLoading = loadingId === m.id;
+          const roleColor = ROLE_COLORS[m.role] ?? "#5A7A50";
+          const canChange = canChangeRole(m);
           return (
-            <div key={m.id} style={{ display: "grid", gridTemplateColumns: "2fr 1.2fr 0.8fr 0.6fr 0.6fr 0.8fr", padding: "12px 20px", borderTop: "1px solid #2C4820", background: m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#1A2614" : "#162212", alignItems: "center" }}>
-
+            <div key={m.id}
+              onClick={() => setSelectedMember(m)}
+              style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", padding: "12px 20px", borderTop: "1px solid #2C4820", background: m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#1A2614" : "#162212", alignItems: "center", cursor: "pointer" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "#1F3018")}
+              onMouseLeave={e => (e.currentTarget.style.background = m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#1A2614" : "#162212")}
+            >
               {/* Member */}
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#1A3D14", border: "1.5px solid #2C4820", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
+                <div style={{ width: "32px", height: "32px", borderRadius: "50%", border: `2px solid ${roleColor}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
                   {m.avatar_url
                     ? <img src={m.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <span style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A" }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>
+                    : <span style={{ fontFamily: R, fontSize: "13px", color: roleColor }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>
                   }
                 </div>
                 <div>
-                  <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#F0EAD6" }}>
+                  <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#F0EAD6", display: "flex", alignItems: "center", gap: "6px" }}>
                     {m.display_name ?? "—"}
-                    {m.is_banned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F04060", background: "#3D0A14", border: "1px solid #F0406040", borderRadius: "4px", padding: "1px 6px", marginLeft: "6px", letterSpacing: "1px" }}>BANNED</span>}
+                    {m.is_banned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F04060", background: "#3D0A14", borderRadius: "4px", padding: "1px 6px" }}>BANNED</span>}
                   </div>
                 </div>
               </div>
 
-              {/* ID */}
-              <span style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30" }}>{m.id.slice(0, 8)}...</span>
-
-              {/* Role */}
-              <span style={{ fontFamily: R, fontSize: "11px", color: m.role === "admin" ? "#F07228" : "#3CCE2A", letterSpacing: "1px" }}>
-                {m.role?.toUpperCase()}
+              {/* Role badge */}
+              <span style={{ fontFamily: R, fontSize: "10px", color: roleColor, background: roleColor + "20", borderRadius: "20px", padding: "3px 10px", letterSpacing: "1px", width: "fit-content" }}>
+                {ROLE_LABELS[m.role] ?? m.role?.toUpperCase()}
               </span>
+
+              {/* Joined */}
+              <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{timeAgo(m.created_at)}</span>
 
               {/* Posts */}
               <span style={{ fontFamily: R, fontSize: "13px", color: "#8AAA78" }}>{m.post_count}</span>
@@ -146,20 +201,19 @@ export default function AdminMembersClient({ members }: { members: any[] }) {
               <span style={{ fontFamily: R, fontSize: "13px", color: "#F5C82A" }}>{m.user_badges?.length ?? 0}</span>
 
               {/* Actions */}
-              <div style={{ display: "flex", gap: "6px" }}>
-                {/* Role toggle */}
-                <button
-                  onClick={() => toggleRole(m)}
-                  disabled={isLoading}
-                  title={m.role === "admin" ? "Demote to member" : "Make admin"}
-                  style={{ fontFamily: R, fontSize: "9px", color: m.role === "admin" ? "#F07228" : "#5A7A50", background: "transparent", border: `1px solid ${m.role === "admin" ? "#F0722840" : "#2C4820"}`, borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", opacity: isLoading ? 0.5 : 1 }}>
-                  {m.role === "admin" ? "DEMOTE" : "ADMIN"}
-                </button>
-                {/* Ban toggle */}
-                <button
-                  onClick={() => toggleBan(m)}
-                  disabled={isLoading}
-                  title={m.is_banned ? "Unban member" : "Ban member"}
+              <div style={{ display: "flex", gap: "4px" }} onClick={e => e.stopPropagation()}>
+                {canChange && (
+                  <select
+                    value={m.role}
+                    onChange={e => changeRole(m, e.target.value)}
+                    disabled={isLoading}
+                    style={{ background: "#243520", border: "1px solid #2C4820", borderRadius: "4px", padding: "4px 6px", color: roleColor, fontFamily: B, fontSize: "10px", outline: "none", cursor: "pointer" }}>
+                    {ROLES.filter(r => isSuperAdmin || !["super_admin", "admin"].includes(r)).map(r => (
+                      <option key={r} value={r}>{ROLE_LABELS[r]}</option>
+                    ))}
+                  </select>
+                )}
+                <button onClick={() => toggleBan(m)} disabled={isLoading}
                   style={{ fontFamily: R, fontSize: "9px", color: m.is_banned ? "#3CCE2A" : "#F04060", background: "transparent", border: `1px solid ${m.is_banned ? "#3CCE2A40" : "#F0406040"}`, borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", opacity: isLoading ? 0.5 : 1 }}>
                   {m.is_banned ? "UNBAN" : "BAN"}
                 </button>
@@ -168,6 +222,130 @@ export default function AdminMembersClient({ members }: { members: any[] }) {
           );
         })}
       </div>
+
+      {/* Cards — mobile only */}
+      <div className="members-cards-mobile" style={{ flexDirection: "column", gap: "8px" }}>
+        {filtered.length === 0 && (
+          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#3A5A30" }}>No members found.</div>
+        )}
+        {filtered.map((m: any) => {
+          const isLoading = loadingId === m.id;
+          const roleColor = ROLE_COLORS[m.role] ?? "#5A7A50";
+          const canChange = canChangeRole(m);
+          return (
+            <div key={m.id}
+              onClick={() => setSelectedMember(m)}
+              style={{ background: m.is_banned ? "#2A0A0A" : "#1A2614", border: `2px solid ${m.is_banned ? "#F0406040" : "#2C4820"}`, borderRadius: "12px", padding: "14px 16px", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}
+            >
+              <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: `2px solid ${roleColor}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
+                {m.avatar_url
+                  ? <img src={m.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : <span style={{ fontFamily: R, fontSize: "15px", color: roleColor }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>
+                }
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#F0EAD6", display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+                  {m.display_name ?? "—"}
+                  {m.is_banned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F04060", background: "#3D0A14", borderRadius: "4px", padding: "1px 6px" }}>BANNED</span>}
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "4px", flexWrap: "wrap" }}>
+                  <span style={{ fontFamily: R, fontSize: "10px", color: roleColor, background: roleColor + "20", borderRadius: "20px", padding: "2px 8px", letterSpacing: "1px" }}>
+                    {ROLE_LABELS[m.role] ?? m.role?.toUpperCase()}
+                  </span>
+                  <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{timeAgo(m.created_at)}</span>
+                  <span style={{ fontFamily: B, fontSize: "11px", color: "#8AAA78" }}>{m.post_count} posts</span>
+                </div>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px", flexShrink: 0 }} onClick={e => e.stopPropagation()}>
+                {canChange && (
+                  <select
+                    value={m.role}
+                    onChange={e => changeRole(m, e.target.value)}
+                    disabled={isLoading}
+                    style={{ background: "#243520", border: "1px solid #2C4820", borderRadius: "4px", padding: "4px 6px", color: roleColor, fontFamily: B, fontSize: "10px", outline: "none", cursor: "pointer" }}
+                  >
+                    {ROLES.filter(r => isSuperAdmin || !["super_admin", "admin"].includes(r)).map(r => (
+                      <option key={r} value={r}>{ROLE_LABELS[r]}</option>
+                    ))}
+                  </select>
+                )}
+                <button onClick={() => toggleBan(m)} disabled={isLoading}
+                  style={{ fontFamily: R, fontSize: "9px", color: m.is_banned ? "#3CCE2A" : "#F04060", background: "transparent", border: `1px solid ${m.is_banned ? "#3CCE2A40" : "#F0406040"}`, borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", opacity: isLoading ? 0.5 : 1 }}>
+                  {m.is_banned ? "UNBAN" : "BAN"}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Member detail modal */}
+      {selectedMember && (
+        <div onClick={() => setSelectedMember(null)}
+          style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", padding: "28px", width: "420px", maxWidth: "90vw", display: "flex", flexDirection: "column", gap: "16px" }}>
+
+            {/* Profile */}
+            <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+              <div style={{ width: "56px", height: "56px", borderRadius: "50%", border: `2px solid ${ROLE_COLORS[selectedMember.role] ?? "#3CCE2A"}`, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {selectedMember.avatar_url
+                  ? <img src={selectedMember.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : <span style={{ fontFamily: R, fontSize: "22px", color: ROLE_COLORS[selectedMember.role] ?? "#3CCE2A" }}>{(selectedMember.display_name ?? "M")[0].toUpperCase()}</span>
+                }
+              </div>
+              <div>
+                <div style={{ fontFamily: R, fontSize: "16px", color: "#F0EAD6", letterSpacing: "1px" }}>{selectedMember.display_name ?? "Member"}</div>
+                <span style={{ fontFamily: R, fontSize: "10px", color: ROLE_COLORS[selectedMember.role], background: (ROLE_COLORS[selectedMember.role] ?? "#3CCE2A") + "20", borderRadius: "20px", padding: "2px 10px" }}>
+                  {ROLE_LABELS[selectedMember.role] ?? selectedMember.role}
+                </span>
+              </div>
+              <button onClick={() => setSelectedMember(null)}
+                style={{ marginLeft: "auto", background: "none", border: "none", color: "#5A7A50", cursor: "pointer", fontSize: "20px" }}>✕</button>
+            </div>
+
+            {/* Details grid */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", background: "#0F1A0B", borderRadius: "10px", padding: "16px" }}>
+              {[
+                { label: "Member ID", value: selectedMember.id.slice(0, 16) + "..." },
+                { label: "Joined", value: new Date(selectedMember.created_at).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" }) },
+                { label: "Posts", value: selectedMember.post_count },
+                { label: "Badges", value: selectedMember.user_badges?.length ?? 0 },
+                { label: "Image Posts Used", value: `${selectedMember.image_post_count ?? 0}/10` },
+                { label: "Status", value: selectedMember.is_banned ? "🚫 BANNED" : "✅ ACTIVE" },
+              ].map(({ label, value }) => (
+                <div key={label}>
+                  <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", letterSpacing: "1px", marginBottom: "2px" }}>{label}</div>
+                  <div style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>{value}</div>
+                </div>
+              ))}
+            </div>
+
+            {selectedMember.bio && (
+              <div style={{ background: "#0F1A0B", borderRadius: "10px", padding: "12px 16px" }}>
+                <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", marginBottom: "4px" }}>BIO</div>
+                <div style={{ fontFamily: B, fontSize: "12px", color: "#C8C0A8", lineHeight: 1.6 }}>{selectedMember.bio}</div>
+              </div>
+            )}
+
+            {/* Actions */}
+            {canChangeRole(selectedMember) && (
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                {ROLES.filter(r => r !== selectedMember.role && (isSuperAdmin || !["super_admin", "admin"].includes(r))).map(r => (
+                  <button key={r} onClick={() => changeRole(selectedMember, r)} disabled={loadingId === selectedMember.id}
+                    style={{ fontFamily: R, fontSize: "10px", background: (ROLE_COLORS[r] ?? "#3CCE2A") + "20", border: `1.5px solid ${ROLE_COLORS[r] ?? "#3CCE2A"}`, color: ROLE_COLORS[r] ?? "#3CCE2A", borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+                    → {ROLE_LABELS[r]}
+                  </button>
+                ))}
+                <button onClick={() => toggleBan(selectedMember)} disabled={loadingId === selectedMember.id}
+                  style={{ fontFamily: R, fontSize: "10px", background: selectedMember.is_banned ? "#1A3D14" : "#3D0A14", border: `1.5px solid ${selectedMember.is_banned ? "#3CCE2A" : "#F04060"}`, color: selectedMember.is_banned ? "#3CCE2A" : "#F04060", borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+                  {selectedMember.is_banned ? "UNBAN" : "BAN"}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

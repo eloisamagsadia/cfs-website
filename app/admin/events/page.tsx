@@ -2,14 +2,18 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Manage Events" };
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 const SC: any = { upcoming: "#3CCE2A", ongoing: "#F5C82A", completed: "#5A7A50", cancelled: "#F04060" };
 
 export default async function AdminEventsPage() {
-  const supabase = createAdminClient();
-  const { data: eventsRaw } = await (((supabase.from("events") as any) as any) as any).select("*, event_registrations(id)").order("date", { ascending: false });
-  const events = eventsRaw as any;
+  const admin = createAdminClient();
+  const { data: events } = await (admin as any)
+    .from("events")
+    .select("*")
+    .order("date", { ascending: false });
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
@@ -27,10 +31,10 @@ export default async function AdminEventsPage() {
           const color = SC[event.status] ?? "#5A7A50";
           const regCount = event.event_registrations?.length ?? 0;
           return (
-            <div key={event.id} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "16px 20px", display: "flex", gap: "16px", alignItems: "center" }}>
+            <div key={event.id} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "16px 20px", display: "flex", gap: "16px", alignItems: "flex-start", flexWrap: "wrap" }}>
               <div style={{ background: color + "20", border: `2px solid ${color}40`, borderRadius: "8px", padding: "10px 14px", textAlign: "center", flexShrink: 0 }}>
                 <div style={{ fontFamily: R, fontSize: "1.2rem", color, lineHeight: 1 }}>{new Date(event.date).getDate()}</div>
-                <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>{new Date(event.date).toLocaleDateString("en-PH", { month: "short" })}</div>
+                <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>{new Date(event.date).toLocaleDateString("en-PH", { month: "short", timeZone: "Asia/Manila" })}</div>
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: R, fontSize: "14px", color: "#F0EAD6", letterSpacing: "1px", marginBottom: "4px" }}>{event.title}</div>
@@ -41,9 +45,11 @@ export default async function AdminEventsPage() {
                   {event.price > 0 ? <span style={{ fontFamily: R, fontSize: "11px", color: "#F07228" }}>₱{Number(event.price).toLocaleString()}</span> : <span style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A" }}>FREE</span>}
                 </div>
               </div>
-              <Link href={`/admin/events/${event.id}/edit`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#8AAA78", border: "1px solid #2C4820", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px", flexShrink: 0 }}>
-                ✏ EDIT
-              </Link>
+              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", width: "100%" }}>
+                <Link href={`/admin/events/${event.id}/tiers`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#F07228", border: "1px solid #F07228", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>🎟 TIERS</Link>
+                <Link href={`/admin/events/${event.id}/tickets`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#3CCE2A", border: "1px solid #3CCE2A", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>🎫 TICKETS</Link>
+                <Link href={`/admin/events/${event.id}/edit`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#8AAA78", border: "1px solid #2C4820", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>✏ EDIT</Link>
+              </div>
             </div>
           );
         })}

@@ -1,4 +1,5 @@
 "use client";
+import { toISOWithPHT, toPHTInputString } from "@/lib/date";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 
@@ -18,7 +19,7 @@ export default function AdminEventEditPage() {
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     title: "", description: "", date: "", location: "", map_url: "",
-    capacity: "", price: "0", is_members_only: false, banner_url: "", status: "upcoming",
+    capacity: "", price: "0", is_members_only: false, banner_url: "", status: "upcoming", sponsor_access_at: "", member_access_at: "",
   });
 
   const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
@@ -32,11 +33,11 @@ export default function AdminEventEditPage() {
         if (!ev) { setError("Event not found"); setLoading(false); return; }
         setForm({
           title: ev.title ?? "", description: ev.description ?? "",
-          date: ev.date ? ev.date.slice(0, 16) : "",
+          date: ev.date ? toPHTInputString(ev.date) : "",
           location: ev.location ?? "", map_url: ev.map_url ?? "",
           capacity: ev.capacity ? String(ev.capacity) : "",
           price: String(ev.price ?? 0), is_members_only: ev.is_members_only ?? false,
-          banner_url: ev.banner_url ?? "", status: ev.status ?? "upcoming",
+          banner_url: ev.banner_url ?? "", status: ev.status ?? "upcoming", sponsor_access_at: ev.sponsor_access_at ? toPHTInputString(ev.sponsor_access_at) : "", member_access_at: ev.member_access_at ? toPHTInputString(ev.member_access_at) : "",
         });
         setLoading(false);
       })
@@ -52,7 +53,7 @@ export default function AdminEventEditPage() {
       const res = await fetch("/api/admin/events", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, ...form, price: Number(form.price), capacity: form.capacity ? Number(form.capacity) : null }),
+        body: JSON.stringify({ id, ...form, date: toISOWithPHT(form.date), price: Number(form.price), capacity: form.capacity ? Number(form.capacity) : null, sponsor_access_at: toISOWithPHT(form.sponsor_access_at), member_access_at: toISOWithPHT(form.member_access_at) }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to save");
@@ -76,7 +77,13 @@ export default function AdminEventEditPage() {
   const inputStyle = { width: "100%", background: "#0F1A0C", border: "2px solid #2C4820", borderRadius: "8px", padding: "10px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
   const labelStyle = { fontFamily: B, fontSize: "12px", color: "#8AAA78", letterSpacing: "1px", marginBottom: "6px", display: "block" };
 
-  if (loading) return <div style={{ fontFamily: R, color: "#5A7A50", letterSpacing: "2px", padding: "40px" }}>LOADING...</div>;
+<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
+      <div className="skeleton skeleton-title" />
+      <div className="skeleton skeleton-card" />
+      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
+      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
+      <div className="skeleton skeleton-card" />
+    </div>
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "720px" }}>
@@ -94,12 +101,12 @@ export default function AdminEventEditPage() {
         <div><label style={labelStyle}>EVENT TITLE *</label><input style={inputStyle} value={form.title} onChange={e => set("title", e.target.value)} /></div>
         <div><label style={labelStyle}>DESCRIPTION</label><textarea style={{ ...inputStyle, minHeight: "80px", resize: "vertical" }} value={form.description} onChange={e => set("description", e.target.value)} /></div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+        <div className="edit-event-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div><label style={labelStyle}>DATE & TIME *</label><input type="datetime-local" style={inputStyle} value={form.date} onChange={e => set("date", e.target.value)} /></div>
           <div><label style={labelStyle}>LOCATION</label><input style={inputStyle} value={form.location} onChange={e => set("location", e.target.value)} /></div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+        <div className="edit-event-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div><label style={labelStyle}>PRICE (₱)</label><input type="number" style={inputStyle} value={form.price} onChange={e => set("price", e.target.value)} /></div>
           <div><label style={labelStyle}>CAPACITY</label><input type="number" style={inputStyle} value={form.capacity} onChange={e => set("capacity", e.target.value)} placeholder="Blank = unlimited" /></div>
         </div>
@@ -127,6 +134,23 @@ export default function AdminEventEditPage() {
           <span style={{ fontFamily: B, fontSize: "13px", color: form.is_members_only ? "#3CCE2A" : "#5A7A50" }}>
             {form.is_members_only ? "Members only" : "Open to everyone"}
           </span>
+        </div>
+      </div>
+
+      {/* Early access */}
+      <div style={{ background: "#B47FE310", border: "1.5px solid #B47FE360", borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div style={{ fontFamily: R, fontSize: "11px", color: "#B47FE3", letterSpacing: "2px" }}>✦ SPONSOR EARLY ACCESS (optional)</div>
+        <div className="edit-event-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+          <div>
+            <label style={labelStyle}>Early Access Opens</label>
+            <input type="datetime-local" style={inputStyle} value={form.sponsor_access_at} onChange={e => set("sponsor_access_at", e.target.value)} />
+            <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>Sponsors get first access from this date & time (PHT)</span>
+          </div>
+          <div>
+            <label style={labelStyle}>General Registration Opens</label>
+            <input type="datetime-local" style={inputStyle} value={form.member_access_at} onChange={e => set("member_access_at", e.target.value)} />
+            <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>Open to all members from this date & time (PHT)</span>
+          </div>
         </div>
       </div>
 

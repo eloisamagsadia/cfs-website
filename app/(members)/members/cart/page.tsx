@@ -47,7 +47,7 @@ export default function CartPage() {
     if (!promoCode.trim()) return;
     setPromoError(""); setPromoLoading(true);
     try {
-      const res = await fetch("/api/codes/validate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: promoCode.trim(), subtotal }) });
+      const res = await fetch("/api/codes/validate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: promoCode.trim(), subtotal, cart_items: items.map(i => ({ product_id: i.product_id, price: i.products?.price ?? 0, quantity: i.quantity })) }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Invalid code");
       setPromoApplied({ code: data.code, discount: data.discount, label: data.discount_type === "percent" ? `${data.discount_value}% OFF` : `₱${data.discount_value} OFF`, promo_code_id: data.promo_code_id });
@@ -79,7 +79,7 @@ export default function CartPage() {
           <Link href="/shop" style={{ fontFamily: R, fontSize: "12px", color: "#F07228", textDecoration: "none", border: "1.5px solid #3D1A0A", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>BROWSE SHOP →</Link>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: "20px", alignItems: "start" }}>
+        <div className="cart-layout" style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: "20px", alignItems: "start" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {items.map((item) => (
               <div key={item.id} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "16px", display: "flex", gap: "14px", alignItems: "center" }}>

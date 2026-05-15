@@ -7,9 +7,13 @@ export default function AdminCodesPage() {
   const [codes,setCodes]=useState<any[]>([]);
   const [filter,setFilter]=useState("ALL");
   const [search,setSearch]=useState("");
-  const [form,setForm]=useState({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:""});
+  const [form,setForm]=useState({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:"",product_ids:[] as string[]});
+  const [products,setProducts]=useState<any[]>([]);
   const [saving,setSaving]=useState(false);
-  useEffect(()=>{loadCodes();},[]);
+  useEffect(()=>{loadCodes();loadProducts();},[]);
+  async function loadProducts(){
+    const res=await fetch("/api/admin/products"); const d=await res.json(); setProducts(d.products??[]);
+  }
   async function loadCodes(){
     const res=await fetch("/api/admin/codes"); const d=await res.json(); setCodes(d.codes??[]);
   }
@@ -21,8 +25,8 @@ export default function AdminCodesPage() {
   async function saveCode(){
     if(!form.code||!form.discount_value)return;
     setSaving(true);
-    await fetch("/api/admin/codes", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({code:form.code,discount_type:form.discount_type,discount_value:Number(form.discount_value),max_uses:form.max_uses?Number(form.max_uses):null,expires_at:form.expires_at||null,is_active:true}) });
-    setForm({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:""});
+    await fetch("/api/admin/codes", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({code:form.code,discount_type:form.discount_type,discount_value:Number(form.discount_value),max_uses:form.max_uses?Number(form.max_uses):null,expires_at:form.expires_at||null,is_active:true,product_ids:form.product_ids}) });
+    setForm({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:"",product_ids:[]});
     await loadCodes();
     setSaving(false);
   }
@@ -73,6 +77,21 @@ export default function AdminCodesPage() {
             <input type="date" value={form.expires_at} onChange={e=>setForm(p=>({...p,expires_at:e.target.value}))} style={inp}/>
           </div>
         </div>
+        <div style={{marginBottom:"14px"}}>
+          <div style={{fontFamily:B,fontSize:"11px",color:"#5A7A50",letterSpacing:"1px",marginBottom:"8px"}}>RESTRICT TO PRODUCTS (leave empty = applies to all)</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:"8px"}}>
+            {products.map((p:any)=>{
+              const selected=form.product_ids.includes(p.id);
+              return(
+                <button key={p.id} onClick={()=>setForm(prev=>({...prev,product_ids:selected?prev.product_ids.filter((id:string)=>id!==p.id):[...prev.product_ids,p.id]}))}
+                  style={{fontFamily:B,fontSize:"11px",background:selected?"#1A3D14":"#243520",border:`1.5px solid ${selected?"#3CCE2A":"#2C4820"}`,borderRadius:"6px",padding:"6px 12px",color:selected?"#3CCE2A":"#8AAA78",cursor:"pointer"}}>
+                  {selected?"✓ ":""}{p.name} — ₱{Number(p.price).toLocaleString()}
+                </button>
+              );
+            })}
+            {products.length===0&&<span style={{fontFamily:B,fontSize:"12px",color:"#3A5A30"}}>No products found</span>}
+          </div>
+        </div>
         <button onClick={saveCode} disabled={saving||!form.code} style={{fontFamily:R,fontSize:"12px",background:saving||!form.code?"#243520":"#F5C82A",color:saving||!form.code?"#5A7A50":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px 24px",cursor:"pointer",letterSpacing:"1.5px"}}>
           {saving?"SAVING...":"SAVE CODE ✦"}
         </button>
@@ -97,7 +116,8 @@ export default function AdminCodesPage() {
           const status=getStatus(c);
           return(
             <div key={c.id} style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",padding:"12px 18px",borderBottom:"1px solid #2C4820",alignItems:"center",gap:"0"}}>
-              <div style={{fontFamily:R,fontSize:"15px",color:"#F5C82A",letterSpacing:"2px"}}>{c.code}</div>
+              <div><div style={{fontFamily:R,fontSize:"15px",color:"#F5C82A",letterSpacing:"2px"}}>{c.code}</div>
+              <div style={{fontFamily:B,fontSize:"10px",color:"#5A7A50",marginTop:"2px"}}>{c.product_ids?.length>0?c.product_ids.map((id:string)=>{const p=products.find((pr:any)=>pr.id===id);return p?.name??id;}).join(", "):"All products"}</div></div>
               <div style={{fontFamily:R,fontSize:"13px",color:"#F07228"}}>{c.discount_type==="percent"?`${c.discount_value}% OFF`:`₱${c.discount_value} OFF`}</div>
               <div style={{fontFamily:B,fontSize:"12px",color:"#8AAA78"}}>{c.used_count??0}/{c.max_uses??"∞"}</div>
               <div style={{fontFamily:B,fontSize:"12px",color:"#8AAA78"}}>{c.expires_at?new Date(c.expires_at).toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"}):"Never"}</div>

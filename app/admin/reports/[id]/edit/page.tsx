@@ -65,7 +65,13 @@ export default function AdminReportEditPage() {
   const inputStyle = { width: "100%", background: "#0F1A0C", border: "2px solid #2C4820", borderRadius: "8px", padding: "10px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
   const labelStyle = { fontFamily: B, fontSize: "12px", color: "#8AAA78", letterSpacing: "1px", marginBottom: "6px", display: "block" };
 
-  if (loading) return <div style={{ fontFamily: R, color: "#5A7A50", letterSpacing: "2px", padding: "40px" }}>LOADING...</div>;
+<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
+      <div className="skeleton skeleton-title" />
+      <div className="skeleton skeleton-card" />
+      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
+      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
+      <div className="skeleton skeleton-card" />
+    </div>
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "720px" }}>

@@ -5,7 +5,12 @@ export async function GET(req: NextRequest) {
   const supabase = createAdminClient();
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
-  if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  if (!id) {
+    // List all products
+    const { data, error } = await (supabase.from("products") as any).select("id, name, price, images").order("name", { ascending: true });
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ products: data ?? [] });
+  }
   const { data, error } = await (((supabase.from("products") as any) as any) as any).select("*").eq("id", id).single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ product: data });

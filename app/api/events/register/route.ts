@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
   const admin = createAdminClient();
   const { data: reg, error } = await admin
     .from("event_registrations")
-    .insert({ event_id, user_id: userId, ticket_type, payment_status: "free", amount_paid: 0 })
+    .insert({ event_id, user_id: userId, ticket_type, payment_status: "free" })
     .select().single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

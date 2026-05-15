@@ -40,9 +40,23 @@ export default authMiddleware({
         return NextResponse.redirect(url);
       }
       const role = (sessionClaims?.metadata as { role?: string })?.role;
-      if (role !== "admin") {
+      if (!["admin", "super_admin"].includes(role ?? "")) {
         const url = req.nextUrl.clone();
-        url.pathname = "/members/community";
+        url.pathname = "/members";
+        return NextResponse.redirect(url);
+      }
+    }
+    if (pathname.startsWith("/super")) {
+      if (!userId) {
+        const url = req.nextUrl.clone();
+        url.pathname = "/sign-in";
+        url.searchParams.set("redirect_url", pathname);
+        return NextResponse.redirect(url);
+      }
+      const role = (sessionClaims?.metadata as { role?: string })?.role;
+      if (role !== "super_admin") {
+        const url = req.nextUrl.clone();
+        url.pathname = "/members";
         return NextResponse.redirect(url);
       }
     }

@@ -15,6 +15,7 @@ interface CommunityFeedProps {
 
 export default function CommunityFeed({ initialPosts, categories, currentUser }: CommunityFeedProps) {
   const [posts, setPosts] = useState(initialPosts ?? []);
+  const [imagePostCount, setImagePostCount] = useState(currentUser?.image_post_count ?? 0);
   const [activeCategory, setActiveCategory] = useState("");
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
@@ -33,7 +34,7 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
         if (payload.new.is_hidden) return;
         const { data } = await supabase
           .from("community_posts")
-          .select("*, profiles:user_id(id,display_name,avatar_url), community_reactions(id,user_id,reaction_type), community_comments(id)")
+          .select("*, profiles:user_id(id,display_name,avatar_url,role), community_reactions(id,user_id,reaction_type), community_comments(id)")
           .eq("id", payload.new.id).single();
         if (!data) return;
         if (data.user_id === currentUser.id) return;
@@ -132,8 +133,9 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
     fetchPosts(activeCategory, "");
   }
 
-  function handlePostCreated(newPost: any) {
+  function handlePostCreated(newPost: any, newCount?: number) {
     setPosts(prev => [newPost, ...prev]);
+    if (newCount !== undefined) setImagePostCount(newCount);
   }
 
   function handlePostDeleted(postId: string) {
@@ -189,7 +191,7 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
       )}
 
       {/* Create post */}
-      <CreatePost categories={categories} currentUser={currentUser} onPostCreated={handlePostCreated} />
+      <CreatePost categories={categories} currentUser={currentUser} onPostCreated={handlePostCreated} imagePostCount={imagePostCount} />
 
       {/* Search results label */}
       {search && (

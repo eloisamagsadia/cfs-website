@@ -3,6 +3,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = { title: "Account" };
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
@@ -25,6 +28,7 @@ export default async function AccountPage() {
     { title:"SETTINGS",  desc:"Notifications, privacy, 2FA",             href:"/members/account/settings", color:"#F5C82A", bg:"#3D3000" },
     { title:"MY EVENTS", desc:"Registered events & tickets",             href:"/members/events",           color:"#F07228", bg:"#3D1A0A" },
     { title:"MY ORDERS", desc:"Order history & tracking",                href:"/members/orders",           color:"#8EE440", bg:"#1E3010" },
+    { title:"MY MEDIA",  desc:"Images you've uploaded across the site",   href:"/members/account/media",    color:"#F07228", bg:"#3D1A0A" },
   ];
 
   return (

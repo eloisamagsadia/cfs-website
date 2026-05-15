@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     : { buffer: rawBuffer, contentType: file.type };
 
   const ext = isImage ? "webp" : (file.name.split(".").pop() ?? "bin");
-  const key = `${folder}/${nanoid()}.${ext}`;
+  const key = `${folder}/${userId}/${nanoid()}.${ext}`;
 
   await r2.send(new PutObjectCommand({
     Bucket: R2_BUCKET,

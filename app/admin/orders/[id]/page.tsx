@@ -7,7 +7,7 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 const PC: any = { paid: "#3CCE2A", pending: "#F5C82A", failed: "#F04060", free: "#8EE440", cancelled: "#5A7A50" };
 const OC: any = { processing: "#F07228", shipped: "#8EE440", delivered: "#3CCE2A", pending: "#F5C82A", cancelled: "#F04060" };
 const ORDER_STATUSES = ["pending", "processing", "shipped", "delivered", "cancelled"];
-const PAYMENT_STATUSES = ["pending", "paid", "failed", "cancelled", "free"];
+const PAYMENT_STATUSES = ["pending", "paid", "failed", "cancelled"];
 
 export default function AdminOrderDetailPage() {
   const router = useRouter();
@@ -47,7 +47,13 @@ export default function AdminOrderDetailPage() {
     finally { setSaving(false); }
   };
 
-  if (loading) return <div style={{ fontFamily: R, color: "#5A7A50", letterSpacing: "2px", padding: "40px" }}>LOADING...</div>;
+<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
+      <div className="skeleton skeleton-title" />
+      <div className="skeleton skeleton-card" />
+      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
+      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
+      <div className="skeleton skeleton-card" />
+    </div>
   if (!order) return <div style={{ fontFamily: R, color: "#F04060", padding: "40px" }}>Order not found.</div>;
 
   const addr = order.shipping_address;

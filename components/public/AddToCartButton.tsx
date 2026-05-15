@@ -30,7 +30,7 @@ export default function AddToCartButton({ productId, isLoggedIn, inStock, accent
     setLoading(true); setError("");
     try {
       const ok = await addToCart();
-      if (ok) { setAdded(true); setTimeout(() => setAdded(false), 3000); }
+      if (ok) { setAdded(true); }
     } catch (e: any) {
       setError(e.message ?? "Failed to add to cart.");
     } finally {

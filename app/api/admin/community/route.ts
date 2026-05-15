@@ -6,7 +6,7 @@ async function requireAdmin() {
   const { userId, sessionClaims } = auth();
   if (!userId) return null;
   const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== "admin") return null;
+  if (!["admin", "super_admin"].includes(role ?? "")) return null;
   return userId;
 }
 

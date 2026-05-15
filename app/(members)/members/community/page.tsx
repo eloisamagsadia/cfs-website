@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import CommunityFeed from "@/components/community/CommunityFeed";
 import type { Metadata } from "next";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = { title:"Community" };
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -23,7 +26,7 @@ export default async function CommunityPage() {
   ] = await Promise.all([
     (((supabase.from("profiles") as any) as any) as any).select("*").eq("id", userId).single(),
     (((supabase.from("community_posts") as any) as any) as any)
-      .select("*, profiles:user_id(id,display_name,avatar_url), community_reactions(id,user_id,reaction_type), community_comments(id), community_reposts(id,user_id)")
+      .select("*, profiles:user_id(id,display_name,avatar_url,role), community_reactions(id,user_id,reaction_type), community_comments(id), community_reposts(id,user_id)")
       .eq("is_hidden", false)
       .order("created_at", { ascending: false })
       .limit(20),
@@ -32,7 +35,7 @@ export default async function CommunityPage() {
   ]);
 
   return (
-    <div style={{ display:"flex", gap:"24px" }}>
+    <div className="community-layout" style={{ display:"flex", gap:"24px" }}>
 
       {/* Main feed */}
       <div style={{ flex:1, minWidth:0 }}>
@@ -54,7 +57,7 @@ export default async function CommunityPage() {
       </div>
 
       {/* Right sidebar */}
-      <div style={{ width:"240px", flexShrink:0, display:"flex", flexDirection:"column", gap:"14px" }}>
+      <div className="community-sidebar" style={{ width:"240px", flexShrink:0, display:"flex", flexDirection:"column", gap:"14px" }}>
 
         {/* Community stats */}
         <div style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"16px" }}>

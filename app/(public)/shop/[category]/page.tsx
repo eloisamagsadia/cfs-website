@@ -1,6 +1,9 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
 const COLORS:Record<string,string>={apparel:"#F07228",photocards:"#F5C82A",accessories:"#8EE440",bundles:"#F04060",default:"#3CCE2A"};

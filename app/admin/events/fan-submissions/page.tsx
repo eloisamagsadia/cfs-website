@@ -1,0 +1,115 @@
+"use client";
+import { useEffect, useState } from "react";
+
+const R = "var(--font-righteous,'Righteous',sans-serif)";
+const B = "var(--font-barlow,'Barlow',sans-serif)";
+
+const ICONS: Record<string, string> = { tiktok:"🎵", twitter:"🐦", instagram:"📸", youtube:"▶️", facebook:"📘", other:"🔗" };
+
+export default function AdminFanSubmissionsPage() {
+  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("pending");
+
+  useEffect(() => { load(); }, [filter]);
+
+  async function load() {
+    setLoading(true);
+    const res = await fetch(`/api/events/fan-submissions?status=${filter}`);
+    const d = await res.json();
+    setSubmissions(d.submissions ?? []);
+    setLoading(false);
+  }
+
+  async function updateStatus(id: string, status: string) {
+    await fetch("/api/events/fan-submissions", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status }),
+    });
+    load();
+  }
+
+  async function remove(id: string) {
+    await fetch(`/api/events/fan-submissions?id=${id}`, { method: "DELETE" });
+    load();
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+        <div>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>FAN SUBMISSIONS</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>{submissions.length} {filter} submissions</p>
+        </div>
+      </div>
+
+      {/* Filter tabs */}
+      <div style={{ display: "flex", gap: "8px" }}>
+        {["pending", "approved", "rejected", "all"].map(f => (
+          <button key={f} onClick={() => setFilter(f)} style={{ fontFamily: B, fontSize: "11px", background: filter === f ? "#2C1A0A" : "#1A2614", color: filter === f ? "#F07228" : "#5A7A50", border: `1.5px solid ${filter === f ? "#F07228" : "#2C4820"}`, borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px", textTransform: "uppercase" as const }}>
+            {f}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
+      <div className="skeleton skeleton-title" />
+      <div className="skeleton skeleton-card" />
+      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
+      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
+      <div className="skeleton skeleton-card" />
+    </div>
+      ) : submissions.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "48px", fontFamily: R, color: "#5A7A50", letterSpacing: "1px" }}>NO {filter.toUpperCase()} SUBMISSIONS</div>
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "12px" }}>
+          {submissions.map((s: any) => (
+            <div key={s.id} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
+              {/* Thumbnail */}
+              <div style={{ height: "150px", background: "#243520", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+                {s.thumbnail_url
+                  ? <img src={s.thumbnail_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : <span style={{ fontSize: "48px" }}>{ICONS[s.platform] ?? "🔗"}</span>
+                }
+                <div style={{ position: "absolute", top: "8px", left: "8px", background: "rgba(0,0,0,0.7)", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: "#8AAA78" }}>
+                  {ICONS[s.platform]} {s.platform}
+                </div>
+                <div style={{ position: "absolute", top: "8px", right: "8px", background: s.status === "approved" ? "#1A3D14" : s.status === "rejected" ? "#3D0A18" : "#2C1A0A", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: s.status === "approved" ? "#3CCE2A" : s.status === "rejected" ? "#F04060" : "#F07228" }}>
+                  {s.status}
+                </div>
+              </div>
+
+              {/* Info */}
+              <div style={{ padding: "12px 14px" }}>
+                {s.caption && <p style={{ fontFamily: B, fontSize: "12px", color: "#F0EAD6", marginBottom: "6px" }}>{s.caption}</p>}
+                <a href={s.url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "11px", color: "#3CCE2A", wordBreak: "break-all" as const }}>{s.url}</a>
+                <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", marginTop: "6px" }}>
+                  {new Date(s.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div style={{ display: "flex", gap: "6px", padding: "0 14px 14px" }}>
+                {s.status !== "approved" && (
+                  <button onClick={() => updateStatus(s.id, "approved")} style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "transparent", color: "#3CCE2A", border: "1.5px solid #3CCE2A", borderRadius: "6px", padding: "7px", cursor: "pointer" }}>
+                    ✓ Approve
+                  </button>
+                )}
+                {s.status !== "rejected" && (
+                  <button onClick={() => updateStatus(s.id, "rejected")} style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "transparent", color: "#F04060", border: "1.5px solid #F04060", borderRadius: "6px", padding: "7px", cursor: "pointer" }}>
+                    ✕ Reject
+                  </button>
+                )}
+                <button onClick={() => remove(s.id)} style={{ fontFamily: B, fontSize: "11px", background: "transparent", color: "#5A7A50", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "7px 10px", cursor: "pointer" }}>
+                  🗑
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

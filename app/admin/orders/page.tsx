@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -8,6 +9,7 @@ const PC: any = { paid: "#3CCE2A", pending: "#F5C82A", failed: "#F04060", free: 
 const OC: any = { processing: "#F07228", shipped: "#8EE440", delivered: "#3CCE2A", pending: "#F5C82A", cancelled: "#F04060" };
 
 export default function AdminOrdersPage() {
+  const router = useRouter();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
@@ -41,7 +43,10 @@ export default function AdminOrdersPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>ORDERS</h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "4px" }}>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px" }}>ORDERS</h1>
+          <button onClick={() => router.push("/admin/orders/create")} style={{ fontFamily: R, fontSize: "11px", background: "#F07228", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>+ ADD ORDER</button>
+        </div>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>
           {orders.length} orders · <span style={{ color: "#F07228" }}>₱{totalRevenue.toLocaleString()} revenue</span>
         </p>
@@ -73,7 +78,13 @@ export default function AdminOrdersPage() {
 
       {/* Orders list */}
       {loading ? (
-        <div style={{ fontFamily: R, color: "#5A7A50", letterSpacing: "2px", padding: "40px", textAlign: "center" }}>LOADING...</div>
+<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
+      <div className="skeleton skeleton-title" />
+      <div className="skeleton skeleton-card" />
+      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
+      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
+      <div className="skeleton skeleton-card" />
+    </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           {filtered.map((o: any) => (

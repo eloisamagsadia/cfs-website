@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 
 export const metadata: Metadata = { title: "Shop — CFS" };
 
@@ -35,6 +38,12 @@ export default async function ShopPage() {
     .select("*")
     .order("name", { ascending: true });
 
+  const { data: products } = await supabase
+    .from("products")
+    .select("*, product_categories(name, slug)")
+    .eq("is_active", true)
+    .order("created_at", { ascending: false });
+
   const display = cats ?? [];
 
   return (
@@ -64,17 +73,13 @@ export default async function ShopPage() {
       {/* ── CATEGORIES ── */}
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "48px 24px" }}>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "28px" }}>
-          <span style={{ fontFamily: R, fontSize: "12px", color: "#5A7A50", letterSpacing: "2px" }}>BROWSE CATEGORIES</span>
-          <div style={{ flex: 1, height: "1px", background: "#2C4820" }} />
-        </div>
-
+        <div style={{display:"none"}}>
         {display.length === 0 ? (
           <div style={{ textAlign: "center", padding: "60px 0" }}>
 <p style={{ fontFamily: B, fontSize: "14px", color: "#3A5A30" }}>Shop coming soon — stay tuned!</p>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: "16px" }}>
+          <div className="stagger" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: "16px" }}>
             {display.map((cat: any, i: number) => {
               const accent = CAT_COLORS[i % CAT_COLORS.length];
               return (
@@ -98,6 +103,41 @@ export default async function ShopPage() {
             })}
           </div>
         )}
+
+        {/* All Products */}
+        </div>
+        <div style={{ marginTop: "48px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "28px" }}>
+            <span style={{ fontFamily: R, fontSize: "12px", color: "#5A7A50", letterSpacing: "2px" }}>ALL PRODUCTS</span>
+            <div style={{ flex: 1, height: "1px", background: "#2C4820" }} />
+          </div>
+          <div className="stagger" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: "16px" }}>
+            {(products ?? []).map((p: any) => (
+              <Link key={p.id} href={`/shop/${p.product_categories?.slug}/${p.id}`} style={{ textDecoration: "none", display: "flex", flexDirection: "column" }}>
+                <div className="cat-card" style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "14px", overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }} className="card-hover">
+                  <div style={{ height: "200px", background: "#243520", overflow: "hidden" }}>
+                    {p.images?.[0]
+                      ? <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px" }}>🛍</div>
+                    }
+                  </div>
+                  <div style={{ padding: "16px" }}>
+                    <div style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "1px", marginBottom: "6px" }}>{p.name}</div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontFamily: R, fontSize: "15px", color: "#F07228" }}>₱{Number(p.price).toLocaleString()}</span>
+                      <span style={{ fontFamily: B, fontSize: "11px", color: p.stock > 0 ? "#3CCE2A" : "#F04060" }}>
+                        {p.stock > 0 ? "In stock" : "Out of stock"}
+                      </span>
+                    </div>
+                    {p.product_categories?.name && (
+                      <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", marginTop: "4px" }}>{p.product_categories.name}</div>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
 
         {/* Members only note */}
         <div style={{ marginTop: "40px", background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "12px", padding: "18px 24px", display: "flex", alignItems: "center", gap: "14px" }}>

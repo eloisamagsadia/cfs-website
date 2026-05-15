@@ -3,6 +3,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import MemberDirectory from "@/components/community/MemberDirectory";
 import type { Metadata } from "next";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = { title:"Member Directory" };
 
 export default async function MembersDirectoryPage() {

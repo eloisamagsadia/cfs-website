@@ -3,6 +3,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect, notFound } from "next/navigation";
 import PostDetail from "@/components/community/PostDetail";
 import type { Metadata } from "next";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 
 export const metadata: Metadata = { title: "Post" };
 

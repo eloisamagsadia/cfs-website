@@ -10,14 +10,15 @@ export default function AdminEditProductPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [form, setForm] = useState({ name:"", description:"", price:"", stock:"", is_active:true, images:[""] });
+  const [uploading, setUploading] = useState<number | null>(null);
+  const [form, setForm] = useState({ name:"", description:"", price:"", stock:"", weight_kg:"0.5", is_active:true, images:[""] });
   useEffect(() => { loadProduct(); }, []);
   async function loadProduct() {
     const res = await fetch("/api/admin/products?id=" + params.id);
     const data = await res.json();
     if (!res.ok || !data.product) { setError("Failed to load: " + (data.error ?? "not found")); setLoading(false); return; }
     const p = data.product;
-    setForm({ name:p.name??"", description:p.description??"", price:String(p.price??""), stock:String(p.stock??""), is_active:p.is_active??true, images:p.images?.length?p.images:[""] });
+    setForm({ name:p.name??"", description:p.description??"", price:String(p.price??""), stock:String(p.stock??""), weight_kg:String(p.weight_kg??0.5), is_active:p.is_active??true, images:p.images?.length?p.images:[""] });
     setLoading(false);
   }
   function upd(k: string, v: any){setForm(p=>({...p,[k]:v}));}
@@ -26,7 +27,7 @@ export default function AdminEditProductPage() {
     setSaving(true);setError("");setSuccess("");
     const res = await fetch("/api/admin/products?id=" + params.id, {
       method:"PUT", headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({name:form.name,description:form.description||null,price:Number(form.price),stock:Number(form.stock)||0,is_active:form.is_active,images:form.images.filter(Boolean)})
+      body:JSON.stringify({name:form.name,description:form.description||null,price:Number(form.price),stock:Number(form.stock)||0,weight_kg:Number(form.weight_kg)||0.5,is_active:form.is_active,images:form.images.filter(Boolean)})
     });
     const data = await res.json();
     setSaving(false);
@@ -37,6 +38,22 @@ export default function AdminEditProductPage() {
     if(!confirm("Delete this product?"))return;
     await fetch("/api/admin/products?id=" + params.id, {method:"DELETE"});
     router.push("/admin/shop");
+  }
+  async function uploadImage(index: number, file: File) {
+    setUploading(index);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "products");
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
+    const data = await res.json();
+    if (data.url) {
+      const a = [...form.images];
+      a[index] = data.url;
+      upd("images", a);
+    } else {
+      setError(data.error ?? "Upload failed");
+    }
+    setUploading(null);
   }
   const inp={width:"100%",background:"#243520",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"10px 14px",color:"#F0EAD6",fontFamily:B,fontSize:"14px",outline:"none",boxSizing:"border-box" as const};
   const lbl={fontFamily:B,fontSize:"11px",color:"#5A7A50",letterSpacing:"1px",textTransform:"uppercase",display:"block",marginBottom:"6px"};
@@ -52,16 +69,41 @@ export default function AdminEditProductPage() {
         <div style={{background:"#1A2614",border:"2px solid #2C4820",borderRadius:"12px",padding:"24px",display:"flex",flexDirection:"column",gap:"14px"}}>
           <div><label style={lbl}>Name *</label><input style={inp} value={form.name} onChange={e=>upd("name",e.target.value)}/></div>
           <div><label style={lbl}>Description</label><textarea style={{...inp,resize:"vertical",minHeight:"80px"}} value={form.description} onChange={e=>upd("description",e.target.value)}/></div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"12px"}}>
             <div><label style={lbl}>Price (P) *</label><input type="number" style={inp} value={form.price} onChange={e=>upd("price",e.target.value)}/></div>
             <div><label style={lbl}>Stock</label><input type="number" style={inp} value={form.stock} onChange={e=>upd("stock",e.target.value)}/></div>
+            <div><label style={lbl}>Weight (kg)</label><input type="number" step="0.01" style={inp} value={form.weight_kg} onChange={e=>upd("weight_kg",e.target.value)} placeholder="e.g. 0.3"/></div>
           </div>
           <div>
             <label style={lbl}>Images</label>
-            {form.images.map((img,i)=>(
-              <div key={i} style={{display:"flex",gap:"8px",marginBottom:"6px"}}>
-                <input style={{...inp,flex:1}} value={img} onChange={e=>{const a=[...form.images];a[i]=e.target.value;upd("images",a);}} placeholder="Image URL"/>
-                {form.images.length>1&&<button onClick={()=>upd("images",form.images.filter((_,j)=>j!==i))} style={{background:"#3D0A18",border:"1.5px solid #F04060",borderRadius:"6px",color:"#F04060",padding:"8px 10px",cursor:"pointer"}}>X</button>}
+            {form.images.map((img, i) => (
+              <div key={i} style={{marginBottom:"10px"}}>
+                <div
+                  onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor="#3CCE2A"; }}
+                  onDragLeave={e => { e.currentTarget.style.borderColor="#2C4820"; }}
+                  onDrop={e => {
+                    e.preventDefault();
+                    e.currentTarget.style.borderColor="#2C4820";
+                    const file = e.dataTransfer.files?.[0];
+                    if (file) uploadImage(i, file);
+                  }}
+                  style={{border:"2px dashed #2C4820",borderRadius:"10px",padding:"16px",textAlign:"center",cursor:"pointer",transition:"border-color 0.15s",background:"#0F1A0B"}}
+                >
+                  {img ? (
+                    <div style={{position:"relative",display:"inline-block"}}>
+                      <img src={img} alt="" style={{height:"120px",width:"120px",borderRadius:"8px",objectFit:"cover",display:"block"}} />
+                      <button onClick={()=>upd("images",form.images.map((v,j)=>j===i?"":v))}
+                        style={{position:"absolute",top:"-8px",right:"-8px",background:"#F04060",border:"none",borderRadius:"50%",width:"22px",height:"22px",color:"#fff",cursor:"pointer",fontSize:"12px",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+                    </div>
+                  ) : (
+                    <label style={{cursor:"pointer",display:"block"}}>
+                      <div style={{fontSize:"28px",marginBottom:"6px"}}>{uploading===i ? "⏳" : "⬆"}</div>
+                      <div style={{fontFamily:B,fontSize:"12px",color:"#5A7A50"}}>{uploading===i ? "Uploading..." : "Drop image here or click to upload"}</div>
+                      <input type="file" accept="image/*" style={{display:"none"}} onChange={e=>{if(e.target.files?.[0])uploadImage(i,e.target.files[0]);}}/>
+                    </label>
+                  )}
+                </div>
+                <input style={{...inp,marginTop:"6px",fontSize:"11px",color:"#5A7A50"}} value={img} onChange={e=>{const a=[...form.images];a[i]=e.target.value;upd("images",a);}} placeholder="Or paste image URL"/>
               </div>
             ))}
             <button onClick={()=>upd("images",[...form.images,""])} style={{fontFamily:R,fontSize:"11px",color:"#3CCE2A",background:"transparent",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"6px 12px",cursor:"pointer"}}>+ ADD IMAGE</button>

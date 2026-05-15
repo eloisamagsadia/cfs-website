@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { toISOWithPHT } from "@/lib/date";
 import { useRouter } from "next/navigation";
 import FileUpload from "@/components/admin/FileUpload";
 
@@ -8,7 +9,7 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 export default function CreateEventPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ title: "", description: "", date: "", location: "", map_url: "", price: "0", capacity: "", is_members_only: false, banner_url: "", status: "upcoming" });
+  const [form, setForm] = useState({ title: "", description: "", date: "", location: "", map_url: "", price: "0", capacity: "", is_members_only: false, banner_url: "", status: "upcoming", sponsor_access_at: "", member_access_at: "" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const upd = (k: string, v: any) => setForm(p => ({ ...p, [k]: v }));
@@ -24,7 +25,7 @@ export default function CreateEventPage() {
     try {
       const res = await fetch("/api/admin/events", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, price: Number(form.price) || 0, capacity: form.capacity ? Number(form.capacity) : null }),
+        body: JSON.stringify({ ...form, date: toISOWithPHT(form.date), price: Number(form.price) || 0, capacity: form.capacity ? Number(form.capacity) : null, sponsor_access_at: toISOWithPHT(form.sponsor_access_at), member_access_at: toISOWithPHT(form.member_access_at) }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to create");
@@ -86,6 +87,23 @@ export default function CreateEventPage() {
           <input type="checkbox" checked={form.is_members_only} onChange={e => upd("is_members_only", e.target.checked)} style={{ width: "18px", height: "18px", accentColor: "#3CCE2A" }} />
           <span style={{ fontFamily: R, fontSize: "12px", color: "#8AAA78", letterSpacing: "1px" }}>MEMBERS ONLY EVENT</span>
         </label>
+
+        {/* Early access */}
+        <div style={{ background: "#B47FE310", border: "1.5px solid #B47FE360", borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#B47FE3", letterSpacing: "2px" }}>✦ SPONSOR EARLY ACCESS (optional)</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div>
+              <label style={labelStyle}>Early Access Opens</label>
+              <input type="datetime-local" style={inputStyle} value={form.sponsor_access_at} onChange={e => upd("sponsor_access_at", e.target.value)} />
+              <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>Sponsors get first access from this date & time (PHT)</span>
+            </div>
+            <div>
+              <label style={labelStyle}>General Registration Opens</label>
+              <input type="datetime-local" style={inputStyle} value={form.member_access_at} onChange={e => upd("member_access_at", e.target.value)} />
+              <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>Open to all members from this date & time (PHT)</span>
+            </div>
+          </div>
+        </div>
 
         <div style={{ display: "flex", gap: "10px" }}>
           <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "transparent", border: "1.5px solid #2C4820", borderRadius: "6px", color: "#5A7A50", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
