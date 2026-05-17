@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
+import { useState, useEffect } from "react";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -46,6 +47,19 @@ const sections = [
 export default function MembersMorePage() {
   const router = useRouter();
   const { signOut } = useClerk();
+  const [unreadMessages, setUnreadMessages] = useState(0);
+  useEffect(() => {
+    async function fetchCount() {
+      try {
+        const res = await fetch("/api/chat/unread");
+        const d = await res.json();
+        setUnreadMessages(d.count ?? 0);
+      } catch {}
+    }
+    fetchCount();
+    const interval = setInterval(fetchCount, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   async function handleSignOut() {
     await signOut();
@@ -65,9 +79,12 @@ export default function MembersMorePage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
             {section.items.map(item => (
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
-                <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px", position: "relative" }}>
                   <span style={{ color: "#3CCE2A", flexShrink: 0 }}>{item.icon}</span>
-                  <span style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>{item.label}</span>
+                  <span style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6", flex: 1 }}>{item.label}</span>
+                  {item.label === "Messages" && unreadMessages > 0 && (
+                    <span style={{ background: "#F04060", color: "#F0EAD6", borderRadius: "20px", minWidth: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", padding: "0 4px" }}>{unreadMessages}</span>
+                  )}
                 </div>
               </Link>
             ))}

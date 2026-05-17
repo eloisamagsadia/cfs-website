@@ -190,7 +190,17 @@
 .cfs-logo:hover .cfs-logo-inner { border-color: #3CCE2A !important; }
 
 /* ── Responsive ── */
-.desktop-sidebar { display: block; }
+.desktop-sidebar {
+  display: block;
+  position: sticky;
+  top: 80px;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex-shrink: 0;
+}
+.desktop-sidebar::-webkit-scrollbar { display: none; }
 .mobile-only { display: none; }
 
 @media (max-width: 768px) {
@@ -464,3 +474,125 @@ input:focus, textarea:focus, select:focus {
 /* Hide scrollbar on chat room messages area */
 .chat-messages::-webkit-scrollbar { display: none; }
 .chat-messages { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Product detail mobile */
+@media (max-width: 768px) {
+  .product-detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+}
+
+/* Product image gallery mobile */
+@media (max-width: 768px) {
+  .product-main-image {
+    height: 300px !important;
+  }
+}
+
+/* Public page container mobile padding */
+@media (max-width: 768px) {
+  .public-container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+/* Navbar mobile padding */
+@media (max-width: 768px) {
+  nav {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+/* Create post toolbar */
+.post-toolbar { flex-wrap: wrap; }
+.post-toolbar > div:last-child { margin-left: auto; }
+
+@media (max-width: 768px) {
+  .post-toolbar { flex-direction: column; align-items: stretch !important; }
+  .post-toolbar > div { width: 100%; }
+  .post-toolbar > div:last-child { margin-left: 0; display: flex; gap: 8px; }
+  .post-toolbar > div:last-child button { flex: 1; }
+}
+
+/* ── Community Page Layout ── */
+.community-layout {
+  display: flex;
+  gap: 24px;
+}
+.community-main {
+  flex: 1;
+  min-width: 0;
+}
+.community-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+.community-members-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-righteous, 'Righteous', sans-serif);
+  font-size: 11px;
+  color: #3CCE2A;
+  text-decoration: none;
+  border: 1.5px solid #2C4820;
+  border-radius: 20px;
+  padding: 8px 16px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  background: transparent;
+  transition: background 0.15s;
+}
+.community-members-btn:hover {
+  background: #1A3D14;
+}
+.community-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 80px;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.community-sidebar::-webkit-scrollbar { display: none; }
+@media (max-width: 768px) {
+  .community-layout {
+    flex-direction: column;
+  }
+  .community-sidebar {
+    display: none;
+  }
+  .community-header {
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}
+
+/* ── Suppress browser focus rings on custom inputs ── */
+textarea:focus,
+input:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Community Feed ── */
+.cf-search-input:focus { outline: none !important; box-shadow: none !important; border-color: #3CCE2A !important; }
+.cf-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
+.cf-chips::-webkit-scrollbar { display: none; }
+.cf-chip { font-family: var(--font-righteous,'Righteous',sans-serif); font-size: 11px; border-radius: 20px; padding: 6px 14px; cursor: pointer; letter-spacing: 1px; white-space: nowrap; border: 1.5px solid #2C4820; background: transparent; color: #5A7A50; transition: all 0.15s; flex-shrink: 0; }
+.cf-chip:hover { border-color: #3CCE2A44; color: #8AAA78; }
+.cf-chip.active { background: #1A3D14; border-color: #3CCE2A; color: #3CCE2A; }
+.cf-new-alert { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #1A3D14; border: 1.5px solid #3CCE2A; border-radius: 10px; padding: 10px; margin-bottom: 12px; cursor: pointer; transition: background 0.15s; }
+.cf-new-alert:hover { background: #223D1A; }

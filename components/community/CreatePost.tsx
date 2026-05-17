@@ -205,7 +205,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
   const canPost = (content.trim() || mediaFiles.length > 0 || videoEmbed) && !submitting;
 
   return (
-    <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", padding: "16px 18px", marginBottom: "12px" }}>
+    <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", padding: "20px", marginBottom: "12px" }}>
       <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
         {/* Avatar */}
         <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "linear-gradient(135deg,#3CCE2A,#F07228)", padding: "2px", flexShrink: 0 }}>
@@ -223,8 +223,8 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
             onChange={e => { setContent(e.target.value); if (e.target.value) setExpanded(true); }}
             onFocus={() => setExpanded(true)}
             placeholder="What's on your mind? Use @username to mention someone ♪"
-            rows={expanded ? 3 : 1}
-            style={{ width: "100%", background: "transparent", border: "none", borderBottom: expanded ? "1px solid #2C4820" : "none", padding: "6px 0", color: "#F0EAD6", fontFamily: B, fontSize: "14px", outline: "none", resize: "none", boxSizing: "border-box", lineHeight: 1.6, transition: "all 0.2s" }}
+            rows={expanded ? 4 : 2}
+            style={{ width: "100%", background: "transparent", border: "none", borderBottom: expanded ? "1px solid #2C4820" : "none", padding: "6px 0", color: "#F0EAD6", fontFamily: B, fontSize: "14px", outline: "none", resize: "none", WebkitAppearance: "none", boxSizing: "border-box", lineHeight: 1.6, transition: "all 0.2s" }}
           />
 
           {/* Photo previews */}
@@ -308,8 +308,8 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
             </div>
           )}
 
-          {(expanded || true) && (
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "12px", flexWrap: "wrap", gap: "8px" }}>
+          {expanded && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", marginTop: "12px", flexWrap: "wrap" }}>
               {/* Left: photo + video + category */}
               <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
 
@@ -359,7 +359,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
               </div>
 
               {/* Right: cancel + post */}
-              <div style={{ display: "flex", gap: "8px" }}>
+              <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end", marginLeft: "auto" }}>
                 <button onClick={() => { setExpanded(false); setContent(""); clearMedia(); }}
                   style={{ fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #2C4820", borderRadius: "6px", color: "#5A7A50", padding: "7px 12px", cursor: "pointer", letterSpacing: "1px" }}>
                   CANCEL

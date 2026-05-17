@@ -144,7 +144,7 @@ export default function CartPage() {
                 <span style={{ fontFamily: R, fontSize: "14px", color: "#F0EAD6", letterSpacing: "2px" }}>CHECKOUT ₱{total.toLocaleString()}</span>
               </div>
             </Link>
-            <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", textAlign: "center", marginTop: "10px" }}>Payments via GCash, Maya, or Card through PayMongo</p>
+            
           </div>
         </div>
       )}

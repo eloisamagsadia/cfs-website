@@ -52,7 +52,7 @@ export default async function ProductDetailPage({ params }: { params: { category
 
   return (
     <div style={{ minHeight: "100vh", background: "#0F1A0B" }}>
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "32px 24px" }}>
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "32px 16px" }}>
 
         {/* Breadcrumb */}
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px", flexWrap: "wrap" }}>
@@ -66,7 +66,7 @@ export default async function ProductDetailPage({ params }: { params: { category
         </div>
 
         {/* Main product layout */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "start", marginBottom: "48px" }}>
+        <div className="product-detail-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", alignItems: "start", marginBottom: "48px" }}>
 
           {/* Left: Images */}
           <div>

@@ -3,6 +3,9 @@ import { Righteous, DM_Serif_Display, Barlow } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
+export const viewport = { themeColor: "#0F1A0B" };
+
+
 const righteous = Righteous({
   weight: "400",
   subsets: ["latin"],
@@ -26,7 +29,6 @@ const barlow = Barlow({
 export const metadata: Metadata = {
   title: { default: "CFS Bini Colet — Colet Fan Suporta", template: "%s | CFS Bini Colet" },
   description: "The official home of Colet Fan Suporta (CFS) — the Bini Colet fansupport community of the Philippines.",
-  themeColor: "#0F1A0B",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -145,7 +145,7 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
       </button>
 
       {open && (
-        <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, width: "360px", maxWidth: "calc(100vw - 32px)", background: "#1A2614", border: "2px solid #2C4820", borderRadius: "14px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)", zIndex: 200, overflow: "hidden" }}>
+        <div style={{ position: "fixed", top: "60px", right: "12px", left: "12px", width: "auto", maxWidth: "420px", marginLeft: "auto", background: "#1A2614", border: "2px solid #2C4820", borderRadius: "14px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)", zIndex: 200, overflow: "hidden" }}>
           {/* Header */}
           <div style={{ padding: "14px 16px", borderBottom: "1px solid #2C4820", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span style={{ fontFamily: R, fontSize: "12px", color: "#F0EAD6", letterSpacing: "2px" }}>NOTIFICATIONS {count > 0 && <span style={{ color: "#F04060" }}>({count})</span>}</span>
