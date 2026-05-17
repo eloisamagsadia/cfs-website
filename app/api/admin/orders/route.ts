@@ -39,6 +39,22 @@ export async function PATCH(req: NextRequest) {
   const admin = createAdminClient();
   const { data, error } = await (admin.from("orders") as any).update(payload).eq("id", id).select("*, profiles:user_id(id, display_name)").single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Notify member of order status update
+  if (data?.user_id && (order_status || payment_status)) {
+    const statusMsg = order_status
+      ? `Your order status has been updated to: ${order_status.replace("_", " ").toUpperCase()}`
+      : `Your payment status has been updated to: ${payment_status.replace("_", " ").toUpperCase()}`;
+    await (admin.from("notifications") as any).insert({
+      user_id: data.user_id,
+      type: "order_update",
+      title: "Order Update",
+      message: statusMsg,
+      link: "/members/orders",
+      is_read: false,
+    });
+  }
+
   return NextResponse.json({ order: data });
 }
 

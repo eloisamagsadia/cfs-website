@@ -1,4 +1,5 @@
 "use client";
+import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 
@@ -48,7 +49,7 @@ export default function SettingsPage() {
     const res = await fetch(`/api/profile/notifications`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: user!.id, ...notifSettings }),
+      body: JSON.stringify({ ...notifSettings }),
     });
     const data = await res.json();
     const err = data.error ? { message: data.error } : null;
@@ -80,17 +81,14 @@ export default function SettingsPage() {
 
   if (!isLoaded || loading) return (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <div className="skeleton skeleton-title" />
-      <div className="skeleton skeleton-card" />
-      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
-      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
-      <div className="skeleton skeleton-card" />
+      <SkeletonPage />
     </div>
   );
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px", maxWidth: "560px" }}>
       <div>
+        <a href="/members/account" style={{ fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "12px", color: "#5A7A50", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", marginBottom: "12px" }}>← Account</a>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>SETTINGS</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Account preferences and security</p>
       </div>
@@ -101,7 +99,6 @@ export default function SettingsPage() {
         <div>
           <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px", marginBottom: "6px", textTransform: "uppercase" }}>Email Address</div>
           <div style={{ fontFamily: B, fontSize: "14px", color: "#F0EAD6", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "10px 14px" }}>{email}</div>
-          <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", marginTop: "4px" }}>To change your email or password, visit your <a href="https://accounts.clerk.dev/user" target="_blank" rel="noreferrer" style={{ color: "#3CCE2A" }}>Clerk account settings</a>.</div>
         </div>
       </div>
 

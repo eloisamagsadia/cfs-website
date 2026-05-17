@@ -1,4 +1,5 @@
 "use client";
+import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -84,13 +85,7 @@ export default function CheckoutPage() {
     }
   }
 
-<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <div className="skeleton skeleton-title" />
-      <div className="skeleton skeleton-card" />
-      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
-      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
-      <div className="skeleton skeleton-card" />
-    </div>
+  if (!isLoaded || loading) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
   if (items.length === 0) { router.push("/members/cart"); return null; }
 
   const inputStyle = { width:"100%", background:"#243520", border:"1.5px solid #2C4820", borderRadius:"6px", padding:"10px 14px", color:"#F0EAD6", fontFamily:B, fontSize:"13px", outline:"none", boxSizing:"border-box" as const };

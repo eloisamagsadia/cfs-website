@@ -62,7 +62,7 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
     { label: "Dashboard",  href: "/members",               icon: icons.dashboard },
     { label: "My Events",  href: "/members/events",        icon: icons.events },
     { label: "My Orders",  href: "/members/orders",        icon: icons.orders },
-    { label: "Profile",    href: "/members/account/profile", icon: icons.profile },
+    { label: "My Account", href: "/members/account", icon: icons.profile },
     { label: "Settings",   href: "/members/account/settings", icon: icons.settings },
     { label: "Help & Support", href: "/members/support", icon: icons.help },
   ];

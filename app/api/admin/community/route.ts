@@ -19,7 +19,8 @@ export async function GET(req: NextRequest) {
   // No is_hidden filter — admin sees ALL posts
   const { data, error } = await admin
     .from("community_posts")
-    .select("*, profiles:user_id(id, display_name, avatar_url), community_reactions(id), community_comments(id)")
+    .select("*, profiles:user_id(id, display_name, avatar_url), community_reactions(id, reaction_type), community_comments(id, content, created_at)")
+    .order("is_pinned", { ascending: false })
     .order("created_at", { ascending: false })
     .limit(limit);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

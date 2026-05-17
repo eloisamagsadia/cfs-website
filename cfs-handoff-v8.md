@@ -2,26 +2,11 @@
 **Stack:** Next.js 14, Supabase, Clerk, Resend, PayMongo, Cloudflare R2
 **Developer:** eloisamagsadia | **Target Launch:** May 31, 2026
 **Working Directory:** /Users/eloisamagsadia/Desktop/cfs-website-v1
-**Session:** Week 10 — Mobile + Promo Codes + Orders + Shop + Support + Shipping + Email + Product Gallery
+**Session:** Week 10 — Bug Fixes + Messaging + Support Threading + Account Pages + Chat Improvements
 
 ---
 
 ## HOW TO WORK WITH THIS CODEBASE (Terminal Patterns)
-
-### Read a file
-cat ./path/to/file.tsx
-
-### Search in a file
-grep -n "searchterm" ./path/to/file.tsx
-
-### Search across all files
-grep -rn "searchterm" ./app --include="*.tsx"
-
-### Find a file
-find . -path ./node_modules -prune -o -name "filename.tsx" -print
-
-### View specific lines
-sed -n '50,70p' ./path/to/file.tsx
 
 ### Edit a file (safest method)
 python3 << 'EOF'
@@ -31,7 +16,7 @@ open("./path/to/file.tsx", "w").write(content)
 print("Done!")
 EOF
 
-### Edit by line number (use when string replace fails due to wrapping)
+### Edit by line number
 python3 << 'EOF'
 lines = open("./path/to/file.tsx").readlines()
 lines[59] = lines[59].replace("old", "new")
@@ -39,30 +24,21 @@ open("./path/to/file.tsx", "w").writelines(lines)
 print("Done!")
 EOF
 
-### Insert at line number
-python3 << 'EOF'
-lines = open("./path/to/file.tsx").readlines()
-lines.insert(79, "new line content\n")
-open("./path/to/file.tsx", "w").writelines(lines)
-print("Done!")
-EOF
-
-### Rewrite entire file (use when file is corrupted from multiple edits)
+### Rewrite entire file
 cat > ./path/to/file.tsx << 'EOF'
 file contents here
 EOF
 
 ### Common Fixes
-- Event handlers in server component: remove onMouseEnter/Leave, use CSS in globals.css
-- Hydration error: move inline style tags to globals.css
-- Table not in types: use (client as any).from("table")
+- Supabase join fails (text/uuid mismatch): fetch profiles separately using .in("id", ids)
 - API 401: check requireAdmin() includes super_admin
-- Date showing UTC: add timeZone: Asia/Manila to all date calls
-- Mobile overflow: add className + CSS @media (max-width: 768px) in globals.css
-- super_admin blocked: check middleware includes super_admin
-- String replace fails: file has wrapped lines, use line number method
 - Next.js cache stale: add force-dynamic + revalidate = 0
-- Checkout page: use cat > rewrite method if editing, avoid python replace on long lines
+- Upload 400: check folder is in ALLOWED_FOLDERS in /lib/r2.ts and /app/api/upload/route.ts
+- Realtime not working: check RLS policies on profiles table
+- Supabase broadcast typing: use module-level singleton getSupabase(), mountedRef guard, 3000ms timeout
+- Multiple GoTrueClient instances: never call createClient() inside component render, use singleton
+- String replace fails: file has wrapped lines, use line number method
+- Chat room height off: uses calc(100dvh - 140px) with negative margin to escape layout padding
 
 ---
 
@@ -72,168 +48,135 @@ EOF
 - Resend verified (noreply@coletfs.com)
 - R2 custom domain (media.coletfs.com)
 - Full role system: super_admin, admin, moderator, sponsor, member
-- Exclusive content for sponsors
-- Super Admin at /super (separate world, gold theme)
 - All server component pages: force-dynamic + revalidate 0
-- All admin API routes: super_admin auth bug fixed
-- Promo codes with product restriction
-- Manual order creation with email confirmation
-- Shop with drag and drop image upload
-- Support ticket system
-- Shipping management: weight-based rates per region
-- Checkout: dynamic shipping, processing fee included, PayMongo pending banner
-- Email system: admin composer + 3 templates + order receipt
-- Product page: image gallery with lightbox + zoom hover, VIEW CART stays visible
-- PENDING: PayMongo integration
+- PayMongo pending: checkout + donate show "PAYMENT COMING SOON"
+- profiles.is_public defaults to true
+- profiles.email saved on signup via Clerk webhook
+- RLS policy: "Members can read public profiles" on profiles (needed for realtime)
 
 ---
 
-## Three Navigation Worlds
-Members /members  — Green  #3CCE2A — MobileNav.tsx
-Admin   /admin    — Orange #F07228 — MobileAdminNav.tsx
-Super   /super    — Gold   #F5C82A — MobileSuperNav.tsx
+## Messaging System
+- DB tables: chat_rooms, chat_members, chat_messages, chat_reactions
+- chat_messages columns: id, room_id, sender_id, content, reply_to_id, image_url, is_pinned, created_at, edited_at
+- chat_rooms columns: id, name, is_group, created_by, avatar_url, pinned_message_id, created_at
+- Supabase Realtime: chat_messages INSERT, chat_members UPDATE
+- Typing: broadcast channel, singleton pattern, mountedRef guard, 3000ms timeout
+- Seen receipts: last_read_at in chat_members
+- Reactions: hover → emoji picker → toggle, grouped count display
+- Reply: hover → ↩ → reply preview bar → send
+- Pin message: hover → star SVG → toggles, shown in drawer and pinned banner
+- Photo upload: 📷 button → R2 messages/ folder, image renders in bubble
+- Search: in drawer, filters messages inline
+- Emoji picker: emoji-mart with dark theme, click outside to close
+- Mentions: type @ → dropdown → arrow keys → Enter to select
+- Side drawer: room info, members list with profile links, search, pinned, leave button
 
----
+### Inbox (/members/messages)
+- Search conversations by name
+- Filter: ALL / DIRECT / GROUPS
+- Hover → LEAVE button with confirm modal
+- Unread count badge, bold unread conversations
+- Borderless list layout
 
-## Mobile Setup
+### API Routes
+- GET/POST /api/chat
+- GET/POST /api/chat/[roomId]
+- GET /api/chat/[roomId]/seen
+- GET/POST /api/chat/[roomId]/reactions
+- POST /api/chat/[roomId]/pin
+- POST /api/chat/[roomId]/leave
+- GET /api/community/members
 
-### CSS Classes (app/globals.css)
-@media (max-width: 768px) {
-  .desktop-sidebar { display: none !important; }
-  .mobile-only { display: block !important; }
-  .community-sidebar { display: none !important; }
-  .community-layout { flex-direction: column !important; }
-  .event-detail-grid { grid-template-columns: 1fr !important; }
-  .event-register-card { position: static !important; }
-  .nav-links { display: none !important; }
-  .members-table-desktop { display: none !important; }
-  .members-cards-mobile { display: flex !important; }
-  .ticket-template-grid { grid-template-columns: 1fr !important; }
-  .edit-event-grid { grid-template-columns: 1fr !important; }
-  .cart-layout { grid-template-columns: 1fr !important; }
-  .letter-card { flex-direction: column-reverse !important; }
-  .letter-thumbnail { width: 100% !important; height: 180px !important; }
+### Supabase Singleton (CRITICAL)
+let _supabase: any = null;
+function getSupabase() {
+  if (!_supabase) _supabase = createClient(URL, ANON_KEY);
+  return _supabase;
 }
-@media (min-width: 769px) {
-  .members-cards-mobile { display: none !important; }
-  .event-card-actions { width: auto !important; flex-shrink: 0; }
-}
+Never call createClient() inside a component.
 
-### More Pages
-- ./app/(members)/members/more/page.tsx
-- ./app/admin/more/page.tsx
-- ./app/super/more/page.tsx
+### R2 Folders
+avatars, products, events, reports, projects, badges, gallery, community, support, messages
 
 ---
 
-## Product Image Gallery
-- Component: ./components/public/ProductImageGallery.tsx
-- Features: thumbnail click to swap main image, zoom on hover, lightbox on click
-- Lightbox: prev/next arrows, dot navigation, click outside to close
-- VIEW CART button stays visible until user navigates away
-
----
-
-## Email System
-- Resend free plan: 3,000/month, 100/day
-- Admin composer: /admin/email — search by name/email/role, templates, [NAME] placeholder
-- Templates: Thank You, Reward/Badge, Announcement
-- Order confirmation: fires on manual order POST, also wired in PayMongo webhook
-- Email functions: /lib/email.ts
-- profiles.email column added, backfilled from Clerk, auto-saved on new signup
-
----
-
-## Shipping System
-- DB table: shipping_rates (region, weight_from, weight_to, rate)
-- Regions: Metro Manila, Luzon, Visayas, Mindanao
-- Admin: /admin/shipping — inline edit rates
-- API: GET /api/shipping?region=X&weight=Y
-- Products have weight_kg field (default 0.5kg)
-- Checkout calculates shipping dynamically on region change
+## Account Pages
+- /members/account — hub
+- /members/account/posts — My Posts (MemberProfile, isOwnProfile=true)
+- /members/account/activity — My Activity (comments + reactions)
+- /members/account/profile — Edit profile
+- /members/account/settings — Notifications (Clerk link removed)
+- /members/account/media — Media library
+- Back nav on all sub-pages
+- My Account removed from More (in topbar only)
+- MESSAGE button on member profiles (starts DM)
 
 ---
 
 ## Support Ticket System
-- DB table: support_tickets
-- Member: /members/support, /members/support/tickets
-- Admin: /admin/support
-- API: /api/support
+- DB: support_tickets + attachments[], member_reply, member_replied_at
+- Member: submit with photos, expandable thread, reply to admin
+- Admin: table + filters, inline thread, lightbox, attachment counts
+- Upload folder "support" in R2
 
 ---
 
-## Promo Codes
-- DB table: promo_codes with product_ids uuid[]
-- Admin: /admin/codes
-- API: /api/codes/validate
+## Community
+- Fan Art, Fan Cam, Events, Projects allow photo/video uploads
+- TikTok/Instagram: fallback card
+- Name click → member profile
+- Post media shows in detail page
 
 ---
 
-## Manual Orders
-- /admin/orders/create
-- Sends order confirmation email automatically
-- DB: orders has notes column
+## Email System
+- Resend: 3,000/month, 100/day
+- Admin composer: /admin/email — templates, [NAME] placeholder
+- Order confirmation on manual order + PayMongo webhook
 
 ---
 
-## Shop
-- 7 products: Mga Sasakyan ni Coco + This is COLET
-- Products have weight_kg for shipping
-- Edit: drag and drop upload to R2, auto WebP
-- Homepage: all products shown directly
-- Product page: shows "Shipping fee based on region and weight" and "Secure checkout"
+## Shipping
+- DB: shipping_rates (region, weight_from, weight_to, rate)
+- Admin: /admin/shipping — inline edit
+- Checkout: dynamic shipping + processing fee always included
 
 ---
 
-## Checkout
-- Dynamic shipping by region + weight
-- Processing fee (2.45% + P15) always included
-- PayMongo pending: shows "PAYMENT COMING SOON" banner
-- When PayMongo ready: remove banner, re-enable button
+## Navigation
+- Topbar: My Account, Settings, Help & Support, Admin Panel, Super Admin
+- Member sidebar: Messages added
+- Mobile nav: Messages replaces Orders (Orders in More)
+- More page: My Account removed
 
 ---
 
-## Super Admin Pages
-/super, /super/roles, /super/exclusive, /super/broadcast
-/super/settings, /super/audit, /super/danger, /super/more
+## Checkout / Donate
+- Processing fee always on buyer/donor
+- PayMongo pending banner + disabled button
 
 ---
 
 ## Event System
-- Early access: sponsor_access_at → member_access_at → everyone
-- Tiers: Free (green RSVP) / Paid (orange PAY — PayMongo pending)
-- Ticket format: CFS-{USERNAME}-{RANDOM8}
-- PHT dates: toISOWithPHT(), toPHTInputString() from lib/date.ts
+- Early access: sponsor → member → everyone
+- Tiers: Free / Paid (PayMongo pending)
+- Ticket: CFS-{USERNAME}-{RANDOM8}
+- PHT dates: lib/date.ts
 
 ---
 
-## API Routes
-GET    /api/admin/members              — includes email field
-GET    /api/admin/stats
-GET    /api/admin/audit-log            — super_admin only
-GET    /api/admin/members/export       — super_admin only
-POST   /api/admin/members/role
-POST   /api/admin/broadcast
-GET/PATCH /api/admin/site-settings
-GET/PATCH /api/admin/sponsor-perks
-GET/POST/PATCH/DELETE /api/events/tiers
-GET/POST /api/events/tickets
-GET/DELETE /api/user/media
-GET/POST/PATCH/DELETE /api/exclusive
-GET/POST/PATCH/DELETE /api/admin/orders
-GET /api/admin/products
-POST /api/codes/validate
-GET/POST/PATCH /api/support
-GET/PATCH /api/shipping
-POST /api/admin/email
+## DB Tables Added This Session
+- chat_rooms, chat_members, chat_messages, chat_reactions
+- chat_messages.reply_to_id, image_url, is_pinned
+- chat_rooms.pinned_message_id
+- support_tickets.attachments, member_reply, member_replied_at
 
 ---
 
 ## Role Hierarchy
 super_admin > admin > moderator > sponsor > member
-
-### requireAdmin() pattern
-if (!["admin", "super_admin"].includes(role ?? "")) return 401;
+requireAdmin(): if (!["admin", "super_admin"].includes(role ?? "")) return 401;
 
 ### Fonts
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -247,18 +190,21 @@ Purple/Sponsor: #B47FE3  Cyan/Mod: #69C9D0
 
 ---
 
-## Pending Features
+## Pending
 - Screenshot thumbnail fix (EventFanWall.tsx ~line 27-33)
 - Projects public gallery
 - PayMongo integration
+- Unread badge on Messages nav item
+- Chat room scroll behavior fine-tuning on mobile
 
 ## Pre-Launch Checklist
 - Delete app/api/debug/route.ts
 - Switch Clerk to live keys
-- Set up Clerk webhook
+- Set up Clerk webhook in Clerk dashboard
+- RLS policy on profiles: "Members can read public profiles"
 - Disable maintenance mode on coletfs.com
 - Add Vercel DNS to Cloudflare
-- Test signup to welcome email flow
+- Test signup → welcome email
 - Test PayMongo when ready
-- Full mobile testing on real device
+- Full mobile testing
 - Migrate old R2 files to per-user folder structure

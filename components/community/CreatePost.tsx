@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-const IMAGE_ALLOWED_CATEGORIES = ["Fan Cam", "Events", "Projects"];
+const IMAGE_ALLOWED_CATEGORIES = ["Fan Cam", "Events", "Projects", "Fan Art"];
 
 interface CreatePostProps {
   categories: any[];
@@ -242,7 +242,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
           {/* Video input */}
           {activeMedia === "video" && (
             <div style={{ marginTop: "10px" }}>
-              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
                 <input
                   type="text"
                   value={videoUrl}
@@ -308,8 +308,8 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
             </div>
           )}
 
-          {expanded && (
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "12px" }}>
+          {(expanded || true) && (
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "12px", flexWrap: "wrap", gap: "8px" }}>
               {/* Left: photo + video + category */}
               <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
 

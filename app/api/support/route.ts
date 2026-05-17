@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { subject, message, category } = await req.json();
+  const { subject, message, category, attachments } = await req.json();
   if (!subject?.trim() || !message?.trim()) return NextResponse.json({ error: "Subject and message required" }, { status: 400 });
 
   const { data, error } = await (db() as any).from("support_tickets").insert({
@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
     message: message.trim(),
     category: category ?? "general",
     status: "open",
+    attachments: attachments ?? [],
   }).select().single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -58,5 +59,18 @@ export async function PATCH(req: NextRequest) {
 
   const { data, error } = await (db() as any).from("support_tickets").update(payload).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Notify member if admin replied
+  if (admin_notes && data?.user_id) {
+    await (db() as any).from("notifications").insert({
+      user_id: data.user_id,
+      type: "support_reply",
+      title: "Support Reply",
+      message: `Your ticket "${data.subject}" has been updated by the team.`,
+      link: "/members/support/tickets",
+      is_read: false,
+    });
+  }
+
   return NextResponse.json({ ticket: data });
 }

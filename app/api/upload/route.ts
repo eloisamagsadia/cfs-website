@@ -12,7 +12,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { auth } from "@clerk/nextjs/server";
 
 const ALLOWED_FOLDERS: R2Folder[] = [
-  "avatars", "products", "events", "reports", "projects", "badges", "gallery", "community",
+  "avatars", "products", "events", "reports", "projects", "badges", "gallery", "community", "support", "messages",
 ];
 
 const MAX_DIMENSION = 1200;

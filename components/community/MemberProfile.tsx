@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PostCard from "./PostCard";
 
@@ -22,6 +23,7 @@ export default function MemberProfile({
   followersCount: initFollowers, followingCount, badges, isOwnProfile,
 }: MemberProfileProps) {
   const [isFollowing, setIsFollowing] = useState(initialFollowing);
+  const router = useRouter();
   const [followersCount, setFollowersCount] = useState(initFollowers);
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"posts" | "reposts">("posts");
@@ -42,9 +44,9 @@ export default function MemberProfile({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "0", maxWidth: "680px", margin: "0 auto" }}>
-      <Link href="/members/community/members" style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", textDecoration: "none", letterSpacing: "1px", display: "flex", alignItems: "center", gap: "6px", marginBottom: "16px" }}>
+      <Link href={isOwnProfile ? "/members/account" : "/members/community/members"} style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", textDecoration: "none", letterSpacing: "1px", display: "flex", alignItems: "center", gap: "6px", marginBottom: "16px" }}>
         <svg width="6" height="10" viewBox="0 0 6 10"><path d="M5 1L1 5L5 9" stroke="#5A7A50" strokeWidth="1.5" fill="none" strokeLinecap="round" /></svg>
-        BACK TO MEMBERS
+        {isOwnProfile ? "BACK TO ACCOUNT" : "BACK TO MEMBERS"}
       </Link>
 
       <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", marginBottom: "12px" }}>
@@ -63,9 +65,18 @@ export default function MemberProfile({
             </div>
             <div style={{ paddingBottom: "10px" }}>
               {!isOwnProfile ? (
-                <button onClick={toggleFollow} disabled={loading} style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: `2px solid ${isFollowing ? "rgba(255,255,255,0.3)" : "#3CCE2A"}`, background: isFollowing ? "rgba(0,0,0,0.3)" : "#3CCE2A", color: isFollowing ? "#F0EAD6" : "#080F06", cursor: "pointer", opacity: loading ? 0.7 : 1 }}>
-                  {loading ? "..." : isFollowing ? "Following" : "Follow"}
-                </button>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button onClick={toggleFollow} disabled={loading} style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: `2px solid ${isFollowing ? "rgba(255,255,255,0.3)" : "#3CCE2A"}`, background: isFollowing ? "rgba(0,0,0,0.3)" : "#3CCE2A", color: isFollowing ? "#F0EAD6" : "#080F06", cursor: "pointer", opacity: loading ? 0.7 : 1 }}>
+                    {loading ? "..." : isFollowing ? "Following" : "Follow"}
+                  </button>
+                  <button onClick={async () => {
+                    const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ is_group: false, member_ids: [profile.id] }) });
+                    const d = await res.json();
+                    if (d.room?.id) router.push(`/members/messages/${d.room.id}`);
+                  }} style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: "2px solid rgba(255,255,255,0.3)", background: "rgba(0,0,0,0.3)", color: "#F0EAD6", cursor: "pointer" }}>
+                    MESSAGE
+                  </button>
+                </div>
               ) : (
                 <Link href="/members/account" style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: "2px solid rgba(255,255,255,0.2)", color: "#F0EAD6", textDecoration: "none", display: "block", background: "rgba(0,0,0,0.2)" }}>
                   Edit Profile

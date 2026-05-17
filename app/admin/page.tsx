@@ -89,7 +89,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Recent activity */}
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px" }}>
+      <div className="admin-recent-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px" }}>
         {/* Recent orders */}
         <div style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"18px" }}>
           <div style={{ fontFamily:R, fontSize:"13px", color:"#F07228", letterSpacing:"2px", marginBottom:"14px" }}>RECENT ORDERS</div>

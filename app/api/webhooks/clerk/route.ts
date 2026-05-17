@@ -48,6 +48,7 @@ export async function POST(req: Request) {
       display_name: displayName,
       avatar_url: image_url ?? null,
       role: "member",
+      is_public: true,
     });
 
     if (error) {

@@ -345,3 +345,122 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 2px rgba(60,206,42,0.15);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+
+/* Support tickets mobile */
+@media (max-width: 768px) {
+  .support-table-header { display: none !important; }
+  .support-table-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 14px 16px !important;
+  }
+  .support-table-row > span:nth-child(2),
+  .support-table-row > span:nth-child(3),
+  .support-table-row > span:nth-child(4) {
+    display: none !important;
+  }
+  .support-table-row > div:first-child {
+    flex: 1;
+    text-align: left;
+  }
+  .support-table-row > div:nth-child(5) {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .support-table-row > span:last-child {
+    flex-shrink: 0;
+    color: #5A7A50;
+  }
+}
+
+/* Media library list view mobile */
+@media (max-width: 768px) {
+  .media-list-col-folder,
+  .media-list-col-size,
+  .media-list-col-uploaded,
+  .media-list-col-actions { display: none !important; }
+
+  .media-list-col-file { max-width: calc(100vw - 80px) !important; }
+}
+
+/* Promo codes mobile */
+@media (max-width: 768px) {
+  .codes-form-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .codes-table-header { display: none !important; }
+  .codes-table-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 12px 16px !important;
+  }
+  .codes-table-row > div:nth-child(1) { flex: 1; min-width: 0; }
+  .codes-table-row > div:nth-child(2) { flex-shrink: 0; }
+  .codes-table-row > div:nth-child(3),
+  .codes-table-row > div:nth-child(4) { display: none !important; }
+  .codes-table-row > div:nth-child(5) { flex-shrink: 0; }
+  .codes-table-row > div:nth-child(6) { flex-shrink: 0; margin-left: auto; }
+}
+
+/* Email page mobile */
+@media (max-width: 768px) {
+  .email-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Admin dashboard mobile */
+@media (max-width: 768px) {
+  .admin-recent-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Responsive skeleton */
+.skeleton-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
+}
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media (max-width: 768px) {
+  .skeleton-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .skeleton-card {
+    height: 80px !important;
+  }
+  .skeleton-title {
+    width: 70% !important;
+  }
+}
+
+/* Chat drawer full screen on mobile */
+@media (max-width: 768px) {
+  .chat-drawer {
+    width: 100% !important;
+    border-left: none !important;
+  }
+}
+
+/* Chat room mobile nav spacing */
+@media (max-width: 768px) {
+  .chat-input-bar {
+    padding-bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* Hide scrollbar on chat room messages area */
+.chat-messages::-webkit-scrollbar { display: none; }
+.chat-messages { -ms-overflow-style: none; scrollbar-width: none; }

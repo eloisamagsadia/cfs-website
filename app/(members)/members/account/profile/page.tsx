@@ -1,4 +1,5 @@
 "use client";
+import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -101,11 +102,7 @@ export default function ProfilePage() {
 
   if (!isLoaded || loading) return (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <div className="skeleton skeleton-title" />
-      <div className="skeleton skeleton-card" />
-      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
-      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
-      <div className="skeleton skeleton-card" />
+      <SkeletonPage />
     </div>
   );
 

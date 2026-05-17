@@ -29,6 +29,8 @@ export default async function AccountPage() {
     { title:"MY EVENTS", desc:"Registered events & tickets",             href:"/members/events",           color:"#F07228", bg:"#3D1A0A" },
     { title:"MY ORDERS", desc:"Order history & tracking",                href:"/members/orders",           color:"#8EE440", bg:"#1E3010" },
     { title:"MY MEDIA",  desc:"Images you've uploaded across the site",   href:"/members/account/media",    color:"#F07228", bg:"#3D1A0A" },
+    { title:"MY POSTS",   desc:"Your posts and reposts in the community",   href:"/members/account/posts",    color:"#3CCE2A", bg:"#1A3D14" },
+    { title:"MY ACTIVITY",desc:"Comments, reactions and interactions",      href:"/members/account/activity", color:"#F5C82A", bg:"#3D3000" },
   ];
 
   return (
@@ -68,12 +70,12 @@ export default async function AccountPage() {
         </div>
       </div>
 
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:"10px" }}>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:"10px", alignItems:"stretch" }}>
         {sections.map(({ title, desc, href, color, bg }) => (
           <Link key={title} href={href} style={{ textDecoration:"none" }}>
-            <div style={{ position:"relative", padding:"4px 4px 6px 0" }}>
+            <div style={{ position:"relative", padding:"4px 4px 6px 0", height:"100%" }}>
               <div style={{ position:"absolute", bottom:0, right:0, width:"calc(100% - 4px)", height:"calc(100% - 4px)", borderRadius:"10px", background:"#080F06" }}/>
-              <div style={{ position:"relative", background:bg, border:"2px solid #2C4820", borderRadius:"10px", padding:"18px 16px", zIndex:1 }}>
+              <div style={{ position:"relative", background:bg, border:"2px solid #2C4820", borderRadius:"10px", padding:"18px 16px", zIndex:1, height:"100%", boxSizing:"border-box" as const, display:"flex", flexDirection:"column" as const, justifyContent:"space-between" }}>
                 <div style={{ fontFamily:R, fontSize:"14px", color, letterSpacing:"2px", marginBottom:"6px" }}>{title}</div>
                 <div style={{ fontFamily:B, fontSize:"12px", color:"#8AAA78", lineHeight:1.5 }}>{desc}</div>
                 <div style={{ fontFamily:R, fontSize:"11px", color, marginTop:"10px", letterSpacing:"1px" }}>MANAGE →</div>

@@ -24,12 +24,11 @@ export default function DonatePage() {
   const [anon, setAnon] = useState(false);
   const [msg, setMsg] = useState("");
 
-  const [coverFee, setCoverFee] = useState(false);
   const final = custom ? Number(custom) : amount;
   const paymongoFee = (final * PAYMONGO_RATE) + PAYMONGO_FIXED;
   // If donor covers fee, they pay more so CFS gets the full amount
-  const totalCharged = coverFee ? final + paymongoFee : final;
-  const cfsReceives  = coverFee ? final : final - paymongoFee;
+  const totalCharged = final + paymongoFee;
+  const cfsReceives  = final;
 
   const fmt = (n: number) => n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -131,31 +130,15 @@ export default function DonatePage() {
                 <span style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Payment processing fee </span>
                 <span style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30" }}>(2.45% + ₱15)</span>
               </div>
-              <span style={{ fontFamily: R, fontSize: "13px", color: coverFee ? "#3CCE2A" : "#F04060" }}>
-                {coverFee ? "+ " : "− "}₱{fmt(paymongoFee)}
+              <span style={{ fontFamily: R, fontSize: "13px", color: "#F04060" }}>
+                +₱{fmt(paymongoFee)}
               </span>
             </div>
-
-            {/* Cover fee toggle */}
-            <label style={{ display: "flex", alignItems: "flex-start", gap: "10px", cursor: "pointer", background: coverFee ? "#0F2A0B" : "#243520", border: `1.5px solid ${coverFee ? "#3CCE2A" : "#2C4820"}`, borderRadius: "8px", padding: "12px 14px", transition: "all 0.2s" }}>
-              <input type="checkbox" checked={coverFee} onChange={e => setCoverFee(e.target.checked)} style={{ width: "16px", height: "16px", accentColor: "#3CCE2A", marginTop: "2px", flexShrink: 0 }} />
-              <div>
-                <div style={{ fontFamily: R, fontSize: "12px", color: coverFee ? "#3CCE2A" : "#F0EAD6", letterSpacing: "1px", marginBottom: "3px" }}>
-                  I want CFS to receive the full amount
-                </div>
-                <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", lineHeight: 1.5 }}>
-                  Add ₱{fmt(paymongoFee)} to cover the processing fee. You'll be charged ₱{fmt(totalCharged)} total.
-                </div>
-              </div>
-            </label>
-
             {/* Net */}
             <div style={{ borderTop: "1px solid #2C4820", paddingTop: "12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <div style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A", letterSpacing: "1px" }}>CFS RECEIVES</div>
-                <div style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30" }}>
-                  {coverFee ? "Full amount — fee covered by you 💚" : "After processing fee deduction"}
-                </div>
+                <div style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30" }}>Full amount after fee</div>
               </div>
               <span style={{ fontFamily: R, fontSize: "22px", color: "#3CCE2A" }}>₱{fmt(cfsReceives)}</span>
             </div>

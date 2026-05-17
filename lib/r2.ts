@@ -19,6 +19,8 @@ export const R2_FOLDERS = {
   EVENTS:    "events",
   GALLERY:   "gallery",
   COMMUNITY: "community",
+  SUPPORT:   "support",
+  MESSAGES:  "messages",
   REPORTS:   "reports",
   PROJECTS:  "projects",
   BADGES:    "badges",

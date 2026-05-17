@@ -185,7 +185,7 @@ export default function AdminMediaPage() {
     viewToggle: { display: "flex", gap: "4px" },
     viewBtn: { background: "#1A2614", border: "1px solid #2C4820", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "13px", color: "#8AAA78" },
     viewBtnActive: { background: "#2C1A0A", border: "1px solid #F07228", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "13px", color: "#F07228" },
-    grid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "10px" },
+    grid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "10px" },
     card: { background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", overflow: "hidden", cursor: "pointer", transition: "border-color 0.15s" },
     cardSel: { background: "#1A2614", border: "2px solid #F07228", borderRadius: "10px", overflow: "hidden", cursor: "pointer" },
     thumb: { height: "110px", background: "#243520", position: "relative" as const, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" },
@@ -357,10 +357,10 @@ export default function AdminMediaPage() {
             <tr>
               <th style={s.listTh}></th>
               <th style={s.listTh}>FILE</th>
-              <th style={s.listTh}>FOLDER</th>
-              <th style={s.listTh}>SIZE</th>
-              <th style={s.listTh}>UPLOADED</th>
-              <th style={s.listTh}>ACTIONS</th>
+              <th style={s.listTh} className="media-list-col-folder">FOLDER</th>
+              <th style={s.listTh} className="media-list-col-size">SIZE</th>
+              <th style={s.listTh} className="media-list-col-uploaded">UPLOADED</th>
+              <th style={s.listTh} className="media-list-col-actions">ACTIONS</th>
             </tr>
           </thead>
           <tbody>
@@ -385,10 +385,10 @@ export default function AdminMediaPage() {
                     <span style={{ fontFamily: B, fontSize: "12px", color: "#F0EAD6", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name}</span>
                   </div>
                 </td>
-                <td style={{ ...s.listTd, color: "#8AAA78" }}>{item.folder}/</td>
-                <td style={{ ...s.listTd, color: "#8AAA78" }}>{formatSize(item.size)}</td>
-                <td style={{ ...s.listTd, color: "#8AAA78" }}>{formatDate(item.lastModified)}</td>
-                <td style={s.listTd} onClick={e => e.stopPropagation()}>
+                <td style={{ ...s.listTd, color: "#8AAA78" }} className="media-list-col-folder">{item.folder}/</td>
+                <td style={{ ...s.listTd, color: "#8AAA78" }} className="media-list-col-size">{formatSize(item.size)}</td>
+                <td style={{ ...s.listTd, color: "#8AAA78" }} className="media-list-col-uploaded">{formatDate(item.lastModified)}</td>
+                <td style={s.listTd} className="media-list-col-actions" onClick={e => e.stopPropagation()}>
                   <div style={{ display: "flex", gap: "6px" }}>
                     <button style={s.actBtn} onClick={() => copyUrl(item.url)}>Copy URL</button>
                     {item.type === "pdf" && (

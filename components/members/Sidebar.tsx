@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
+import { useState, useEffect } from "react";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -43,27 +44,46 @@ const sections = [
   {
     label: "ACCOUNT",
     items: [
-      { label: "Notifications", href: "/members/notifications", icon: icons.notifs },
+      { label: "Messages",      href: "/members/messages",      icon: icons.community, badge: true },
     ]
   },
 ];
 
-function NavItem({ label, href, icon, exact }: { label: string; href: string; icon: React.ReactNode; exact?: boolean }) {
+function NavItem({ label, href, icon, exact, badge, unread }: { label: string; href: string; icon: React.ReactNode; exact?: boolean; badge?: boolean; unread?: number }) {
   const pathname = usePathname();
   const isActive = exact ? pathname === href : pathname === href || pathname.startsWith(href);
 
   return (
     <Link href={href} style={{ textDecoration: "none", display: "block" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", position: "relative", background: isActive ? "linear-gradient(90deg, #1A3D14, #162212)" : "transparent", transition: "background 0.15s" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "8px", position: "relative", background: isActive ? "linear-gradient(90deg, #1A3D14, #162212)" : "transparent", transition: "background 0.15s" }}>
         {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#3CCE2A", borderRadius: "0 3px 3px 0" }} />}
         <span style={{ color: isActive ? "#3CCE2A" : "#4A6A42", transition: "color 0.15s" }}>{icon}</span>
-        <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#D0E8C8" : "#4A6A42", letterSpacing: "0.3px", transition: "color 0.15s" }}>{label}</span>
+        <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#D0E8C8" : "#4A6A42", letterSpacing: "0.3px", transition: "color 0.15s", flex: 1 }}>{label}</span>
+        {badge && unread && unread > 0 ? <span style={{ background: "#F04060", color: "#F0EAD6", borderRadius: "20px", minWidth: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", padding: "0 4px", marginLeft: "auto" }}>{unread}</span> : null}
       </div>
     </Link>
   );
 }
 
+function useUnreadMessages() {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    async function fetchCount() {
+      try {
+        const res = await fetch("/api/chat/unread");
+        const d = await res.json();
+        setCount(d.count ?? 0);
+      } catch {}
+    }
+    fetchCount();
+    const interval = setInterval(fetchCount, 15000);
+    return () => clearInterval(interval);
+  }, []);
+  return count;
+}
+
 export default function MembersSidebar({ isAdmin = false, role = "member" }: { isAdmin?: boolean; role?: string }) {
+  const unreadMessages = useUnreadMessages();
   const canSeeExclusive = ["sponsor", "admin", "super_admin"].includes(role);
   const router = useRouter();
   const { signOut } = useClerk();
@@ -79,9 +99,9 @@ export default function MembersSidebar({ isAdmin = false, role = "member" }: { i
 
         {sections.map(section => (
           <div key={section.label}>
-            <div style={{ fontFamily: R, fontSize: "9px", color: "#2C4820", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>{section.label}</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
-              {section.items.map(item => <NavItem key={item.href} {...item} />)}
+            <div style={{ fontFamily: R, fontSize: "9px", color: "#2C4820", letterSpacing: "2px", padding: "0 12px", marginBottom: "6px" }}>{section.label}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {section.items.map(item => <NavItem key={item.href} {...item} unread={item.badge ? unreadMessages : 0} />)}
             </div>
           </div>
         ))}

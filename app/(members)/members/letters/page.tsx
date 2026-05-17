@@ -1,4 +1,5 @@
 "use client";
+import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -44,11 +45,7 @@ export default function LettersPage() {
 
       {loading ? (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <div className="skeleton skeleton-title" />
-      <div className="skeleton skeleton-card" />
-      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
-      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
-      <div className="skeleton skeleton-card" />
+      <SkeletonPage />
     </div>
       ) : error ? (
         <div style={{ background: "#1A2614", border: "2px solid #F04060", borderRadius: "12px", padding: "32px", textAlign: "center" }}>

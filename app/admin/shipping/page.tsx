@@ -1,4 +1,5 @@
 "use client";
+import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -57,11 +58,7 @@ export default function AdminShippingPage() {
 
       {loading ? (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <div className="skeleton skeleton-title" />
-      <div className="skeleton skeleton-card" />
-      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
-      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
-      <div className="skeleton skeleton-card" />
+      <SkeletonPage />
     </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>

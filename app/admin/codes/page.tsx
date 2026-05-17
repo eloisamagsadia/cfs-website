@@ -67,7 +67,7 @@ export default function AdminCodesPage() {
             <input value={form.code} onChange={e=>setForm(p=>({...p,code:e.target.value.toUpperCase()}))} placeholder="CODE (e.g. CFS2026)" style={{...inp,flex:1,letterSpacing:"2px",fontFamily:R}}/>
             <button onClick={generateCode} style={{background:"#3D3000",border:"2px solid #F5C82A",borderRadius:"6px",color:"#F5C82A",padding:"10px 20px",cursor:"pointer",fontFamily:R,fontSize:"12px",letterSpacing:"1.5px",whiteSpace:"nowrap",flexShrink:0}}>✦ GENERATE</button>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"10px"}}>
+          <div className="codes-form-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"10px"}}>
             <select value={form.discount_type} onChange={e=>setForm(p=>({...p,discount_type:e.target.value}))} style={inp}>
               <option value="percent">Percent (%)</option>
               <option value="fixed">Fixed (₱)</option>
@@ -105,7 +105,7 @@ export default function AdminCodesPage() {
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search code..." style={{...inp,width:"220px"}}/>
       </div>
       <div style={{background:"#1A2614",border:"2px solid #2C4820",borderRadius:"12px",overflow:"hidden"}}>
-        <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",background:"#243520",borderBottom:"2px solid #2C4820",padding:"10px 18px",gap:"0"}}>
+        <div className="codes-table-header" style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",background:"#243520",borderBottom:"2px solid #2C4820",padding:"10px 18px",gap:"0"}}>
           {["CODE","DISCOUNT","USES","EXPIRES","STATUS","ACTIONS"].map(h=>(
             <div key={h} style={{fontFamily:B,fontSize:"11px",color:"#5A7A50",letterSpacing:"1.5px"}}>{h}</div>
           ))}
@@ -115,7 +115,7 @@ export default function AdminCodesPage() {
         ):filtered.map(c=>{
           const status=getStatus(c);
           return(
-            <div key={c.id} style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",padding:"12px 18px",borderBottom:"1px solid #2C4820",alignItems:"center",gap:"0"}}>
+            <div key={c.id} className="codes-table-row" style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",padding:"12px 18px",borderBottom:"1px solid #2C4820",alignItems:"center",gap:"0"}}>
               <div><div style={{fontFamily:R,fontSize:"15px",color:"#F5C82A",letterSpacing:"2px"}}>{c.code}</div>
               <div style={{fontFamily:B,fontSize:"10px",color:"#5A7A50",marginTop:"2px"}}>{c.product_ids?.length>0?c.product_ids.map((id:string)=>{const p=products.find((pr:any)=>pr.id===id);return p?.name??id;}).join(", "):"All products"}</div></div>
               <div style={{fontFamily:R,fontSize:"13px",color:"#F07228"}}>{c.discount_type==="percent"?`${c.discount_value}% OFF`:`₱${c.discount_value} OFF`}</div>

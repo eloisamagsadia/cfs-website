@@ -1,33 +1,50 @@
 "use client";
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
-const TC:Record<string,{icon:string;color:string;label:string}>={
-  event_reminder:{icon:"🎫",color:"#3CCE2A",label:"Events"},
-  order_update:{icon:"🛍",color:"#F07228",label:"Orders"},
-  community_reply:{icon:"💬",color:"#F5C82A",label:"Community"},
-  community_mention:{icon:"📢",color:"#F5C82A",label:"Community"},
-  badge_earned:{icon:"⭐",color:"#8EE440",label:"Badges"},
-  new_follower:{icon:"👤",color:"#3CCE2A",label:"Social"},
-  donation_ack:{icon:"♥",color:"#F04060",label:"Donations"},
-  new_report:{icon:"📋",color:"#3CCE2A",label:"Reports"},
-  announcement:{icon:"📣",color:"#F07228",label:"Announcements"},
+const ICONS:Record<string,React.ReactNode>={
+  event_reminder:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+  order_update:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>,
+  community_reply:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+  community_mention:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg>,
+  badge_earned:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>,
+  new_follower:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="23" y1="11" x2="17" y2="11"/><line x1="20" y1="8" x2="20" y2="14"/></svg>,
+  donation_ack:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
+  new_report:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>,
+  announcement:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>,
+  new_message:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+  support_reply:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+  default:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
+};
+const TC:Record<string,{color:string;label:string}>={
+  event_reminder:{color:"#3CCE2A",label:"Events"},
+  order_update:{color:"#F07228",label:"Orders"},
+  community_reply:{color:"#F5C82A",label:"Community"},
+  community_mention:{color:"#F5C82A",label:"Community"},
+  badge_earned:{color:"#8EE440",label:"Badges"},
+  new_follower:{color:"#3CCE2A",label:"Social"},
+  donation_ack:{color:"#F04060",label:"Donations"},
+  new_report:{color:"#3CCE2A",label:"Reports"},
+  announcement:{color:"#F07228",label:"Announcements"},
+  new_message:{color:"#3CCE2A",label:"Messages"},
+  support_reply:{color:"#F07228",label:"Support"},
 };
 const FILTERS=["ALL","Events","Orders","Community","Badges","Social","Donations","Announcements"];
-const GROUP_ORDER=["TODAY","YESTERDAY","THIS WEEK","OLDER"];
-function getGroup(d:string){
-  const date=new Date(d),now=new Date();
-  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  const yesterday=new Date(today.getTime()-86400000);
-  const weekAgo=new Date(today.getTime()-6*86400000);
-  const nd=new Date(date.getFullYear(),date.getMonth(),date.getDate());
-  if(nd>=today)return"TODAY";
-  if(nd>=yesterday)return"YESTERDAY";
-  if(nd>=weekAgo)return"THIS WEEK";
-  return"OLDER";
-}
+const TYPE_LABELS: Record<string,string> = {
+  new_message: "Messages",
+  community_reply: "Community",
+  community_mention: "Community",
+  new_follower: "Social",
+  badge_earned: "Badges",
+  event_reminder: "Events",
+  order_update: "Orders",
+  donation_ack: "Donations",
+  announcement: "Announcements",
+  support_reply: "Support",
+  new_report: "Reports",
+};
+function getGroup(type:string){ return TYPE_LABELS[type] ?? "General"; }
 function timeAgo(d:string){
   const diff=Date.now()-new Date(d).getTime();
   const m=Math.floor(diff/60000);
@@ -51,34 +68,41 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
   const [filter,setFilter]=useState("ALL");
   const [markingAll,setMarkingAll]=useState(false);
   const [soundOn,setSoundOn]=useState(false);
-  const supabase=createClient();
   const router=useRouter();
   useEffect(()=>{setSoundOn(localStorage.getItem("cfs_notif_sound")==="true");},[]);
   useEffect(()=>{
-    const ch=supabase.channel(`np_${userId}`)
-      .on("postgres_changes",{event:"INSERT",schema:"public",table:"notifications",filter:`user_id=eq.${userId}`},
-        p=>{setNotifications(prev=>[p.new as any,...prev]);if(localStorage.getItem("cfs_notif_sound")==="true")playSound();})
-      .subscribe();
-    return()=>{supabase.removeChannel(ch);};
+    async function poll() {
+      try {
+        const res = await fetch("/api/notifications");
+        const d = await res.json();
+        const fresh = d.notifications ?? [];
+        setNotifications(prev => {
+          if (fresh.length > prev.length && localStorage.getItem("cfs_notif_sound") === "true") playSound();
+          return fresh;
+        });
+      } catch {}
+    }
+    const interval = setInterval(poll, 10000);
+    return () => clearInterval(interval);
   },[userId]);
   function toggleSound(){const n=!soundOn;setSoundOn(n);localStorage.setItem("cfs_notif_sound",String(n));if(n)playSound();}
   async function markRead(id:string){
     setNotifications(prev=>prev.map(n=>n.id===id?{...n,is_read:true}:n));
-    await supabase.from("notifications").update({is_read:true}).eq("id",id);
+    await fetch("/api/notifications",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id})});
   }
   async function markAllRead(){
     setMarkingAll(true);
     setNotifications(prev=>prev.map(n=>({...n,is_read:true})));
-    await supabase.from("notifications").update({is_read:true}).eq("user_id",userId).eq("is_read",false);
+    await fetch("/api/notifications",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({all:true})});
     setMarkingAll(false);
   }
   async function deleteNotification(id:string){
     setNotifications(prev=>prev.filter(n=>n.id!==id));
-    await supabase.from("notifications").delete().eq("id",id);
+    await fetch("/api/notifications",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({id})});
   }
   async function clearRead(){
     setNotifications(prev=>prev.filter(n=>!n.is_read));
-    await supabase.from("notifications").delete().eq("user_id",userId).eq("is_read",true);
+    await fetch("/api/notifications",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({clearRead:true})});
   }
   async function handleView(notif:any){
     if(!notif.is_read)await markRead(notif.id);
@@ -86,7 +110,7 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
   }
   const filtered=notifications.filter(n=>filter==="ALL"||TC[n.type]?.label===filter);
   const groups:Record<string,any[]>={};
-  filtered.forEach(n=>{const g=getGroup(n.created_at);if(!groups[g])groups[g]=[];groups[g].push(n);});
+  filtered.forEach(n=>{const g=getGroup(n.type);if(!groups[g])groups[g]=[];groups[g].push(n);});
   const unreadCount=notifications.filter(n=>!n.is_read).length;
   return(
     <div style={{display:"flex",flexDirection:"column",gap:"20px"}}>
@@ -126,7 +150,7 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
         </div>
       ):(
         <div style={{display:"flex",flexDirection:"column",gap:"24px"}}>
-          {GROUP_ORDER.filter(g=>groups[g]?.length>0).map(group=>{
+          {Object.keys(groups).sort().map(group=>{
             const gn=groups[group]??[];
             const gu=gn.filter((n:any)=>!n.is_read).length;
             return(
@@ -138,10 +162,11 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                   {gn.map((notif:any)=>{
-                    const cfg=TC[notif.type]??{icon:"🔔",color:"#5A7A50",label:"General"};
+                    const cfg=TC[notif.type]??{color:"#5A7A50",label:"General"};
+                    const icon=ICONS[notif.type]??ICONS.default;
                     return(
                       <div key={notif.id} style={{background:notif.is_read?"#1A2614":"#1E3018",border:`2px solid ${notif.is_read?"#2C4820":cfg.color+"60"}`,borderRadius:"10px",padding:"12px 16px",display:"flex",gap:"12px",alignItems:"flex-start",opacity:notif.is_read?0.75:1,transition:"all 0.2s"}}>
-                        <div style={{width:"36px",height:"36px",borderRadius:"8px",background:cfg.color+"20",border:`1.5px solid ${cfg.color}40`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"16px",flexShrink:0}}>{cfg.icon}</div>
+                        <div style={{width:"36px",height:"36px",borderRadius:"8px",background:cfg.color+"20",border:`1.5px solid ${cfg.color}40`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:cfg.color}}>{icon}</div>
                         <div style={{flex:1,minWidth:0}}>
                           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"8px",marginBottom:"3px"}}>
                             <span style={{fontFamily:R,fontSize:"12px",color:notif.is_read?"#5A7A50":cfg.color,letterSpacing:"1px"}}>{notif.title}</span>

@@ -60,7 +60,7 @@ export default function MemberDirectory({ members, currentUserId, followingIds: 
           const isMe = member.id === currentUserId;
           const isFollowing = following.has(member.id);
           return (
-            <div key={member.id} style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"16px", textAlign:"center" }}>
+            <div key={member.id} style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"16px", textAlign:"center" }} className="card-hover">
               {/* Avatar */}
               <div style={{ width:"56px", height:"56px", borderRadius:"50%", background:"#1A3D14", border:"2px solid #3CCE2A", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", margin:"0 auto 10px" }}>
                 {member.avatar_url
@@ -69,7 +69,7 @@ export default function MemberDirectory({ members, currentUserId, followingIds: 
                 }
               </div>
               <div style={{ fontFamily:R, fontSize:"13px", color:"#F0EAD6", letterSpacing:"1px", marginBottom:"4px" }}>
-                {member.display_name ?? "Member"}
+<Link href={`/members/community/members/${member.id}`} style={{ textDecoration:"none", color:"inherit" }}>{member.display_name ?? "Member"}</Link>
               </div>
               {member.bio && (
                 <div style={{ fontFamily:B, fontSize:"11px", color:"#5A7A50", lineHeight:1.5, marginBottom:"10px", overflow:"hidden", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" as const }}>

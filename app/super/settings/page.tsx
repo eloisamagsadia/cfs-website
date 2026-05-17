@@ -1,4 +1,5 @@
 "use client";
+import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -39,13 +40,7 @@ export default function SettingsPage() {
     if (data.settings) setSettings(data.settings);
   }
 
-<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <div className="skeleton skeleton-title" />
-      <div className="skeleton skeleton-card" />
-      <div className="skeleton skeleton-text" style={{ width: "80%" }} />
-      <div className="skeleton skeleton-text" style={{ width: "60%" }} />
-      <div className="skeleton skeleton-card" />
-    </div>
+if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px", maxWidth: "720px" }}>

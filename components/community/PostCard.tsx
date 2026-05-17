@@ -77,6 +77,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
   const [isReposted, setIsReposted] = useState((post.community_reposts ?? []).some((r: any) => r.user_id === currentUserId));
   const [repostCount, setRepostCount] = useState((post.community_reposts ?? []).length);
   const [showRepostMenu, setShowRepostMenu] = useState(false);
+  const [embedFailed, setEmbedFailed] = useState(false);
   const [commentReactions, setCommentReactions] = useState<Record<string, string>>({});
   const [showCommentReactions, setShowCommentReactions] = useState<string | null>(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -189,7 +190,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "0.5px" }}>{profile.display_name ?? "Member"}</span>
+              <a href={`/members/community/members/${profile.id}`} style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "0.5px", textDecoration: "none", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color="#3CCE2A")} onMouseLeave={e => (e.currentTarget.style.color="#F0EAD6")}>{profile.display_name ?? "Member"}</a>
               {profile.role && ROLE_BADGES[profile.role] && (
                 <span style={{ fontFamily: R, fontSize: "9px", color: ROLE_BADGES[profile.role].color, background: ROLE_BADGES[profile.role].bg, borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>
                   {ROLE_BADGES[profile.role].label}
@@ -281,12 +282,24 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
           <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 2, background: PLATFORM_COLORS[post.video_platform] ?? "#5A7A50", borderRadius: "6px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#fff", fontWeight: 700 }}>
             {PLATFORM_LABELS[post.video_platform] ?? "Video"}
           </div>
-          <iframe
-            src={post.video_embed_url}
-            style={{ width: "100%", height: "280px", border: "none", display: "block" }}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          {(post.video_platform === "tiktok" || post.video_platform === "instagram") && embedFailed ? (
+            <a href={post.video_url ?? post.video_embed_url} target="_blank" rel="noopener noreferrer"
+              style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px", background: "#243520", textDecoration: "none" }}>
+              <span style={{ fontSize: "28px" }}>{post.video_platform === "tiktok" ? "🎵" : "📸"}</span>
+              <div>
+                <p style={{ fontFamily: B, fontSize: "12px", color: "#F0EAD6", margin: 0 }}>{post.video_platform === "tiktok" ? "TikTok" : "Instagram"} Video</p>
+                <p style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", margin: "2px 0 0" }}>Click to open on {post.video_platform === "tiktok" ? "TikTok" : "Instagram"}</p>
+              </div>
+            </a>
+          ) : (
+            <iframe
+              src={post.video_embed_url}
+              style={{ width: "100%", height: "280px", border: "none", display: "block" }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              onError={() => setEmbedFailed(true)}
+            />
+          )}
         </div>
       )}
 
@@ -369,7 +382,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
                     {/* Name + content inline, no bubble */}
                     <div style={{ paddingBottom: "5px" }}>
                       <span style={{ fontFamily: R, fontSize: "12px", color: "#F0EAD6", letterSpacing: "0.5px", marginRight: "7px" }}>
-                        {comment.profiles?.display_name ?? "Member"}
+                        <a href={`/members/community/members/${comment.profiles?.id}`} style={{ color: "#F0EAD6", textDecoration: "none", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color="#3CCE2A")} onMouseLeave={e => (e.currentTarget.style.color="#F0EAD6")}>{comment.profiles?.display_name ?? "Member"}</a>
                       </span>
                       <span style={{ fontFamily: B, fontSize: "13px", color: "#C8C0A8", lineHeight: 1.65, wordBreak: "break-word" }}
                         dangerouslySetInnerHTML={{ __html: renderContent((comment.content || "").replace(/<[^>]*>/g, "")) }}
