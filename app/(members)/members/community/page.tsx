@@ -29,7 +29,7 @@ export default async function CommunityPage() {
       .from("community_posts" as any)
       .select("*, profiles:user_id(id,display_name,avatar_url,role), community_reactions(id,user_id,reaction_type), community_comments(id), community_reposts(id,user_id)")
       .eq("is_hidden", false)
-      .order("created_at", { ascending: false })
+      .order("is_pinned", { ascending: false }).order("created_at", { ascending: false })
       .limit(20),
     createAdminClient().from("community_categories" as any).select("*"),
     createAdminClient().from("community_posts" as any).select("*", { count: "exact", head: true }).eq("is_hidden", false),

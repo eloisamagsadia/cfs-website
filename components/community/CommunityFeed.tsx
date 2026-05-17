@@ -5,6 +5,14 @@ import CreatePost from "./CreatePost";
 import PostCard from "./PostCard";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
+
+function sortPosts(posts: any[]) {
+  return [...posts].sort((a, b) => {
+    if (b.is_pinned && !a.is_pinned) return 1;
+    if (a.is_pinned && !b.is_pinned) return -1;
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+}
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 interface CommunityFeedProps {
@@ -14,7 +22,7 @@ interface CommunityFeedProps {
 }
 
 export default function CommunityFeed({ initialPosts, categories, currentUser }: CommunityFeedProps) {
-  const [posts, setPosts] = useState(initialPosts ?? []);
+  const [posts, setPosts] = useState(sortPosts(initialPosts ?? []));
   const [imagePostCount, setImagePostCount] = useState(currentUser?.image_post_count ?? 0);
   const [activeCategory, setActiveCategory] = useState("");
   const [search, setSearch] = useState("");
@@ -44,7 +52,7 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
         if (updated.is_hidden) {
           setPosts(prev => prev.filter(p => p.id !== updated.id));
         } else {
-          setPosts(prev => prev.map(p => p.id === updated.id ? { ...p, ...updated } : p));
+          setPosts(prev => sortPosts(prev.map(p => p.id === updated.id ? { ...p, ...updated } : p)));
         }
       })
       .on("postgres_changes", { event: "DELETE", schema: "public", table: "community_posts" }, (payload) => {
@@ -100,7 +108,7 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
     if (q) params.set("q", q);
     const res = await fetch(`/api/community/posts?${params.toString()}`);
     const { posts: fresh } = await res.json();
-    setPosts(fresh ?? []);
+    setPosts(sortPosts(fresh ?? []));
     setLoading(false);
   }
 
@@ -131,7 +139,7 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
   }
 
   function handlePostCreated(newPost: any, newCount?: number) {
-    setPosts(prev => [newPost, ...prev]);
+    setPosts(prev => sortPosts([newPost, ...prev]));
     if (newCount !== undefined) setImagePostCount(newCount);
   }
 
