@@ -27,14 +27,18 @@ export async function POST(req: NextRequest) {
 
   const supabase = createAdminClient();
 
-  const { data: txn } = await supabase
-    .from("payment_transactions")
-    .select("reference_id, type")
+  const { data: txn } = await (supabase.from("payment_transactions") as any)
+    .select("reference_id, type, status")
     .eq("payment_link_id", linkId)
     .single();
 
   console.log("[paymongo] txn lookup:", txn);
   if (!txn) return NextResponse.json({ received: true });
+
+  if (txn.status === "paid") {
+    console.log("[paymongo] Already processed, skipping");
+    return NextResponse.json({ received: true });
+  }
 
   const reference = txn.reference_id as string;
   const type = txn.type as string;

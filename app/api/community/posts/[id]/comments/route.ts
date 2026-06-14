@@ -27,7 +27,6 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const content = raw.replace(/<\/?[^>]+(>|$)/g, "").replace(/style="[^"]*"/g, "").trim();
   const parent_comment_id = body.parent_comment_id ?? null;
 
-  console.log('API SAVING:', content);
   if (!content) return NextResponse.json({ error: "Content required" }, { status: 400 });
 
   const { data: comment, error } = await supabase
@@ -52,7 +51,6 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     });
   }
 
-  console.log('API RETURNING:', JSON.stringify(comment));
   return NextResponse.json({ comment });
 }
 
