@@ -47,7 +47,7 @@ export default async function ProjectsPage() {
         <div style={{ padding:"64px", display:"flex", flexDirection:"column", justifyContent:"center" }}>
  
           <h1 style={{ fontFamily:S, fontSize:"clamp(2.4rem,4vw,3.6rem)", color:C.forest, lineHeight:1.05, marginBottom:"16px" }}>
-            We Show Up.<br /><em style={{ fontStyle:"italic", color:C.sage }}>For Colet.</em>
+            We Show Up.<br /><em style={{ fontStyle:"italic", color:C.sage }}>Para Kay Colet.</em>
           </h1>
           <p style={{ fontFamily:B, fontSize:"15px", color:C.muted, maxWidth:"440px", lineHeight:1.9, marginBottom:"40px" }}>
             From charity outreach to concert fan projects — everything we do, we do for Colet and the community.

@@ -87,7 +87,7 @@ export default function DonatePage() {
         <div style={{ padding:"64px", display:"flex", flexDirection:"column", justifyContent:"center" }}>
          
           <h1 style={{ fontFamily:S, fontSize:"clamp(2.4rem,4vw,3.6rem)", color:C.forest, lineHeight:1.05, marginBottom:"16px" }}>
-            Your Peso Matters. <br /><em style={{ fontStyle:"italic", color:C.sage }}>All for Colet.</em>
+            Your Peso Matters. <br /><em style={{ fontStyle:"italic", color:C.sage }}>Para Kay Colet.</em>
           </h1>
           <p style={{ fontFamily:B, fontSize:"15px", color:C.muted, maxWidth:"440px", lineHeight:1.9 }}>
             Every peso funds fan projects, charity drives, and event productions. 100% transparent — all fund usage is in our quarterly reports.
