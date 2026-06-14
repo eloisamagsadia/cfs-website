@@ -11,14 +11,33 @@ export async function POST(req: NextRequest) {
   if (!isValid) console.warn("[paymongo] Signature verification failed — proceeding anyway (bypass enabled)");
 
   const payload = JSON.parse(rawBody);
+  console.log("[paymongo] Event:", payload.data?.attributes?.type,
+    "metadata:", JSON.stringify(payload.data?.attributes?.data?.attributes?.metadata));
   const eventType = payload.data?.attributes?.type;
   const eventData = payload.data?.attributes?.data;
   if (!eventType || !eventData) return NextResponse.json({ received: true });
 
-  const { reference, type } = (eventData.attributes?.metadata ?? {}) as { reference?: string; type?: string };
-  if (!reference || !type) return NextResponse.json({ received: true });
+  // PayMongo does not forward custom metadata from links to webhook events.
+  // Instead, look up the payment_transactions row by payment_link_id to get reference_id + type.
+  // For link.* events, the link ID is eventData.id.
+  // For payment.* events, the link ID is in eventData.attributes.source.id.
+  const linkId = eventData.id ?? eventData.attributes?.source?.id;
+  console.log("[paymongo] linkId:", linkId);
+  if (!linkId) return NextResponse.json({ received: true });
 
   const supabase = createAdminClient();
+
+  const { data: txn } = await supabase
+    .from("payment_transactions")
+    .select("reference_id, type")
+    .eq("payment_link_id", linkId)
+    .single();
+
+  console.log("[paymongo] txn lookup:", txn);
+  if (!txn) return NextResponse.json({ received: true });
+
+  const reference = txn.reference_id as string;
+  const type = txn.type as string;
 
   if (eventType === "payment.paid" || eventType === "link.payment.paid") {
     await (supabase.from("payment_transactions") as any)
