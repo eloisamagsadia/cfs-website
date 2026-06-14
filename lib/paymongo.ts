@@ -84,20 +84,29 @@ export async function verifyWebhookSignature(
   const webhookSecret = process.env.PAYMONGO_WEBHOOK_SECRET!;
 
   try {
-    const encoder = new TextEncoder();
-    const keyData = encoder.encode(webhookSecret);
-    const messageData = encoder.encode(rawBody);
+    const parts = Object.fromEntries(
+      signature.split(",").map((part) => part.split("=") as [string, string])
+    );
+    const timestamp = parts["t"];
+    const teSig = parts["te"];
+    const liSig = parts["li"];
+    if (!timestamp || (!teSig && !liSig)) return false;
 
+    const message = `${timestamp}.${rawBody}`;
+    const encoder = new TextEncoder();
     const cryptoKey = await crypto.subtle.importKey(
       "raw",
-      keyData,
+      encoder.encode(webhookSecret),
       { name: "HMAC", hash: "SHA-256" },
       false,
-      ["verify"]
+      ["sign"]
     );
 
-    const sigBuffer = Buffer.from(signature, "hex");
-    return await crypto.subtle.verify("HMAC", cryptoKey, sigBuffer, messageData);
+    const computed = Buffer.from(
+      await crypto.subtle.sign("HMAC", cryptoKey, encoder.encode(message))
+    ).toString("hex");
+
+    return computed === teSig || computed === liSig;
   } catch {
     return false;
   }
