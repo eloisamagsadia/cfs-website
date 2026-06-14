@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const R = "var(--font-righteous,'Righteous',sans-serif)";
+const R = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const socials = [
@@ -36,20 +36,17 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer style={{ background: "#060D04", borderTop: "1px solid #1A2614" }}>
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "32px 28px", display: "flex", flexDirection: "column", gap: "24px", alignItems: "center" }}>
+    <footer style={{ background: "#1B3A2D", borderTop: "1px solid #162E22" }}>
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "20px 28px", display: "flex", flexDirection: "column", gap: "24px", alignItems: "center" }}>
 
         {/* Logo */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 0L6 4L10 5L6 6L5 10L4 6L0 5L4 4Z" fill="#F5C82A"/></svg>
-          <span style={{ fontFamily: R, fontSize: "20px", color: "#3CCE2A", letterSpacing: "4px" }}>CFS</span>
-        </div>
+        <img src="https://media.coletfs.com/assets/logo/cfs-logo-white.png" alt="CFS" style={{ height: "150px", width: "auto", }} />
 
         {/* Nav links */}
         <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", justifyContent: "center" }}>
           {links.map(({ label, href }) => (
             <Link key={href} href={href}
-              style={{ fontFamily: R, fontSize: "10px", color: "#3A5230", letterSpacing: "1.5px", textDecoration: "none" }}>
+              style={{ fontFamily: R, fontSize: "10px", color: "#8FBF9F", letterSpacing: "1.5px", textDecoration: "none" }}>
               {label}
             </Link>
           ))}
@@ -59,18 +56,18 @@ export default function Footer() {
         <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
           {socials.map(({ label, href, icon }) => (
             <a key={label} href={href} aria-label={label}
-              className="footer-social" style={{ display: "flex" }}>
+              className="footer-social" style={{ display: "flex", color: "#8FBF9F" }}>
               {icon}
             </a>
           ))}
         </div>
 
         {/* Divider */}
-        <div style={{ width: "100%", height: "1px", background: "#1A2614" }} />
+        <div style={{ width: "100%", height: "1px", background: "rgba(255,255,255,.08)" }} />
 
         {/* Copyright */}
-        <span style={{ fontFamily: R, fontSize: "10px", color: "#2C4820", letterSpacing: "2px", textAlign: "center" }}>
-          © {new Date().getFullYear()} CFS BINI COLET ✦ PHILIPPINES
+        <span style={{ fontFamily: R, fontSize: "10px", color: "#4A7C59", letterSpacing: "2px", textAlign: "center" }}>
+          © {new Date().getFullYear()} Colet Fan Suporta ✦ 
         </span>
 
       </div>

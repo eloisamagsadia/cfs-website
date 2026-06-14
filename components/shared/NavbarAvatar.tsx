@@ -70,7 +70,7 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
   return (
     <div ref={ref} style={{ position: "relative" }}>
       <button onClick={() => setOpen(p => !p)}
-        style={{ background: "none", border: `2px solid ${open ? badge.color : "#2C4820"}`, borderRadius: "50%", padding: "2px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "38px", height: "38px", transition: "border-color 0.15s" }}>
+        style={{ background: "none", border: `2px solid ${open ? badge.color : "#DDE8DD"}`, borderRadius: "50%", padding: "2px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "38px", height: "38px", transition: "border-color 0.15s" }}>
         {avatarUrl
           ? <img src={avatarUrl} alt="" style={{ width: "30px", height: "30px", borderRadius: "50%", objectFit: "cover" }} />
           : <div style={{ width: "30px", height: "30px", borderRadius: "50%", background: badge.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>

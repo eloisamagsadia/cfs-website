@@ -10,6 +10,18 @@ export const metadata: Metadata = { title: "Shop — CFS" };
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const S = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
+const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
+
+const C = {
+  paper:  "#FAFDF9",
+  cream:  "#F2F7F2",
+  mist:   "#E8F0E4",
+  forest: "#1B3A2D",
+  sage:   "#4A7C59",
+  border: "#DDE8DD",
+  muted:  "#7A8E7A",
+  green:  "#3CCE2A",
+};
 
 function CategoryIcon({ name, color }: { name: string; color: string }) {
   const n = name.toLowerCase();
@@ -47,28 +59,27 @@ export default async function ShopPage() {
   const display = cats ?? [];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0F1A0B" }}>
+    <div style={{ minHeight: "100vh", background: "#FAFDF9" }}>
       <style>{`
         .cat-card { transition: border-color 0.2s, transform 0.2s; }
         .cat-card:hover { border-color: #3CCE2A !important; transform: translateY(-3px); }
         .cat-card:hover .cat-cta { background: #3CCE2A !important; color: #080F06 !important; }
       `}</style>
-
       {/* ── HERO ── */}
-      <div style={{ background: "#1A3D14", borderBottom: "2px solid #2C4820", padding: "56px 24px 48px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(60,206,42,0.1) 1.5px,transparent 1.5px)", backgroundSize: "18px 18px" }} />
-        <div style={{ position: "relative", zIndex: 1, maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "#0F1A0B", border: "1.5px solid #F07228", borderRadius: "20px", padding: "4px 16px", marginBottom: "20px" }}>
-<span style={{ fontFamily: R, fontSize: "10px", color: "#F07228", letterSpacing: "2.5px" }}>CFS OFFICIAL MERCH</span>
-          </div>
-          <h1 style={{ fontFamily: R, fontSize: "clamp(2rem,5vw,3.2rem)", color: "#F0EAD6", letterSpacing: "4px", marginBottom: "14px" }}>
-            OFFICIAL SHOP
+      <section style={{ display:"grid", gridTemplateColumns:"1fr 1fr", minHeight:"420px", overflow:"hidden", maxWidth:"1400px", margin:"0 auto", width:"100%" }}>
+        <div style={{ padding:"64px", display:"flex", flexDirection:"column", justifyContent:"center" }}>
+          
+          <h1 style={{ fontFamily:S, fontSize:"clamp(2.4rem,4vw,3.6rem)", color:C.forest, lineHeight:1.05, marginBottom:"16px" }}>
+            Rep the Fam.<br /><em style={{ fontStyle:"italic", color:C.sage }}>Wear the Love.</em>
           </h1>
-          <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "15px", color: "#8AAA78", maxWidth: "460px", margin: "0 auto", lineHeight: 1.8 }}>
-            Rep the CFS fam — exclusive merch for members. Every purchase supports our fan projects for Colet.
+          <p style={{ fontFamily:B, fontSize:"15px", color:C.muted, maxWidth:"400px", lineHeight:1.9 }}>
+            Exclusive merch for the fam. Every purchase supports our fan projects for Colet.
           </p>
         </div>
-      </div>
+        <div style={{ background:C.mist, position:"relative", overflow:"hidden", display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <img src="https://media.coletfs.com/assets/hero/shop/cfs-shop-hero.png" alt="CFS Shop" style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"center", position:"absolute", inset:0 }} />
+        </div>
+      </section>
 
       {/* ── CATEGORIES ── */}
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "48px 24px" }}>
@@ -84,17 +95,17 @@ export default async function ShopPage() {
               const accent = CAT_COLORS[i % CAT_COLORS.length];
               return (
                 <Link key={cat.id} href={`/shop/${cat.slug}`} style={{ textDecoration: "none" }}>
-                  <div className="cat-card" style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "14px", padding: "32px 24px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+                  <div className="cat-card" style={{ background: "#ffffff", border: "2px solid #2C4820", borderRadius: "14px", padding: "32px 24px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
                     {/* Icon circle */}
-                    <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "#0F1A0B", border: `2px solid ${accent}60`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "#FAFDF9", border: `2px solid ${accent}60`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <CategoryIcon name={cat.name} color={accent} />
                     </div>
-                    <h3 style={{ fontFamily: R, fontSize: "16px", color: "#F0EAD6", letterSpacing: "1.5px", margin: 0 }}>{cat.name}</h3>
+                    <h3 style={{ fontFamily: R, fontSize: "16px", color: "#1B3A2D", letterSpacing: "1.5px", margin: 0 }}>{cat.name}</h3>
                     {cat.description && (
-                      <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", lineHeight: 1.6, margin: 0 }}>{cat.description}</p>
+                      <p style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", lineHeight: 1.6, margin: 0 }}>{cat.description}</p>
                     )}
                     {/* CTA */}
-                    <div className="cat-cta" style={{ marginTop: "8px", background: "#243520", border: `1.5px solid ${accent}`, borderRadius: "6px", padding: "8px 20px", fontFamily: R, fontSize: "11px", color: accent, letterSpacing: "1.5px", transition: "background 0.2s, color 0.2s" }}>
+                    <div className="cat-cta" style={{ marginTop: "8px", background: "#E8F0E4", border: `1.5px solid ${accent}`, borderRadius: "6px", padding: "8px 20px", fontFamily: R, fontSize: "11px", color: accent, letterSpacing: "1.5px", transition: "background 0.2s, color 0.2s" }}>
                       SHOP NOW →
                     </div>
                   </div>
@@ -108,30 +119,35 @@ export default async function ShopPage() {
         </div>
         <div style={{ marginTop: "48px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "28px" }}>
-            <span style={{ fontFamily: R, fontSize: "12px", color: "#5A7A50", letterSpacing: "2px" }}>ALL PRODUCTS</span>
-            <div style={{ flex: 1, height: "1px", background: "#2C4820" }} />
+            <span style={{ fontFamily: R, fontSize: "12px", color: "#4A7C59", letterSpacing: "2px" }}>ALL PRODUCTS</span>
+            <div style={{ flex: 1, height: "1px", background: "#DDE8DD" }} />
           </div>
-          <div className="stagger" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: "16px" }}>
+          <div className="stagger" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: "20px" }}>
             {(products ?? []).map((p: any) => (
               <Link key={p.id} href={`/shop/${p.product_categories?.slug}/${p.id}`} style={{ textDecoration: "none", display: "flex", flexDirection: "column" }}>
-                <div className="cat-card" style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "14px", overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }} className="card-hover">
-                  <div style={{ height: "200px", background: "#243520", overflow: "hidden" }}>
+                <div className="cat-card" style={{ background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: "16px", overflow: "hidden", display: "flex", flexDirection: "column", height: "100%", boxShadow: "0 2px 12px rgba(0,0,0,0.04)", transition: "transform 0.2s, box-shadow 0.2s" }}>
+                  <div style={{ height: "auto", background: C.mist, overflow: "hidden", position: "relative", aspectRatio: "1/1" }}>
                     {p.images?.[0]
                       ? <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px" }}>🛍</div>
                     }
+                    {p.stock === 0 && (
+                      <div style={{ position: "absolute", inset: 0, background: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#F04060", letterSpacing: "2px", background: "#fff", padding: "6px 14px", borderRadius: "20px", border: "1px solid #F04060" }}>OUT OF STOCK</span>
+                      </div>
+                    )}
                   </div>
-                  <div style={{ padding: "16px" }}>
-                    <div style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "1px", marginBottom: "6px" }}>{p.name}</div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontFamily: R, fontSize: "15px", color: "#F07228" }}>₱{Number(p.price).toLocaleString()}</span>
-                      <span style={{ fontFamily: B, fontSize: "11px", color: p.stock > 0 ? "#3CCE2A" : "#F04060" }}>
+                  <div style={{ padding: "18px 20px", flex: 1, display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <div style={{ fontFamily: S, fontSize: "15px", color: C.forest, lineHeight: 1.3 }}>{p.name}</div>
+                    {p.product_categories?.name && (
+                      <div style={{ fontFamily: B, fontSize: "11px", color: C.muted }}>{p.product_categories.name}</div>
+                    )}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto", paddingTop: "12px", borderTop: `1px solid ${C.border}` }}>
+                      <span style={{ fontFamily: S, fontSize: "17px", color: "#F07228" }}>₱{Number(p.price).toLocaleString()}</span>
+                      <span style={{ fontFamily: B, fontSize: "10px", fontWeight: 700, color: p.stock > 0 ? C.sage : "#F04060", background: p.stock > 0 ? C.mist : "#FFF0F0", borderRadius: "20px", padding: "3px 10px" }}>
                         {p.stock > 0 ? "In stock" : "Out of stock"}
                       </span>
                     </div>
-                    {p.product_categories?.name && (
-                      <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", marginTop: "4px" }}>{p.product_categories.name}</div>
-                    )}
                   </div>
                 </div>
               </Link>
@@ -139,19 +155,7 @@ export default async function ShopPage() {
           </div>
         </div>
 
-        {/* Members only note */}
-        <div style={{ marginTop: "40px", background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "12px", padding: "18px 24px", display: "flex", alignItems: "center", gap: "14px" }}>
-          <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#0F2A0B", border: "1.5px solid #3CCE2A40", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 015 5 5 5 0 01-5 5 5 5 0 01-5-5 5 5 0 015-5zm0 12c5.33 0 8 2.67 8 4v2H4v-2c0-1.33 2.67-4 8-4z" fill="#3CCE2A"/></svg>
-          </div>
-          <div>
-            <div style={{ fontFamily: R, fontSize: "12px", color: "#F0EAD6", letterSpacing: "1px", marginBottom: "3px" }}>MEMBERS ONLY</div>
-            <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", lineHeight: 1.5 }}>
-              Some items are exclusive to CFS members. <Link href="/login" style={{ color: "#3CCE2A", textDecoration: "none" }}>Log in</Link> or <Link href="/register" style={{ color: "#3CCE2A", textDecoration: "none" }}>join the fam</Link> to unlock everything.
-            </div>
-          </div>
         </div>
       </div>
-    </div>
   );
 }

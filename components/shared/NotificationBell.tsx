@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-const R = "var(--font-righteous,'Righteous',sans-serif)";
+const R = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const ICONS: Record<string, React.ReactNode> = {
@@ -134,32 +134,32 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
     <div ref={ref} style={{ position: "relative" }}>
       <button onClick={handleOpen} style={{ position: "relative", display: "inline-flex", alignItems: "center", justifyContent: "center", background: "none", border: "none", cursor: "pointer", width: "34px", height: "34px", padding: 0 }}>
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M10 2C10 2 6 3.5 6 9V14L4 16H16L14 14V9C14 3.5 10 2 10 2Z" stroke={count > 0 ? "#F0EAD6" : "#8AAA78"} strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
-          <path d="M8 16C8 17.1 8.9 18 10 18C11.1 18 12 17.1 12 16" stroke={count > 0 ? "#F0EAD6" : "#8AAA78"} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+          <path d="M10 2C10 2 6 3.5 6 9V14L4 16H16L14 14V9C14 3.5 10 2 10 2Z" stroke={count > 0 ? "#1B3A2D" : "#7A8E7A"} strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
+          <path d="M8 16C8 17.1 8.9 18 10 18C11.1 18 12 17.1 12 16" stroke={count > 0 ? "#1B3A2D" : "#7A8E7A"} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
         </svg>
         {count > 0 && (
-          <span style={{ position: "absolute", top: "0px", right: "0px", background: "#F04060", border: "1.5px solid #080F06", borderRadius: "20px", minWidth: "16px", height: "16px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", color: "#F0EAD6", padding: "0 3px" }}>
+          <span style={{ position: "absolute", top: "0px", right: "0px", background: "#F04060", border: "1.5px solid #fff", borderRadius: "20px", minWidth: "16px", height: "16px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", color: "#F0EAD6", padding: "0 3px" }}>
             {count > 99 ? "99+" : count}
           </span>
         )}
       </button>
 
       {open && (
-        <div style={{ position: "fixed", top: "60px", right: "12px", left: "12px", width: "auto", maxWidth: "420px", marginLeft: "auto", background: "#1A2614", border: "2px solid #2C4820", borderRadius: "14px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)", zIndex: 200, overflow: "hidden" }}>
+        <div style={{ position: "fixed", top: "60px", right: "12px", left: "12px", width: "auto", maxWidth: "420px", marginLeft: "auto", background: "#FAFDF9", border: "1px solid #DDE8DD", borderRadius: "14px", boxShadow: "0 8px 32px rgba(0,0,0,0.12)", zIndex: 200, overflow: "hidden" }}>
           {/* Header */}
-          <div style={{ padding: "14px 16px", borderBottom: "1px solid #2C4820", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontFamily: R, fontSize: "12px", color: "#F0EAD6", letterSpacing: "2px" }}>NOTIFICATIONS {count > 0 && <span style={{ color: "#F04060" }}>({count})</span>}</span>
-            {count > 0 && <button onClick={markAllRead} style={{ fontFamily: R, fontSize: "9px", color: "#3CCE2A", background: "transparent", border: "none", cursor: "pointer", letterSpacing: "1px" }}>MARK ALL READ</button>}
+          <div style={{ padding: "14px 16px", borderBottom: "1px solid #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#fff" }}>
+            <span style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "2px" }}>NOTIFICATIONS {count > 0 && <span style={{ color: "#F04060" }}>({count})</span>}</span>
+            {count > 0 && <button onClick={markAllRead} style={{ fontFamily: R, fontSize: "9px", color: "#4A7C59", background: "transparent", border: "none", cursor: "pointer", letterSpacing: "1px" }}>MARK ALL READ</button>}
           </div>
 
           {/* List */}
           <div style={{ maxHeight: "400px", overflowY: "auto" }}>
             {loading ? (
-              <div style={{ padding: "32px", textAlign: "center", fontFamily: B, fontSize: "12px", color: "#5A7A50" }}>Loading...</div>
+              <div style={{ padding: "32px", textAlign: "center", fontFamily: B, fontSize: "12px", color: "#7A8E7A" }}>Loading...</div>
             ) : notifications.length === 0 ? (
               <div style={{ padding: "32px", textAlign: "center" }}>
                 <div style={{ fontSize: "32px", marginBottom: "8px" }}>🔔</div>
-                <div style={{ fontFamily: R, fontSize: "12px", color: "#5A7A50", letterSpacing: "1px" }}>ALL CAUGHT UP</div>
+                <div style={{ fontFamily: R, fontSize: "12px", color: "#7A8E7A", letterSpacing: "1px" }}>ALL CAUGHT UP</div>
               </div>
             ) : (() => {
               const TYPE_LABELS: Record<string,string> = {
@@ -192,9 +192,9 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
               });
               return Object.keys(groups).sort().map(group => (
                 <div key={group}>
-                  <div onClick={() => toggleGroup(group)} style={{ padding: "8px 16px 4px", fontFamily: R, fontSize: "9px", color: "#5A7A50", letterSpacing: "2px", background: "#162010", borderBottom: "1px solid #1C2E14", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div onClick={() => toggleGroup(group)} style={{ padding: "8px 16px 4px", fontFamily: R, fontSize: "9px", color: "#7A8E7A", letterSpacing: "2px", background: "#F2F7F2", borderBottom: "1px solid #DDE8DD", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span>{group.toUpperCase()} ({groups[group].length})</span>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#5A7A50" strokeWidth="2" strokeLinecap="round"><polyline points={collapsedGroups.has(group) ? "6 9 12 15 18 9" : "18 15 12 9 6 15"}/></svg>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#7A8E7A" strokeWidth="2" strokeLinecap="round"><polyline points={collapsedGroups.has(group) ? "6 9 12 15 18 9" : "18 15 12 9 6 15"}/></svg>
                   </div>
                   {!collapsedGroups.has(group) && groups[group].map(notif => {
                     const cfg = TC[notif.type] ?? { color: "#5A7A50" };
@@ -210,9 +210,9 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
                           onTouchStart={e => { swipeStart.current = e.touches[0].clientX; setSwipedId(notif.id); setSwipeX(0); }}
                           onTouchMove={e => { const dx = e.touches[0].clientX - swipeStart.current; if (dx < 0) setSwipeX(Math.max(dx, -80)); }}
                           onTouchEnd={() => { if (swipeX < -40) setSwipeX(-80); else { setSwipeX(0); setSwipedId(null); } }}
-                          style={{ padding: "10px 16px", borderBottom: "1px solid #1C2E14", display: "flex", gap: "10px", alignItems: "flex-start", cursor: notif.link ? "pointer" : "default", background: notif.is_read ? "transparent" : "#1E3018", opacity: notif.is_read ? 0.7 : 1, transform: swipedId === notif.id ? `translateX(${swipeX}px)` : "translateX(0)", transition: swipedId === notif.id ? "none" : "transform 0.2s ease", position: "relative", zIndex: 1 }}
-                          onMouseEnter={e => { if (notif.link) (e.currentTarget as HTMLDivElement).style.background = "#243520"; }}
-                          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = notif.is_read ? "transparent" : "#1E3018"; }}>
+                          style={{ padding: "10px 16px", borderBottom: "1px solid #EEF4EE", display: "flex", gap: "10px", alignItems: "flex-start", cursor: notif.link ? "pointer" : "default", background: notif.is_read ? "transparent" : "#F2F7F2", opacity: notif.is_read ? 0.7 : 1, transform: swipedId === notif.id ? `translateX(${swipeX}px)` : "translateX(0)", transition: swipedId === notif.id ? "none" : "transform 0.2s ease", position: "relative", zIndex: 1 }}
+                          onMouseEnter={e => { if (notif.link) (e.currentTarget as HTMLDivElement).style.background = "#EEF4EE"; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = notif.is_read ? "transparent" : "#F2F7F2"; }}>
                           {/* Avatar or icon */}
                           <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: cfg.color + "20", border: `1.5px solid ${cfg.color}40`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: cfg.color, overflow: "hidden" }}>
                             {notif.image_url
@@ -221,10 +221,10 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ display: "flex", justifyContent: "space-between", gap: "8px", marginBottom: "2px" }}>
-                              <span style={{ fontFamily: R, fontSize: "11px", color: notif.is_read ? "#5A7A50" : cfg.color, letterSpacing: "0.5px" }}>{notif.title}</span>
-                              <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", flexShrink: 0 }}>{timeAgo(notif.created_at)}</span>
+                              <span style={{ fontFamily: R, fontSize: "11px", color: notif.is_read ? "#7A8E7A" : cfg.color, letterSpacing: "0.5px" }}>{notif.title}</span>
+                              <span style={{ fontFamily: B, fontSize: "10px", color: "#7A8E7A", flexShrink: 0 }}>{timeAgo(notif.created_at)}</span>
                             </div>
-                            <div style={{ fontFamily: B, fontSize: "11px", color: notif.is_read ? "#5A7A50" : "#C8C0A8", lineHeight: 1.4 }}>{notif.message}</div>
+                            <div style={{ fontFamily: B, fontSize: "11px", color: notif.is_read ? "#7A8E7A" : "#1B3A2D", lineHeight: 1.4 }}>{notif.message}</div>
                           </div>
                           {!notif.is_read && <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: cfg.color, flexShrink: 0, marginTop: "4px" }} />}
                         </div>

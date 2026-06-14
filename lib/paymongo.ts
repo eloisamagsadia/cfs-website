@@ -14,6 +14,7 @@ export interface CreatePaymentLinkOptions {
   referenceId: string;      // your internal order/registration/donation ID
   type: PaymentType;
   remarks?: string;
+  redirectUrl?: string;     // where PayMongo redirects after payment
 }
 
 export interface PayMongoPaymentLink {
@@ -30,7 +31,7 @@ export interface PayMongoPaymentLink {
 export async function createPaymentLink(
   options: CreatePaymentLinkOptions
 ): Promise<PayMongoPaymentLink> {
-  const { amount, description, referenceId, type, remarks } = options;
+  const { amount, description, referenceId, type, remarks, redirectUrl } = options;
 
   const response = await fetch(`${PAYMONGO_BASE}/links`, {
     method: "POST",
@@ -44,6 +45,7 @@ export async function createPaymentLink(
           amount,                  // in centavos
           description,
           remarks: remarks ?? description,
+          redirect_url: redirectUrl,
           metadata: {
             reference: referenceId,
             type,

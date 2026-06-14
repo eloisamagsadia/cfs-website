@@ -160,9 +160,66 @@ avatars, products, events, reports, projects, badges, gallery, community, suppor
 
 ## Event System
 - Early access: sponsor → member → everyone
-- Tiers: Free / Paid (PayMongo pending)
+- Tiers: Free / Paid (PayMongo — see below)
 - Ticket: CFS-{USERNAME}-{RANDOM8}
 - PHT dates: lib/date.ts
+
+---
+
+## PayMongo Integration
+
+### Status
+- Built but not yet live (waiting for API keys)
+- Test with sk_test_* keys, go live by swapping to sk_live_*
+
+### Environment Variables needed in .env.local
+PAYMONGO_SECRET_KEY=sk_test_or_live_key
+PAYMONGO_PUBLIC_KEY=pk_test_or_live_key
+PAYMONGO_WEBHOOK_SECRET=whsk_key
+
+### Files Built
+- lib/paymongo.ts — createPaymentLink(), verifyWebhookSignature(), tocentavos()
+- app/api/paymongo/create-link/route.ts — POST, creates PayMongo link, saves to payment_transactions
+- app/api/paymongo/webhook/route.ts — POST, verifies signature, handles payment.paid
+- app/(public)/payment/success/page.tsx — success page per type (ticket/order/donation)
+- app/(public)/payment/failed/page.tsx — failed page with retry
+
+### Updated Files
+- components/public/EventRegisterButton.tsx — paid tiers redirect to PayMongo checkout
+- app/(public)/donate/page.tsx — donate button wired to PayMongo
+- middleware.ts — /api/paymongo/webhook and /payment(.*) added to publicRoutes
+
+### DB Table (run in Supabase)
+CREATE TABLE IF NOT EXISTS payment_transactions (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id text REFERENCES profiles(id),
+  type text NOT NULL,
+  reference_id text,
+  payment_link_id text,
+  payment_intent_id text,
+  amount numeric NOT NULL,
+  currency text DEFAULT 'PHP',
+  status text DEFAULT 'pending',
+  metadata jsonb,
+  created_at timestamptz DEFAULT now(),
+  paid_at timestamptz
+);
+
+### Flow
+1. User clicks PAY on event tier or DONATE button
+2. POST /api/paymongo/create-link → returns checkout_url
+3. window.location.href = checkout_url → user pays on PayMongo
+4. PayMongo POSTs to /api/paymongo/webhook on payment.paid
+5. Webhook updates payment_transactions + event_tickets/orders/donations
+6. User lands on /payment/success or /payment/failed
+
+### Go Live Checklist
+- Add real keys to .env.local (get from team PayMongo dashboard)
+- Register webhook in PayMongo Dashboard → Developers → Webhooks
+- URL: https://coletfs.com/api/paymongo/webhook
+- Event to listen: payment.paid
+- Run payment_transactions SQL in Supabase
+- Test with PayMongo test card: 4343 4343 4343 4343
 
 ---
 

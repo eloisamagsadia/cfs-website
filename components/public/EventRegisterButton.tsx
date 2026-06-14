@@ -39,7 +39,34 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
 
     if (!hasTiers) {
       if (event.price > 0) {
-        setError("Paid ticket registration coming soon. Please contact the admin.");
+        // Legacy paid event without tiers — create ticket then pay
+        setLoading(true); setError("");
+        try {
+          const ticketRes = await fetch("/api/events/tickets", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ event_id: event.id, tier_id: null }),
+          });
+          const ticketData = await ticketRes.json();
+          if (!ticketRes.ok) throw new Error(ticketData.error);
+          const payRes = await fetch("/api/paymongo/create-link", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              amount: event.price,
+              description: `${event.title} — Ticket`,
+              type: "ticket",
+              reference_id: ticketData.ticket.id,
+              success_url: `${window.location.origin}/payment/success?type=ticket&ref=${ticketData.ticket.id}`,
+            }),
+          });
+          const payData = await payRes.json();
+          if (!payRes.ok) throw new Error(payData.error);
+          window.location.href = payData.checkout_url;
+        } catch (e: any) {
+          setError(e.message ?? "Could not initiate payment.");
+          setLoading(false);
+        }
         return;
       }
       // Free event — old register route
@@ -64,8 +91,34 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
     if (!tier) { setError("Please select a tier."); return; }
 
     if (tier.price > 0) {
-      // Paid — stub for PayMongo
-      setError("Paid tickets coming soon. Please contact the admin.");
+      // Paid tier — create ticket with pending_payment status, then redirect to checkout
+      setLoading(true); setError("");
+      try {
+        const ticketRes = await fetch("/api/events/tickets", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ event_id: event.id, tier_id: tier.id }),
+        });
+        const ticketData = await ticketRes.json();
+        if (!ticketRes.ok) throw new Error(ticketData.error);
+        const payRes = await fetch("/api/paymongo/create-link", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: tier.price,
+            description: `${event.title} — ${tier.name}`,
+            type: "ticket",
+            reference_id: ticketData.ticket.id,
+            success_url: `${window.location.origin}/payment/success?type=ticket&ref=${ticketData.ticket.id}`,
+          }),
+        });
+        const payData = await payRes.json();
+        if (!payRes.ok) throw new Error(payData.error);
+        window.location.href = payData.checkout_url;
+      } catch (e: any) {
+        setError(e.message ?? "Could not initiate payment.");
+        setLoading(false);
+      }
       return;
     }
 
@@ -91,14 +144,14 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
   if (registered) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <div style={{ background: "#1A3D14", border: "2px solid #3CCE2A", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
+        <div style={{ background: "#E8F5E9", border: "2px solid #3CCE2A", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
           <div style={{ fontSize: "28px", marginBottom: "8px" }}>🎫</div>
           <div style={{ fontFamily: R, fontSize: "14px", color: "#3CCE2A", letterSpacing: "1.5px", marginBottom: "4px" }}>YOU'RE REGISTERED!</div>
           <div style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Your ticket is ready</div>
         </div>
         {ticketId && (
           <button onClick={() => router.push(`/members/tickets/${ticketId}`)}
-            style={{ width: "100%", fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+            style={{ width: "100%", fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#1B3A2D", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
             VIEW MY TICKET →
           </button>
         )}
@@ -127,7 +180,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
 
       {/* Not open yet */}
       {isNotOpenYet && (
-        <div style={{ background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
+        <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
           <div style={{ fontFamily: R, fontSize: "12px", color: "#5A7A50", letterSpacing: "1px" }}>REGISTRATION OPENS</div>
           <div style={{ fontFamily: R, fontSize: "14px", color: "#F0EAD6", marginTop: "4px" }}>{sponsorDate?.toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}</div>
         </div>
@@ -153,9 +206,9 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
             const isSelected = selectedTier?.id === tier.id;
             return (
               <button key={tier.id} onClick={() => !isSoldOut && setSelectedTier(tier)} disabled={isSoldOut}
-                style={{ background: isSelected ? tier.color + "20" : "#243520", border: `2px solid ${isSelected ? tier.color : "#2C4820"}`, borderRadius: "10px", padding: "12px 14px", cursor: isSoldOut ? "not-allowed" : "pointer", textAlign: "left", opacity: isSoldOut ? 0.5 : 1, transition: "all 0.15s" }}>
+                style={{ background: isSelected ? tier.color + "20" : "#ffffff", border: `1.5px solid ${isSelected ? tier.color : "#DDE8DD"}`, borderRadius: "10px", padding: "12px 14px", cursor: isSoldOut ? "not-allowed" : "pointer", textAlign: "left", opacity: isSoldOut ? 0.5 : 1, transition: "all 0.15s" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: tier.perks?.length ? "6px" : 0 }}>
-                  <span style={{ fontFamily: R, fontSize: "13px", color: isSelected ? tier.color : "#F0EAD6", letterSpacing: "1px" }}>{tier.name}</span>
+                  <span style={{ fontFamily: R, fontSize: "13px", color: isSelected ? tier.color : "#1B3A2D", letterSpacing: "1px" }}>{tier.name}</span>
                   <span style={{ fontFamily: R, fontSize: "13px", color: tier.price > 0 ? "#F07228" : "#3CCE2A" }}>
                     {tier.price > 0 ? `₱${Number(tier.price).toLocaleString()}` : "FREE"}
                   </span>
@@ -186,7 +239,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
       {!isNotOpenYet && !isEarlyAccessOnly && (<button onClick={handleRegister} disabled={loading}
         style={{ position: "relative", display: "block", width: "100%", background: "transparent", border: "none", padding: 0, cursor: loading ? "not-allowed" : "pointer" }}>
         <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "8px" }} />
-        <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "15px", background: loading ? "#1A3D14" : (selectedTier?.price > 0 || (!hasTiers && event.price > 0)) ? "#F07228" : "#3CCE2A", color: loading ? "#5A7A50" : "#080F06", padding: "14px", border: "2px solid #080F06", borderRadius: "8px", textAlign: "center", letterSpacing: "2px" }}>
+        <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "15px", background: loading ? "#E8F5E9" : (selectedTier?.price > 0 || (!hasTiers && event.price > 0)) ? "#F07228" : "#3CCE2A", color: loading ? "#4A7C59" : "#080F06", padding: "14px", border: "2px solid #080F06", borderRadius: "8px", textAlign: "center", letterSpacing: "2px" }}>
           {loading ? "LOADING..." : !isLoggedIn ? "LOGIN TO REGISTER" : (selectedTier?.price > 0 || (!hasTiers && event.price > 0)) ? `PAY ₱${Number(selectedTier?.price ?? event.price).toLocaleString()} →` : "RSVP FREE ✦"}
         </span>
       </button>)}

@@ -12,6 +12,8 @@ export const revalidate = 0;
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const S = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
+const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
+const C = { paper:"#FAFDF9", cream:"#F2F7F2", mist:"#E8F0E4", forest:"#1B3A2D", sage:"#4A7C59", border:"#DDE8DD", muted:"#7A8E7A", green:"#3CCE2A" };
 
 const CAT_COLORS: Record<string, string> = {
   apparel: "#F07228", photocards: "#F5C82A", accessories: "#8EE440",
@@ -51,7 +53,7 @@ export default async function ProductDetailPage({ params }: { params: { category
   const images: string[] = product.images ?? [];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0F1A0B" }}>
+    <div style={{ minHeight: "100vh", background: C.paper }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "32px 16px" }}>
 
         {/* Breadcrumb */}
@@ -62,7 +64,7 @@ export default async function ProductDetailPage({ params }: { params: { category
             {(product.product_categories as any)?.name?.toUpperCase() ?? params.category.toUpperCase()}
           </Link>
           <span style={{ color: "#3A5030" }}>/</span>
-          <span style={{ fontFamily: R, fontSize: "11px", color: accentColor, letterSpacing: "1px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "200px" }}>{product.name.toUpperCase()}</span>
+          <span style={{ fontFamily: R, fontSize: "11px", color: C.sage, letterSpacing: "0.5px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "200px" }}>{product.name.toUpperCase()}</span>
         </div>
 
         {/* Main product layout */}
@@ -76,17 +78,17 @@ export default async function ProductDetailPage({ params }: { params: { category
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             {/* Category badge */}
             <div>
-              <Link href={`/shop/${params.category}`} style={{ fontFamily: R, fontSize: "11px", color: accentColor, background: accentColor + "20", border: `1px solid ${accentColor}40`, borderRadius: "20px", padding: "3px 12px", textDecoration: "none", letterSpacing: "1px" }}>
+              <Link href={`/shop/${params.category}`} style={{ fontFamily: R, fontSize: "11px", color: C.sage, background: C.mist, border: `1px solid ${C.border}`, borderRadius: "20px", padding: "3px 12px", textDecoration: "none", letterSpacing: "1px" }}>
                 {(product.product_categories as any)?.name?.toUpperCase() ?? "PRODUCT"}
               </Link>
             </div>
 
             {/* Name */}
-            <h1 style={{ fontFamily: R, fontSize: "clamp(1.4rem,4vw,2.2rem)", color: "#F0EAD6", letterSpacing: "2px" }}>{product.name}</h1>
+            <h1 style={{ fontFamily: S, fontSize: "clamp(1.6rem,4vw,2.4rem)", color: C.forest, letterSpacing: "0" }}>{product.name}</h1>
 
             {/* Price */}
             <div style={{ display: "flex", alignItems: "baseline", gap: "12px" }}>
-              <span style={{ fontFamily: R, fontSize: "2rem", color: accentColor }}> ₱{Number(product.price).toLocaleString()}</span>
+              <span style={{ fontFamily: S, fontSize: "2rem", color: C.forest }}> ₱{Number(product.price).toLocaleString()}</span>
               {inStock
                 ? <span style={{ fontFamily: B, fontSize: "12px", color: "#3CCE2A" }}>{product.stock <= 5 ? `Only ${product.stock} left!` : "In stock"}</span>
                 : <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>Out of stock</span>
@@ -95,7 +97,7 @@ export default async function ProductDetailPage({ params }: { params: { category
 
             {/* Description */}
             {product.description && (
-              <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "15px", color: "#8AAA78", lineHeight: 1.9 }}>
+              <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "15px", color: C.muted, lineHeight: 1.9 }}>
                 {product.description}
               </p>
             )}
@@ -105,10 +107,10 @@ export default async function ProductDetailPage({ params }: { params: { category
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 {Object.entries(product.variants as Record<string, string[]>).map(([key, values]) => (
                   <div key={key}>
-                    <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "8px" }}>{key}</div>
+                    <div style={{ fontFamily: B, fontSize: "11px", color: C.muted, letterSpacing: "1px", textTransform: "uppercase", marginBottom: "8px" }}>{key}</div>
                     <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                       {(values as string[]).map((v: string) => (
-                        <button key={v} style={{ fontFamily: R, fontSize: "12px", color: "#F0EAD6", background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+                        <button key={v} style={{ fontFamily: R, fontSize: "12px", color: C.forest, background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: "6px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1px" }}>
                           {v}
                         </button>
                       ))}
@@ -119,7 +121,7 @@ export default async function ProductDetailPage({ params }: { params: { category
             )}
 
             {/* Divider */}
-            <div style={{ height: "1px", background: "#2C4820" }}/>
+            <div style={{ height: "1px", background: C.border }}/>
 
             {/* Add to cart */}
             <AddToCartButton
@@ -130,17 +132,19 @@ export default async function ProductDetailPage({ params }: { params: { category
             />
 
             {/* Delivery info */}
-            <div style={{ background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "12px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
-              {[
-                { icon: "🚚", text: "Ships within 3-5 business days" },
-                { icon: "📦", text: "Shipping fee based on region and weight" },
-                { icon: "🔒", text: "Secure checkout" },
-              ].map(({ icon, text }) => (
-                <div key={text} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span style={{ fontSize: "14px" }}>{icon}</span>
-                  <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>{text}</span>
-                </div>
-              ))}
+            <div style={{ background: C.cream, border: `1px solid ${C.border}`, borderRadius: "8px", padding: "12px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="1" y="3" width="15" height="13" rx="1" stroke={C.sage} strokeWidth="1.8"/><path d="M16 8h4l3 5v3h-7V8z" stroke={C.sage} strokeWidth="1.8" strokeLinejoin="round"/><circle cx="5.5" cy="18.5" r="1.5" stroke={C.sage} strokeWidth="1.8"/><circle cx="18.5" cy="18.5" r="1.5" stroke={C.sage} strokeWidth="1.8"/></svg>
+                <span style={{ fontFamily:B, fontSize:"12px", color:C.muted }}>Ships within 3-5 business days</span>
+              </div>
+              <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke={C.sage} strokeWidth="1.8" strokeLinejoin="round"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke={C.sage} strokeWidth="1.8"/></svg>
+                <span style={{ fontFamily:B, fontSize:"12px", color:C.muted }}>Shipping fee based on region and weight</span>
+              </div>
+              <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke={C.sage} strokeWidth="1.8"/><path d="M7 11V7a5 5 0 0110 0v4" stroke={C.sage} strokeWidth="1.8" strokeLinecap="round"/></svg>
+                <span style={{ fontFamily:B, fontSize:"12px", color:C.muted }}>Secure checkout</span>
+              </div>
             </div>
           </div>
         </div>
@@ -149,22 +153,22 @@ export default async function ProductDetailPage({ params }: { params: { category
         {related && related.length > 0 && (
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
-              <h2 style={{ fontFamily: R, fontSize: "1.2rem", color: "#F0EAD6", letterSpacing: "2px" }}>MORE FROM {(product.product_categories as any)?.name?.toUpperCase()}</h2>
-              <div style={{ flex: 1, height: "1px", background: "#2C4820" }}/>
+              <h2 style={{ fontFamily: R, fontSize: "1.2rem", color: C.forest, letterSpacing: "1px" }}>MORE FROM {(product.product_categories as any)?.name?.toUpperCase()}</h2>
+              <div style={{ flex: 1, height: "1px", background: C.border }}/>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: "12px" }}>
               {related.map((p: any) => (
                 <Link key={p.id} href={`/shop/${params.category}/${p.id}`} style={{ textDecoration: "none" }}>
-                  <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", overflow: "hidden" }}>
-                    <div style={{ height: "160px", background: "#243520", overflow: "hidden" }}>
+                  <div style={{ background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: "12px", overflow: "hidden" }}>
+                    <div style={{ height: "160px", background: C.mist, overflow: "hidden" }}>
                       {p.images?.[0]
                         ? <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} loading="lazy"/>
                         : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "36px" }}>🛍</div>
                       }
                     </div>
                     <div style={{ padding: "12px" }}>
-                      <div style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "1px", marginBottom: "4px" }}>{p.name}</div>
-                      <div style={{ fontFamily: R, fontSize: "14px", color: accentColor }}>₱{Number(p.price).toLocaleString()}</div>
+                      <div style={{ fontFamily: R, fontSize: "13px", color: C.forest, marginBottom: "4px" }}>{p.name}</div>
+                      <div style={{ fontFamily: B, fontSize: "14px", color: C.sage }}>₱{Number(p.price).toLocaleString()}</div>
                     </div>
                   </div>
                 </Link>

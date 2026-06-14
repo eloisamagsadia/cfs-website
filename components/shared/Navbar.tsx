@@ -5,7 +5,7 @@ import NotificationBell from "./NotificationBell";
 import NavbarAvatar from "./NavbarAvatar";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 
-const R = "var(--font-righteous,'Righteous',sans-serif)";
+const R = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const navLinks = [
@@ -54,24 +54,23 @@ export default async function Navbar() {
 
   return (
     <>
-      <header style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(15,26,11,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid #1E3318" }}>
+      <header style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(250,253,249,0.96)", backdropFilter: "blur(12px)", borderBottom: "1px solid #DDE8DD" }}>
         <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 32px", maxWidth: "1320px", margin: "0 auto" }}>
 
           {/* Logo */}
-          <Link href="/" style={{ textDecoration: "none" }} className="cfs-logo">
-            <div className="cfs-logo-inner" style={{ display: "flex", alignItems: "center", gap: "8px", background: "#0F1A0B", border: "1.5px solid #2C4820", borderRadius: "10px", padding: "6px 16px", transition: "border-color 0.2s" }}>
-              <svg width="12" height="12" viewBox="0 0 10 10">
-                <path d="M5 0L6 4L10 5L6 6L5 10L4 6L0 5L4 4Z" fill="#F5C82A"/>
-              </svg>
-              <span style={{ fontFamily: R, fontSize: "17px", color: "#3CCE2A", letterSpacing: "3px" }}>CFS</span>
-            </div>
+          <Link href="/" style={{ textDecoration: "none" }}>
+            <img
+              src="https://media.coletfs.com/assets/logo/cfs-logo.svg"
+              alt="CFS Logo"
+              style={{ height: "120px", width: "auto", display: "block", marginTop: "-15px", marginBottom: "-15px" }}
+            />
           </Link>
 
           {/* Nav links */}
           <div className="nav-links" style={{ display: "flex", gap: "28px", alignItems: "center" }}>
             {navLinks.map(({ label, href }) => (
               <Link key={href} href={href} className="nav-link"
-                style={{ fontFamily: R, fontSize: "11px", color: "#6A8A60", letterSpacing: "2px", textDecoration: "none" }}>
+                style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "1.5px", textDecoration: "none", fontWeight: "500" }} className="nav-link-light">
                 {label}
               </Link>
             ))}
@@ -91,11 +90,11 @@ export default async function Navbar() {
             ) : (
               <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                 <Link href="/sign-in"
-                  style={{ fontFamily: R, fontSize: "11px", color: "#6A8A60", letterSpacing: "2px", textDecoration: "none" }}>
+                  style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "1.5px", textDecoration: "none", fontWeight: "500" }} className="nav-link-light">
                   SIGN IN
                 </Link>
                 <Link href="/sign-up" style={{ textDecoration: "none" }}>
-                  <div style={{ fontFamily: R, fontSize: "11px", background: "#F5C82A", color: "#080F06", padding: "7px 18px", borderRadius: "8px", letterSpacing: "2px" }}>
+                  <div style={{ fontFamily: R, fontSize: "11px", background: "#1B3A2D", color: "#fff", padding: "8px 20px", borderRadius: "6px", letterSpacing: "1px", fontWeight: "700", fontSize: "11px" }}>
                     JOIN ✦
                   </div>
                 </Link>
@@ -105,7 +104,7 @@ export default async function Navbar() {
         </nav>
 
         {/* Bottom accent line */}
-        <div style={{ height: "1px", background: "linear-gradient(90deg, transparent, #2C4820 20%, #2C4820 80%, transparent)" }} />
+        <div style={{ height: "1px", background: "linear-gradient(90deg, transparent, #DDE8DD 20%, #DDE8DD 80%, transparent)" }} />
       </header>
     </>
   );
