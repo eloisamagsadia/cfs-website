@@ -106,11 +106,6 @@ export async function verifyWebhookSignature(
       await crypto.subtle.sign("HMAC", cryptoKey, encoder.encode(message))
     ).toString("hex");
 
-    console.log("[paymongo-sig] secret starts:", webhookSecret?.substring(0, 10));
-    console.log("[paymongo-sig] timestamp:", timestamp);
-    console.log("[paymongo-sig] computed:", computed?.substring(0, 16));
-    console.log("[paymongo-sig] te:", teSig?.substring(0, 16));
-    console.log("[paymongo-sig] li:", liSig?.substring(0, 16));
     return computed === teSig || computed === liSig;
   } catch {
     return false;

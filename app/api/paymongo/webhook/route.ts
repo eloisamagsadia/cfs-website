@@ -6,9 +6,8 @@ export async function POST(req: NextRequest) {
   const rawBody = await req.text();
   const signature = req.headers.get("paymongo-signature") ?? "";
 
-  // TODO: re-enable signature verification before launch
   const isValid = await verifyWebhookSignature(rawBody, signature);
-  if (!isValid) console.warn("[paymongo] Signature verification failed — proceeding anyway (bypass enabled)");
+  if (!isValid) return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
 
   const payload = JSON.parse(rawBody);
   console.log("[paymongo] Event:", payload.data?.attributes?.type,
