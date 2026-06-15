@@ -62,23 +62,30 @@ export default function CheckoutPage() {
     }
     setSubmitting(true); setError("");
     try {
-      const res = await fetch("/api/paymongo/create-payment", {
+      // Create order record first to get the order ID
+      const orderRes = await fetch("/api/orders/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items, subtotal, shipping_fee: shippingFee, total: Math.round(total), shipping_address: form }),
+      });
+      const { orderId, error: orderError } = await orderRes.json();
+      if (orderError) throw new Error(orderError);
+
+      // Create PayMongo payment link using the order ID as reference
+      const payRes = await fetch("/api/paymongo/create-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "order",
-          items,
-          subtotal,
-          shipping_fee: shippingFee,
-          total: Math.round(total),
-          shipping_address: form,
-          description: `CFS Shop Order - ${items.length} item(s)`,
+          reference_id: orderId,
+          amount: Math.round(total),
+          description: "CFS Shop Order",
         }),
       });
-      const { checkoutUrl, error: payError } = await res.json();
+      const { checkout_url, error: payError } = await payRes.json();
       if (payError) throw new Error(payError);
       await fetch("/api/cart/clear", { method: "POST" });
-      window.location.href = checkoutUrl;
+      window.location.href = checkout_url;
     } catch (e: any) {
       setError(e.message ?? "Something went wrong. Please try again.");
       setSubmitting(false);
@@ -154,11 +161,7 @@ export default function CheckoutPage() {
               <span style={{ fontFamily:R, fontSize:"15px", color:"#F07228" }}>P{fmt(total)}</span>
             </div>
           </div>
-          <div style={{ background:"#1A2614", border:"1.5px solid #F07228", borderRadius:"8px", padding:"12px 14px", marginBottom:"10px", textAlign:"center" }}>
-            <div style={{ fontFamily:R, fontSize:"11px", color:"#F07228", letterSpacing:"1px", marginBottom:"4px" }}>PAYMENT COMING SOON</div>
-            <div style={{ fontFamily:B, fontSize:"11px", color:"#5A7A50", lineHeight:1.5 }}>Online payment is being set up. Please contact us to complete your order.</div>
-          </div>
-          <button disabled style={{ position:"relative", display:"block", width:"100%", background:"transparent", border:"none", cursor:"not-allowed", padding:0, opacity:0.4 }}>
+          <button onClick={handleCheckout} disabled={submitting} style={{ position:"relative", display:"block", width:"100%", background:"transparent", border:"none", cursor: submitting ? "not-allowed" : "pointer", padding:0, opacity: submitting ? 0.6 : 1 }}>
             <span style={{ position:"absolute", top:"3px", left:"3px", width:"100%", height:"100%", background:"#080F06", borderRadius:"6px", display:"block" }}/>
             <span style={{ position:"relative", display:"block", background:"#F07228", border:"2px solid #080F06", borderRadius:"6px", padding:"12px", textAlign:"center" }}>
               <span style={{ fontFamily:R, fontSize:"13px", color:"#F0EAD6", letterSpacing:"2px" }}>PAY P{fmt(total)}</span>
