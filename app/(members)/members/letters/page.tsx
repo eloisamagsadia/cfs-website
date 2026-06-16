@@ -70,7 +70,7 @@ export default function LettersPage() {
                   {letter.tags.length > 0 && (
                     <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "10px" }}>
                       {letter.tags.slice(0, 3).map((tag: string) => (
-                        <span key={tag} style={{ fontFamily: B, fontSize: "10px", color: "#1A8040", background: "#3D1A0A", borderRadius: "20px", padding: "2px 10px", letterSpacing: "0.5px" }}>
+                        <span key={tag} style={{ fontFamily: B, fontSize: "10px", color: "#1A8040", background: "#E8F4EC", borderRadius: "20px", padding: "2px 10px", letterSpacing: "0.5px" }}>
                           {tag}
                         </span>
                       ))}

@@ -25,12 +25,12 @@ export default async function AccountPage() {
 
   const sections = [
     { title:"PROFILE",   desc:"Avatar, display name, bio, social links", href:"/members/account/profile", color:"#1A8040", bg:"#E8F0E4" },
-    { title:"SETTINGS",  desc:"Notifications, privacy, 2FA",             href:"/members/account/settings", color:"#156530", bg:"#3D3000" },
-    { title:"MY EVENTS", desc:"Registered events & tickets",             href:"/members/events",           color:"#1A8040", bg:"#3D1A0A" },
+    { title:"SETTINGS",  desc:"Notifications, privacy, 2FA",             href:"/members/account/settings", color:"#156530", bg:"#E8F4EC" },
+    { title:"MY EVENTS", desc:"Registered events & tickets",             href:"/members/events",           color:"#1A8040", bg:"#E8F4EC" },
     { title:"MY ORDERS", desc:"Order history & tracking",                href:"/members/orders",           color:"#1A8040", bg:"#1E3010" },
-    { title:"MY MEDIA",  desc:"Images you've uploaded across the site",   href:"/members/account/media",    color:"#1A8040", bg:"#3D1A0A" },
+    { title:"MY MEDIA",  desc:"Images you've uploaded across the site",   href:"/members/account/media",    color:"#1A8040", bg:"#E8F4EC" },
     { title:"MY POSTS",   desc:"Your posts and reposts in the community",   href:"/members/account/posts",    color:"#1A8040", bg:"#E8F0E4" },
-    { title:"MY ACTIVITY",desc:"Comments, reactions and interactions",      href:"/members/account/activity", color:"#156530", bg:"#3D3000" },
+    { title:"MY ACTIVITY",desc:"Comments, reactions and interactions",      href:"/members/account/activity", color:"#156530", bg:"#E8F4EC" },
   ];
 
   return (

@@ -8,14 +8,14 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const TYPE_CONFIG: Record<string, { icon: string; color: string; bg: string }> = {
   event_reminder:    { icon: "🎫", color: "#1A8040", bg: "#E8F0E4" },
-  order_update:      { icon: "🛍",  color: "#1A8040", bg: "#3D1A0A" },
-  community_reply:   { icon: "💬", color: "#156530", bg: "#3D3000" },
-  community_mention: { icon: "📢", color: "#156530", bg: "#3D3000" },
-  badge_earned:      { icon: "⭐", color: "#1A8040", bg: "#1E3010" },
+  order_update:      { icon: "🛍",  color: "#1A8040", bg: "#E8F4EC" },
+  community_reply:   { icon: "💬", color: "#156530", bg: "#E8F4EC" },
+  community_mention: { icon: "📢", color: "#156530", bg: "#E8F4EC" },
+  badge_earned:      { icon: "⭐", color: "#1A8040", bg: "#E8F4EC" },
   new_follower:      { icon: "👤", color: "#1A8040", bg: "#E8F0E4" },
-  donation_ack:      { icon: "♥",  color: "#CC3344", bg: "#3D0A18" },
+  donation_ack:      { icon: "♥",  color: "#CC3344", bg: "#FFE8EC" },
   new_report:        { icon: "📋", color: "#1A8040", bg: "#E8F0E4" },
-  announcement:      { icon: "📣", color: "#1A8040", bg: "#3D1A0A" },
+  announcement:      { icon: "📣", color: "#1A8040", bg: "#E8F4EC" },
 };
 
 interface ToastItem {

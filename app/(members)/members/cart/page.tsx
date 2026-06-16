@@ -76,7 +76,7 @@ export default function CartPage() {
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
           <div style={{ fontSize: "40px", marginBottom: "12px" }}>🛒</div>
           <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "16px" }}>YOUR CART IS EMPTY</div>
-          <Link href="/shop" style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #3D1A0A", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>BROWSE SHOP →</Link>
+          <Link href="/shop" style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>BROWSE SHOP →</Link>
         </div>
       ) : (
         <div className="cart-layout" style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: "20px", alignItems: "start" }}>

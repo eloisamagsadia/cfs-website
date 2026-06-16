@@ -22,7 +22,7 @@ const C = {
 };
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  upcoming:  { label: "UPCOMING",  color: "#156530", bg: "#3D3000" },
+  upcoming:  { label: "UPCOMING",  color: "#156530", bg: "#E8F4EC" },
   ongoing:   { label: "ONGOING",   color: "#1A8040", bg: "#F2F7F2" },
   completed: { label: "COMPLETED", color: "#4A7C59", bg: "#ffffff" },
   cancelled: { label: "CANCELLED", color: "#CC3344", bg: "#3D0A14" },

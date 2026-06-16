@@ -52,10 +52,10 @@ const PLATFORM_LABELS: Record<string, string> = {
 };
 
 const ROLE_BADGES: Record<string, { label: string; color: string; bg: string }> = {
-  super_admin: { label: "⚡ SUPER ADMIN", color: "#156530", bg: "#3D3000" },
-  admin:       { label: "🛡 ADMIN",       color: "#1A8040", bg: "#3D1A0A" },
-  moderator:   { label: "🔧 MOD",         color: "#5A7A60", bg: "#0A2A2A" },
-  sponsor:     { label: "✦ SPONSOR",      color: "#1A8040", bg: "#2A1A3D" },
+  super_admin: { label: "⚡ SUPER ADMIN", color: "#1B3A2D", bg: "#C8E0D0" },
+  admin:       { label: "🛡 ADMIN",       color: "#156530", bg: "#D8EDD8" },
+  moderator:   { label: "🔧 MOD",         color: "#1A8040", bg: "#E4F2E8" },
+  sponsor:     { label: "✦ SPONSOR",      color: "#4A7C59", bg: "#EEF6EE" },
 };
 
 const COMMENT_REACTIONS = ["❤️","👍","😂","😮","🔥","🥺"];
@@ -223,7 +223,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
             </div>
           <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
             <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(post.created_at)}</span>
-            {post.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#156530", background: "#3D3000", borderRadius: "4px", padding: "1px 5px" }}>📌</span>}
+            {post.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#156530", background: "#E8F4EC", borderRadius: "4px", padding: "1px 5px" }}>📌</span>}
           </div>
         </div>
         <div style={{ position: "relative" }} onClick={e => e.stopPropagation()}>
