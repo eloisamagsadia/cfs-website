@@ -21,7 +21,7 @@ export default authMiddleware({
     const { userId, sessionClaims } = auth;
     const pathname = req.nextUrl.pathname;
 
-    if (userId && (pathname === "/sign-in" || pathname === "/sign-up" || pathname === "/login" || pathname === "/register")) {
+    if (userId && (pathname === "/" || pathname === "/sign-in" || pathname === "/sign-up" || pathname === "/login" || pathname === "/register")) {
       const url = req.nextUrl.clone();
       url.pathname = "/members";
       return NextResponse.redirect(url);
