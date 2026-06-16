@@ -92,6 +92,21 @@ export async function sendEventTicket({
 }
 
 // ─── DONATION RECEIPT ────────────────────────────────────────────────────────
+function makeBarcode(seed: string): string {
+  // Generate pseudo-barcode SVG bars from the seed string
+  const bars: string[] = [];
+  let x = 0;
+  const chars = (seed + seed).slice(0, 40);
+  for (let i = 0; i < chars.length; i++) {
+    const code = chars.charCodeAt(i);
+    const w = (code % 3) + 1;   // 1, 2, or 3px wide
+    const gap = (code % 2) + 1;
+    if (i % 2 === 0) bars.push(`<rect x="${x}" y="0" width="${w}" height="56" fill="#111"/>`);
+    x += w + gap;
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${x}" height="56" style="display:block;margin:0 auto;">${bars.join("")}</svg>`;
+}
+
 export async function sendDonationReceipt({
   to, amount, message, donationId,
 }: {
@@ -100,27 +115,90 @@ export async function sendDonationReceipt({
   message?: string;
   donationId: string;
 }) {
+  const now    = new Date();
+  const date   = now.toLocaleDateString("en-PH", { month: "2-digit", day: "2-digit", year: "numeric" }).replace(/\//g, "/");
+  const time   = now.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", hour12: true });
+  const refNo  = donationId.slice(0, 12).toUpperCase();
+  const dash   = "- - - - - - - - - - - - - - - - - - - - - -";
+  const mono   = "Courier New, Courier, Lucida Console, monospace";
+
   await resend.emails.send({
     from: `${FROM_NAME} <${FROM}>`,
     to,
-    subject: `♥ Thank you for your donation to CFS!`,
+    subject: `Official Receipt #${refNo} — CFS Donation`,
     html: `
-      <div style="background:#0F1A0B;padding:32px;font-family:sans-serif;max-width:600px;margin:0 auto;">
-        <div style="text-align:center;margin-bottom:24px;">
-          <h1 style="color:#3CCE2A;font-size:28px;letter-spacing:4px;margin:0;">CFS</h1>
-        </div>
-        <div style="background:#3D0A18;border:2px solid #F04060;border-radius:12px;padding:24px;text-align:center;margin-bottom:20px;">
-          <div style="font-size:40px;margin-bottom:12px;">♥</div>
-          <h2 style="color:#F0EAD6;font-size:22px;letter-spacing:2px;margin:0 0 8px;">SALAMAT!</h2>
-          <p style="color:#F04060;font-size:28px;font-weight:bold;margin:0 0 8px;">₱${amount.toLocaleString()}</p>
-          <p style="color:#8AAA78;font-size:13px;margin:0;">Donation #${donationId.slice(0, 8).toUpperCase()}</p>
-          ${message ? `<p style="color:#F0EAD6;font-style:italic;font-size:14px;margin-top:12px;">"${message}"</p>` : ""}
-        </div>
-        <p style="color:#8AAA78;font-size:14px;text-align:center;line-height:1.8;">
-          Your donation helps CFS do more for Colet and the entire Bini community.<br/>
-          All fund usage is published in our quarterly transparency reports. ♥
-        </p>
-      </div>
+<div style="background:#f0f0f0;padding:32px 0;font-family:${mono};">
+  <div style="background:#ffffff;max-width:380px;margin:0 auto;padding:32px 28px;box-shadow:0 4px 20px rgba(0,0,0,0.12);">
+
+    <!-- Barcode -->
+    <div style="margin-bottom:18px;">
+      ${makeBarcode(donationId)}
+    </div>
+
+    <!-- Header -->
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:11px;letter-spacing:3px;color:#111;margin-bottom:4px;">OFFICIAL RECEIPT</div>
+      <div style="font-size:15px;font-weight:bold;letter-spacing:2px;color:#111;">CFS — COLET FAN SUPORTA</div>
+      <div style="font-size:10px;color:#666;margin-top:4px;letter-spacing:1px;">BINI COLET FAN SOCIETY</div>
+    </div>
+
+    <!-- Date / Time -->
+    <div style="text-align:center;font-size:12px;color:#333;margin-bottom:18px;letter-spacing:1px;">
+      ${date}&nbsp;&nbsp;&nbsp;${time}
+    </div>
+
+    <!-- Divider -->
+    <div style="color:#aaa;font-size:11px;text-align:center;margin-bottom:14px;letter-spacing:1px;">${dash}</div>
+
+    <!-- Column headers -->
+    <table style="width:100%;border-collapse:collapse;font-size:11px;color:#888;letter-spacing:1px;">
+      <tr>
+        <td style="padding-bottom:8px;">DESCRIPTION</td>
+        <td style="text-align:right;padding-bottom:8px;">AMT</td>
+      </tr>
+    </table>
+
+    <!-- Line items -->
+    <table style="width:100%;border-collapse:collapse;font-size:13px;color:#111;">
+      <tr>
+        <td style="padding:4px 0;">Fan Support Donation</td>
+        <td style="text-align:right;padding:4px 0;">₱${Number(amount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+      </tr>
+      ${message ? `<tr><td colspan="2" style="padding:4px 0;font-size:11px;color:#666;font-style:italic;">"${message}"</td></tr>` : ""}
+    </table>
+
+    <!-- Divider -->
+    <div style="color:#aaa;font-size:11px;text-align:center;margin:14px 0;letter-spacing:1px;">${dash}</div>
+
+    <!-- Total -->
+    <table style="width:100%;border-collapse:collapse;">
+      <tr>
+        <td style="font-size:15px;font-weight:bold;color:#111;letter-spacing:1px;">TOTAL</td>
+        <td style="text-align:right;font-size:15px;font-weight:bold;color:#111;">₱${Number(amount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#888;padding-top:6px;letter-spacing:1px;">PAYMENT METHOD</td>
+        <td style="text-align:right;font-size:11px;color:#888;padding-top:6px;">ONLINE</td>
+      </tr>
+      <tr>
+        <td style="font-size:11px;color:#888;letter-spacing:1px;">REF NO.</td>
+        <td style="text-align:right;font-size:11px;color:#888;">${refNo}</td>
+      </tr>
+    </table>
+
+    <!-- Divider -->
+    <div style="color:#aaa;font-size:11px;text-align:center;margin:18px 0 14px;letter-spacing:1px;">${dash}</div>
+
+    <!-- Footer -->
+    <div style="text-align:center;font-size:11px;color:#555;line-height:1.9;letter-spacing:0.5px;">
+      <div>Thank you for supporting Colet! ♥</div>
+      <div style="margin-top:4px;">Fund usage published in quarterly reports.</div>
+      <div style="margin-top:8px;color:#888;">coletfs.com</div>
+      <div style="color:#888;">@coletfansuporta</div>
+    </div>
+
+  </div>
+</div>
     `,
   });
 }
