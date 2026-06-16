@@ -14,9 +14,20 @@ export async function GET() {
   const supabase = createAdminClient();
   const { data: donations, error } = await supabase
     .from("donations")
-    .select("*, profiles:user_id(id, display_name, avatar_url, email)")
+    .select("*")
     .order("created_at", { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ donations: donations ?? [] });
+  if (!donations?.length) return NextResponse.json({ donations: [] });
+
+  const userIds = [...new Set(donations.map((d: any) => d.user_id).filter(Boolean))];
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("id, display_name, avatar_url, email")
+    .in("id", userIds);
+
+  const profileMap = Object.fromEntries((profiles ?? []).map((p: any) => [p.id, p]));
+  const merged = donations.map((d: any) => ({ ...d, profiles: profileMap[d.user_id] ?? null }));
+
+  return NextResponse.json({ donations: merged });
 }
