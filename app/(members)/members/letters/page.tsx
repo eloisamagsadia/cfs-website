@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { IconMail, IconPen, IconSend, IconX } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -81,8 +82,8 @@ export default function LettersPage() {
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header */}
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>LETTERS FOR COLET</h1>
-        <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "14px", color: "#4A7C59" }}>Fan letters written from the heart 💌</p>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px", display: "flex", alignItems: "center", gap: "10px" }}><IconMail size={22} color="#1B3A2D" /> LETTERS FOR COLET</h1>
+        <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "14px", color: "#4A7C59" }}>Fan letters written from the heart</p>
       </div>
 
       {/* Tabs */}
@@ -177,7 +178,7 @@ export default function LettersPage() {
                   style={{ fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #D8C878", borderRadius: "6px", color: "#8A7840", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
                 <button onClick={submitLetter} disabled={submitting || !form.title.trim() || !form.content.trim()}
                   style={{ fontFamily: R, fontSize: "11px", background: submitting || !form.title.trim() || !form.content.trim() ? "#E8D8A0" : "#1A8040", color: submitting || !form.title.trim() || !form.content.trim() ? "#8A7840" : "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", flex: 1 }}>
-                  {submitting ? "SENDING..." : "📮 SEND LETTER"}
+                  <span style={{ display: "flex", alignItems: "center", gap: "6px", justifyContent: "center" }}>{submitting ? "SENDING..." : <><IconSend size={12} color="currentColor" /> SEND LETTER</>}</span>
                 </button>
               </div>
             </div>
@@ -189,10 +190,10 @@ export default function LettersPage() {
               cursor: "pointer", textAlign: "center", width: "100%",
               display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
             }}>
-              <span style={{ fontSize: "20px" }}>✍️</span>
+              <IconPen size={20} color="#8A7040" />
               <div>
                 <div style={{ fontFamily: S, fontSize: "14px", color: "#6A5A30", fontStyle: "italic", marginBottom: "2px" }}>Write a letter to Colet</div>
-                <div style={{ fontFamily: B, fontSize: "11px", color: "#8A7850" }}>Share your heart — she sees every word 💚</div>
+                <div style={{ fontFamily: B, fontSize: "11px", color: "#8A7850" }}>Share your heart — she sees every word</div>
               </div>
             </button>
           )}
@@ -209,7 +210,7 @@ export default function LettersPage() {
               backgroundImage: "radial-gradient(ellipse at 2px 2px, rgba(0,0,0,0.07) 1.5px, transparent 0)", backgroundSize: "14px 14px",
               boxShadow: "inset 0 2px 8px rgba(0,0,0,0.2)",
             }}>
-              <div style={{ fontSize: "36px", marginBottom: "12px" }}>💌</div>
+              <div style={{ marginBottom: "12px" }}><IconMail size={36} color="rgba(255,255,255,0.8)" /></div>
               <div style={{ fontFamily: R, fontSize: "13px", color: "rgba(255,255,255,0.9)", letterSpacing: "2px", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>BE THE FIRST TO WRITE</div>
             </div>
           ) : (
@@ -253,8 +254,8 @@ export default function LettersPage() {
                         {/* Delete */}
                         {isOwn && (
                           <button onClick={() => deleteLetter(letter.id)} disabled={deletingId === letter.id}
-                            style={{ position: "absolute", top: "6px", right: "6px", background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "10px", color: "#CC3344", opacity: deletingId === letter.id ? 0.4 : 0.6, padding: "2px 4px" }}>
-                            ✕
+                            style={{ position: "absolute", top: "6px", right: "6px", background: "none", border: "none", cursor: "pointer", color: "#CC3344", opacity: deletingId === letter.id ? 0.4 : 0.6, padding: "2px 4px", display: "flex" }}>
+                            <IconX size={12} color="#CC3344" />
                           </button>
                         )}
                         {/* Author */}

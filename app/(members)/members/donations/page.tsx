@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { IconHeart } from "@/components/shared/Icons";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -58,7 +59,7 @@ export default async function MyDonationsPage() {
 
       {totalGiven > 0 && (
         <div style={{ background: "linear-gradient(135deg, #E8F0E4, #D4EAD0)", border: "2px solid #1A804040", borderRadius: "14px", padding: "24px", display: "flex", alignItems: "center", gap: "20px" }}>
-          <div style={{ fontSize: "36px" }}>💚</div>
+          <div><IconHeart size={36} color="#1A8040" /></div>
           <div>
             <div style={{ fontFamily: S, fontSize: "1.8rem", color: "#1A8040" }}>₱{totalGiven.toLocaleString()}</div>
             <div style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Total contributed to CFS — thank you for your support!</div>
@@ -68,7 +69,7 @@ export default async function MyDonationsPage() {
 
       {display.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
-          <div style={{ fontSize: "40px", marginBottom: "12px" }}>💚</div>
+          <div style={{ marginBottom: "12px" }}><IconHeart size={40} color="#DDE8DD" /></div>
           <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "16px" }}>NO DONATIONS YET</div>
           <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>DONATE NOW →</a>
         </div>

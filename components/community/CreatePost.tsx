@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
+import { IconX, IconMusic, IconPhoto, IconCamera, IconVideo, IconWarning } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -233,7 +234,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
               {mediaFiles.map((m, i) => (
                 <div key={i} style={{ position: "relative", borderRadius: "8px", overflow: "hidden", height: "120px" }}>
                   <img src={m.preview} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  <button onClick={() => removeMedia(i)} style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(0,0,0,0.7)", border: "none", borderRadius: "50%", width: "22px", height: "22px", color: "#fff", cursor: "pointer", fontSize: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+                  <button onClick={() => removeMedia(i)} style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(255,255,255,0.9)", border: "none", borderRadius: "50%", width: "22px", height: "22px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><IconX size={10} color="#CC3344" /></button>
                 </div>
               ))}
             </div>
@@ -252,7 +253,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
                 />
                 {videoUrl && (
                   <button onClick={() => { setVideoUrl(""); setVideoEmbed(null); setVideoError(""); setTiktokFailed(false); }}
-                    style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "16px" }}>✕</button>
+                    style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center" }}><IconX size={16} color="#5A7A60" /></button>
                 )}
               </div>
               {videoError && (
@@ -270,7 +271,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
                     /* TikTok fallback — link card */
                     <a href={videoEmbed.url} target="_blank" rel="noopener noreferrer"
                       style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px", background: "#F2F7F2", textDecoration: "none" }}>
-                      <span style={{ fontSize: "28px" }}>🎵</span>
+                      <IconMusic size={28} color="#4A7C59" />
                       <div>
                         <p style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", margin: 0 }}>TikTok Video</p>
                         <p style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", margin: "2px 0 0" }}>Click to open on TikTok</p>
@@ -294,7 +295,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
           {allowsMedia && imagePostCount > 0 && (
             <div style={{ marginTop: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
               <span style={{ fontFamily: B, fontSize: "11px", color: imagePostsRemaining <= 5 ? "#1A8040" : "#5A7A60" }}>
-                🖼 {imagePostCount}/{IMAGE_POST_LIMIT} image posts used this month
+                <IconPhoto size={11} color={imagePostsRemaining <= 5 ? "#1A8040" : "#5A7A60"} /> {imagePostCount}/{IMAGE_POST_LIMIT} image posts used this month
                 {imagePostsRemaining <= 5 && imagePostsRemaining > 0 && ` — ${imagePostsRemaining} left`}
                 {imagePostsRemaining === 0 && " — limit reached!"}
               </span>
@@ -303,8 +304,8 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
 
           {/* Post error */}
           {postError && (
-            <div style={{ marginTop: "8px", background: "#3D0A14", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "8px 12px" }}>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>⚠️ {postError}</span>
+            <div style={{ marginTop: "8px", background: "#FFE8EC", border: "1.5px solid #CC334440", borderRadius: "8px", padding: "8px 12px", display: "flex", alignItems: "center", gap: "6px" }}>
+              <IconWarning size={12} color="#CC3344" /><span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>{postError}</span>
             </div>
           )}
 
@@ -322,7 +323,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
                       title="Add photos"
                       style={{ background: activeMedia === "photo" ? "#DDE8DD" : "none", border: `1.5px solid ${activeMedia === "photo" ? "#1A8040" : "#DDE8DD"}`, borderRadius: "8px", padding: "6px 10px", cursor: mediaFiles.length >= 4 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: "5px", opacity: mediaFiles.length >= 4 && activeMedia !== "photo" ? 0.4 : 1, transition: "all 0.15s" }}
                     >
-                      <span style={{ fontSize: "15px" }}>📷</span>
+                      <IconCamera size={15} color={activeMedia === "photo" ? "#1A8040" : "#5A7A60"} />
                       <span style={{ fontFamily: B, fontSize: "11px", color: activeMedia === "photo" ? "#1A8040" : "#5A7A60" }}>
                         {mediaFiles.length > 0 ? `${mediaFiles.length}/4` : "Photo"}
                       </span>
@@ -334,7 +335,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
                       title="Add video link"
                       style={{ background: activeMedia === "video" ? "#DDE8DD" : "none", border: `1.5px solid ${activeMedia === "video" ? "#1A8040" : "#DDE8DD"}`, borderRadius: "8px", padding: "6px 10px", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px", transition: "all 0.15s" }}
                     >
-                      <span style={{ fontSize: "15px" }}>🎬</span>
+                      <IconVideo size={15} color={activeMedia === "video" ? "#1A8040" : "#5A7A60"} />
                       <span style={{ fontFamily: B, fontSize: "11px", color: activeMedia === "video" ? "#1A8040" : "#5A7A60" }}>
                         {videoEmbed ? PLATFORM_LABELS[videoEmbed.platform] : "Video"}
                       </span>

@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { IconWarning } from "@/components/shared/Icons";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -50,7 +51,7 @@ export default async function AdminDashboard() {
     <div style={{ display:"flex", flexDirection:"column", gap:"24px" }}>
       <div>
         <div style={{ display:"inline-block", background:"#1B3A2D", border:"2px solid #1B3A2D", borderRadius:"6px", padding:"3px 12px", marginBottom:"8px" }}>
-          <span style={{ fontFamily:R, fontSize:"10px", color:"#FFFFFF", letterSpacing:"2px" }}>⚠ ADMIN ONLY</span>
+          <span style={{ fontFamily:R, fontSize:"10px", color:"#FFFFFF", letterSpacing:"2px", display:"inline-flex", alignItems:"center", gap:"5px" }}><IconWarning size={10} color="#FFFFFF" /> ADMIN ONLY</span>
         </div>
         <h1 style={{ fontFamily:R, fontSize:"1.8rem", color:"#1B3A2D", letterSpacing:"3px", marginBottom:"4px" }}>ADMIN DASHBOARD</h1>
         <p style={{ fontFamily:S, fontStyle:"italic", fontSize:"14px", color:"#4A7C59" }}>Overview of all CFS operations</p>

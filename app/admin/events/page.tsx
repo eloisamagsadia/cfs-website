@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { IconTicket, IconEdit, IconPin } from "@/components/shared/Icons";
 export const metadata: Metadata = { title: "Manage Events" };
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -39,16 +40,16 @@ export default async function AdminEventsPage() {
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: R, fontSize: "14px", color: "#1B3A2D", letterSpacing: "1px", marginBottom: "4px" }}>{event.title}</div>
                 <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                  <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>📍 {event.location ?? "TBD"}</span>
+                  <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", display: "inline-flex", alignItems: "center", gap: "4px" }}><IconPin size={12} color="#4A7C59" /> {event.location ?? "TBD"}</span>
                   <span style={{ fontFamily: R, fontSize: "11px", color, background: color + "20", borderRadius: "20px", padding: "1px 8px", letterSpacing: "1px" }}>{event.status.toUpperCase()}</span>
                   <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>{regCount} registered</span>
                   {event.price > 0 ? <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040" }}>₱{Number(event.price).toLocaleString()}</span> : <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040" }}>FREE</span>}
                 </div>
               </div>
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", width: "100%" }}>
-                <Link href={`/admin/events/${event.id}/tiers`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#1A8040", border: "1px solid #1A8040", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>🎟 TIERS</Link>
-                <Link href={`/admin/events/${event.id}/tickets`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#1A8040", border: "1px solid #1A8040", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>🎫 TICKETS</Link>
-                <Link href={`/admin/events/${event.id}/edit`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>✏ EDIT</Link>
+                <Link href={`/admin/events/${event.id}/tiers`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#1A8040", border: "1px solid #1A8040", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px", display: "inline-flex", alignItems: "center", gap: "5px" }}><IconTicket size={11} color="#1A8040" /> TIERS</Link>
+                <Link href={`/admin/events/${event.id}/tickets`} style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px", fontFamily: B, fontSize: "11px", color: "#1A8040", border: "1px solid #1A8040", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}><IconTicket size={11} color="#1A8040" /> TICKETS</Link>
+                <Link href={`/admin/events/${event.id}/edit`} style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}><IconEdit size={11} color="#4A7C59" /> EDIT</Link>
               </div>
             </div>
           );

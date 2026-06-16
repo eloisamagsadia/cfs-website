@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
+import { IconEdit, IconClipboard } from "@/components/shared/Icons";
 import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -47,11 +48,11 @@ export default async function AdminReportsPage() {
                   VIEW PDF
                 </a>
               )}
-              <Link href={`/admin/reports/${r.id}/receipts`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#5A7A60", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
-                📎 RECEIPTS
+              <Link href={`/admin/reports/${r.id}/receipts`} style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px", fontFamily: B, fontSize: "11px", color: "#5A7A60", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
+                <IconClipboard size={11} color="#5A7A60" /> RECEIPTS
               </Link>
-              <Link href={`/admin/reports/${r.id}/edit`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
-                ✏ EDIT
+              <Link href={`/admin/reports/${r.id}/edit`} style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
+                <IconEdit size={11} color="#4A7C59" /> EDIT
               </Link>
             </div>
           </div>

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { IconCheck, IconMegaphone } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -27,8 +28,8 @@ export default function BroadcastPage() {
       </div>
 
       {sent !== null && (
-        <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "10px", padding: "14px 18px", fontFamily: B, fontSize: "13px", color: "#1A8040" }}>
-          ✅ Broadcast sent to {sent} members!
+        <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "10px", padding: "14px 18px", fontFamily: B, fontSize: "13px", color: "#1A8040", display: "flex", alignItems: "center", gap: "6px" }}>
+          <IconCheck size={13} color="#1A8040" /> Broadcast sent to {sent} members!
         </div>
       )}
 
@@ -50,7 +51,7 @@ export default function BroadcastPage() {
         </div>
         <button onClick={send} disabled={sending || !form.title.trim() || !form.message.trim()}
           style={{ fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#F7FAF5", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", opacity: (sending || !form.title.trim() || !form.message.trim()) ? 0.5 : 1 }}>
-          {sending ? "SENDING..." : "📣 SEND TO ALL MEMBERS"}
+          {sending ? "SENDING..." : <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><IconMegaphone size={12} color="#F7FAF5" /> SEND TO ALL MEMBERS</span>}
         </button>
       </div>
     </div>

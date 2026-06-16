@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { IconShoppingBag } from "@/components/shared/Icons";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -129,7 +130,7 @@ export default async function ShopPage() {
                   <div style={{ height: "auto", background: C.mist, overflow: "hidden", position: "relative", aspectRatio: "1/1" }}>
                     {p.images?.[0]
                       ? <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px" }}>🛍</div>
+                      : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}><IconShoppingBag size={40} color="#DDE8DD" /></div>
                     }
                     {p.stock === 0 && (
                       <div style={{ position: "absolute", inset: 0, background: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", justifyContent: "center" }}>

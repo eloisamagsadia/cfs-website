@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { IconTicket } from "@/components/shared/Icons";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -41,7 +42,7 @@ export default async function CodesPage() {
 
       {codes.length === 0 ? (
         <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"48px 24px", textAlign:"center" }}>
-          <div style={{ fontSize:"40px", marginBottom:"12px" }}>🎟</div>
+          <div style={{ marginBottom:"12px" }}><IconTicket size={40} color="#DDE8DD" /></div>
           <div style={{ fontFamily:R, fontSize:"14px", color:"#5A7A60", letterSpacing:"2px" }}>NO CODES YET</div>
           <div style={{ fontFamily:B, fontSize:"13px", color:"#5A7A60", marginTop:"8px" }}>Promo codes will appear here when assigned by the admin.</div>
         </div>

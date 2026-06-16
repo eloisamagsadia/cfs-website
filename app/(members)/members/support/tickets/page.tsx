@@ -2,6 +2,7 @@
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { IconTicket } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -66,7 +67,7 @@ export default function MyTicketsPage() {
           <SkeletonPage /></div>
       ) : tickets.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center" }}>
-          <div style={{ fontSize: "32px", marginBottom: "12px" }}>🎫</div>
+          <div style={{ marginBottom: "12px" }}><IconTicket size={32} color="#DDE8DD" /></div>
           <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "16px" }}>NO TICKETS YET</div>
           <Link href="/members/support" style={{ textDecoration: "none", fontFamily: B, fontSize: "12px", color: "#1A8040" }}>Submit your first ticket →</Link>
         </div>
@@ -114,7 +115,7 @@ export default function MyTicketsPage() {
                   )}
                   {/* Admin reply */}
                   {t.admin_notes && (
-                    <div style={{ background: "#0F2A0B", border: "1px solid #1A804030", borderRadius: "8px", padding: "12px 14px" }}>
+                    <div style={{ background: "#E8F0E4", border: "1px solid #1A804030", borderRadius: "8px", padding: "12px 14px" }}>
                       <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "1px", marginBottom: "6px" }}>ADMIN REPLY</div>
                       <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", lineHeight: 1.6 }}>{t.admin_notes}</div>
                     </div>
@@ -139,7 +140,7 @@ export default function MyTicketsPage() {
                         style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "none", boxSizing: "border-box" }}
                       />
                       <button onClick={() => handleReply(t.id)} disabled={replying === t.id || !replyText[t.id]?.trim()}
-                        style={{ alignSelf: "flex-end", fontFamily: R, fontSize: "11px", background: replying === t.id || !replyText[t.id]?.trim() ? "#F2F7F2" : "#1A8040", color: replying === t.id || !replyText[t.id]?.trim() ? "#5A7A60" : "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px" }}>
+                        style={{ alignSelf: "flex-end", fontFamily: R, fontSize: "11px", background: replying === t.id || !replyText[t.id]?.trim() ? "#F2F7F2" : "#1A8040", color: replying === t.id || !replyText[t.id]?.trim() ? "#5A7A60" : "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px" }}>
                         {replying === t.id ? "SENDING..." : "SEND REPLY"}
                       </button>
                     </div>

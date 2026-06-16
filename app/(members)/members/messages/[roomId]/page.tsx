@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { IconX, IconCamera, IconUsers, IconSparkle } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -310,7 +311,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
         <button onClick={() => router.push("/members/messages")} style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontFamily: B, fontSize: "12px", padding: "4px 0" }}>← Back</button>
         <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#E8F0E4", border: "1.5px solid #1A804030", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
           {room?.is_group
-            ? <span style={{ fontSize: "16px" }}>👥</span>
+            ? <IconUsers size={16} color="#1A8040" />
             : members.find(m => m.user_id !== user?.id)?.profiles?.avatar_url
               ? <img src={members.find(m => m.user_id !== user?.id)?.profiles?.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               : <span style={{ fontFamily: R, fontSize: "14px", color: "#1A8040" }}>{(getRoomName()[0] ?? "?").toUpperCase()}</span>
@@ -347,7 +348,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
             <div style={{ fontFamily: R, fontSize: "9px", color: "#156530", letterSpacing: "1px", marginBottom: "2px" }}>PINNED MESSAGE</div>
             <div style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pinnedMsg.content || "📷 Photo"}</div>
           </div>
-          <button onClick={() => pinMessage(pinnedMsg.id)} style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "14px" }}>✕</button>
+          <button onClick={() => pinMessage(pinnedMsg.id)} style={{ background: "none", border: "none", cursor: "pointer", display: "flex" }}><IconX size={14} color="#5A7A60" /></button>
         </div>
       )}
 
@@ -408,7 +409,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                 {hoveredMsg === msg.id && (
                   <div style={{ display: "flex", gap: "4px", alignItems: "center", flexShrink: 0, position: "relative" }}>
                     <button onClick={() => setShowReactions(showReactions === msg.id ? null : msg.id)}
-                      style={{ background: "#F2F7F2", border: "1px solid #DDE8DD", borderRadius: "20px", padding: "4px 8px", cursor: "pointer", fontSize: "14px" }}>😊</button>
+                      style={{ background: "#F2F7F2", border: "1px solid #DDE8DD", borderRadius: "20px", padding: "4px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><IconSparkle size={14} color="#5A7A60" /></button>
                     <button onClick={() => { setReplyTo(msg); inputRef.current?.focus(); }}
                       style={{ background: "#F2F7F2", border: "1px solid #DDE8DD", borderRadius: "20px", padding: "4px 8px", cursor: "pointer", fontFamily: R, fontSize: "10px", color: "#5A7A60" }}>↩</button>
                     <button onClick={() => pinMessage(msg.id)} title={msg.is_pinned ? "Unpin" : "Pin"}
@@ -462,7 +463,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
             <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "0.5px", marginBottom: "2px" }}>Replying to {replyTo.profiles?.display_name ?? "Member"}</div>
             <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "400px" }}>{replyTo.content || "📷 Photo"}</div>
           </div>
-          <button onClick={() => setReplyTo(null)} style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "18px" }}>✕</button>
+          <button onClick={() => setReplyTo(null)} style={{ background: "none", border: "none", cursor: "pointer", display: "flex" }}><IconX size={18} color="#5A7A60" /></button>
         </div>
       )}
 
@@ -499,7 +500,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
       <div className="chat-input-bar" style={{ padding: "12px 4px 4px", borderTop: "1px solid #DDE8DD", display: "flex", gap: "8px", alignItems: "flex-end" }}>
         <button onClick={() => imgInputRef.current?.click()} disabled={uploadingImg}
           style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", opacity: uploadingImg ? 0.5 : 1 }}>
-          {uploadingImg ? "⏳" : "📷"}
+          <IconCamera size={18} color="#5A7A60" />
         </button>
         <textarea ref={inputRef} value={input}
           onChange={handleInputChange}
@@ -517,8 +518,8 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
           rows={1}
           style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "20px", padding: "10px 16px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "none", lineHeight: 1.5, maxHeight: "100px", overflowY: "auto", boxSizing: "border-box" }} />
         <button onClick={() => setShowEmojiPicker(p => !p)}
-          style={{ background: showEmojiPicker ? "#E8F0E4" : "#F2F7F2", border: `1.5px solid ${showEmojiPicker ? "#1A8040" : "#DDE8DD"}`, borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px" }}>
-          😊
+          style={{ background: showEmojiPicker ? "#E8F0E4" : "#F2F7F2", border: `1.5px solid ${showEmojiPicker ? "#1A8040" : "#DDE8DD"}`, borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <IconSparkle size={18} color={showEmojiPicker ? "#1A8040" : "#5A7A60"} />
         </button>
         <button onClick={sendMessage} disabled={!input.trim() || sending}
           style={{ background: !input.trim() || sending ? "#F2F7F2" : "#1A8040", border: "none", borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -533,7 +534,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
             {/* Drawer header */}
             <div style={{ padding: "20px 16px 16px", borderBottom: "1px solid #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "2px" }}>CHAT INFO</span>
-              <button onClick={() => setShowDrawer(false)} style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "18px" }}>✕</button>
+              <button onClick={() => setShowDrawer(false)} style={{ background: "none", border: "none", cursor: "pointer", display: "flex" }}><IconX size={18} color="#5A7A60" /></button>
             </div>
 
             {/* Room name */}
@@ -541,7 +542,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E8F0E4", border: "2px solid #1A804030", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
                   {room?.is_group
-                    ? <span style={{ fontSize: "20px" }}>👥</span>
+                    ? <IconUsers size={20} color="#1A8040" />
                     : members.find(m => m.user_id !== user?.id)?.profiles?.avatar_url
                       ? <img src={members.find(m => m.user_id !== user?.id)?.profiles?.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       : <span style={{ fontFamily: R, fontSize: "18px", color: "#1A8040" }}>{(getRoomName()[0] ?? "?").toUpperCase()}</span>
@@ -630,7 +631,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                             setNicknames(prev => ({ ...prev, [m.user_id]: nicknameInput.trim() }));
                             setEditingNickname(null);
                           }} style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "10px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "6px 10px", cursor: "pointer" }}>SAVE</button>
-                          <button onClick={() => setEditingNickname(null)} style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "10px", background: "transparent", color: "#5A7A60", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 8px", cursor: "pointer" }}>✕</button>
+                          <button onClick={() => setEditingNickname(null)} style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "10px", background: "transparent", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 8px", cursor: "pointer", display: "flex", alignItems: "center" }}><IconX size={10} color="#5A7A60" /></button>
                         </div>
                       ) : (
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -643,7 +644,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                             <button onClick={async () => {
                               await fetch(`/api/chat/${params.roomId}/nickname`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ target_user_id: m.user_id, nickname: "" }) });
                               setNicknames(prev => { const n = { ...prev }; delete n[m.user_id]; return n; });
-                            }} style={{ background: "none", border: "none", cursor: "pointer", color: "#CC3344", fontSize: "12px" }}>✕</button>
+                            }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center" }}><IconX size={12} color="#CC3344" /></button>
                           )}
                         </div>
                       )}

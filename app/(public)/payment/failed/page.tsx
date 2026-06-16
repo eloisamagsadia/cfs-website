@@ -1,6 +1,7 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
+import { IconX } from "@/components/shared/Icons";
 
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -23,7 +24,7 @@ function FailedContent() {
   return (
     <div style={{ minHeight: "100vh", background: C.paper, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
       <div style={{ background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: "20px", padding: "48px 40px", maxWidth: "480px", width: "100%", textAlign: "center", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
-        <div style={{ fontSize: "56px", marginBottom: "20px" }}>😞</div>
+        <div style={{ marginBottom: "20px", display: "flex", alignItems: "center", justifyContent: "center", width: "72px", height: "72px", borderRadius: "50%", background: C.red + "18", border: `2px solid ${C.red}40`, margin: "0 auto 20px" }}><IconX size={32} color={C.red} /></div>
 
         <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: C.red + "18", border: `1px solid ${C.red}40`, borderRadius: "20px", padding: "5px 14px", marginBottom: "24px" }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="3"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>

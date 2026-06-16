@@ -1,6 +1,7 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
+import { IconTicket, IconHeart, IconPackage } from "@/components/shared/Icons";
 
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -8,23 +9,23 @@ const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
 const C = { paper: "#FAFDF9", forest: "#1B3A2D", sage: "#4A7C59", border: "#DDE8DD", green: "#1A8040", muted: "#7A8E7A" };
 
-const CONFIG: Record<string, { emoji: string; headline: string; body: string; cta: string; href: string }> = {
+const CONFIG: Record<string, { icon: React.ReactNode; headline: string; body: string; cta: string; href: string }> = {
   ticket: {
-    emoji: "🎫",
+    icon: <IconTicket size={40} color="#1A8040" />,
     headline: "You're going!",
     body: "Your ticket has been confirmed. Check your tickets in the members area.",
     cta: "VIEW MY TICKETS",
     href: "/members/events",
   },
   donation: {
-    emoji: "💚",
+    icon: <IconHeart size={40} color="#1A8040" />,
     headline: "Salamat! Thank you for supporting CFS!",
     body: "Your donation has been received. Every peso funds fan projects, events, and Colet. A receipt has been sent to your email.",
     cta: "VIEW MY DONATIONS",
     href: "/members/donations",
   },
   order: {
-    emoji: "📦",
+    icon: <IconPackage size={40} color="#1A8040" />,
     headline: "Order confirmed!",
     body: "Payment received. You'll get an email once your order ships. Track it in your orders.",
     cta: "VIEW MY ORDERS",
@@ -41,7 +42,7 @@ function SuccessContent() {
   return (
     <div style={{ minHeight: "100vh", background: C.paper, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
       <div style={{ background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: "20px", padding: "48px 40px", maxWidth: "480px", width: "100%", textAlign: "center", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
-        <div style={{ fontSize: "56px", marginBottom: "20px" }}>{config.emoji}</div>
+        <div style={{ marginBottom: "20px", display: "flex", alignItems: "center", justifyContent: "center", width: "72px", height: "72px", borderRadius: "50%", background: C.green + "18", border: `2px solid ${C.green}40`, margin: "0 auto 20px" }}>{config.icon}</div>
 
         <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: C.green + "18", border: `1px solid ${C.green}40`, borderRadius: "20px", padding: "5px 14px", marginBottom: "24px" }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>

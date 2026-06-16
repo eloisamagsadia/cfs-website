@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { IconCamera, IconCheck, IconWarning, IconX } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -89,7 +90,7 @@ export default function CheckInPage() {
             <div id="qr-reader" style={{ width: "100%" }} />
             {!scanning && (
               <div style={{ padding: "40px", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
-                <div style={{ fontSize: "48px" }}>📷</div>
+                <IconCamera size={48} color="#DDE8DD" />
                 <div style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>Camera not started</div>
               </div>
             )}
@@ -132,7 +133,7 @@ export default function CheckInPage() {
         /* Result */
         <div style={{ background: "#FFFFFF", border: `2px solid ${result.success ? "#1A8040" : "#CC3344"}`, borderRadius: "16px", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "56px" }}>{result.success ? "✅" : result.error?.includes("already") ? "⚠️" : "❌"}</div>
+            <div style={{ display: "flex", justifyContent: "center" }}>{result.success ? <IconCheck size={56} color="#1A8040" /> : result.error?.includes("already") ? <IconWarning size={56} color="#CC9900" /> : <IconX size={56} color="#CC3344" />}</div>
             <div style={{ fontFamily: R, fontSize: "1.2rem", color: result.success ? "#1A8040" : "#CC3344", letterSpacing: "2px", marginTop: "8px" }}>
               {result.success ? "CHECKED IN!" : result.error?.includes("already") ? "ALREADY USED" : "INVALID TICKET"}
             </div>

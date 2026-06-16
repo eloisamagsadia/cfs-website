@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PostCard from "./PostCard";
+import { IconStar, IconPen, IconSend } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -102,7 +103,7 @@ export default function MemberProfile({
             <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
               {badges.map((ub: any) => (
                 <div key={ub.id} title={ub.badges?.description ?? ""} style={{ background: "#F2F7F2", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "3px 8px", display: "flex", alignItems: "center", gap: "4px" }}>
-                  <span style={{ fontSize: "12px" }}>🏅</span>
+                  <IconStar size={12} color="#4A7C59" />
                   <span style={{ fontFamily: B, fontSize: "10px", color: "#4A7C59" }}>{ub.badges?.name}</span>
                 </div>
               ))}
@@ -123,7 +124,7 @@ export default function MemberProfile({
       {/* Posts/Reposts */}
       {display.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", padding: "48px 24px", textAlign: "center" }}>
-          <div style={{ fontSize: "32px", marginBottom: "10px" }}>{tab === "posts" ? "📝" : "🔁"}</div>
+          <div style={{ marginBottom: "10px" }}>{tab === "posts" ? <IconPen size={32} color="#DDE8DD" /> : <IconSend size={32} color="#DDE8DD" />}</div>
           <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px" }}>NO {tab.toUpperCase()} YET</div>
         </div>
       ) : (

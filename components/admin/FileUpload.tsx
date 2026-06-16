@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import { IconFile, IconPhoto, IconX } from "@/components/shared/Icons";
 
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -56,17 +57,17 @@ export default function FileUpload({ folder, accept = "image/*", label = "IMAGE"
         <div style={{ position: "relative", display: "inline-block" }}>
           {isPdf ? (
             <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ fontSize: "24px" }}>📄</span>
+              <IconFile size={24} color="#1A8040" />
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "1px" }}>PDF UPLOADED</div>
                 <a href={preview} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59", wordBreak: "break-all" }}>View PDF →</a>
               </div>
-              <button onClick={handleRemove} style={{ background: "#2C1010", border: "1px solid #CC3344", borderRadius: "4px", color: "#CC3344", padding: "4px 8px", cursor: "pointer", fontFamily: B, fontSize: "11px" }}>✕ Remove</button>
+              <button onClick={handleRemove} style={{ background: "#FFE8EC", border: "1px solid #CC334440", borderRadius: "4px", color: "#CC3344", padding: "4px 8px", cursor: "pointer", fontFamily: B, fontSize: "11px", display: "inline-flex", alignItems: "center", gap: "4px" }}><IconX size={10} color="#CC3344" /> Remove</button>
             </div>
           ) : (
             <div style={{ position: "relative", width: "160px", height: "120px", borderRadius: "8px", overflow: "hidden", border: "2px solid #1A8040" }}>
               <img src={preview} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              <button onClick={handleRemove} style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(0,0,0,0.7)", border: "none", borderRadius: "4px", color: "#CC3344", padding: "2px 6px", cursor: "pointer", fontSize: "12px" }}>✕</button>
+              <button onClick={handleRemove} style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(255,255,255,0.9)", border: "none", borderRadius: "4px", color: "#CC3344", padding: "2px 4px", cursor: "pointer", display: "flex", alignItems: "center" }}><IconX size={10} color="#CC3344" /></button>
             </div>
           )}
         </div>
@@ -75,13 +76,13 @@ export default function FileUpload({ folder, accept = "image/*", label = "IMAGE"
           onDrop={handleDrop}
           onDragOver={e => e.preventDefault()}
           onClick={() => inputRef.current?.click()}
-          style={{ border: "2px dashed #DDE8DD", borderRadius: "8px", padding: "24px", textAlign: "center", cursor: uploading ? "not-allowed" : "pointer", background: "#0F1A0C", transition: "border-color 0.2s" }}
+          style={{ border: "2px dashed #DDE8DD", borderRadius: "8px", padding: "24px", textAlign: "center", cursor: uploading ? "not-allowed" : "pointer", background: "#F2F7F2", transition: "border-color 0.2s" }}
         >
           {uploading ? (
             <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px" }}>UPLOADING...</div>
           ) : (
             <>
-              <div style={{ fontSize: "28px", marginBottom: "6px" }}>{isPdf ? "📄" : "🖼"}</div>
+              <div style={{ marginBottom: "6px" }}>{isPdf ? <IconFile size={28} color="#5A7A60" /> : <IconPhoto size={28} color="#5A7A60" />}</div>
               <div style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px", marginBottom: "4px" }}>
                 CLICK OR DRAG TO UPLOAD
               </div>

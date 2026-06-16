@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
+import { IconUsers, IconSparkle, IconShield, IconWrench, IconMessage, IconTicket, IconStar, IconLightning, IconMegaphone } from "@/components/shared/Icons";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -34,14 +35,14 @@ export default async function SuperCommandCenter() {
   const { data: sponsorPerks } = await (db as any).from("sponsor_perks").select("*").single();
 
   const stats = [
-    { label: "TOTAL MEMBERS", value: total_members ?? 0, color: "#1B3A2D", icon: "◈", href: "/super/roles" },
-    { label: "SPONSORS", value: sponsors ?? 0, color: "#1A8040", icon: "✦", href: "/super/roles" },
-    { label: "ADMINS", value: admins ?? 0, color: "#1A8040", icon: "▲", href: "/super/roles" },
-    { label: "MODERATORS", value: moderators ?? 0, color: "#5A7A60", icon: "◆", href: "/super/roles" },
-    { label: "TOTAL POSTS", value: total_posts ?? 0, color: "#1A8040", icon: "◉", href: "/admin/community" },
-    { label: "TOTAL TICKETS", value: total_tickets ?? 0, color: "#156530", icon: "◈", href: "/admin/events" },
-    { label: "TOTAL EVENTS", value: total_events ?? 0, color: "#1A8040", icon: "◆", href: "/admin/events" },
-    { label: "EXCLUSIVE CONTENT", value: exclusive_content ?? 0, color: "#1A8040", icon: "✦", href: "/super/exclusive" },
+    { label: "TOTAL MEMBERS",    value: total_members ?? 0,    color: "#1B3A2D", icon: <IconUsers size={18} color="#1B3A2D" />,    href: "/super/roles" },
+    { label: "SPONSORS",         value: sponsors ?? 0,         color: "#1A8040", icon: <IconSparkle size={18} color="#1A8040" />,  href: "/super/roles" },
+    { label: "ADMINS",           value: admins ?? 0,           color: "#1A8040", icon: <IconShield size={18} color="#1A8040" />,   href: "/super/roles" },
+    { label: "MODERATORS",       value: moderators ?? 0,       color: "#5A7A60", icon: <IconWrench size={18} color="#5A7A60" />,   href: "/super/roles" },
+    { label: "TOTAL POSTS",      value: total_posts ?? 0,      color: "#1A8040", icon: <IconMessage size={18} color="#1A8040" />,  href: "/admin/community" },
+    { label: "TOTAL TICKETS",    value: total_tickets ?? 0,    color: "#156530", icon: <IconTicket size={18} color="#156530" />,   href: "/admin/events" },
+    { label: "TOTAL EVENTS",     value: total_events ?? 0,     color: "#1A8040", icon: <IconStar size={18} color="#1A8040" />,     href: "/admin/events" },
+    { label: "EXCLUSIVE CONTENT",value: exclusive_content ?? 0,color: "#1A8040", icon: <IconLightning size={18} color="#1A8040" />,href: "/super/exclusive" },
   ];
 
   const quickActions = [
@@ -56,7 +57,7 @@ export default async function SuperCommandCenter() {
       {/* Header */}
       <div style={{ background: "#FFFFFF", border: "1px solid #D8E8D8", borderRadius: "16px", padding: "28px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
-          <span style={{ fontSize: "28px" }}>⚡</span>
+          <IconLightning size={28} color="#156530" />
           <h1 style={{ fontFamily: R, fontSize: "1.8rem", color: "#156530", letterSpacing: "4px", margin: 0 }}>COMMAND CENTER</h1>
         </div>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", margin: 0 }}>Full platform control — with great power comes great responsibility.</p>
@@ -65,17 +66,17 @@ export default async function SuperCommandCenter() {
         <div style={{ display: "flex", gap: "12px", marginTop: "16px", flexWrap: "wrap" }}>
           <div style={{ background: settings?.maintenance_mode ? "#F0F4F0" : "#E8F0E4", border: `1px solid ${settings?.maintenance_mode ? "#CC3344" : "#1A8040"}40`, borderRadius: "8px", padding: "8px 16px" }}>
             <span style={{ fontFamily: R, fontSize: "11px", color: settings?.maintenance_mode ? "#CC3344" : "#1A8040", letterSpacing: "1px" }}>
-              {settings?.maintenance_mode ? "🔴 MAINTENANCE MODE" : "🟢 SITE LIVE"}
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><span style={{ display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", background: settings?.maintenance_mode ? "#CC3344" : "#1A8040", flexShrink: 0 }} />{settings?.maintenance_mode ? "MAINTENANCE MODE" : "SITE LIVE"}</span>
             </span>
           </div>
           {settings?.announcement_active && (
             <div style={{ background: "#E8F0E4", border: "1px solid #1A8040", borderRadius: "8px", padding: "8px 16px" }}>
-              <span style={{ fontFamily: B, fontSize: "11px", color: "#1A8040" }}>📣 Announcement active</span>
+              <span style={{ fontFamily: B, fontSize: "11px", color: "#1A8040", display: "flex", alignItems: "center", gap: "4px" }}><IconMegaphone size={11} color="#1A8040" /> Announcement active</span>
             </div>
           )}
           {sponsorPerks && (
             <div style={{ background: "#E8F4EC", border: "1px solid #1A804040", borderRadius: "8px", padding: "8px 16px" }}>
-              <span style={{ fontFamily: B, fontSize: "11px", color: "#1A8040" }}>✦ {sponsors ?? 0}/{sponsorPerks.max_sponsors} sponsor slots</span>
+              <span style={{ fontFamily: B, fontSize: "11px", color: "#1A8040", display: "flex", alignItems: "center", gap: "4px" }}><IconSparkle size={11} color="#1A8040" /> {sponsors ?? 0}/{sponsorPerks.max_sponsors} sponsor slots</span>
             </div>
           )}
         </div>
@@ -87,7 +88,7 @@ export default async function SuperCommandCenter() {
           <Link key={label} href={href} style={{ textDecoration: "none" }}>
             <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "16px", transition: "border-color 0.15s" }}
 >
-              <div style={{ fontSize: "20px", marginBottom: "6px" }}>{icon}</div>
+              <div style={{ marginBottom: "6px" }}>{icon}</div>
               <div style={{ fontFamily: R, fontSize: "1.6rem", color }}>{value}</div>
               <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A60", letterSpacing: "1.5px", marginTop: "2px" }}>{label}</div>
             </div>

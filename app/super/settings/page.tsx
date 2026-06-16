@@ -1,6 +1,7 @@
 "use client";
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
+import { IconCheck, IconWrench, IconSparkle, IconMegaphone } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -49,12 +50,12 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Configure platform-wide settings</p>
       </div>
 
-      {saved && <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#1A8040" }}>✅ Settings saved!</div>}
+      {saved && <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#1A8040", display: "flex", alignItems: "center", gap: "6px" }}><IconCheck size={13} color="#1A8040" /> Settings saved!</div>}
 
       {/* Site status */}
       <div style={{ background: "#FFFFFF", border: `2px solid ${settings.maintenance_mode ? "#CC3344" : "#1A8040"}40`, borderRadius: "12px", padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <div style={{ fontFamily: R, fontSize: "12px", color: settings.maintenance_mode ? "#CC3344" : "#1A8040", letterSpacing: "1.5px" }}>{settings.maintenance_mode ? "🔴 MAINTENANCE MODE ON" : "🟢 SITE LIVE"}</div>
+          <div style={{ fontFamily: R, fontSize: "12px", color: settings.maintenance_mode ? "#CC3344" : "#1A8040", letterSpacing: "1.5px", display: "flex", alignItems: "center", gap: "6px" }}><span style={{ display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", background: settings.maintenance_mode ? "#CC3344" : "#1A8040", flexShrink: 0 }} />{settings.maintenance_mode ? "MAINTENANCE MODE ON" : "SITE LIVE"}</div>
           <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", marginTop: "4px" }}>{settings.maintenance_mode ? "Members cannot access the site" : "coletfs.com is live"}</div>
         </div>
         <button onClick={toggleMaintenance} style={{ fontFamily: R, fontSize: "11px", background: settings.maintenance_mode ? "#1A8040" : "#CC3344", color: "#fff", border: "none", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
@@ -64,7 +65,7 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
 
       {/* General settings */}
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
-        <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px" }}>🔧 GENERAL SETTINGS</div>
+        <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "6px" }}><IconWrench size={12} color="#1A8040" /> GENERAL SETTINGS</div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
           {[
             { label: "MAX IMAGE POSTS/MONTH", key: "max_image_posts_per_month" },
@@ -82,7 +83,7 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
       {/* Sponsor settings */}
       {perks && (
         <div style={{ background: "#FFFFFF", border: "2px solid #1A804060", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
-          <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px" }}>✦ SPONSOR SETTINGS</div>
+          <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "6px" }}><IconSparkle size={12} color="#1A8040" /> SPONSOR SETTINGS</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             {[
               { label: "MAX SPONSORS", key: "max_sponsors" },
@@ -100,7 +101,7 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
 
       {/* Announcement */}
       <div style={{ background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
-        <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px" }}>📣 SITE ANNOUNCEMENT</div>
+        <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "6px" }}><IconMegaphone size={12} color="#1A8040" /> SITE ANNOUNCEMENT</div>
         <input value={settings.announcement_text ?? ""} onChange={e => setSettings((p: any) => ({ ...p, announcement_text: e.target.value }))} placeholder="Announcement text..."
           style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>

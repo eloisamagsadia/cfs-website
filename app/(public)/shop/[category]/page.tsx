@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
+import { IconShoppingBag } from "@/components/shared/Icons";
 import Link from "next/link";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -37,7 +38,7 @@ export default async function ShopCategoryPage({ params }:{ params:{ category:st
       <div style={{maxWidth:"1280px",margin:"0 auto",padding:"32px 24px"}}>
         {!products?.length ? (
           <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",padding:"56px",textAlign:"center"}}>
-            <div style={{fontSize:"48px",marginBottom:"14px"}}>🛍</div>
+            <div style={{marginBottom:"14px"}}><IconShoppingBag size={48} color="#DDE8DD" /></div>
             <div style={{fontFamily:R,fontSize:"14px",color:"#5A7A60",letterSpacing:"2px"}}>NO PRODUCTS YET</div>
           </div>
         ) : (
@@ -45,10 +46,10 @@ export default async function ShopCategoryPage({ params }:{ params:{ category:st
             {products.map((p:any) => (
               <Link key={p.id} href={`/shop/${params.category}/${p.id}`} style={{textDecoration:"none"}}>
                 <div style={{position:"relative",padding:"4px 4px 8px 0"}}>
-                  <div style={{position:"absolute",bottom:0,right:0,width:"calc(100% - 4px)",height:"calc(100% - 4px)",borderRadius:"12px",background:"#080F06"}}/>
+                  <div style={{position:"absolute",bottom:0,right:0,width:"calc(100% - 4px)",height:"calc(100% - 4px)",borderRadius:"12px",background:"#DDE8DD"}}/>
                   <div style={{position:"relative",background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",overflow:"hidden",zIndex:1}}>
                     <div style={{height:"220px",background:"#F2F7F2",overflow:"hidden",position:"relative"}}>
-                      {p.images?.[0]?<img src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} loading="lazy"/>:<div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"48px"}}>🛍</div>}
+                      {p.images?.[0]?<img src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} loading="lazy"/>:<div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}><IconShoppingBag size={48} color="#DDE8DD" /></div>}
                       {p.stock===0&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.55)",display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:R,fontSize:"13px",color:"#CC3344",background:"#FFE8EC",border:"1.5px solid #CC3344",borderRadius:"6px",padding:"6px 14px",letterSpacing:"1px"}}>OUT OF STOCK</span></div>}
                       {p.stock>0&&p.stock<=5&&<div style={{position:"absolute",top:"8px",right:"8px",background:"#1A8040",border:"1.5px solid #DDE8DD",borderRadius:"4px",padding:"2px 8px",fontFamily:R,fontSize:"9px",color:"#FFFFFF",letterSpacing:"1px"}}>ONLY {p.stock} LEFT</div>}
                     </div>

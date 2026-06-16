@@ -3,6 +3,7 @@ import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { IconTicket, IconEdit, IconTrash, IconCheck, IconSparkle } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -105,8 +106,8 @@ export default function EventTiersPage() {
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
           <Link href={`/admin/events/${event_id}/tickets`}
-            style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #1A8040", borderRadius: "6px", padding: "8px 14px", letterSpacing: "1px" }}>
-            🎫 VIEW TICKETS
+            style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #1A8040", borderRadius: "6px", padding: "8px 14px", letterSpacing: "1px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+            <IconTicket size={11} color="#1A8040" /> VIEW TICKETS
           </Link>
           <button onClick={() => { setShowForm(true); setEditingId(null); setForm(DEFAULT_FORM); }}
             style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
@@ -178,7 +179,7 @@ export default function EventTiersPage() {
     </div>
       ) : tiers.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center" }}>
-          <div style={{ fontSize: "32px", marginBottom: "12px" }}>🎟️</div>
+          <div style={{ marginBottom: "12px" }}><IconTicket size={32} color="#DDE8DD" /></div>
           <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px" }}>NO TIERS YET</div>
           <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", marginTop: "6px" }}>Add tiers to define ticket types for this event.</div>
         </div>
@@ -212,12 +213,12 @@ export default function EventTiersPage() {
               </div>
               <div style={{ display: "flex", gap: "8px" }}>
                 <button onClick={() => startEdit(tier)}
-                  style={{ fontFamily: B, fontSize: "11px", background: "none", border: "1px solid #DDE8DD", borderRadius: "6px", color: "#4A7C59", padding: "5px 10px", cursor: "pointer" }}>
-                  ✏ EDIT
+                  style={{ fontFamily: B, fontSize: "11px", background: "none", border: "1px solid #DDE8DD", borderRadius: "6px", color: "#4A7C59", padding: "5px 10px", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                  <IconEdit size={11} color="#4A7C59" /> EDIT
                 </button>
                 <button onClick={() => handleDelete(tier.id)}
-                  style={{ fontFamily: B, fontSize: "11px", background: "none", border: "1px solid #CC3344", borderRadius: "6px", color: "#CC3344", padding: "5px 10px", cursor: "pointer" }}>
-                  🗑
+                  style={{ fontFamily: B, fontSize: "11px", background: "none", border: "1px solid #CC3344", borderRadius: "6px", color: "#CC3344", padding: "5px 10px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <IconTrash size={11} color="#CC3344" />
                 </button>
               </div>
             </div>
@@ -226,7 +227,7 @@ export default function EventTiersPage() {
       )}
       {/* Ticket Template */}
       <div className="tiers-template-card" style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px" }}>
-        <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", marginBottom: "16px" }}>🎨 TICKET TEMPLATE</div>
+        <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", marginBottom: "16px", display: "flex", alignItems: "center", gap: "6px" }}><IconSparkle size={13} color="#1A8040" /> TICKET TEMPLATE</div>
         <div className="ticket-template-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
           <div>
             <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>BACKGROUND COLOR</label>
@@ -300,7 +301,7 @@ export default function EventTiersPage() {
             style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: savingTemplate ? 0.7 : 1 }}>
             {savingTemplate ? "SAVING..." : "SAVE TEMPLATE"}
           </button>
-          {templateSaved && <span style={{ fontFamily: B, fontSize: "12px", color: "#1A8040" }}>✓ Saved!</span>}
+          {templateSaved && <span style={{ fontFamily: B, fontSize: "12px", color: "#1A8040", display: "inline-flex", alignItems: "center", gap: "4px" }}><IconCheck size={12} color="#1A8040" /> Saved!</span>}
         </div>
       </div>
 

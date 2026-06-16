@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { IconLink, IconWarning } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-const ICONS: Record<string, string> = { tiktok:"🎵", twitter:"🐦", instagram:"📸", youtube:"▶️", facebook:"📘", other:"🔗" };
 
 export default function EventFanWall({ eventId }: { eventId: string }) {
   const { user, isLoaded } = useUser();
@@ -79,7 +79,7 @@ export default function EventFanWall({ eventId }: { eventId: string }) {
               <div style={{ height: "130px", background: "#F2F7F2", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
                 {s.thumbnail_url
                   ? <img src={s.thumbnail_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <span style={{ fontSize: "40px" }}>{ICONS[s.platform] ?? "🔗"}</span>
+                  : <IconLink size={40} color="#DDE8DD" />
                 }
                 <div style={{ position: "absolute", top: "8px", left: "8px", background: "rgba(0,0,0,0.7)", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: "#4A7C59" }}>
                   {s.platform}
@@ -109,13 +109,13 @@ export default function EventFanWall({ eventId }: { eventId: string }) {
               {/* Screenshot upload */}
               <div style={{ marginBottom: "8px" }}>
                 <label style={{ fontFamily: B, fontSize: "11px", color: url.includes("tiktok") || url.includes("instagram") || url.includes("twitter") || url.includes("x.com") ? "#1A8040" : "#5A7A60", letterSpacing: "1px", display: "block", marginBottom: "6px" }}>
-                  SCREENSHOT {url.includes("tiktok") || url.includes("instagram") || url.includes("twitter") || url.includes("x.com") ? "⚠️ REQUIRED for TikTok/IG/Twitter" : "(optional for YouTube)"}
+                  SCREENSHOT {url.includes("tiktok") || url.includes("instagram") || url.includes("twitter") || url.includes("x.com") ? <><IconWarning size={11} color="#1A8040" /> REQUIRED for TikTok/IG/Twitter</> : "(optional for YouTube)"}
                 </label>
                 {preview && <img src={preview} alt="preview" style={{ width: "100%", height: "120px", objectFit: "cover", borderRadius: "6px", marginBottom: "6px", border: "1.5px solid #DDE8DD" }} />}
                 <input type="file" accept="image/*" onChange={handleFile} style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", width: "100%" }} />
               </div>
               <textarea placeholder="Add a caption... (optional)" value={caption} onChange={e => setCaption(e.target.value)} rows={2} style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", marginBottom: "12px", resize: "none", boxSizing: "border-box" as const }} />
-              <button onClick={handleSubmit} disabled={submitting || !url.trim()} style={{ fontFamily: R, fontSize: "12px", background: url.trim() ? "#1A8040" : "#F2F7F2", color: url.trim() ? "#080F06" : "#5A7A60", border: "2px solid #1B3A2D", borderRadius: "6px", padding: "10px 24px", cursor: url.trim() ? "pointer" : "not-allowed", letterSpacing: "1.5px" }}>
+              <button onClick={handleSubmit} disabled={submitting || !url.trim()} style={{ fontFamily: R, fontSize: "12px", background: url.trim() ? "#1A8040" : "#F2F7F2", color: url.trim() ? "#FFFFFF" : "#5A7A60", border: "2px solid #1B3A2D", borderRadius: "6px", padding: "10px 24px", cursor: url.trim() ? "pointer" : "not-allowed", letterSpacing: "1.5px" }}>
                 {submitting ? "SUBMITTING..." : "SUBMIT FOR REVIEW"}
               </button>
             </div>

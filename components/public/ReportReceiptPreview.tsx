@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { IconLink } from "@/components/shared/Icons";
 
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
@@ -43,7 +44,7 @@ export default function ReportReceiptPreview({ receipts }: { receipts: Receipt[]
               borderRadius: "4px", padding: "2px 7px",
               cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "3px",
             }}>
-            📎 {receipts.length > 1 ? `Receipt ${i + 1}` : "Receipt"}
+            <IconLink size={10} color="#4A7C59" /> {receipts.length > 1 ? `Receipt ${i + 1}` : "Receipt"}
           </button>
         ))}
       </div>
@@ -68,7 +69,7 @@ export default function ReportReceiptPreview({ receipts }: { receipts: Receipt[]
             {/* Header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", borderBottom: "1px solid #DDE8DD", flexShrink: 0 }}>
               <span style={{ fontFamily: SG, fontSize: "12px", fontWeight: 600, color: "#1B3A2D", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                📎 {active.file_name}
+                <IconLink size={12} color="#1B3A2D" style={{ flexShrink: 0 }} /> {active.file_name}
               </span>
               <div style={{ display: "flex", gap: "8px", alignItems: "center", flexShrink: 0, marginLeft: "12px" }}>
                 <a href={active.file_url} target="_blank" rel="noopener noreferrer" download={active.file_name}

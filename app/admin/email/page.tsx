@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { IconCheck, IconWarning } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -121,8 +122,8 @@ export default function AdminEmailPage() {
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Send a custom email to any member.</p>
       </div>
 
-      {error && <div style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
-      {success && <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "1px" }}>✓ {success}</div>}
+      {error && <div style={{ background: "#FFE8EC", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344", display: "flex", alignItems: "center", gap: "6px" }}><IconWarning size={13} color="#CC3344" /> {error}</div>}
+      {success && <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "1px", display: "flex", alignItems: "center", gap: "6px" }}><IconCheck size={13} color="#1A8040" /> {success}</div>}
 
       <div className="email-layout" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", alignItems: "start" }}>
         {/* Recipients */}
@@ -153,7 +154,7 @@ export default function AdminEmailPage() {
                 <div key={m.id} onClick={() => toggleMember(m)}
                   style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", background: isSelected ? "#E8F0E4" : "transparent", border: `1.5px solid ${isSelected ? "#1A8040" : "transparent"}` }}>
                   <div style={{ width: "18px", height: "18px", borderRadius: "4px", border: `2px solid ${isSelected ? "#1A8040" : "#DDE8DD"}`, background: isSelected ? "#1A8040" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    {isSelected && <span style={{ color: "#FFFFFF", fontSize: "12px", fontWeight: "bold" }}>✓</span>}
+                    {isSelected && <IconCheck size={10} color="#FFFFFF" />}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{m.display_name}</div>
@@ -196,7 +197,7 @@ export default function AdminEmailPage() {
           </div>
           {activeTemplate && (
             <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginBottom: "8px", background: "#F7FAF5", borderRadius: "6px", padding: "6px 10px" }}>
-              💡 Use [NAME] as placeholder — it will be replaced with each recipient's name.
+              Use [NAME] as placeholder — it will be replaced with each recipient's name.
             </div>
           )}
           <div style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "2px" }}>COMPOSE</div>

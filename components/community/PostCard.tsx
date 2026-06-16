@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import ReactionBar from "./ReactionBar";
 import { createClient } from "@/lib/supabase/client";
+import { IconShield, IconLightning, IconWrench, IconStar, IconPin, IconX, IconTrash, IconVideo, IconPhoto } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -51,11 +52,17 @@ const PLATFORM_LABELS: Record<string, string> = {
   unknown: "Video",
 };
 
+const ROLE_BADGE_ICONS: Record<string, React.ReactNode> = {
+  super_admin: <IconLightning size={9} color="#1B3A2D" />,
+  admin:       <IconShield size={9} color="#156530" />,
+  moderator:   <IconWrench size={9} color="#1A8040" />,
+  sponsor:     <IconStar size={9} color="#4A7C59" />,
+};
 const ROLE_BADGES: Record<string, { label: string; color: string; bg: string }> = {
-  super_admin: { label: "⚡ SUPER ADMIN", color: "#1B3A2D", bg: "#C8E0D0" },
-  admin:       { label: "🛡 ADMIN",       color: "#156530", bg: "#D8EDD8" },
-  moderator:   { label: "🔧 MOD",         color: "#1A8040", bg: "#E4F2E8" },
-  sponsor:     { label: "✦ SPONSOR",      color: "#4A7C59", bg: "#EEF6EE" },
+  super_admin: { label: "SUPER ADMIN", color: "#1B3A2D", bg: "#C8E0D0" },
+  admin:       { label: "ADMIN",       color: "#156530", bg: "#D8EDD8" },
+  moderator:   { label: "MOD",         color: "#1A8040", bg: "#E4F2E8" },
+  sponsor:     { label: "SPONSOR",     color: "#4A7C59", bg: "#EEF6EE" },
 };
 
 const COMMENT_REACTIONS = ["❤️","👍","😂","😮","🔥","🥺"];
@@ -216,14 +223,14 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
               <a href={`/members/community/members/${profile.id}`} onClick={e => e.stopPropagation()} style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "0.5px", textDecoration: "none", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color="#1A8040")} onMouseLeave={e => (e.currentTarget.style.color="#1B3A2D")}>{profile.display_name ?? "Member"}</a>
               {profile.role && ROLE_BADGES[profile.role] && (
-                <span style={{ fontFamily: R, fontSize: "9px", color: ROLE_BADGES[profile.role].color, background: ROLE_BADGES[profile.role].bg, borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>
-                  {ROLE_BADGES[profile.role].label}
+                <span style={{ fontFamily: R, fontSize: "9px", color: ROLE_BADGES[profile.role].color, background: ROLE_BADGES[profile.role].bg, borderRadius: "4px", padding: "2px 6px", letterSpacing: "1px", display: "inline-flex", alignItems: "center", gap: "3px" }}>
+                  {ROLE_BADGE_ICONS[profile.role]}{ROLE_BADGES[profile.role].label}
                 </span>
               )}
             </div>
           <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
             <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(post.created_at)}</span>
-            {post.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#156530", background: "#E8F4EC", borderRadius: "4px", padding: "1px 5px" }}>📌</span>}
+            {post.is_pinned && <span style={{ color: "#156530", background: "#E8F4EC", borderRadius: "4px", padding: "2px 5px", display: "inline-flex", alignItems: "center" }}><IconPin size={10} color="#156530" /></span>}
           </div>
         </div>
         <div style={{ position: "relative" }} onClick={e => e.stopPropagation()}>
@@ -337,7 +344,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
                 <a href={post.video_url ?? post.video_embed_url} target="_blank" rel="noopener noreferrer"
                   style={{ display: "flex", alignItems: "center", gap: "14px", padding: "16px", background: "#FFFFFF", textDecoration: "none" }}>
                   <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "#F2F7F2", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <span style={{ fontSize: "24px" }}>{post.video_platform === "tiktok" ? "🎵" : "📸"}</span>
+                    {post.video_platform === "tiktok" ? <IconVideo size={24} color="#4A7C59" /> : <IconPhoto size={24} color="#4A7C59" />}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ fontFamily: R, fontSize: "12px", color: PLATFORM_COLORS[post.video_platform], margin: 0, letterSpacing: "1px" }}>

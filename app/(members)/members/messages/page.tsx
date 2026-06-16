@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { IconX, IconCheck, IconMessage, IconUsers } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -125,7 +126,7 @@ export default function MessagesPage() {
         </div>
       ) : filteredRooms.length === 0 ? (
         <div style={{ textAlign: "center", padding: "48px 0" }}>
-          <div style={{ fontSize: "32px", marginBottom: "12px" }}>💬</div>
+          <div style={{ marginBottom: "12px" }}><IconMessage size={32} color="#DDE8DD" /></div>
           <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "16px" }}>
             {search || filter !== "all" ? "NO CONVERSATIONS FOUND" : "NO CONVERSATIONS YET"}
           </div>
@@ -143,7 +144,7 @@ export default function MessagesPage() {
                 style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E8F0E4", border: `2px solid ${room.unread_count > 0 ? "#1A8040" : "#DDE8DD"}`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", cursor: "pointer" }}>
                 {getRoomAvatar(room)
                   ? <img src={getRoomAvatar(room)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <span style={{ fontFamily: R, fontSize: "18px", color: "#1A8040" }}>{room.is_group ? "👥" : (getRoomName(room)[0] ?? "?").toUpperCase()}</span>
+                  : <span style={{ fontFamily: R, fontSize: "18px", color: "#1A8040" }}>{room.is_group ? <IconUsers size={20} color="#1A8040" /> : (getRoomName(room)[0] ?? "?").toUpperCase()}</span>
                 }
               </div>
 
@@ -195,7 +196,7 @@ export default function MessagesPage() {
           <div onClick={e => e.stopPropagation()} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", padding: "24px", width: "480px", maxWidth: "90vw", maxHeight: "80vh", overflowY: "auto", display: "flex", flexDirection: "column", gap: "16px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span style={{ fontFamily: R, fontSize: "14px", color: "#1B3A2D", letterSpacing: "2px" }}>NEW CHAT</span>
-              <button onClick={() => setShowNew(false)} style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "20px" }}>✕</button>
+              <button onClick={() => setShowNew(false)} style={{ background: "none", border: "none", cursor: "pointer", display: "flex" }}><IconX size={20} color="#5A7A60" /></button>
             </div>
             {selected.length > 1 && (
               <input value={groupName} onChange={e => setGroupName(e.target.value)} placeholder="Group name (optional)"
@@ -208,7 +209,7 @@ export default function MessagesPage() {
                 <div key={m.id} onClick={() => setSelected(prev => prev.includes(m.id) ? prev.filter(id => id !== m.id) : [...prev, m.id])}
                   style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", background: selected.includes(m.id) ? "#E8F0E4" : "transparent", border: `1.5px solid ${selected.includes(m.id) ? "#1A8040" : "transparent"}` }}>
                   <div style={{ width: "18px", height: "18px", borderRadius: "4px", border: `2px solid ${selected.includes(m.id) ? "#1A8040" : "#DDE8DD"}`, background: selected.includes(m.id) ? "#1A8040" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    {selected.includes(m.id) && <span style={{ color: "#FFFFFF", fontSize: "12px", fontWeight: "bold" }}>✓</span>}
+                    {selected.includes(m.id) && <IconCheck size={10} color="#FFFFFF" />}
                   </div>
                   <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#F2F7F2", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     {m.avatar_url ? <img src={m.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span style={{ fontFamily: R, fontSize: "12px", color: "#1A8040" }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>}

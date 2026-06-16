@@ -2,20 +2,21 @@
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { IconTicket, IconShoppingBag, IconMessage, IconMegaphone, IconStar, IconUser, IconHeart, IconClipboard, IconBell, IconX } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-const TYPE_CONFIG: Record<string, { icon: string; color: string; bg: string }> = {
-  event_reminder:    { icon: "🎫", color: "#1A8040", bg: "#E8F0E4" },
-  order_update:      { icon: "🛍",  color: "#1A8040", bg: "#E8F4EC" },
-  community_reply:   { icon: "💬", color: "#156530", bg: "#E8F4EC" },
-  community_mention: { icon: "📢", color: "#156530", bg: "#E8F4EC" },
-  badge_earned:      { icon: "⭐", color: "#1A8040", bg: "#E8F4EC" },
-  new_follower:      { icon: "👤", color: "#1A8040", bg: "#E8F0E4" },
-  donation_ack:      { icon: "♥",  color: "#CC3344", bg: "#FFE8EC" },
-  new_report:        { icon: "📋", color: "#1A8040", bg: "#E8F0E4" },
-  announcement:      { icon: "📣", color: "#1A8040", bg: "#E8F4EC" },
+const TYPE_CONFIG: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
+  event_reminder:    { icon: <IconTicket size={16} color="#1A8040" />,     color: "#1A8040", bg: "#E8F0E4" },
+  order_update:      { icon: <IconShoppingBag size={16} color="#1A8040" />, color: "#1A8040", bg: "#E8F4EC" },
+  community_reply:   { icon: <IconMessage size={16} color="#156530" />,    color: "#156530", bg: "#E8F4EC" },
+  community_mention: { icon: <IconMegaphone size={16} color="#156530" />,  color: "#156530", bg: "#E8F4EC" },
+  badge_earned:      { icon: <IconStar size={16} color="#1A8040" />,       color: "#1A8040", bg: "#E8F4EC" },
+  new_follower:      { icon: <IconUser size={16} color="#1A8040" />,       color: "#1A8040", bg: "#E8F0E4" },
+  donation_ack:      { icon: <IconHeart size={16} color="#CC3344" />,      color: "#CC3344", bg: "#FFE8EC" },
+  new_report:        { icon: <IconClipboard size={16} color="#1A8040" />,  color: "#1A8040", bg: "#E8F0E4" },
+  announcement:      { icon: <IconMegaphone size={16} color="#1A8040" />,  color: "#1A8040", bg: "#E8F4EC" },
 };
 
 interface ToastItem {
@@ -108,7 +109,7 @@ export default function ToastNotifications() {
         gap: "8px", pointerEvents: "none",
       }}>
         {toasts.map((toast) => {
-          const cfg = TYPE_CONFIG[toast.type] ?? { icon: "🔔", color: "#4A7C59", bg: "#FFFFFF" };
+          const cfg = TYPE_CONFIG[toast.type] ?? { icon: <IconBell size={16} color="#4A7C59" />, color: "#4A7C59", bg: "#FFFFFF" };
           return (
             <div key={toast.id} style={{
               width: "320px",
@@ -130,7 +131,7 @@ export default function ToastNotifications() {
                   width: "36px", height: "36px", borderRadius: "8px",
                   background: cfg.bg, border: `1.5px solid ${cfg.color}40`,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: "18px", flexShrink: 0,
+                  flexShrink: 0,
                 }}>
                   {cfg.icon}
                 </div>
@@ -173,11 +174,11 @@ export default function ToastNotifications() {
                   style={{
                     background: "transparent", border: "none",
                     color: "#5A7A60", cursor: "pointer",
-                    fontSize: "14px", padding: "0", flexShrink: 0,
-                    lineHeight: 1,
+                    padding: "0", flexShrink: 0,
+                    display: "flex", alignItems: "center",
                   }}
                 >
-                  ✕
+                  <IconX size={14} color="#5A7A60" />
                 </button>
               </div>
 

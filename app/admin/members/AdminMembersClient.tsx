@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { IconX, IconCheck, IconWarning } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -301,7 +302,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                 </span>
               </div>
               <button onClick={() => setSelectedMember(null)}
-                style={{ marginLeft: "auto", background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "20px" }}>✕</button>
+                style={{ marginLeft: "auto", background: "none", border: "none", color: "#5A7A60", cursor: "pointer", display: "flex" }}><IconX size={18} color="#5A7A60" /></button>
             </div>
 
             {/* Details grid */}
@@ -312,7 +313,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                 { label: "Posts", value: selectedMember.post_count },
                 { label: "Badges", value: selectedMember.user_badges?.length ?? 0 },
                 { label: "Image Posts Used", value: `${selectedMember.image_post_count ?? 0}/10` },
-                { label: "Status", value: selectedMember.is_banned ? "🚫 BANNED" : "✅ ACTIVE" },
+                { label: "Status", value: selectedMember.is_banned ? <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", color: "#CC3344" }}><IconWarning size={11} color="#CC3344" /> BANNED</span> : <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", color: "#1A8040" }}><IconCheck size={11} color="#1A8040" /> ACTIVE</span> },
               ].map(({ label, value }) => (
                 <div key={label}>
                   <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", letterSpacing: "1px", marginBottom: "2px" }}>{label}</div>

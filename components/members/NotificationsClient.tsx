@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { IconBell, IconX } from "@/components/shared/Icons";
 import { useRouter } from "next/navigation";
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
@@ -124,7 +125,7 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
         </div>
         <div style={{display:"flex",gap:"8px",flexWrap:"wrap",alignItems:"center"}}>
           <button onClick={toggleSound} style={{display:"flex",alignItems:"center",gap:"5px",fontFamily:R,fontSize:"11px",letterSpacing:"1px",background:soundOn?"#E8F0E4":"transparent",color:soundOn?"#1A8040":"#5A7A60",border:`1.5px solid ${soundOn?"#1A8040":"#DDE8DD"}`,borderRadius:"20px",padding:"6px 12px",cursor:"pointer"}}>
-            <span style={{fontSize:"13px"}}>{soundOn?"🔔":"🔕"}</span>{soundOn?"SOUND ON":"SOUND OFF"}
+            <IconBell size={13} color={soundOn?"#1A8040":"#5A7A60"} />{soundOn?"SOUND ON":"SOUND OFF"}
           </button>
           {unreadCount>0&&<button onClick={markAllRead} disabled={markingAll} style={{fontFamily:R,fontSize:"11px",color:"#1A8040",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"20px",padding:"6px 14px",cursor:"pointer",letterSpacing:"1px"}}>{markingAll?"...":"MARK ALL READ ✓"}</button>}
           {notifications.some(n=>n.is_read)&&<button onClick={clearRead} style={{fontFamily:R,fontSize:"11px",color:"#5A7A60",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"20px",padding:"6px 14px",cursor:"pointer",letterSpacing:"1px"}}>CLEAR READ</button>}
@@ -144,7 +145,7 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
       </div>
       {filtered.length===0?(
         <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",padding:"56px 24px",textAlign:"center"}}>
-          <div style={{fontSize:"48px",marginBottom:"14px"}}>🔔</div>
+          <div style={{marginBottom:"14px"}}><IconBell size={48} color="#DDE8DD" /></div>
           <div style={{fontFamily:R,fontSize:"14px",color:"#5A7A60",letterSpacing:"2px",marginBottom:"8px"}}>NO NOTIFICATIONS</div>
           <div style={{fontFamily:B,fontSize:"13px",color:"#3A5030"}}>{filter==="ALL"?"You're all caught up!":` No ${filter.toLowerCase()} notifications`}</div>
         </div>
@@ -165,7 +166,7 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
                     const cfg=TC[notif.type]??{color:"#5A7A60",label:"General"};
                     const icon=ICONS[notif.type]??ICONS.default;
                     return(
-                      <div key={notif.id} style={{background:notif.is_read?"#FFFFFF":"#1E3018",border:`2px solid ${notif.is_read?"#DDE8DD":cfg.color+"60"}`,borderRadius:"10px",padding:"12px 16px",display:"flex",gap:"12px",alignItems:"flex-start",opacity:notif.is_read?0.75:1,transition:"all 0.2s"}}>
+                      <div key={notif.id} style={{background:notif.is_read?"#FFFFFF":"#F2F7F2",border:`2px solid ${notif.is_read?"#DDE8DD":cfg.color+"60"}`,borderRadius:"10px",padding:"12px 16px",display:"flex",gap:"12px",alignItems:"flex-start",opacity:notif.is_read?0.75:1,transition:"all 0.2s"}}>
                         <div style={{width:"36px",height:"36px",borderRadius:"8px",background:cfg.color+"20",border:`1.5px solid ${cfg.color}40`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:cfg.color}}>{icon}</div>
                         <div style={{flex:1,minWidth:0}}>
                           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"8px",marginBottom:"3px"}}>
@@ -178,7 +179,7 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
                         </div>
                         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"8px",flexShrink:0}}>
                           {!notif.is_read&&<div style={{width:"7px",height:"7px",borderRadius:"50%",background:cfg.color}}/>}
-                          <button onClick={()=>deleteNotification(notif.id)} style={{background:"transparent",border:"none",color:"#3A5030",cursor:"pointer",fontSize:"12px",padding:"2px",lineHeight:1}} title="Dismiss">✕</button>
+                          <button onClick={()=>deleteNotification(notif.id)} style={{background:"transparent",border:"none",cursor:"pointer",padding:"2px",display:"flex",alignItems:"center"}} title="Dismiss"><IconX size={12} color="#3A5030" /></button>
                         </div>
                       </div>
                     );

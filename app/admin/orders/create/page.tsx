@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { IconX, IconCheck } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -96,7 +97,7 @@ export default function CreateOrderPage() {
               <div style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D" }}>{selectedMember.display_name}</div>
               <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{selectedMember.id.slice(0, 16)}...</div>
             </div>
-            <button onClick={() => setSelectedMember(null)} style={{ background: "none", border: "none", color: "#CC3344", cursor: "pointer", fontSize: "16px" }}>✕</button>
+            <button onClick={() => setSelectedMember(null)} style={{ background: "none", border: "none", cursor: "pointer", display: "flex" }}><IconX size={16} color="#CC3344" /></button>
           </div>
         ) : (
           <>
@@ -127,7 +128,7 @@ export default function CreateOrderPage() {
             <button key={p.id} onClick={() => addItem(p)}
               disabled={!!items.find(i => i.product.id === p.id)}
               style={{ fontFamily: B, fontSize: "11px", background: items.find(i => i.product.id === p.id) ? "#E8F0E4" : "#F2F7F2", border: `1.5px solid ${items.find(i => i.product.id === p.id) ? "#1A8040" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 12px", color: items.find(i => i.product.id === p.id) ? "#1A8040" : "#4A7C59", cursor: "pointer" }}>
-              {items.find(i => i.product.id === p.id) ? "✓ " : ""}{p.name} — ₱{Number(p.price).toLocaleString()}
+              {items.find(i => i.product.id === p.id) ? <><IconCheck size={10} color="#1A8040" style={{ verticalAlign: "middle" }} />{" "}</> : ""}{p.name} — ₱{Number(p.price).toLocaleString()}
             </button>
           ))}
         </div>

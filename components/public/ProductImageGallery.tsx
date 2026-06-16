@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { IconShoppingBag, IconX } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 
@@ -18,7 +19,7 @@ export default function ProductImageGallery({ images, productName, inStock, acce
     <div style={{ maxWidth: "100%", overflow: "hidden" }}>
       {/* Main image */}
       <div style={{ position: "relative", padding: "4px 4px 8px 0", marginBottom: "10px", overflow: "hidden" }}>
-        <div style={{ position: "absolute", bottom: 0, right: 0, width: "calc(100% - 4px)", height: "calc(100% - 4px)", borderRadius: "12px", background: "#080F06", overflow: "hidden" }} />
+        <div style={{ position: "absolute", bottom: 0, right: 0, width: "calc(100% - 4px)", height: "calc(100% - 4px)", borderRadius: "12px", background: "#DDE8DD", overflow: "hidden" }} />
         <div
           onMouseEnter={() => { if (window.innerWidth > 768 && !lightbox) setZoomed(true); }}
           onMouseLeave={() => setZoomed(false)}
@@ -32,7 +33,7 @@ export default function ProductImageGallery({ images, productName, inStock, acce
           className="product-main-image" style={{ position: "relative", background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden", zIndex: 1, height: "420px", cursor: "zoom-in" }}>
           {images[selected]
             ? <img src={images[selected]} alt={productName} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.1s ease", transform: zoomed ? "scale(2)" : "scale(1)", transformOrigin: `${mousePos.x}% ${mousePos.y}%` }} />
-            : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "72px" }}>🛍</div>
+            : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}><IconShoppingBag size={72} color="#DDE8DD" /></div>
           }
           {!inStock && (
             <div style={{ position: "absolute", inset: 0, background: "rgba(8,15,6,0.7)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -65,7 +66,7 @@ export default function ProductImageGallery({ images, productName, inStock, acce
         <div onClick={() => { setLightbox(false); setZoomed(false); }}
           style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999, background: "rgba(0,0,0,0.95)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "zoom-out", flexDirection: "column" }}>
           <button onClick={() => setLightbox(false)}
-            style={{ position: "absolute", top: "20px", right: "24px", background: "none", border: "none", color: "#1B3A2D", fontSize: "28px", cursor: "pointer", zIndex: 2001 }}>✕</button>
+            style={{ position: "absolute", top: "20px", right: "24px", background: "rgba(255,255,255,0.9)", border: "none", borderRadius: "6px", padding: "6px", cursor: "pointer", zIndex: 2001, display: "flex", alignItems: "center" }}><IconX size={20} color="#1B3A2D" /></button>
           {selected > 0 && (
             <button onClick={e => { e.stopPropagation(); setSelected(s => s - 1); }}
               style={{ position: "absolute", left: "20px", background: "rgba(255,255,255,0.1)", border: "none", color: "#1B3A2D", fontSize: "28px", cursor: "pointer", borderRadius: "50%", width: "48px", height: "48px", zIndex: 2001 }}>‹</button>

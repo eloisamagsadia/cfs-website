@@ -1,6 +1,7 @@
 "use client";
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
+import { IconUsers, IconSparkle, IconShield, IconWrench, IconMessage, IconTicket, IconStar, IconChart, IconMegaphone, IconX, IconLightning, IconSkull, IconCheck, IconWarning, IconClipboard } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -133,12 +134,12 @@ export default function SuperAdminPage() {
     setExportLoading(false);
   }
 
-  const TABS = [
-    { id: "overview", label: "📊 Overview" },
-    { id: "settings", label: "🔧 Settings" },
-    { id: "broadcast", label: "📣 Broadcast" },
-    { id: "audit", label: "📋 Audit Log" },
-    { id: "danger", label: "☠️ Danger Zone" },
+  const TABS: { id: string; label: React.ReactNode }[] = [
+    { id: "overview",  label: <><IconChart size={11} color="currentColor" style={{ verticalAlign: "middle" }} /> Overview</> },
+    { id: "settings",  label: <><IconWrench size={11} color="currentColor" style={{ verticalAlign: "middle" }} /> Settings</> },
+    { id: "broadcast", label: <><IconMegaphone size={11} color="currentColor" style={{ verticalAlign: "middle" }} /> Broadcast</> },
+    { id: "audit",     label: <><IconClipboard size={11} color="currentColor" style={{ verticalAlign: "middle" }} /> Audit Log</> },
+    { id: "danger",    label: <><IconSkull size={11} color="currentColor" style={{ verticalAlign: "middle" }} /> Danger Zone</> },
   ];
 
   if (loading) return (
@@ -152,7 +153,7 @@ export default function SuperAdminPage() {
       {/* Header */}
       <div style={{ background: "linear-gradient(135deg, #FFFBE8, #FFF7D4)", border: "2px solid #1A804040", borderRadius: "16px", padding: "24px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "6px" }}>
-          <span style={{ fontSize: "24px" }}>⚡</span>
+          <IconLightning size={24} color="#156530" />
           <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#156530", letterSpacing: "3px", margin: 0 }}>SUPER ADMIN</h1>
         </div>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", margin: 0 }}>Full platform control — with great power comes great responsibility.</p>
@@ -173,17 +174,17 @@ export default function SuperAdminPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "10px" }}>
             {[
-              { label: "TOTAL MEMBERS", value: stats?.total_members ?? "—", color: "#1B3A2D", icon: "👥" },
-              { label: "SPONSORS", value: stats?.sponsors ?? "—", color: "#1A8040", icon: "✦" },
-              { label: "ADMINS", value: stats?.admins ?? "—", color: "#1A8040", icon: "🛡" },
-              { label: "MODERATORS", value: stats?.moderators ?? "—", color: "#5A7A60", icon: "🔧" },
-              { label: "TOTAL POSTS", value: stats?.total_posts ?? "—", color: "#1A8040", icon: "💬" },
-              { label: "TOTAL TICKETS", value: stats?.total_tickets ?? "—", color: "#156530", icon: "🎫" },
-              { label: "TOTAL EVENTS", value: stats?.total_events ?? "—", color: "#1A8040", icon: "🎪" },
-              { label: "EXCLUSIVE CONTENT", value: stats?.exclusive_content ?? "—", color: "#1A8040", icon: "✨" },
+              { label: "TOTAL MEMBERS",    value: stats?.total_members ?? "—",    color: "#1B3A2D", icon: <IconUsers size={18} color="#1B3A2D" /> },
+              { label: "SPONSORS",         value: stats?.sponsors ?? "—",         color: "#1A8040", icon: <IconSparkle size={18} color="#1A8040" /> },
+              { label: "ADMINS",           value: stats?.admins ?? "—",           color: "#1A8040", icon: <IconShield size={18} color="#1A8040" /> },
+              { label: "MODERATORS",       value: stats?.moderators ?? "—",       color: "#5A7A60", icon: <IconWrench size={18} color="#5A7A60" /> },
+              { label: "TOTAL POSTS",      value: stats?.total_posts ?? "—",      color: "#1A8040", icon: <IconMessage size={18} color="#1A8040" /> },
+              { label: "TOTAL TICKETS",    value: stats?.total_tickets ?? "—",    color: "#156530", icon: <IconTicket size={18} color="#156530" /> },
+              { label: "TOTAL EVENTS",     value: stats?.total_events ?? "—",     color: "#1A8040", icon: <IconStar size={18} color="#1A8040" /> },
+              { label: "EXCLUSIVE CONTENT",value: stats?.exclusive_content ?? "—",color: "#1A8040", icon: <IconLightning size={18} color="#1A8040" /> },
             ].map(({ label, value, color, icon }) => (
               <div key={label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "14px 16px" }}>
-                <div style={{ fontSize: "20px", marginBottom: "6px" }}>{icon}</div>
+                <div style={{ marginBottom: "6px" }}>{icon}</div>
                 <div style={{ fontFamily: R, fontSize: "1.4rem", color }}>{value}</div>
                 <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A60", letterSpacing: "1.5px" }}>{label}</div>
               </div>
@@ -193,7 +194,7 @@ export default function SuperAdminPage() {
           {/* Sponsor slots */}
           {sponsorPerks && (
             <div style={{ background: "#FFFFFF", border: "2px solid #1A804060", borderRadius: "12px", padding: "20px" }}>
-              <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px", marginBottom: "12px" }}>✦ SPONSOR SLOTS</div>
+              <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px", marginBottom: "12px", display: "flex", alignItems: "center", gap: "6px" }}><IconSparkle size={12} color="#1A8040" /> SPONSOR SLOTS</div>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
                 <span style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{stats?.sponsors ?? 0} / {sponsorPerks.max_sponsors} slots used</span>
                 <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>{sponsorPerks.max_sponsors - (stats?.sponsors ?? 0)} remaining</span>
@@ -209,7 +210,7 @@ export default function SuperAdminPage() {
             <div style={{ background: "#FFFFFF", border: `2px solid ${settings.maintenance_mode ? "#CC3344" : "#1A8040"}30`, borderRadius: "12px", padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <div style={{ fontFamily: R, fontSize: "12px", color: settings.maintenance_mode ? "#CC3344" : "#1A8040", letterSpacing: "2px", marginBottom: "4px" }}>
-                  {settings.maintenance_mode ? "🔴 MAINTENANCE MODE ON" : "🟢 SITE LIVE"}
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><span style={{ display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", background: settings.maintenance_mode ? "#CC3344" : "#1A8040", flexShrink: 0 }} />{settings.maintenance_mode ? "MAINTENANCE MODE ON" : "SITE LIVE"}</span>
                 </div>
                 <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>
                   {settings.maintenance_mode ? "Site is under maintenance" : "coletfs.com is live and running"}
@@ -225,9 +226,9 @@ export default function SuperAdminPage() {
           {/* Announcement */}
           {settings?.announcement_active && (
             <div style={{ background: "#E8F0E4", border: `2px solid ${settings.announcement_color}`, borderRadius: "12px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>📣 {settings.announcement_text}</div>
+              <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", display: "flex", alignItems: "center", gap: "6px" }}><IconMegaphone size={13} color="#1B3A2D" /> {settings.announcement_text}</div>
               <button onClick={() => saveSetting("announcement_active", false)}
-                style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "16px" }}>✕</button>
+                style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", display: "flex" }}><IconX size={16} color="#5A7A60" /></button>
             </div>
           )}
         </div>
@@ -237,7 +238,7 @@ export default function SuperAdminPage() {
       {activeTab === "settings" && settings && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px" }}>🔧 SITE SETTINGS</div>
+            <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "6px" }}><IconWrench size={13} color="#1A8040" /> SITE SETTINGS</div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
               <div>
@@ -263,7 +264,7 @@ export default function SuperAdminPage() {
           {/* Sponsor settings */}
           {sponsorPerks && (
             <div style={{ background: "#FFFFFF", border: "2px solid #1A804060", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px" }}>✦ SPONSOR SETTINGS</div>
+              <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "6px" }}><IconSparkle size={13} color="#1A8040" /> SPONSOR SETTINGS</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>MAX SPONSORS</label>
@@ -287,7 +288,7 @@ export default function SuperAdminPage() {
 
           {/* Announcement banner */}
           <div style={{ background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
-            <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px" }}>📣 SITE ANNOUNCEMENT</div>
+            <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "6px" }}><IconMegaphone size={13} color="#1A8040" /> SITE ANNOUNCEMENT</div>
             <input value={settings.announcement_text ?? ""} onChange={e => setSettings((p: any) => ({ ...p, announcement_text: e.target.value }))}
               placeholder="e.g. Site maintenance tonight at 12AM"
               style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
@@ -317,7 +318,7 @@ export default function SuperAdminPage() {
       {/* ── BROADCAST ── */}
       {activeTab === "broadcast" && (
         <div style={{ background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "12px", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
-          <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px" }}>📣 BROADCAST TO ALL MEMBERS</div>
+          <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "6px" }}><IconMegaphone size={13} color="#1A8040" /> BROADCAST TO ALL MEMBERS</div>
           <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>This sends a notification to every active member on the platform.</div>
           <div>
             <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>TITLE *</label>
@@ -338,13 +339,13 @@ export default function SuperAdminPage() {
               style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
           </div>
           {broadcastSent && (
-            <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#1A8040" }}>
-              ✅ Broadcast sent successfully!
+            <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#1A8040", display: "flex", alignItems: "center", gap: "6px" }}>
+              <IconCheck size={13} color="#1A8040" /> Broadcast sent successfully!
             </div>
           )}
           <button onClick={sendBroadcast} disabled={broadcasting || !broadcast.title.trim() || !broadcast.message.trim()}
             style={{ fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", width: "fit-content", opacity: (broadcasting || !broadcast.title.trim() || !broadcast.message.trim()) ? 0.5 : 1 }}>
-            {broadcasting ? "SENDING..." : "📣 SEND TO ALL MEMBERS"}
+            {broadcasting ? "SENDING..." : <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><IconMegaphone size={12} color="#FFFFFF" /> SEND TO ALL MEMBERS</span>}
           </button>
         </div>
       )}
@@ -387,7 +388,7 @@ export default function SuperAdminPage() {
       {activeTab === "danger" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           <div style={{ background: "#FFF5F6", border: "2px solid #CC3344", borderRadius: "12px", padding: "20px" }}>
-            <div style={{ fontFamily: R, fontSize: "13px", color: "#CC3344", letterSpacing: "2px", marginBottom: "16px" }}>☠️ DANGER ZONE</div>
+            <div style={{ fontFamily: R, fontSize: "13px", color: "#CC3344", letterSpacing: "2px", marginBottom: "16px", display: "flex", alignItems: "center", gap: "6px" }}><IconSkull size={13} color="#CC3344" /> DANGER ZONE</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {[
                 {

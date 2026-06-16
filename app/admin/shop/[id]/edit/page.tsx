@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { IconX, IconUpload, IconLightning } from "@/components/shared/Icons";
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
 export default function AdminEditProductPage() {
@@ -93,11 +94,11 @@ export default function AdminEditProductPage() {
                     <div style={{position:"relative",display:"inline-block"}}>
                       <img src={img} alt="" style={{height:"120px",width:"120px",borderRadius:"8px",objectFit:"cover",display:"block"}} />
                       <button onClick={()=>upd("images",form.images.map((v,j)=>j===i?"":v))}
-                        style={{position:"absolute",top:"-8px",right:"-8px",background:"#CC3344",border:"none",borderRadius:"50%",width:"22px",height:"22px",color:"#fff",cursor:"pointer",fontSize:"12px",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+                        style={{position:"absolute",top:"-8px",right:"-8px",background:"#CC3344",border:"none",borderRadius:"50%",width:"22px",height:"22px",color:"#fff",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><IconX size={10} color="#FFFFFF" /></button>
                     </div>
                   ) : (
                     <label style={{cursor:"pointer",display:"block"}}>
-                      <div style={{fontSize:"28px",marginBottom:"6px"}}>{uploading===i ? "⏳" : "⬆"}</div>
+                      <div style={{marginBottom:"6px"}}>{uploading===i ? <IconLightning size={28} color="#5A7A60" /> : <IconUpload size={28} color="#5A7A60" />}</div>
                       <div style={{fontFamily:B,fontSize:"12px",color:"#5A7A60"}}>{uploading===i ? "Uploading..." : "Drop image here or click to upload"}</div>
                       <input type="file" accept="image/*" style={{display:"none"}} onChange={e=>{if(e.target.files?.[0])uploadImage(i,e.target.files[0]);}}/>
                     </label>
@@ -113,7 +114,7 @@ export default function AdminEditProductPage() {
             <span style={{fontFamily:R,fontSize:"12px",color:"#4A7C59"}}>ACTIVE IN SHOP</span>
           </label>
           <div style={{display:"flex",gap:"10px",paddingTop:"10px",borderTop:"1px solid #DDE8DD"}}>
-            <button onClick={handleSave} disabled={saving} style={{flex:1,fontFamily:R,fontSize:"12px",background:saving?"#F2F7F2":"#1A8040",color:saving?"#5A7A60":"#080F06",border:"2px solid #1B3A2D",borderRadius:"6px",padding:"10px",cursor:"pointer"}}>{saving?"SAVING...":"SAVE"}</button>
+            <button onClick={handleSave} disabled={saving} style={{flex:1,fontFamily:R,fontSize:"12px",background:saving?"#F2F7F2":"#1A8040",color:saving?"#5A7A60":"#FFFFFF",border:"2px solid #1B3A2D",borderRadius:"6px",padding:"10px",cursor:"pointer"}}>{saving?"SAVING...":"SAVE"}</button>
             <button onClick={handleDelete} style={{fontFamily:R,fontSize:"11px",background:"transparent",border:"1.5px solid #CC3344",borderRadius:"6px",color:"#CC3344",padding:"10px 14px",cursor:"pointer"}}>DELETE</button>
           </div>
         </div>

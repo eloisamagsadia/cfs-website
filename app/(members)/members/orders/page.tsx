@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { IconShoppingBag } from "@/components/shared/Icons";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -32,7 +33,7 @@ export default async function MyOrdersPage() {
 
       {display.length === 0 ? (
         <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"48px 24px", textAlign:"center" }}>
-          <div style={{ fontSize:"40px", marginBottom:"12px" }}>🛍</div>
+          <div style={{ marginBottom:"12px" }}><IconShoppingBag size={40} color="#DDE8DD" /></div>
           <div style={{ fontFamily:R, fontSize:"14px", color:"#5A7A60", letterSpacing:"2px", marginBottom:"16px" }}>NO ORDERS YET</div>
           <a href="/shop" style={{ fontFamily:R, fontSize:"12px", color:"#1A8040", textDecoration:"none", border:"1.5px solid #DDE8DD", borderRadius:"6px", padding:"8px 18px", letterSpacing:"1.5px" }}>SHOP NOW →</a>
         </div>

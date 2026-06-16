@@ -3,6 +3,7 @@ import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { IconCamera, IconCheck } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -54,8 +55,8 @@ export default function EventTicketsPage() {
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", margin: 0 }}>{tickets.length} total registrations</p>
         </div>
         <Link href="/admin/check-in"
-          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", textDecoration: "none", borderRadius: "6px", padding: "8px 16px", letterSpacing: "1px" }}>
-          📷 CHECK-IN SCANNER
+          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", textDecoration: "none", borderRadius: "6px", padding: "8px 16px", letterSpacing: "1px", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+          <IconCamera size={11} color="#FFFFFF" /> CHECK-IN SCANNER
         </Link>
       </div>
 
@@ -118,7 +119,7 @@ export default function EventTicketsPage() {
                     </span>
                     <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(ticket.created_at)}</span>
                     {ticket.checked_in_at && (
-                      <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>✓ {timeAgo(ticket.checked_in_at)}</span>
+                      <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "inline-flex", alignItems: "center", gap: "3px" }}><IconCheck size={10} color="#1A8040" /> {timeAgo(ticket.checked_in_at)}</span>
                     )}
                   </div>
                 </div>

@@ -1,16 +1,17 @@
 "use client";
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
+import { IconX, IconSparkle, IconStar, IconVideo, IconMessage } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 const S = "var(--font-dm-serif,'DM Serif Display',serif)";
 
 const CATEGORIES = [
-  { value: "all", label: "All", icon: "✨" },
-  { value: "events", label: "Events", icon: "🎪" },
-  { value: "projects", label: "Projects", icon: "🎨" },
-  { value: "behind_scenes", label: "Behind the Scenes", icon: "🎬" },
+  { value: "all", label: "All", icon: <IconSparkle size={13} color="currentColor" /> },
+  { value: "events", label: "Events", icon: <IconStar size={13} color="currentColor" /> },
+  { value: "projects", label: "Projects", icon: <IconStar size={13} color="currentColor" /> },
+  { value: "behind_scenes", label: "Behind the Scenes", icon: <IconVideo size={13} color="currentColor" /> },
 ];
 
 export default function ExclusivePage() {
@@ -75,7 +76,7 @@ export default function ExclusivePage() {
     </div>
       ) : filtered.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "60px 24px", textAlign: "center" }}>
-          <div style={{ fontSize: "40px", marginBottom: "12px" }}>📭</div>
+          <div style={{ fontSize: "40px", marginBottom: "12px" }}><IconMessage size={40} color="#DDE8DD" /></div>
           <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A60", letterSpacing: "2px" }}>NO CONTENT YET</div>
           <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", marginTop: "8px" }}>Check back soon for exclusive content!</div>
         </div>
@@ -130,8 +131,8 @@ export default function ExclusivePage() {
                 {selected.description && <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>{selected.description}</div>}
               </div>
               <button onClick={() => setSelected(null)}
-                style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontFamily: R, fontSize: "12px", letterSpacing: "1px" }}>
-                CLOSE ✕
+                style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontFamily: R, fontSize: "12px", letterSpacing: "1px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                CLOSE <IconX size={12} color="#5A7A60" />
               </button>
             </div>
           </div>

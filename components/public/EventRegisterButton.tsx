@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconTicket, IconCheck } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -152,13 +153,13 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <div style={{ background: "#E8F5E9", border: "2px solid #1A8040", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
-          <div style={{ fontSize: "28px", marginBottom: "8px" }}>🎫</div>
+          <div style={{ marginBottom: "8px" }}><IconTicket size={28} color="#1A8040" /></div>
           <div style={{ fontFamily: R, fontSize: "14px", color: "#1A8040", letterSpacing: "1.5px", marginBottom: "4px" }}>YOU'RE REGISTERED!</div>
           <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Your ticket is ready</div>
         </div>
         {ticketId && (
           <button onClick={() => router.push(`/members/tickets/${ticketId}`)}
-            style={{ width: "100%", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+            style={{ width: "100%", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
             VIEW MY TICKET →
           </button>
         )}
@@ -223,7 +224,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
                 {tier.perks?.length > 0 && (
                   <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
                     {tier.perks.map((p: string) => (
-                      <span key={p} style={{ fontFamily: B, fontSize: "9px", color: tier.color, background: tier.color + "20", borderRadius: "10px", padding: "1px 8px" }}>✓ {p}</span>
+                      <span key={p} style={{ fontFamily: B, fontSize: "9px", color: tier.color, background: tier.color + "20", borderRadius: "10px", padding: "1px 8px", display: "inline-flex", alignItems: "center", gap: "3px" }}><IconCheck size={7} color={tier.color} /> {p}</span>
                     ))}
                   </div>
                 )}

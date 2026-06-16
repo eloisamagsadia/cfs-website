@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toISOWithPHT } from "@/lib/date";
 import { useRouter } from "next/navigation";
 import FileUpload from "@/components/admin/FileUpload";
+import { IconSparkle } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -90,7 +91,7 @@ export default function CreateEventPage() {
 
         {/* Early access */}
         <div style={{ background: "#1A804010", border: "1.5px solid #1A804060", borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
-          <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px" }}>✦ SPONSOR EARLY ACCESS (optional)</div>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "5px" }}><IconSparkle size={11} color="#1A8040" /> SPONSOR EARLY ACCESS (optional)</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div>
               <label style={labelStyle}>Early Access Opens</label>
@@ -108,8 +109,8 @@ export default function CreateEventPage() {
         <div style={{ display: "flex", gap: "10px" }}>
           <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
           <button onClick={handleSave} disabled={saving} style={{ position: "relative", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
-            <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#080F06", padding: "10px 22px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1.5px" }}>{saving ? "SAVING..." : "SAVE EVENT ✦"}</span>
+            <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#1B3A2D", borderRadius: "6px" }} />
+            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#FFFFFF", padding: "10px 22px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1.5px", display: "inline-flex", alignItems: "center", gap: "6px" }}>{saving ? "SAVING..." : <><IconSparkle size={12} color="#FFFFFF" /> SAVE EVENT</>}</span>
           </button>
         </div>
       </div>

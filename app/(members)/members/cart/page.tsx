@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { IconX, IconCart } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -74,7 +75,7 @@ export default function CartPage() {
       </div>
       {items.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
-          <div style={{ fontSize: "40px", marginBottom: "12px" }}>🛒</div>
+          <div style={{ marginBottom: "12px" }}><IconCart size={40} color="#DDE8DD" /></div>
           <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "16px" }}>YOUR CART IS EMPTY</div>
           <Link href="/shop" style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>BROWSE SHOP →</Link>
         </div>
@@ -96,7 +97,7 @@ export default function CartPage() {
                   <span style={{ fontFamily: R, fontSize: "14px", color: "#1B3A2D", minWidth: "20px", textAlign: "center" }}>{item.quantity}</span>
                   <button onClick={() => updateQty(item.id, item.quantity + 1)} style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#F2F7F2", border: "1.5px solid #DDE8DD", color: "#1B3A2D", cursor: "pointer", fontFamily: R, fontSize: "14px" }}>+</button>
                 </div>
-                <button onClick={() => removeItem(item.id)} style={{ background: "transparent", border: "none", color: "#CC3344", cursor: "pointer", fontSize: "16px", padding: "4px" }}>✕</button>
+                <button onClick={() => removeItem(item.id)} style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px", display: "flex" }}><IconX size={16} color="#CC3344" /></button>
               </div>
             ))}
           </div>
@@ -110,7 +111,7 @@ export default function CartPage() {
                     <span style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px" }}>{promoApplied.code}</span>
                     <span style={{ fontFamily: B, fontSize: "11px", color: "#1A8040", marginLeft: "8px" }}>{promoApplied.label}</span>
                   </div>
-                  <button onClick={removePromo} style={{ background: "none", border: "none", color: "#CC3344", cursor: "pointer", fontSize: "14px" }}>✕</button>
+                  <button onClick={removePromo} style={{ background: "none", border: "none", cursor: "pointer", display: "flex" }}><IconX size={14} color="#CC3344" /></button>
                 </div>
               ) : (
                 <>

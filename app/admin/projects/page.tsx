@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { IconEdit } from "@/components/shared/Icons";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -48,8 +49,8 @@ export default async function AdminProjectsPage() {
                   {p.description && <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>{p.description.slice(0, 60)}{p.description.length > 60 ? "..." : ""}</span>}
                 </div>
               </div>
-              <Link href={`/admin/projects/${p.id}/edit`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px", flexShrink: 0 }}>
-                ✏ EDIT
+              <Link href={`/admin/projects/${p.id}/edit`} style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px", flexShrink: 0 }}>
+                <IconEdit size={11} color="#4A7C59" /> EDIT
               </Link>
             </div>
           );

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { IconCheck } from "@/components/shared/Icons";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function RegisterPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="w-full max-w-md rounded-2xl p-8 text-center">
-          <div className="text-5xl mb-4">🎉</div>
+          <div className="mb-4 flex justify-center"><IconCheck size={48} color="#1A8040" /></div>
           <h1 className="text-2xl font-bold mb-2">Check your email!</h1>
           <p className="text-muted-foreground">
             We sent a confirmation link to <strong>{email}</strong>. Click it to

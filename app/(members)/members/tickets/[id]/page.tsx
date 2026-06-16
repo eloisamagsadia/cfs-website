@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import QRCode from "react-qr-code";
+import { IconTicket, IconCheck, IconLightning } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -48,7 +49,7 @@ export default function TicketPage() {
 
   if (!ticket) return (
     <div style={{ textAlign: "center", padding: "80px" }}>
-      <div style={{ fontSize: "40px", marginBottom: "12px" }}>🎫</div>
+      <div style={{ marginBottom: "12px" }}><IconTicket size={40} color="#DDE8DD" /></div>
       <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A60", letterSpacing: "2px" }}>TICKET NOT FOUND</div>
       <Link href="/members/events" style={{ fontFamily: B, fontSize: "13px", color: "#1A8040", textDecoration: "none", display: "block", marginTop: "12px" }}>← Back to Events</Link>
     </div>
@@ -122,7 +123,7 @@ export default function TicketPage() {
             <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", letterSpacing: "1px", marginBottom: "8px" }}>INCLUDES</div>
             <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
               {tier.perks.map((perk: string) => (
-                <span key={perk} style={{ fontFamily: B, fontSize: "10px", color: tierColor, background: tierColor + "20", borderRadius: "20px", padding: "2px 10px" }}>✓ {perk}</span>
+                <span key={perk} style={{ fontFamily: B, fontSize: "10px", color: tierColor, background: tierColor + "20", borderRadius: "20px", padding: "2px 10px", display: "inline-flex", alignItems: "center", gap: "4px" }}><IconCheck size={8} color={tierColor} /> {perk}</span>
               ))}
             </div>
           </div>
@@ -153,7 +154,7 @@ export default function TicketPage() {
             </>
           ) : ticket.status === "used" ? (
             <div style={{ padding: "24px", textAlign: "center" }}>
-              <div style={{ fontSize: "40px", marginBottom: "8px" }}>✅</div>
+              <div style={{ marginBottom: "8px" }}><IconCheck size={36} color="#1A8040" /></div>
               <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px" }}>TICKET USED</div>
               {ticket.checked_in_at && (
                 <div style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30", marginTop: "6px" }}>
@@ -163,7 +164,7 @@ export default function TicketPage() {
             </div>
           ) : ticket.status === "pending_payment" ? (
             <div style={{ padding: "24px", textAlign: "center" }}>
-              <div style={{ fontSize: "40px", marginBottom: "8px" }}>⏳</div>
+              <div style={{ marginBottom: "8px" }}><IconLightning size={36} color="#156530" /></div>
               <div style={{ fontFamily: R, fontSize: "13px", color: "#156530", letterSpacing: "2px" }}>AWAITING PAYMENT</div>
               <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "6px" }}>Complete payment to activate your ticket</div>
             </div>
@@ -182,7 +183,7 @@ export default function TicketPage() {
       {/* Save hint */}
       {ticket.status === "active" && (
         <div style={{ background: "#E8F0E4", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "12px 16px", display: "flex", gap: "10px", alignItems: "center" }}>
-          <span style={{ fontSize: "16px" }}>💡</span>
+          <IconLightning size={16} color="#4A7C59" />
           <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", lineHeight: 1.5 }}>
             Take a screenshot of this ticket to save it offline. Present the QR code at the event.
           </span>

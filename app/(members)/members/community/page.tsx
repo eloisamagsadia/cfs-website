@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import CommunityFeed from "@/components/community/CommunityFeed";
 import FanLettersBulletin from "@/components/community/FanLettersBulletin";
+import { IconUsers } from "@/components/shared/Icons";
 import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -47,7 +48,7 @@ export default async function CommunityPage() {
             <p style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60", marginTop: "6px" }}>Share, connect, and celebrate with the fam</p>
           </div>
           <Link href="/members/community/members" className="community-members-btn">
-            <span style={{ fontSize: "16px" }}>👥</span>
+            <IconUsers size={15} color="currentColor" />
             <span>MEMBERS</span>
             <span style={{ fontSize: "12px", opacity: 0.7 }}>→</span>
           </Link>

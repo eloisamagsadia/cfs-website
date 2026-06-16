@@ -2,6 +2,7 @@
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { IconTrash } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -158,8 +159,8 @@ export default function MediaLibraryPage() {
                     </div>
                     <button
                       onClick={() => setConfirmDelete({ key: file.key, url: file.url })}
-                      style={{ position: "absolute", top: "6px", right: "6px", background: "rgba(0,0,0,0.7)", border: "none", borderRadius: "6px", padding: "4px 7px", cursor: "pointer", fontFamily: B, fontSize: "11px", color: "#CC3344" }}
-                    >🗑</button>
+                      style={{ position: "absolute", top: "6px", right: "6px", background: "rgba(255,255,255,0.9)", border: "none", borderRadius: "6px", padding: "4px 7px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                    ><IconTrash size={13} color="#CC3344" /></button>
                   </div>
                 ))}
               </div>
@@ -172,7 +173,7 @@ export default function MediaLibraryPage() {
       {confirmDelete && (
         <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }}>
           <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", padding: "28px", maxWidth: "320px", width: "90%" }}>
-            <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: "#3D0A14", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px", fontSize: "20px" }}>🗑️</div>
+            <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: "#FFE8EC", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}><IconTrash size={20} color="#CC3344" /></div>
             <div style={{ fontFamily: R, fontSize: "16px", color: "#1B3A2D", marginBottom: "8px" }}>Delete this file?</div>
             <div style={{ marginBottom: "16px", borderRadius: "8px", overflow: "hidden" }}>
               <img src={confirmDelete.url} alt="" style={{ width: "100%", height: "120px", objectFit: "cover" }} />

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FileUpload from "@/components/admin/FileUpload";
+import { IconX } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -53,7 +54,7 @@ export default function AdminShopCreatePage() {
         <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
       </div>
 
-      {error && <div style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
+      {error && <div style={{ background: "#FFE8EC", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
 
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
         <div><label style={labelStyle}>PRODUCT NAME *</label><input style={inputStyle} placeholder="e.g. CFS Tote Bag" value={form.name} onChange={e => set("name", e.target.value)} /></div>
@@ -97,7 +98,7 @@ export default function AdminShopCreatePage() {
               <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 2fr auto", gap: "8px", alignItems: "center" }}>
                 <input style={inputStyle} placeholder="Name (e.g. Size)" value={v.name} onChange={e => setVariant(i, "name", e.target.value)} />
                 <input style={inputStyle} placeholder="Options: S,M,L,XL" value={v.options} onChange={e => setVariant(i, "options", e.target.value)} />
-                <button onClick={() => removeVariant(i)} style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "6px", color: "#CC3344", fontFamily: B, fontSize: "11px", padding: "8px 10px", cursor: "pointer" }}>✕</button>
+                <button onClick={() => removeVariant(i)} style={{ background: "#FFE8EC", border: "2px solid #CC3344", borderRadius: "6px", color: "#CC3344", fontFamily: B, fontSize: "11px", padding: "8px 10px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><IconX size={11} color="#CC3344" /></button>
               </div>
             ))}
             <button onClick={addVariant} style={{ alignSelf: "flex-start", background: "none", border: "2px dashed #DDE8DD", borderRadius: "6px", color: "#5A7A60", fontFamily: B, fontSize: "12px", padding: "6px 14px", cursor: "pointer" }}>+ Add Variant</button>

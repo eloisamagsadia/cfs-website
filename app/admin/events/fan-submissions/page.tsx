@@ -1,11 +1,19 @@
 "use client";
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
+import { IconCheck, IconX, IconTrash, IconMusic, IconPhoto, IconVideo, IconLink, IconMegaphone, IconUsers } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-const ICONS: Record<string, string> = { tiktok:"🎵", twitter:"🐦", instagram:"📸", youtube:"▶️", facebook:"📘", other:"🔗" };
+const PLATFORM_ICONS: Record<string, React.ReactNode> = {
+  tiktok: <IconMusic size={14} color="#4A7C59" />,
+  twitter: <IconMegaphone size={14} color="#4A7C59" />,
+  instagram: <IconPhoto size={14} color="#4A7C59" />,
+  youtube: <IconVideo size={14} color="#4A7C59" />,
+  facebook: <IconUsers size={14} color="#4A7C59" />,
+  other: <IconLink size={14} color="#4A7C59" />,
+};
 
 export default function AdminFanSubmissionsPage() {
   const [submissions, setSubmissions] = useState<any[]>([]);
@@ -48,7 +56,7 @@ export default function AdminFanSubmissionsPage() {
       {/* Filter tabs */}
       <div style={{ display: "flex", gap: "8px" }}>
         {["pending", "approved", "rejected", "all"].map(f => (
-          <button key={f} onClick={() => setFilter(f)} style={{ fontFamily: B, fontSize: "11px", background: filter === f ? "#2C1A0A" : "#FFFFFF", color: filter === f ? "#1A8040" : "#5A7A60", border: `1.5px solid ${filter === f ? "#1A8040" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px", textTransform: "uppercase" as const }}>
+          <button key={f} onClick={() => setFilter(f)} style={{ fontFamily: B, fontSize: "11px", background: filter === f ? "#E8F4EC" : "#FFFFFF", color: filter === f ? "#1A8040" : "#5A7A60", border: `1.5px solid ${filter === f ? "#1A8040" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px", textTransform: "uppercase" as const }}>
             {f}
           </button>
         ))}
@@ -68,12 +76,12 @@ export default function AdminFanSubmissionsPage() {
               <div style={{ height: "150px", background: "#F2F7F2", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
                 {s.thumbnail_url
                   ? <img src={s.thumbnail_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <span style={{ fontSize: "48px" }}>{ICONS[s.platform] ?? "🔗"}</span>
+                  : <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>{PLATFORM_ICONS[s.platform] ?? <IconLink size={48} color="#DDE8DD" />}</div>
                 }
-                <div style={{ position: "absolute", top: "8px", left: "8px", background: "rgba(0,0,0,0.7)", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: "#4A7C59" }}>
-                  {ICONS[s.platform]} {s.platform}
+                <div style={{ position: "absolute", top: "8px", left: "8px", background: "rgba(255,255,255,0.9)", borderRadius: "4px", padding: "2px 8px", display: "flex", alignItems: "center", gap: "4px", fontSize: "11px", color: "#4A7C59" }}>
+                  {PLATFORM_ICONS[s.platform]} {s.platform}
                 </div>
-                <div style={{ position: "absolute", top: "8px", right: "8px", background: s.status === "approved" ? "#E8F0E4" : s.status === "rejected" ? "#3D0A18" : "#2C1A0A", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: s.status === "approved" ? "#1A8040" : s.status === "rejected" ? "#CC3344" : "#1A8040" }}>
+                <div style={{ position: "absolute", top: "8px", right: "8px", background: s.status === "approved" ? "#E8F0E4" : s.status === "rejected" ? "#FFE8EC" : "#E8F4EC", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: s.status === "approved" ? "#1A8040" : s.status === "rejected" ? "#CC3344" : "#1A8040" }}>
                   {s.status}
                 </div>
               </div>
@@ -90,17 +98,17 @@ export default function AdminFanSubmissionsPage() {
               {/* Actions */}
               <div style={{ display: "flex", gap: "6px", padding: "0 14px 14px" }}>
                 {s.status !== "approved" && (
-                  <button onClick={() => updateStatus(s.id, "approved")} style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "transparent", color: "#1A8040", border: "1.5px solid #1A8040", borderRadius: "6px", padding: "7px", cursor: "pointer" }}>
-                    ✓ Approve
+                  <button onClick={() => updateStatus(s.id, "approved")} style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "transparent", color: "#1A8040", border: "1.5px solid #1A8040", borderRadius: "6px", padding: "7px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+                    <IconCheck size={11} color="#1A8040" /> Approve
                   </button>
                 )}
                 {s.status !== "rejected" && (
-                  <button onClick={() => updateStatus(s.id, "rejected")} style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "transparent", color: "#CC3344", border: "1.5px solid #CC3344", borderRadius: "6px", padding: "7px", cursor: "pointer" }}>
-                    ✕ Reject
+                  <button onClick={() => updateStatus(s.id, "rejected")} style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "transparent", color: "#CC3344", border: "1.5px solid #CC3344", borderRadius: "6px", padding: "7px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+                    <IconX size={11} color="#CC3344" /> Reject
                   </button>
                 )}
-                <button onClick={() => remove(s.id)} style={{ fontFamily: B, fontSize: "11px", background: "transparent", color: "#5A7A60", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "7px 10px", cursor: "pointer" }}>
-                  🗑
+                <button onClick={() => remove(s.id)} style={{ fontFamily: B, fontSize: "11px", background: "transparent", color: "#5A7A60", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "7px 10px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <IconTrash size={13} color="#5A7A60" />
                 </button>
               </div>
             </div>

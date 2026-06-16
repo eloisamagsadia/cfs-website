@@ -3,6 +3,7 @@ import SkeletonPage from "@/components/shared/SkeletonPage";
 import { toISOWithPHT, toPHTInputString } from "@/lib/date";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { IconSparkle, IconTrash } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -136,7 +137,7 @@ export default function AdminEventEditPage() {
 
       {/* Early access */}
       <div style={{ background: "#1A804010", border: "1.5px solid #1A804060", borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
-        <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px" }}>✦ SPONSOR EARLY ACCESS (optional)</div>
+        <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "5px" }}><IconSparkle size={11} color="#1A8040" /> SPONSOR EARLY ACCESS (optional)</div>
         <div className="edit-event-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
           <div>
             <label style={labelStyle}>Early Access Opens</label>
@@ -162,7 +163,7 @@ export default function AdminEventEditPage() {
           <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "none", border: "2px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
         </div>
         {!confirmDelete
-          ? <button onClick={() => setConfirmDelete(true)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #CC3344", borderRadius: "6px", color: "#CC3344", padding: "10px 16px", cursor: "pointer" }}>🗑 Delete Event</button>
+          ? <button onClick={() => setConfirmDelete(true)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #CC3344", borderRadius: "6px", color: "#CC3344", padding: "10px 16px", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "5px" }}><IconTrash size={12} color="#CC3344" /> Delete Event</button>
           : <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>Sure?</span>
               <button onClick={handleDelete} disabled={deleting} style={{ fontFamily: B, fontSize: "12px", background: "#CC3344", border: "none", borderRadius: "6px", color: "#fff", padding: "8px 14px", cursor: "pointer" }}>{deleting ? "Deleting..." : "Yes, Delete"}</button>

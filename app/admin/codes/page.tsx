@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { IconSparkle, IconCheck, IconTrash } from "@/components/shared/Icons";
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
 const FILTERS=["ALL","ACTIVE","INACTIVE","EXPIRED","USED UP"];
@@ -65,7 +66,7 @@ export default function AdminCodesPage() {
         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"14px"}}>
           <div style={{display:"flex",gap:"10px"}}>
             <input value={form.code} onChange={e=>setForm(p=>({...p,code:e.target.value.toUpperCase()}))} placeholder="CODE (e.g. CFS2026)" style={{...inp,flex:1,letterSpacing:"2px",fontFamily:R}}/>
-            <button onClick={generateCode} style={{background:"#E8F4EC",border:"2px solid #156530",borderRadius:"6px",color:"#156530",padding:"10px 20px",cursor:"pointer",fontFamily:R,fontSize:"12px",letterSpacing:"1.5px",whiteSpace:"nowrap",flexShrink:0}}>✦ GENERATE</button>
+            <button onClick={generateCode} style={{background:"#E8F4EC",border:"2px solid #156530",borderRadius:"6px",color:"#156530",padding:"10px 20px",cursor:"pointer",fontFamily:R,fontSize:"12px",letterSpacing:"1.5px",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",gap:"6px"}}><IconSparkle size={12} color="#156530" /> GENERATE</button>
           </div>
           <div className="codes-form-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"10px"}}>
             <select value={form.discount_type} onChange={e=>setForm(p=>({...p,discount_type:e.target.value}))} style={inp}>
@@ -85,7 +86,7 @@ export default function AdminCodesPage() {
               return(
                 <button key={p.id} onClick={()=>setForm(prev=>({...prev,product_ids:selected?prev.product_ids.filter((id:string)=>id!==p.id):[...prev.product_ids,p.id]}))}
                   style={{fontFamily:B,fontSize:"11px",background:selected?"#E8F0E4":"#F2F7F2",border:`1.5px solid ${selected?"#1A8040":"#DDE8DD"}`,borderRadius:"6px",padding:"6px 12px",color:selected?"#1A8040":"#4A7C59",cursor:"pointer"}}>
-                  {selected?"✓ ":""}{p.name} — ₱{Number(p.price).toLocaleString()}
+                  {selected ? <><IconCheck size={10} color="#1A8040" style={{ verticalAlign: "middle" }} />{" "}</> : ""}{p.name} — ₱{Number(p.price).toLocaleString()}
                 </button>
               );
             })}
@@ -93,7 +94,7 @@ export default function AdminCodesPage() {
           </div>
         </div>
         <button onClick={saveCode} disabled={saving||!form.code} style={{fontFamily:R,fontSize:"12px",background:saving||!form.code?"#F2F7F2":"#156530",color:saving||!form.code?"#5A7A60":"#080F06",border:"2px solid #1B3A2D",borderRadius:"6px",padding:"10px 24px",cursor:"pointer",letterSpacing:"1.5px"}}>
-          {saving?"SAVING...":"SAVE CODE ✦"}
+          {saving ? "SAVING..." : <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>SAVE CODE <IconSparkle size={12} color="#FFFFFF" /></span>}
         </button>
       </div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"10px"}}>
@@ -124,7 +125,7 @@ export default function AdminCodesPage() {
               <div><span style={{fontFamily:R,fontSize:"10px",color:SC[status],background:SB[status],border:`1.5px solid ${SC[status]}40`,borderRadius:"20px",padding:"2px 10px",letterSpacing:"1px"}}>{status}</span></div>
               <div style={{display:"flex",gap:"6px"}}>
                 <button onClick={()=>toggleActive(c.id,c.is_active)} style={{background:"#E8F4EC",border:"1.5px solid #156530",borderRadius:"6px",color:"#156530",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>{c.is_active?"⏸":"▶"}</button>
-                <button onClick={()=>deleteCode(c.id)} style={{background:"#FFE8EC",border:"1.5px solid #CC3344",borderRadius:"6px",color:"#CC3344",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>🗑</button>
+                <button onClick={()=>deleteCode(c.id)} style={{background:"#FFE8EC",border:"1.5px solid #CC3344",borderRadius:"6px",color:"#CC3344",width:"32px",height:"32px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><IconTrash size={13} color="#CC3344" /></button>
               </div>
             </div>
           );

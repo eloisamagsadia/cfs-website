@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import ReactionBar from "./ReactionBar";
 import { createClient } from "@/lib/supabase/client";
+import { IconX, IconPin, IconVideo, IconPhoto } from "@/components/shared/Icons";
 
 const PLATFORM_COLORS: Record<string, string> = { youtube: "#FF0000", tiktok: "#5A7A60", gdrive: "#4285F4", instagram: "#E1306C" };
 const PLATFORM_LABELS: Record<string, string> = { youtube: "YouTube", tiktok: "TikTok", gdrive: "Google Drive", instagram: "Instagram" };
@@ -152,7 +153,7 @@ const ReplyInput = memo(function ReplyInput({ commentId, authorName, currentUser
           </div>
         )}
       </div>
-      <button onClick={onCancel} style={{ background:"none", border:"none", color:"#5A7A60", cursor:"pointer", fontSize:"16px", paddingBottom:"4px" }}>✕</button>
+      <button onClick={onCancel} style={{ background:"none", border:"none", cursor:"pointer", paddingBottom:"4px", display:"flex", alignItems:"center" }}><IconX size={16} color="#5A7A60" /></button>
     </div>
   );
 });
@@ -314,7 +315,7 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
             <div style={{ fontFamily:R, fontSize:"14px", color:"#1B3A2D", letterSpacing:"0.5px" }}>{profile.display_name??"Member"}</div>
             <div style={{ fontFamily:B, fontSize:"11px", color:"#5A7A60" }}>{timeAgo(post.created_at)}</div>
           </div>
-          {post.is_pinned&&<span style={{ fontFamily:R, fontSize:"9px", color:"#156530", background:"#E8F4EC", border:"1px solid #1A804040", borderRadius:"4px", padding:"2px 8px" }}>📌 PINNED</span>}
+          {post.is_pinned&&<span style={{ fontFamily:R, fontSize:"9px", color:"#156530", background:"#E8F4EC", border:"1px solid #1A804040", borderRadius:"4px", padding:"2px 8px", display:"inline-flex", alignItems:"center", gap:"3px" }}><IconPin size={9} color="#156530" /> PINNED</span>}
 
           {/* ── ··· MENU BUTTON ── */}
           <button
@@ -345,7 +346,7 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
             {(post.video_platform === "tiktok" || post.video_platform === "instagram") && embedFailed ? (
               <a href={post.video_url ?? post.video_embed_url} target="_blank" rel="noopener noreferrer"
                 style={{ display: "flex", alignItems: "center", gap: "10px", padding: "16px", background: "#F2F7F2", textDecoration: "none" }}>
-                <span style={{ fontSize: "32px" }}>{post.video_platform === "tiktok" ? "🎵" : "📸"}</span>
+                {post.video_platform === "tiktok" ? <IconVideo size={32} color="#4A7C59" /> : <IconPhoto size={32} color="#4A7C59" />}
                 <div>
                   <p style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", margin: 0 }}>{post.video_platform === "tiktok" ? "TikTok" : "Instagram"} Video</p>
                   <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", margin: "2px 0 0" }}>Click to open on {post.video_platform === "tiktok" ? "TikTok" : "Instagram"}</p>
@@ -405,7 +406,7 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
         <div style={{ padding:"14px 18px" }}>
           {topComments.length>0&&<div style={{ fontFamily:B, fontSize:"12px", color:"#5A7A60", marginBottom:"14px" }}>{comments.length} comment{comments.length!==1?"s":""}</div>}
           {topComments.length===0
-            ?<div style={{ textAlign:"center", padding:"20px 0 10px", fontFamily:B, fontSize:"13px", color:"#3A5A30" }}>No comments yet — be the first! 💬</div>
+            ?<div style={{ textAlign:"center", padding:"20px 0 10px", fontFamily:B, fontSize:"13px", color:"#3A5A30" }}>No comments yet — be the first!</div>
             :topComments.map(c=>(
               <CommentItem
                 key={c.id} comment={c} level={0} currentUser={currentUser}

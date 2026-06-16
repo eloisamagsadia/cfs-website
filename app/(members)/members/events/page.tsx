@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { IconTicket } from "@/components/shared/Icons";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -46,7 +47,7 @@ export default async function MyEventsPage() {
 
       {display.length === 0 ? (
         <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"48px 24px", textAlign:"center" }}>
-          <div style={{ fontSize:"40px", marginBottom:"12px" }}>🎫</div>
+          <div style={{ marginBottom:"12px" }}><IconTicket size={40} color="#DDE8DD" /></div>
           <div style={{ fontFamily:R, fontSize:"14px", color:"#5A7A60", letterSpacing:"2px", marginBottom:"16px" }}>NO TICKETS YET</div>
           <a href="/events" style={{ fontFamily:R, fontSize:"12px", color:"#1A8040", textDecoration:"none", border:"1.5px solid #DDE8DD", borderRadius:"6px", padding:"8px 18px", letterSpacing:"1.5px" }}>BROWSE EVENTS →</a>
         </div>
@@ -87,8 +88,8 @@ export default async function MyEventsPage() {
 
                 {/* View ticket */}
                 <Link href={`/members/tickets/${ticket.id}`}
-                  style={{ flexShrink:0, fontFamily:R, fontSize:"10px", color:"#1A8040", border:"1.5px solid #1A8040", borderRadius:"6px", padding:"6px 12px", letterSpacing:"1px", textDecoration:"none" }}>
-                  🎫 TICKET
+                  style={{ flexShrink:0, fontFamily:R, fontSize:"10px", color:"#1A8040", border:"1.5px solid #1A8040", borderRadius:"6px", padding:"6px 12px", letterSpacing:"1px", textDecoration:"none", display:"inline-flex", alignItems:"center", gap:"5px" }}>
+                  <IconTicket size={10} color="#1A8040" /> TICKET
                 </Link>
               </div>
             );

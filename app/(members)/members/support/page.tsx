@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { IconLink } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -122,7 +123,7 @@ export default function SupportPage() {
           {attachments.length < 3 && (
             <button onClick={() => fileRef.current?.click()}
               style={{ fontFamily: B, fontSize: "12px", background: "transparent", border: "1.5px dashed #DDE8DD", borderRadius: "8px", color: "#5A7A60", padding: "10px 16px", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}>
-              📎 Attach Photo
+              <IconLink size={12} color="#5A7A60" /> Attach Photo
             </button>
           )}
           {attachments.length > 0 && (

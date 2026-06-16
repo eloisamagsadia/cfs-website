@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { IconMail, IconPen } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -49,7 +50,7 @@ export default function FanLettersBulletin({ letters }: { letters: Letter[] }) {
 
       {/* Board header */}
       <div style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-        <div style={{ fontFamily: R, fontSize: "10px", color: "#FFFFFF", letterSpacing: "2px", textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}>💌 LETTERS FOR COLET</div>
+        <div style={{ fontFamily: R, fontSize: "10px", color: "#FFFFFF", letterSpacing: "2px", textShadow: "0 1px 2px rgba(0,0,0,0.4)", display: "flex", alignItems: "center", gap: "5px" }}><IconMail size={11} color="#FFFFFF" /> LETTERS FOR COLET</div>
         <Link href="/members/letters" style={{ fontFamily: R, fontSize: "9px", color: "rgba(255,255,255,0.8)", textDecoration: "none", letterSpacing: "1px", background: "rgba(0,0,0,0.15)", borderRadius: "4px", padding: "3px 8px" }}>SEE ALL</Link>
       </div>
 
@@ -64,7 +65,7 @@ export default function FanLettersBulletin({ letters }: { letters: Letter[] }) {
               boxShadow: "2px 3px 8px rgba(0,0,0,0.15)",
             }}>
               <div style={{ fontFamily: S, fontSize: "13px", color: "#8A7040", fontStyle: "italic", marginBottom: "6px" }}>Be the first to write...</div>
-              <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "1px" }}>✍️ WRITE A LETTER</div>
+              <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "1px", display: "flex", alignItems: "center", gap: "4px", justifyContent: "center" }}><IconPen size={10} color="#1A8040" /> WRITE A LETTER</div>
             </div>
           </Link>
         ) : (
@@ -116,8 +117,8 @@ export default function FanLettersBulletin({ letters }: { letters: Letter[] }) {
       {/* Write CTA at bottom */}
       {letters.length > 0 && (
         <div style={{ position: "relative", zIndex: 1, textAlign: "center", marginTop: "10px" }}>
-          <Link href="/members/letters" style={{ fontFamily: R, fontSize: "10px", color: "rgba(255,255,255,0.9)", textDecoration: "none", letterSpacing: "1px", background: "rgba(0,0,0,0.2)", borderRadius: "6px", padding: "5px 12px", display: "inline-block", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>
-            ✍️ WRITE YOUR LETTER
+          <Link href="/members/letters" style={{ fontFamily: R, fontSize: "10px", color: "rgba(255,255,255,0.9)", textDecoration: "none", letterSpacing: "1px", background: "rgba(0,0,0,0.2)", borderRadius: "6px", padding: "5px 12px", display: "inline-flex", alignItems: "center", gap: "5px", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>
+            <IconPen size={10} color="rgba(255,255,255,0.9)" /> WRITE YOUR LETTER
           </Link>
         </div>
       )}

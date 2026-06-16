@@ -1,6 +1,7 @@
 "use client";
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
+import { IconCheck, IconX } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -228,8 +229,8 @@ export default function AdminSupportPage() {
                       </div>
 
                       {saveSuccess === t.id && (
-                        <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "10px 14px", fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "1px", textAlign: "center" }}>
-                          ✓ TICKET UPDATED
+                        <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "10px 14px", fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "1px", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+                          <IconCheck size={12} color="#1A8040" /> TICKET UPDATED
                         </div>
                       )}
 
@@ -251,7 +252,7 @@ export default function AdminSupportPage() {
 
       {lightboxImg && (
         <div onClick={() => setLightboxImg(null)} style={{ position: "fixed", inset: 0, zIndex: 2000, background: "rgba(0,0,0,0.95)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "zoom-out" }}>
-          <button onClick={() => setLightboxImg(null)} style={{ position: "absolute", top: "20px", right: "24px", background: "none", border: "none", color: "#1B3A2D", fontSize: "28px", cursor: "pointer" }}>✕</button>
+          <button onClick={() => setLightboxImg(null)} style={{ position: "absolute", top: "20px", right: "24px", background: "none", border: "none", cursor: "pointer", display: "flex" }}><IconX size={28} color="#FFFFFF" /></button>
           <img src={lightboxImg} alt="" style={{ maxWidth: "90vw", maxHeight: "90vh", objectFit: "contain", borderRadius: "8px" }} onClick={e => e.stopPropagation()} />
         </div>
       )}

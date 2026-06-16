@@ -1,21 +1,28 @@
 "use client";
 import { useEffect, useState } from "react";
+import { IconMegaphone, IconTicket, IconShoppingBag, IconStar, IconClipboard, IconMessage, IconUser, IconHeart, IconBell, IconWarning, IconCheck } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const NOTIF_TYPES = [
-  { value: "announcement",   label: "📣 Announcement" },
-  { value: "event_reminder", label: "🎫 Event Reminder" },
-  { value: "order_update",   label: "🛍 Order Update" },
-  { value: "badge_earned",   label: "⭐ Badge" },
-  { value: "new_report",     label: "📋 New Report" },
+  { value: "announcement",   label: "Announcement" },
+  { value: "event_reminder", label: "Event Reminder" },
+  { value: "order_update",   label: "Order Update" },
+  { value: "badge_earned",   label: "Badge" },
+  { value: "new_report",     label: "New Report" },
 ];
 
-const TYPE_ICONS: Record<string, string> = {
-  announcement: "📣", event_reminder: "🎫", order_update: "🛍",
-  community_reply: "💬", badge_earned: "⭐", new_follower: "👤",
-  donation_ack: "♥", new_report: "📋", community_mention: "📢",
+const TYPE_ICON_COMPONENTS: Record<string, React.ReactNode> = {
+  announcement:     <IconMegaphone size={14} color="#4A7C59" />,
+  event_reminder:   <IconTicket size={14} color="#4A7C59" />,
+  order_update:     <IconShoppingBag size={14} color="#4A7C59" />,
+  community_reply:  <IconMessage size={14} color="#4A7C59" />,
+  badge_earned:     <IconStar size={14} color="#4A7C59" />,
+  new_follower:     <IconUser size={14} color="#4A7C59" />,
+  donation_ack:     <IconHeart size={14} color="#4A7C59" />,
+  new_report:       <IconClipboard size={14} color="#4A7C59" />,
+  community_mention:<IconMegaphone size={14} color="#4A7C59" />,
 };
 
 function timeAgo(d: string) {
@@ -87,7 +94,7 @@ export default function AdminNotificationsPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setResult({ ok: true, msg: `✦ Sent to ${data.sent} member${data.sent !== 1 ? "s" : ""}!` });
+      setResult({ ok: true, msg: `Sent to ${data.sent} member${data.sent !== 1 ? "s" : ""}!` });
       setForm({ title: "", message: "", type: "announcement", link: "", targetUserId: "", eventId: "" });
       await loadStats();
     } catch (e: any) {
@@ -107,7 +114,7 @@ export default function AdminNotificationsPage() {
       {/* Header */}
       <div>
         <div style={{ display: "inline-block", background: "#1A8040", border: "2px solid #1B3A2D", borderRadius: "6px", padding: "3px 12px", marginBottom: "8px" }}>
-          <span style={{ fontFamily: R, fontSize: "10px", color: "#FFFFFF", letterSpacing: "2px" }}>⚠ ADMIN ONLY</span>
+          <span style={{ fontFamily: R, fontSize: "10px", color: "#FFFFFF", letterSpacing: "2px", display: "inline-flex", alignItems: "center", gap: "5px" }}><IconWarning size={10} color="#FFFFFF" /> ADMIN ONLY</span>
         </div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>NOTIFICATIONS</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Broadcast messages, send reminders, and track engagement</p>
@@ -122,7 +129,7 @@ export default function AdminNotificationsPage() {
           { label: "READ RATE",    value: loadingStats ? "..." : `${stats?.readRate ?? 0}%`, color: "#1A8040", bg: "#E8F4EC" },
         ].map(({ label, value, color, bg }) => (
           <div key={label} style={{ position: "relative", padding: "4px 4px 6px 0" }}>
-            <div style={{ position: "absolute", bottom: 0, right: 0, width: "calc(100% - 4px)", height: "calc(100% - 4px)", borderRadius: "10px", background: "#080F06" }}/>
+            <div style={{ position: "absolute", bottom: 0, right: 0, width: "calc(100% - 4px)", height: "calc(100% - 4px)", borderRadius: "10px", background: "#1B3A2D" }}/>
             <div style={{ position: "relative", background: bg, border: "2px solid #DDE8DD", borderRadius: "10px", padding: "16px", zIndex: 1 }}>
               <div style={{ fontFamily: R, fontSize: "1.6rem", color, letterSpacing: "1px" }}>{value}</div>
               <div style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59", letterSpacing: "1px" }}>{label}</div>
@@ -138,7 +145,7 @@ export default function AdminNotificationsPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {stats.byType.map((t: any) => (
               <div key={t.type} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <span style={{ fontSize: "14px", flexShrink: 0 }}>{TYPE_ICONS[t.type] ?? "🔔"}</span>
+                <span style={{ flexShrink: 0 }}>{TYPE_ICON_COMPONENTS[t.type] ?? <IconBell size={14} color="#4A7C59" />}</span>
                 <span style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "1px", width: "140px", flexShrink: 0, textTransform: "uppercase" }}>
                   {t.type.replace(/_/g, " ")}
                 </span>
@@ -162,9 +169,9 @@ export default function AdminNotificationsPage() {
           <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px", marginBottom: "8px", textTransform: "uppercase" }}>Send To</div>
           <div style={{ display: "flex", gap: "8px" }}>
             {[
-              { v: "all",    label: "📢 All Members" },
-              { v: "member", label: "👤 Specific Member" },
-              { v: "event",  label: "🎫 Event Registrants" },
+              { v: "all",    label: <><IconMegaphone size={11} color="currentColor" style={{ verticalAlign: "middle" }} /> All Members</> },
+              { v: "member", label: <><IconUser size={11} color="currentColor" style={{ verticalAlign: "middle" }} /> Specific Member</> },
+              { v: "event",  label: <><IconTicket size={11} color="currentColor" style={{ verticalAlign: "middle" }} /> Event Registrants</> },
             ].map(({ v, label }) => (
               <button key={v} onClick={() => setTarget(v as any)} style={{
                 fontFamily: R, fontSize: "11px", letterSpacing: "1px",
@@ -241,15 +248,15 @@ export default function AdminNotificationsPage() {
         </div>
 
         {result && (
-          <div style={{ background: result.ok ? "#E8F0E4" : "#3D0A18", border: `1.5px solid ${result.ok ? "#1A8040" : "#CC3344"}`, borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: result.ok ? "#1A8040" : "#CC3344", letterSpacing: "1px", marginBottom: "14px" }}>
-            {result.msg}
+          <div style={{ background: result.ok ? "#E8F0E4" : "#FFE8EC", border: `1.5px solid ${result.ok ? "#1A8040" : "#CC3344"}`, borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: result.ok ? "#1A8040" : "#CC3344", letterSpacing: "1px", marginBottom: "14px", display: "flex", alignItems: "center", gap: "6px" }}>
+            {result.ok ? <IconCheck size={13} color="#1A8040" /> : <IconWarning size={13} color="#CC3344" />} {result.msg}
           </div>
         )}
 
         <button onClick={handleSend} disabled={sending} style={{ position: "relative", display: "block", background: "transparent", border: "none", padding: 0, cursor: sending ? "not-allowed" : "pointer", width: "100%" }}>
-          <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }}/>
+          <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#1B3A2D", borderRadius: "6px" }}/>
           <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "14px", background: sending ? "#E8F0E4" : "#1A8040", color: sending ? "#5A7A60" : "#1B3A2D", padding: "12px", border: "2px solid #1B3A2D", borderRadius: "6px", textAlign: "center", letterSpacing: "2px" }}>
-            {sending ? "SENDING..." : target === "all" ? "📣 SEND TO ALL MEMBERS" : target === "event" ? "🎫 SEND TO REGISTRANTS" : "👤 SEND TO MEMBER"}
+            {sending ? "SENDING..." : target === "all" ? <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><IconMegaphone size={12} color="#1B3A2D" /> SEND TO ALL MEMBERS</span> : target === "event" ? <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><IconTicket size={12} color="#1B3A2D" /> SEND TO REGISTRANTS</span> : <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><IconUser size={12} color="#1B3A2D" /> SEND TO MEMBER</span>}
           </span>
         </button>
       </div>
@@ -261,7 +268,7 @@ export default function AdminNotificationsPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
             {stats.recent.map((n: any) => (
               <div key={n.id} style={{ display: "flex", gap: "10px", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #DDE8DD" }}>
-                <span style={{ fontSize: "14px", flexShrink: 0 }}>{TYPE_ICONS[n.type] ?? "🔔"}</span>
+                <span style={{ flexShrink: 0 }}>{TYPE_ICON_COMPONENTS[n.type] ?? <IconBell size={14} color="#4A7C59" />}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "0.5px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{n.title}</div>
                   <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{n.message}</div>

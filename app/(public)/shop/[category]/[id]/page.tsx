@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import AddToCartButton from "@/components/public/AddToCartButton";
 import ProductImageGallery from "@/components/public/ProductImageGallery";
+import { IconShoppingBag } from "@/components/shared/Icons";
 import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -163,7 +164,7 @@ export default async function ProductDetailPage({ params }: { params: { category
                     <div style={{ height: "160px", background: C.mist, overflow: "hidden" }}>
                       {p.images?.[0]
                         ? <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} loading="lazy"/>
-                        : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "36px" }}>🛍</div>
+                        : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}><IconShoppingBag size={36} color="#DDE8DD" /></div>
                       }
                     </div>
                     <div style={{ padding: "12px" }}>

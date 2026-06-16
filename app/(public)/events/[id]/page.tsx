@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import EventRegisterButton from "@/components/public/EventRegisterButton";
 import type { Metadata } from "next";
+import { IconCalendar, IconPin } from "@/components/shared/Icons";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -89,7 +90,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
             </h1>
             <div style={{ display: "flex", gap: "24px", flexWrap: "wrap", justifyContent: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ fontSize: "16px" }}>📅</span>
+                <IconCalendar size={18} color="#4A7C59" />
                 <div>
                   <div style={{ fontFamily: B, fontSize: "14px", color: C.forest, fontWeight: 600 }}>
                     {eventDate.toLocaleDateString("en-PH", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "Asia/Manila" })}
@@ -101,7 +102,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
               </div>
               {event.location && (
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <span style={{ fontSize: "16px" }}>📍</span>
+                  <IconPin size={18} color="#4A7C59" />
                   <div style={{ fontFamily: B, fontSize: "14px", color: C.forest, fontWeight: 600 }}>{event.location}</div>
                 </div>
               )}

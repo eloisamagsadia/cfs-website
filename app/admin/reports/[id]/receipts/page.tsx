@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { IconLink } from "@/components/shared/Icons";
 import { useParams } from "next/navigation";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -117,7 +118,7 @@ export default function ReportReceiptsPage() {
                           <div key={r.id} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 10px" }}>
                             <a href={r.file_url} target="_blank" rel="noopener noreferrer"
                               style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59", textDecoration: "none" }}>
-                              📎 {r.file_name}
+                              <IconLink size={11} color="#4A7C59" style={{ flexShrink: 0 }} /> {r.file_name}
                             </a>
                             <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id}
                               style={{ background: "none", border: "none", cursor: "pointer", color: "#CC3344", fontSize: "12px", padding: "0 2px", opacity: deleting === r.id ? 0.5 : 1 }}>

@@ -1,14 +1,15 @@
 "use client";
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState, useRef } from "react";
+import { IconEdit, IconTrash, IconVideo, IconPhoto, IconStar, IconUpload, IconSparkle } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const CATEGORIES = [
-  { value: "events", label: "Events", icon: "🎪" },
-  { value: "projects", label: "Projects", icon: "🎨" },
-  { value: "behind_scenes", label: "Behind the Scenes", icon: "🎬" },
+  { value: "events", label: "Events", icon: <IconStar size={13} color="currentColor" /> },
+  { value: "projects", label: "Projects", icon: <IconStar size={13} color="currentColor" /> },
+  { value: "behind_scenes", label: "Behind the Scenes", icon: <IconVideo size={13} color="currentColor" /> },
 ];
 
 const DEFAULT_FORM = { title: "", description: "", type: "photo", category: "events", media_url: "", thumbnail_url: "", is_published: false };
@@ -131,8 +132,8 @@ export default function AdminExclusivePage() {
               <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>TYPE</label>
               <select value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value }))}
                 style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }}>
-                <option value="photo">📷 Photo</option>
-                <option value="video">🎬 Video</option>
+                <option value="photo">Photo</option>
+                <option value="video">Video</option>
               </select>
             </div>
             <div>
@@ -150,7 +151,7 @@ export default function AdminExclusivePage() {
                   style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
                 <button onClick={() => fileInputRef.current?.click()} disabled={uploading}
                   style={{ fontFamily: B, fontSize: "11px", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#4A7C59", cursor: "pointer" }}>
-                  {uploading ? "..." : "📁 Upload"}
+                  {uploading ? "..." : <><IconUpload size={11} color="#4A7C59" /> Upload</>}
                 </button>
               </div>
               {form.media_url && form.type === "photo" && (
@@ -165,7 +166,7 @@ export default function AdminExclusivePage() {
                   style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
                 <button onClick={() => thumbInputRef.current?.click()} disabled={uploading}
                   style={{ fontFamily: B, fontSize: "11px", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#4A7C59", cursor: "pointer" }}>
-                  {uploading ? "..." : "📁 Upload"}
+                  {uploading ? "..." : <><IconUpload size={11} color="#4A7C59" /> Upload</>}
                 </button>
               </div>
             </div>
@@ -216,7 +217,7 @@ export default function AdminExclusivePage() {
     </div>
       ) : filtered.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center" }}>
-          <div style={{ fontSize: "32px", marginBottom: "12px" }}>✨</div>
+          <div style={{ marginBottom: "12px" }}><IconSparkle size={32} color="#DDE8DD" /></div>
           <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px" }}>NO CONTENT YET</div>
         </div>
       ) : (
@@ -230,7 +231,7 @@ export default function AdminExclusivePage() {
                 )}
                 {item.type === "video" && (
                   <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "8px" }}>
-                    <span style={{ fontSize: "32px" }}>🎬</span>
+                    <IconVideo size={32} color="#DDE8DD" />
                     <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>VIDEO</span>
                   </div>
                 )}
@@ -257,12 +258,12 @@ export default function AdminExclusivePage() {
                     {item.is_published ? "UNPUBLISH" : "PUBLISH"}
                   </button>
                   <button onClick={() => startEdit(item)}
-                    style={{ fontFamily: B, fontSize: "10px", background: "none", border: "1px solid #DDE8DD", borderRadius: "4px", color: "#4A7C59", padding: "4px 8px", cursor: "pointer" }}>
-                    ✏ EDIT
+                    style={{ fontFamily: B, fontSize: "10px", background: "none", border: "1px solid #DDE8DD", borderRadius: "4px", color: "#4A7C59", padding: "4px 8px", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                    <IconEdit size={10} color="#4A7C59" /> EDIT
                   </button>
                   <button onClick={() => handleDelete(item.id)}
-                    style={{ fontFamily: B, fontSize: "10px", background: "none", border: "1px solid #CC3344", borderRadius: "4px", color: "#CC3344", padding: "4px 8px", cursor: "pointer" }}>
-                    🗑
+                    style={{ fontFamily: B, fontSize: "10px", background: "none", border: "1px solid #CC3344", borderRadius: "4px", color: "#CC3344", padding: "4px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <IconTrash size={10} color="#CC3344" />
                   </button>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 "use client";
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
+import { IconCheck } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -92,7 +93,7 @@ export default function AdminShippingPage() {
                           />
                           <button onClick={() => saveRate(r.id)} disabled={saving}
                             style={{ background: color, border: "none", borderRadius: "4px", color: "#FFFFFF", padding: "4px 8px", cursor: "pointer", fontFamily: R, fontSize: "10px" }}>
-                            {saving ? "..." : "✓"}
+                            {saving ? "..." : <IconCheck size={10} color="#FFFFFF" />}
                           </button>
                         </div>
                       ) : (

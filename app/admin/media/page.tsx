@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { IconTrash, IconX, IconCheck, IconFile, IconUpload } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -218,7 +219,7 @@ export default function AdminMediaPage() {
         <div>
           <div style={s.title}>MEDIA LIBRARY</div>
           <div style={s.meta}>{counts.all} files · {counts.images} images · {counts.pdfs} PDFs · {formatSize(totalSize)} total</div>
-          {savings && <div style={{ fontFamily: B, fontSize: "11px", color: "#1A8040", marginTop: "2px" }}>✓ {savings}</div>}
+          {savings && <div style={{ fontFamily: B, fontSize: "11px", color: "#1A8040", marginTop: "2px", display: "flex", alignItems: "center", gap: "4px" }}><IconCheck size={11} color="#1A8040" /> {savings}</div>}
         </div>
         <div style={s.topRow}>
           <select
@@ -331,13 +332,13 @@ export default function AdminMediaPage() {
                   />
                 ) : item.type === "pdf" ? (
                   <div style={s.pdfThumb}>
-                    <span style={{ fontSize: "32px" }}>📄</span>
+                    <IconFile size={32} color="#4A7C59" />
                     <span style={{ fontFamily: B, fontSize: "10px", color: "#4A7C59" }}>PDF</span>
                   </div>
                 ) : (
-                  <span style={{ fontSize: "28px" }}>📁</span>
+                  <IconUpload size={28} color="#4A7C59" />
                 )}
-                {selected.has(item.key) && <div style={s.checkBadge}>✓</div>}
+                {selected.has(item.key) && <div style={s.checkBadge}><IconCheck size={10} color="#FFFFFF" /></div>}
                 {folder === "all" && <div style={s.folderBadge}>{item.folder}/</div>}
               </div>
               <div style={s.cardBody}>
@@ -372,7 +373,7 @@ export default function AdminMediaPage() {
               >
                 <td style={{ ...s.listTd, width: "36px" }}>
                   <div style={{ width: "16px", height: "16px", border: `2px solid ${selected.has(item.key) ? "#1A8040" : "#DDE8DD"}`, borderRadius: "4px", background: selected.has(item.key) ? "#1A8040" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "white" }}>
-                    {selected.has(item.key) ? "✓" : ""}
+                    {selected.has(item.key) ? <IconCheck size={10} color="#FFFFFF" /> : ""}
                   </div>
                 </td>
                 <td style={s.listTd}>
@@ -380,7 +381,7 @@ export default function AdminMediaPage() {
                     {item.type === "image" ? (
                       <img src={item.url} alt={item.name} style={{ width: "36px", height: "36px", objectFit: "cover", borderRadius: "4px", border: "1px solid #DDE8DD" }} loading="lazy" />
                     ) : (
-                      <div style={{ width: "36px", height: "36px", background: "#F2F7F2", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px" }}>📄</div>
+                      <div style={{ width: "36px", height: "36px", background: "#F2F7F2", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center" }}><IconFile size={18} color="#4A7C59" /></div>
                     )}
                     <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name}</span>
                   </div>
@@ -408,7 +409,7 @@ export default function AdminMediaPage() {
         <>
           <div onClick={() => setDeleteModal(null)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.7)", zIndex:9997 }}/>
           <div style={{ position:"fixed", top:"50%", left:"50%", transform:"translate(-50%,-50%)", background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"16px", padding:"32px 28px", zIndex:9998, width:"320px", textAlign:"center" }}>
-            <div style={{ width:"56px", height:"56px", background:"#FFE8EC", borderRadius:"12px", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", fontSize:"24px" }}>🗑️</div>
+            <div style={{ width:"56px", height:"56px", background:"#FFE8EC", borderRadius:"12px", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px" }}><IconTrash size={24} color="#CC3344" /></div>
             <div style={{ fontFamily:R, fontSize:"1.2rem", color:"#1B3A2D", marginBottom:"10px", letterSpacing:"1px" }}>Delete {deleteModal.keys.length > 1 ? `${deleteModal.keys.length} files` : "file"}?</div>
             <div style={{ fontFamily:B, fontSize:"13px", color:"#4A7C59", marginBottom:"28px", lineHeight:"1.6" }}>This action can&apos;t be undone. The {deleteModal.keys.length > 1 ? "files" : "file"} will be permanently removed.</div>
             <div style={{ display:"flex", gap:"10px" }}>
@@ -423,7 +424,7 @@ export default function AdminMediaPage() {
       {/* Lightbox */}
       {lightbox && createPortal(
         <div style={s.lightboxOverlay} onClick={() => setLightbox(null)}>
-          <button style={s.lightboxClose} onClick={() => setLightbox(null)}>✕ CLOSE</button>
+          <button style={{ ...s.lightboxClose, display: "inline-flex", alignItems: "center", gap: "6px" }} onClick={() => setLightbox(null)}><IconX size={14} color="currentColor" /> CLOSE</button>
           <img src={lightbox.url} alt={lightbox.name} style={s.lightboxImg} onClick={e => e.stopPropagation()} />
           <div style={s.lightboxName}>{lightbox.name} · {formatSize(lightbox.size)} · {lightbox.folder}/</div>
           <div style={s.lightboxActions} onClick={e => e.stopPropagation()}>

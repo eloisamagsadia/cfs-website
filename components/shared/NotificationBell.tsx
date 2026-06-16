@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
+import { IconBell } from "@/components/shared/Icons";
 import { useRouter } from "next/navigation";
 
 const R = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
@@ -158,7 +159,7 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
               <div style={{ padding: "32px", textAlign: "center", fontFamily: B, fontSize: "12px", color: "#7A8E7A" }}>Loading...</div>
             ) : notifications.length === 0 ? (
               <div style={{ padding: "32px", textAlign: "center" }}>
-                <div style={{ fontSize: "32px", marginBottom: "8px" }}>🔔</div>
+                <div style={{ marginBottom: "8px" }}><IconBell size={32} color="#DDE8DD" /></div>
                 <div style={{ fontFamily: R, fontSize: "12px", color: "#7A8E7A", letterSpacing: "1px" }}>ALL CAUGHT UP</div>
               </div>
             ) : (() => {
