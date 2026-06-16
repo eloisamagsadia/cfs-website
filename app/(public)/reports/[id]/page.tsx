@@ -223,14 +223,18 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
                         <span style={{ fontFamily:SG, fontSize:"12px", fontWeight:700, color }}> ₱{projTotal.toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
                       </div>
                     </div>
-                    <div style={{ padding:"8px 0" }}>
+                    <div>
+                      {/* column headers */}
+                      <div style={{ display:"grid", gridTemplateColumns:"2fr 1.5fr auto", gap:"12px", padding:"6px 16px", background:C.mist, borderBottom:`1px solid ${C.border}` }}>
+                        <span style={{ fontFamily:SG, fontSize:"9px", fontWeight:700, color:C.muted, letterSpacing:"1.5px" }}>ITEM</span>
+                        <span style={{ fontFamily:SG, fontSize:"9px", fontWeight:700, color:C.muted, letterSpacing:"1.5px" }}>NOTES</span>
+                        <span style={{ fontFamily:SG, fontSize:"9px", fontWeight:700, color:C.muted, letterSpacing:"1.5px", textAlign:"right" }}>AMOUNT</span>
+                      </div>
                       {proj.items.map((item, ii) => (
-                        <div key={ii} style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", padding:"6px 16px", borderBottom: ii < proj.items.length - 1 ? `1px solid ${C.mist}` : "none", gap:"12px" }}>
-                          <div style={{ flex:1 }}>
-                            <span style={{ fontFamily:B, fontSize:"12px", color:C.forest }}>{item.description}</span>
-                            {item.notes && <span style={{ fontFamily:B, fontSize:"11px", color:C.muted, display:"block", marginTop:"1px" }}>{item.notes}</span>}
-                          </div>
-                          <span style={{ fontFamily:SG, fontSize:"12px", fontWeight:600, color:"#F04060", flexShrink:0 }}>₱{Number(item.amount).toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
+                        <div key={ii} style={{ display:"grid", gridTemplateColumns:"2fr 1.5fr auto", gap:"12px", alignItems:"start", padding:"8px 16px", borderBottom: ii < proj.items.length - 1 ? `1px solid ${C.mist}` : "none" }}>
+                          <span style={{ fontFamily:B, fontSize:"12px", color:C.forest }}>{item.description}</span>
+                          <span style={{ fontFamily:B, fontSize:"11px", color:C.muted }}>{item.notes || "—"}</span>
+                          <span style={{ fontFamily:SG, fontSize:"12px", fontWeight:600, color:"#F04060", textAlign:"right", whiteSpace:"nowrap" }}>₱{Number(item.amount).toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
                         </div>
                       ))}
                     </div>
