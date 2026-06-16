@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyWebhookSignature } from "@/lib/paymongo";
+import { sendDonationReceipt } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
@@ -55,9 +56,27 @@ export async function POST(req: NextRequest) {
     }
 
     if (type === "donation") {
-      await (supabase.from("donations") as any)
+      const { data: donation } = await (supabase.from("donations") as any)
         .update({ status: "completed", paymongo_ref: eventData.id })
-        .eq("id", reference);
+        .eq("id", reference)
+        .select("amount, message, user_id")
+        .single();
+
+      if (donation?.user_id) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("id", donation.user_id)
+          .single();
+        if (profile?.email) {
+          sendDonationReceipt({
+            to: profile.email,
+            amount: Number(donation.amount),
+            message: donation.message ?? undefined,
+            donationId: reference,
+          }).catch(() => {});
+        }
+      }
     }
 
     if (type === "order") {

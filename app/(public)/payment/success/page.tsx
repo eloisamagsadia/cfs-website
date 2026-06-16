@@ -18,10 +18,10 @@ const CONFIG: Record<string, { emoji: string; headline: string; body: string; ct
   },
   donation: {
     emoji: "💚",
-    headline: "Thank you for supporting CFS!",
-    body: "Your donation has been received. Every peso funds fan projects, events, and Colet.",
-    cta: "BACK TO HOME",
-    href: "/",
+    headline: "Salamat! Thank you for supporting CFS!",
+    body: "Your donation has been received. Every peso funds fan projects, events, and Colet. A receipt has been sent to your email.",
+    cta: "VIEW MY DONATIONS",
+    href: "/members/donations",
   },
   order: {
     emoji: "📦",
