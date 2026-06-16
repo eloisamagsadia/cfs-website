@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import UnreleasedSongs from "@/components/home/UnreleasedSongs";
 import LettersPreview from "@/components/home/LettersPreview";
-export const metadata: Metadata = { title: "Home" };
-export const viewport = { themeColor: "#FAFDF9" };
+import MaintenancePage from "@/components/MaintenancePage";
+export const metadata: Metadata = { title: "Coming Soon | CFS" };
+export const viewport = { themeColor: "#080F06" };
 
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
@@ -45,7 +46,12 @@ function Eyebrow({ label, center }: { label: string; center?: boolean }) {
   );
 }
 
+// TODO: Remove maintenance page after launch
 export default function HomePage() {
+  return <MaintenancePage />;
+}
+
+function _HomePage() {
   return (
     <div style={{ background:C.paper, color:C.ink }}>
 
