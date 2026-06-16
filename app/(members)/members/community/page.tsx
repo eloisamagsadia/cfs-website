@@ -23,6 +23,7 @@ export default async function CommunityPage() {
     { data: posts },
     { data: categories },
     { count: statsCount },
+    { data: recentLetters },
   ] = await Promise.all([
     supabase.from("profiles" as any).select("*").eq("id", userId).single(),
     supabase
@@ -33,6 +34,7 @@ export default async function CommunityPage() {
       .limit(20),
     createAdminClient().from("community_categories" as any).select("*"),
     createAdminClient().from("community_posts" as any).select("*", { count: "exact", head: true }).eq("is_hidden", false),
+    createAdminClient().from("fan_letters" as any).select("id,title,content,created_at,profiles:user_id(display_name,avatar_url)").eq("is_approved", true).order("created_at", { ascending: false }).limit(5),
   ]);
 
   return (
@@ -75,6 +77,41 @@ export default async function CommunityPage() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Letters for Colet bulletin */}
+        <div style={{ background: "linear-gradient(160deg, #F2F7F2, #FFFFFF)", border: "2px solid #DDE8DD", borderRadius: "14px", padding: "18px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+            <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px" }}>💌 LETTERS FOR COLET</div>
+            <Link href="/members/letters" style={{ fontFamily: R, fontSize: "9px", color: "#5A7A60", textDecoration: "none", letterSpacing: "1px" }}>SEE ALL →</Link>
+          </div>
+          {(recentLetters ?? []).length === 0 ? (
+            <div style={{ textAlign: "center", padding: "16px 0" }}>
+              <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", marginBottom: "10px" }}>No letters yet — be the first!</div>
+              <Link href="/members/letters" style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", textDecoration: "none", letterSpacing: "1px", background: "#E8F4EC", borderRadius: "6px", padding: "6px 12px" }}>WRITE A LETTER →</Link>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {(recentLetters as any[]).map((letter: any) => (
+                <Link key={letter.id} href="/members/letters" style={{ textDecoration: "none" }}>
+                  <div style={{ display: "flex", gap: "10px", alignItems: "flex-start", padding: "10px", borderRadius: "10px", background: "#FFFFFF", border: "1.5px solid #DDE8DD", transition: "border-color 0.15s", cursor: "pointer" }}
+                    onMouseEnter={(e: any) => (e.currentTarget.style.borderColor = "#1A8040")}
+                    onMouseLeave={(e: any) => (e.currentTarget.style.borderColor = "#DDE8DD")}>
+                    <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#E8F0E4", border: "1.5px solid #DDE8DD", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      {letter.profiles?.avatar_url
+                        ? <img src={letter.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        : <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040" }}>{(letter.profiles?.display_name ?? "M")[0].toUpperCase()}</span>}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontFamily: R, fontSize: "11px", color: "#1B3A2D", marginBottom: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{letter.title}</div>
+                      <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>{letter.content}</div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+              <Link href="/members/letters" style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", textDecoration: "none", letterSpacing: "1px", textAlign: "center", display: "block", paddingTop: "4px" }}>✍️ WRITE YOUR LETTER</Link>
+            </div>
+          )}
         </div>
 
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "14px", padding: "18px" }}>
