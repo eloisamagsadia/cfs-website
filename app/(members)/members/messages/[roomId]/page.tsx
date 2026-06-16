@@ -629,7 +629,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                             await fetch(`/api/chat/${params.roomId}/nickname`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ target_user_id: m.user_id, nickname: nicknameInput }) });
                             setNicknames(prev => ({ ...prev, [m.user_id]: nicknameInput.trim() }));
                             setEditingNickname(null);
-                          }} style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "10px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "6px 10px", cursor: "pointer" }}>SAVE</button>
+                          }} style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "10px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "6px 10px", cursor: "pointer" }}>SAVE</button>
                           <button onClick={() => setEditingNickname(null)} style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "10px", background: "transparent", color: "#5A7A60", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 8px", cursor: "pointer" }}>✕</button>
                         </div>
                       ) : (

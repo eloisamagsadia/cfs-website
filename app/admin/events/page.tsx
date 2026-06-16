@@ -23,7 +23,7 @@ export default async function AdminEventsPage() {
         </div>
         <Link href="/admin/events/create" style={{ textDecoration: "none", position: "relative", display: "inline-block" }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#080F06", padding: "8px 18px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>+ CREATE EVENT</span>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#FFFFFF", padding: "8px 18px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1.5px" }}>+ CREATE EVENT</span>
         </Link>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>

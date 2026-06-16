@@ -109,7 +109,7 @@ export default function EventTiersPage() {
             🎫 VIEW TICKETS
           </Link>
           <button onClick={() => { setShowForm(true); setEditingId(null); setForm(DEFAULT_FORM); }}
-            style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
             + ADD TIER
           </button>
         </div>
@@ -164,7 +164,7 @@ export default function EventTiersPage() {
               CANCEL
             </button>
             <button onClick={handleSave} disabled={saving}
-              style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: saving ? 0.7 : 1 }}>
+              style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: saving ? 0.7 : 1 }}>
               {saving ? "SAVING..." : editingId ? "UPDATE TIER" : "CREATE TIER"}
             </button>
           </div>
@@ -297,7 +297,7 @@ export default function EventTiersPage() {
 
         <div style={{ marginTop: "16px", display: "flex", gap: "10px", alignItems: "center" }}>
           <button onClick={saveTemplate} disabled={savingTemplate}
-            style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: savingTemplate ? 0.7 : 1 }}>
+            style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: savingTemplate ? 0.7 : 1 }}>
             {savingTemplate ? "SAVING..." : "SAVE TEMPLATE"}
           </button>
           {templateSaved && <span style={{ fontFamily: B, fontSize: "12px", color: "#1A8040" }}>✓ Saved!</span>}

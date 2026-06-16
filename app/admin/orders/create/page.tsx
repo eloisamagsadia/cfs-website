@@ -204,7 +204,7 @@ export default function CreateOrderPage() {
       <button onClick={handleSave} disabled={saving}
         style={{ position: "relative", display: "inline-block", cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1, alignSelf: "flex-start" }}>
         <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-        <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "12px 32px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>
+        <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "12px 32px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1.5px" }}>
           {saving ? "SAVING..." : "CREATE ORDER"}
         </span>
       </button>

@@ -176,7 +176,7 @@ export default function ProfilePage() {
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px" }}>
         <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "2px", marginBottom: "14px" }}>PRIVACY</div>
         <label style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
-          <div onClick={() => upd("is_public", !form.is_public)} style={{ width: "40px", height: "22px", borderRadius: "11px", background: form.is_public ? "#1A8040" : "#DDE8DD", border: "2px solid #080F06", position: "relative", flexShrink: 0, transition: "background 0.2s", cursor: "pointer" }}>
+          <div onClick={() => upd("is_public", !form.is_public)} style={{ width: "40px", height: "22px", borderRadius: "11px", background: form.is_public ? "#1A8040" : "#DDE8DD", border: "2px solid #1B3A2D", position: "relative", flexShrink: 0, transition: "background 0.2s", cursor: "pointer" }}>
             <div style={{ position: "absolute", top: "2px", left: form.is_public ? "18px" : "2px", width: "14px", height: "14px", borderRadius: "50%", background: "#1B3A2D", transition: "left 0.2s" }}/>
           </div>
           <div>
@@ -193,7 +193,7 @@ export default function ProfilePage() {
         <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "11px 20px", cursor: "pointer", letterSpacing: "1px" }}>BACK</button>
         <button onClick={handleSave} disabled={saving} style={{ position: "relative", background: "transparent", border: "none", padding: 0, cursor: saving ? "not-allowed" : "pointer", flex: 1 }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }}/>
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "13px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#080F06", padding: "11px 24px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "2px" }}>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "13px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#080F06", padding: "11px 24px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "2px" }}>
             {saving ? "SAVING..." : "SAVE PROFILE ✦"}
           </span>
         </button>

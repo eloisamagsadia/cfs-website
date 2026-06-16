@@ -50,7 +50,7 @@ export default async function ShopCategoryPage({ params }:{ params:{ category:st
                     <div style={{height:"220px",background:"#F2F7F2",overflow:"hidden",position:"relative"}}>
                       {p.images?.[0]?<img src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} loading="lazy"/>:<div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"48px"}}>🛍</div>}
                       {p.stock===0&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.55)",display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:R,fontSize:"13px",color:"#CC3344",background:"#FFE8EC",border:"1.5px solid #CC3344",borderRadius:"6px",padding:"6px 14px",letterSpacing:"1px"}}>OUT OF STOCK</span></div>}
-                      {p.stock>0&&p.stock<=5&&<div style={{position:"absolute",top:"8px",right:"8px",background:"#1A8040",border:"1.5px solid #080F06",borderRadius:"4px",padding:"2px 8px",fontFamily:R,fontSize:"9px",color:"#080F06",letterSpacing:"1px"}}>ONLY {p.stock} LEFT</div>}
+                      {p.stock>0&&p.stock<=5&&<div style={{position:"absolute",top:"8px",right:"8px",background:"#1A8040",border:"1.5px solid #DDE8DD",borderRadius:"4px",padding:"2px 8px",fontFamily:R,fontSize:"9px",color:"#FFFFFF",letterSpacing:"1px"}}>ONLY {p.stock} LEFT</div>}
                     </div>
                     <div style={{padding:"14px 16px"}}>
                       <div style={{fontFamily:R,fontSize:"14px",color:"#1B3A2D",letterSpacing:"1px",marginBottom:"6px"}}>{p.name}</div>

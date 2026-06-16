@@ -163,7 +163,7 @@ export default function CheckoutPage() {
           </div>
           <button onClick={handleCheckout} disabled={submitting} style={{ position:"relative", display:"block", width:"100%", background:"transparent", border:"none", cursor: submitting ? "not-allowed" : "pointer", padding:0, opacity: submitting ? 0.6 : 1 }}>
             <span style={{ position:"absolute", top:"3px", left:"3px", width:"100%", height:"100%", background:"#080F06", borderRadius:"6px", display:"block" }}/>
-            <span style={{ position:"relative", display:"block", background:"#1A8040", border:"2px solid #080F06", borderRadius:"6px", padding:"12px", textAlign:"center" }}>
+            <span style={{ position:"relative", display:"block", background:"#1A8040", border:"2px solid #1B3A2D", borderRadius:"6px", padding:"12px", textAlign:"center" }}>
               <span style={{ fontFamily:R, fontSize:"13px", color:"#1B3A2D", letterSpacing:"2px" }}>PAY P{fmt(total)}</span>
             </span>
           </button>

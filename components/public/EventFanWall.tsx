@@ -115,7 +115,7 @@ export default function EventFanWall({ eventId }: { eventId: string }) {
                 <input type="file" accept="image/*" onChange={handleFile} style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", width: "100%" }} />
               </div>
               <textarea placeholder="Add a caption... (optional)" value={caption} onChange={e => setCaption(e.target.value)} rows={2} style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", marginBottom: "12px", resize: "none", boxSizing: "border-box" as const }} />
-              <button onClick={handleSubmit} disabled={submitting || !url.trim()} style={{ fontFamily: R, fontSize: "12px", background: url.trim() ? "#1A8040" : "#F2F7F2", color: url.trim() ? "#080F06" : "#5A7A60", border: "2px solid #080F06", borderRadius: "6px", padding: "10px 24px", cursor: url.trim() ? "pointer" : "not-allowed", letterSpacing: "1.5px" }}>
+              <button onClick={handleSubmit} disabled={submitting || !url.trim()} style={{ fontFamily: R, fontSize: "12px", background: url.trim() ? "#1A8040" : "#F2F7F2", color: url.trim() ? "#080F06" : "#5A7A60", border: "2px solid #1B3A2D", borderRadius: "6px", padding: "10px 24px", cursor: url.trim() ? "pointer" : "not-allowed", letterSpacing: "1.5px" }}>
                 {submitting ? "SUBMITTING..." : "SUBMIT FOR REVIEW"}
               </button>
             </div>

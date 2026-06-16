@@ -79,7 +79,7 @@ export default async function AdminDashboard() {
             <Link key={label} href={href} style={{ textDecoration:"none" }}>
               <div style={{ position:"relative", padding:"4px 4px 6px 0" }}>
                 <div style={{ position:"absolute", bottom:0, right:0, width:"calc(100% - 4px)", height:"calc(100% - 4px)", borderRadius:"8px", background:"#080F06" }}/>
-                <div style={{ position:"relative", background:bg, border:"2px solid #080F06", borderRadius:"8px", padding:"14px", textAlign:"center", zIndex:1 }}>
+                <div style={{ position:"relative", background:bg, border:"2px solid #1B3A2D", borderRadius:"8px", padding:"14px", textAlign:"center", zIndex:1 }}>
                   <span style={{ fontFamily:R, fontSize:"12px", color, letterSpacing:"1.5px" }}>{label} →</span>
                 </div>
               </div>

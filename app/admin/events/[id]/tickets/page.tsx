@@ -54,7 +54,7 @@ export default function EventTicketsPage() {
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", margin: 0 }}>{tickets.length} total registrations</p>
         </div>
         <Link href="/admin/check-in"
-          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", textDecoration: "none", borderRadius: "6px", padding: "8px 16px", letterSpacing: "1px" }}>
+          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", textDecoration: "none", borderRadius: "6px", padding: "8px 16px", letterSpacing: "1px" }}>
           📷 CHECK-IN SCANNER
         </Link>
       </div>

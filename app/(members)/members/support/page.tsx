@@ -74,7 +74,7 @@ export default function SupportPage() {
             SUBMIT ANOTHER
           </button>
           <button onClick={() => router.push("/members/support/tickets")}
-            style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
             VIEW MY TICKETS
           </button>
         </div>

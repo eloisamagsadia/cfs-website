@@ -99,7 +99,7 @@ export default function MessagesPage() {
           </p>
         </div>
         <button onClick={() => setShowNew(true)}
-          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
           + NEW CHAT
         </button>
       </div>
@@ -158,7 +158,7 @@ export default function MessagesPage() {
                     {room.last_message?.content ?? "No messages yet"}
                   </span>
                   {room.unread_count > 0 && (
-                    <span style={{ fontFamily: R, fontSize: "10px", background: "#1A8040", color: "#080F06", borderRadius: "20px", padding: "2px 8px", flexShrink: 0, marginLeft: "8px" }}>{room.unread_count}</span>
+                    <span style={{ fontFamily: R, fontSize: "10px", background: "#1A8040", color: "#FFFFFF", borderRadius: "20px", padding: "2px 8px", flexShrink: 0, marginLeft: "8px" }}>{room.unread_count}</span>
                   )}
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function MessagesPage() {
               {/* Actions on hover */}
               {hoveredRoom === room.id && (
                 <button onClick={e => { e.stopPropagation(); setConfirmDelete(room.id); }}
-                  style={{ background: "#2C1010", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "5px 10px", cursor: "pointer", fontFamily: R, fontSize: "10px", color: "#CC3344", letterSpacing: "1px", flexShrink: 0 }}>
+                  style={{ background: "#FFE8EC", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "5px 10px", cursor: "pointer", fontFamily: R, fontSize: "10px", color: "#CC3344", letterSpacing: "1px", flexShrink: 0 }}>
                   LEAVE
                 </button>
               )}
@@ -208,7 +208,7 @@ export default function MessagesPage() {
                 <div key={m.id} onClick={() => setSelected(prev => prev.includes(m.id) ? prev.filter(id => id !== m.id) : [...prev, m.id])}
                   style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", background: selected.includes(m.id) ? "#E8F0E4" : "transparent", border: `1.5px solid ${selected.includes(m.id) ? "#1A8040" : "transparent"}` }}>
                   <div style={{ width: "18px", height: "18px", borderRadius: "4px", border: `2px solid ${selected.includes(m.id) ? "#1A8040" : "#DDE8DD"}`, background: selected.includes(m.id) ? "#1A8040" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    {selected.includes(m.id) && <span style={{ color: "#080F06", fontSize: "12px", fontWeight: "bold" }}>✓</span>}
+                    {selected.includes(m.id) && <span style={{ color: "#FFFFFF", fontSize: "12px", fontWeight: "bold" }}>✓</span>}
                   </div>
                   <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#F2F7F2", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     {m.avatar_url ? <img src={m.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span style={{ fontFamily: R, fontSize: "12px", color: "#1A8040" }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>}
@@ -226,7 +226,7 @@ export default function MessagesPage() {
               </div>
             )}
             <button onClick={createRoom} disabled={!selected.length || creating}
-              style={{ fontFamily: R, fontSize: "12px", background: !selected.length || creating ? "#F2F7F2" : "#1A8040", color: !selected.length || creating ? "#5A7A60" : "#080F06", border: "none", borderRadius: "6px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+              style={{ fontFamily: R, fontSize: "12px", background: !selected.length || creating ? "#F2F7F2" : "#1A8040", color: !selected.length || creating ? "#5A7A60" : "#FFFFFF", border: "none", borderRadius: "6px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
               {creating ? "CREATING..." : selected.length > 1 ? "CREATE GROUP CHAT" : "START CHAT"}
             </button>
           </div>

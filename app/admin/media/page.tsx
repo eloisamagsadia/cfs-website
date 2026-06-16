@@ -168,7 +168,7 @@ export default function AdminMediaPage() {
     topRow: { display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" },
     uploadBtn: { position: "relative" as const, display: "inline-block" },
     uploadBtnShadow: { position: "absolute" as const, top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" },
-    uploadBtnInner: { position: "relative" as const, display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "8px 16px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1px", cursor: "pointer" },
+    uploadBtnInner: { position: "relative" as const, display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "8px 16px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1px", cursor: "pointer" },
     select: { fontFamily: B, fontSize: "12px", background: "#FFFFFF", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "7px 10px" },
     searchBar: { display: "flex", gap: "8px", alignItems: "center" },
     searchInput: { fontFamily: B, fontSize: "12px", background: "#FFFFFF", color: "#1B3A2D", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "7px 12px", width: "200px", outline: "none" },

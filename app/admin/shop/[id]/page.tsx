@@ -65,7 +65,7 @@ export default function AdminEditProductPage() {
             <span style={{fontFamily:R,fontSize:"12px",color:"#4A7C59"}}>ACTIVE IN SHOP</span>
           </label>
           <div style={{display:"flex",gap:"10px",paddingTop:"10px",borderTop:"1px solid #DDE8DD"}}>
-            <button onClick={handleSave} disabled={saving} style={{flex:1,fontFamily:R,fontSize:"12px",background:saving?"#F2F7F2":"#1A8040",color:saving?"#5A7A60":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px",cursor:"pointer",letterSpacing:"1px"}}>{saving?"SAVING...":"SAVE"}</button>
+            <button onClick={handleSave} disabled={saving} style={{flex:1,fontFamily:R,fontSize:"12px",background:saving?"#F2F7F2":"#1A8040",color:saving?"#5A7A60":"#080F06",border:"2px solid #1B3A2D",borderRadius:"6px",padding:"10px",cursor:"pointer",letterSpacing:"1px"}}>{saving?"SAVING...":"SAVE"}</button>
             <button onClick={handleDelete} style={{fontFamily:R,fontSize:"11px",background:"transparent",border:"1.5px solid #CC3344",borderRadius:"6px",color:"#CC3344",padding:"10px 14px",cursor:"pointer"}}>DELETE</button>
           </div>
         </div>

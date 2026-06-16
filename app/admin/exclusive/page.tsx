@@ -109,7 +109,7 @@ export default function AdminExclusivePage() {
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Sponsor-only photos and videos</p>
         </div>
         <button onClick={() => { setShowForm(true); setEditingId(null); setForm(DEFAULT_FORM); }}
-          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
           + ADD CONTENT
         </button>
       </div>
@@ -186,7 +186,7 @@ export default function AdminExclusivePage() {
               CANCEL
             </button>
             <button onClick={handleSave} disabled={saving || !form.title.trim() || !form.media_url}
-              style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: (saving || !form.title.trim() || !form.media_url) ? 0.5 : 1 }}>
+              style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: (saving || !form.title.trim() || !form.media_url) ? 0.5 : 1 }}>
               {saving ? "SAVING..." : editingId ? "UPDATE" : "PUBLISH"}
             </button>
           </div>

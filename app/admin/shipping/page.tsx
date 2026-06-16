@@ -91,7 +91,7 @@ export default function AdminShippingPage() {
                             autoFocus
                           />
                           <button onClick={() => saveRate(r.id)} disabled={saving}
-                            style={{ background: color, border: "none", borderRadius: "4px", color: "#080F06", padding: "4px 8px", cursor: "pointer", fontFamily: R, fontSize: "10px" }}>
+                            style={{ background: color, border: "none", borderRadius: "4px", color: "#FFFFFF", padding: "4px 8px", cursor: "pointer", fontFamily: R, fontSize: "10px" }}>
                             {saving ? "..." : "✓"}
                           </button>
                         </div>

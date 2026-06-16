@@ -73,7 +73,7 @@ export default function SettingsPage() {
         <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{label}</div>
         <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{desc}</div>
       </div>
-      <div onClick={onChange} style={{ width: "40px", height: "22px", borderRadius: "11px", background: value ? "#1A8040" : "#DDE8DD", border: "2px solid #080F06", position: "relative", flexShrink: 0, cursor: "pointer", transition: "background 0.2s" }}>
+      <div onClick={onChange} style={{ width: "40px", height: "22px", borderRadius: "11px", background: value ? "#1A8040" : "#DDE8DD", border: "2px solid #1B3A2D", position: "relative", flexShrink: 0, cursor: "pointer", transition: "background 0.2s" }}>
         <div style={{ position: "absolute", top: "2px", left: value ? "18px" : "2px", width: "14px", height: "14px", borderRadius: "50%", background: "#1B3A2D", transition: "left 0.2s" }}/>
       </div>
     </div>
@@ -114,7 +114,7 @@ export default function SettingsPage() {
         <Toggle value={notifSettings.email_new_follower} onChange={() => setNotifSettings(p => ({ ...p, email_new_follower: !p.email_new_follower }))} label="New Follower" desc="When someone follows you in the community"/>
 
         <button onClick={saveNotifications} disabled={saving}
-          style={{ marginTop: "16px", fontFamily: R, fontSize: "12px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#080F06", border: "2px solid #080F06", borderRadius: "6px", padding: "10px 20px", cursor: "pointer", letterSpacing: "1.5px" }}>
+          style={{ marginTop: "16px", fontFamily: R, fontSize: "12px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#080F06", border: "2px solid #1B3A2D", borderRadius: "6px", padding: "10px 20px", cursor: "pointer", letterSpacing: "1.5px" }}>
           {saving ? "SAVING..." : "SAVE PREFERENCES"}
         </button>
       </div>

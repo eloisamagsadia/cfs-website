@@ -140,7 +140,7 @@ export default function CartPage() {
             </div>
             <Link href={`/members/checkout?discount=${discount}&promo_code_id=${promoApplied?.promo_code_id ?? ""}&promo_label=${promoApplied?.label ?? ""}`} style={{ textDecoration: "none", display: "block", position: "relative" }}>
               <div style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-              <div style={{ position: "relative", background: "#1A8040", border: "2px solid #080F06", borderRadius: "6px", padding: "12px", textAlign: "center" }}>
+              <div style={{ position: "relative", background: "#1A8040", border: "2px solid #1B3A2D", borderRadius: "6px", padding: "12px", textAlign: "center" }}>
                 <span style={{ fontFamily: R, fontSize: "14px", color: "#1B3A2D", letterSpacing: "2px" }}>CHECKOUT ₱{total.toLocaleString()}</span>
               </div>
             </Link>

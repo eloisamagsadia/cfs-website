@@ -153,7 +153,7 @@ export default function AdminEmailPage() {
                 <div key={m.id} onClick={() => toggleMember(m)}
                   style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", background: isSelected ? "#E8F0E4" : "transparent", border: `1.5px solid ${isSelected ? "#1A8040" : "transparent"}` }}>
                   <div style={{ width: "18px", height: "18px", borderRadius: "4px", border: `2px solid ${isSelected ? "#1A8040" : "#DDE8DD"}`, background: isSelected ? "#1A8040" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    {isSelected && <span style={{ color: "#080F06", fontSize: "12px", fontWeight: "bold" }}>✓</span>}
+                    {isSelected && <span style={{ color: "#FFFFFF", fontSize: "12px", fontWeight: "bold" }}>✓</span>}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{m.display_name}</div>

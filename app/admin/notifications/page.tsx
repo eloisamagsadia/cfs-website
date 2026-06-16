@@ -106,8 +106,8 @@ export default function AdminNotificationsPage() {
 
       {/* Header */}
       <div>
-        <div style={{ display: "inline-block", background: "#1A8040", border: "2px solid #080F06", borderRadius: "6px", padding: "3px 12px", marginBottom: "8px" }}>
-          <span style={{ fontFamily: R, fontSize: "10px", color: "#080F06", letterSpacing: "2px" }}>⚠ ADMIN ONLY</span>
+        <div style={{ display: "inline-block", background: "#1A8040", border: "2px solid #1B3A2D", borderRadius: "6px", padding: "3px 12px", marginBottom: "8px" }}>
+          <span style={{ fontFamily: R, fontSize: "10px", color: "#FFFFFF", letterSpacing: "2px" }}>⚠ ADMIN ONLY</span>
         </div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>NOTIFICATIONS</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Broadcast messages, send reminders, and track engagement</p>
@@ -248,7 +248,7 @@ export default function AdminNotificationsPage() {
 
         <button onClick={handleSend} disabled={sending} style={{ position: "relative", display: "block", background: "transparent", border: "none", padding: 0, cursor: sending ? "not-allowed" : "pointer", width: "100%" }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }}/>
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "14px", background: sending ? "#E8F0E4" : "#1A8040", color: sending ? "#5A7A60" : "#1B3A2D", padding: "12px", border: "2px solid #080F06", borderRadius: "6px", textAlign: "center", letterSpacing: "2px" }}>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "14px", background: sending ? "#E8F0E4" : "#1A8040", color: sending ? "#5A7A60" : "#1B3A2D", padding: "12px", border: "2px solid #1B3A2D", borderRadius: "6px", textAlign: "center", letterSpacing: "2px" }}>
             {sending ? "SENDING..." : target === "all" ? "📣 SEND TO ALL MEMBERS" : target === "event" ? "🎫 SEND TO REGISTRANTS" : "👤 SEND TO MEMBER"}
           </span>
         </button>

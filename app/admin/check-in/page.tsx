@@ -96,7 +96,7 @@ export default function CheckInPage() {
             <div style={{ padding: "16px", display: "flex", gap: "10px" }}>
               {!scanning ? (
                 <button onClick={startScanner}
-                  style={{ flex: 1, fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+                  style={{ flex: 1, fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
                   START CAMERA
                 </button>
               ) : (
@@ -122,7 +122,7 @@ export default function CheckInPage() {
               <button
                 onClick={() => { if (manualId.trim()) checkIn(manualId.trim()); }}
                 disabled={!manualId.trim() || loading}
-                style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "8px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1px", opacity: (!manualId.trim() || loading) ? 0.5 : 1 }}>
+                style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "8px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1px", opacity: (!manualId.trim() || loading) ? 0.5 : 1 }}>
                 {loading ? "..." : "CHECK IN"}
               </button>
             </div>
@@ -167,7 +167,7 @@ export default function CheckInPage() {
           )}
 
           <button onClick={reset}
-            style={{ fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+            style={{ fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
             SCAN NEXT TICKET
           </button>
         </div>

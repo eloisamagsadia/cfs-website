@@ -255,7 +255,7 @@ export default function SuperAdminPage() {
             </div>
 
             <button onClick={saveSettings} disabled={saving}
-              style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
+              style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
               {saving ? "SAVING..." : "SAVE SETTINGS"}
             </button>
           </div>
@@ -279,7 +279,7 @@ export default function SuperAdminPage() {
                 </div>
               </div>
               <button onClick={saveSponsorPerks} disabled={saving}
-                style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
+                style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
                 {saving ? "SAVING..." : "SAVE SPONSOR SETTINGS"}
               </button>
             </div>
@@ -306,7 +306,7 @@ export default function SuperAdminPage() {
                 if (data.settings) setSettings(data.settings);
                 setSaving(false);
               }}
-                style={{ fontFamily: R, fontSize: "11px", background: settings.announcement_active ? "#CC3344" : "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+                style={{ fontFamily: R, fontSize: "11px", background: settings.announcement_active ? "#CC3344" : "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1px" }}>
                 {settings.announcement_active ? "HIDE ANNOUNCEMENT" : "SHOW ANNOUNCEMENT"}
               </button>
             </div>
@@ -343,7 +343,7 @@ export default function SuperAdminPage() {
             </div>
           )}
           <button onClick={sendBroadcast} disabled={broadcasting || !broadcast.title.trim() || !broadcast.message.trim()}
-            style={{ fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", width: "fit-content", opacity: (broadcasting || !broadcast.title.trim() || !broadcast.message.trim()) ? 0.5 : 1 }}>
+            style={{ fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", width: "fit-content", opacity: (broadcasting || !broadcast.title.trim() || !broadcast.message.trim()) ? 0.5 : 1 }}>
             {broadcasting ? "SENDING..." : "📣 SEND TO ALL MEMBERS"}
           </button>
         </div>

@@ -367,7 +367,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
                 <button onClick={handleSubmit} disabled={!canPost}
                   style={{ position: "relative", display: "inline-block", background: "transparent", border: "none", padding: 0, cursor: canPost ? "pointer" : "not-allowed", opacity: submitting ? 0.7 : 1 }}>
                   <span style={{ position: "absolute", top: "2px", left: "2px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-                  <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "11px", background: canPost ? "#1A8040" : "#E8F0E4", color: canPost ? "#080F06" : "#5A7A60", padding: "7px 16px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>
+                  <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "11px", background: canPost ? "#1A8040" : "#E8F0E4", color: canPost ? "#080F06" : "#5A7A60", padding: "7px 16px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1.5px" }}>
                     {uploading ? "UPLOADING..." : submitting ? "POSTING..." : "POST ✦"}
                   </span>
                 </button>

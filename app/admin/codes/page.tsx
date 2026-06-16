@@ -92,7 +92,7 @@ export default function AdminCodesPage() {
             {products.length===0&&<span style={{fontFamily:B,fontSize:"12px",color:"#5A7A60"}}>No products found</span>}
           </div>
         </div>
-        <button onClick={saveCode} disabled={saving||!form.code} style={{fontFamily:R,fontSize:"12px",background:saving||!form.code?"#F2F7F2":"#156530",color:saving||!form.code?"#5A7A60":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px 24px",cursor:"pointer",letterSpacing:"1.5px"}}>
+        <button onClick={saveCode} disabled={saving||!form.code} style={{fontFamily:R,fontSize:"12px",background:saving||!form.code?"#F2F7F2":"#156530",color:saving||!form.code?"#5A7A60":"#080F06",border:"2px solid #1B3A2D",borderRadius:"6px",padding:"10px 24px",cursor:"pointer",letterSpacing:"1.5px"}}>
           {saving?"SAVING...":"SAVE CODE ✦"}
         </button>
       </div>

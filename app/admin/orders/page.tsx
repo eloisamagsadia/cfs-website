@@ -46,7 +46,7 @@ export default function AdminOrdersPage() {
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "4px" }}>
           <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px" }}>ORDERS</h1>
-          <button onClick={() => router.push("/admin/orders/create")} style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>+ ADD ORDER</button>
+          <button onClick={() => router.push("/admin/orders/create")} style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>+ ADD ORDER</button>
         </div>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
           {orders.length} orders · <span style={{ color: "#1A8040" }}>₱{totalRevenue.toLocaleString()} revenue</span>

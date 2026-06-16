@@ -56,7 +56,7 @@ export default function MyTicketsPage() {
           <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>MY TICKETS</h1>
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>{tickets.length} total</p>
         </div>
-        <Link href="/members/support" style={{ textDecoration: "none", fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", borderRadius: "6px", padding: "8px 16px", letterSpacing: "1px" }}>
+        <Link href="/members/support" style={{ textDecoration: "none", fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", borderRadius: "6px", padding: "8px 16px", letterSpacing: "1px" }}>
           + NEW TICKET
         </Link>
       </div>
