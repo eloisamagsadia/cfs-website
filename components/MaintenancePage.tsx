@@ -110,7 +110,7 @@ export default function MaintenancePage() {
           margin: "0 0 48px",
           lineHeight: 1.8,
         }}>
-          CFS is the official fan community for Colet of BINI.<br />
+          CFS (Colet Fan Suporta) is a fan support group for Colet of BINI.<br />
           We&apos;re putting the final touches — see you soon!
         </p>
 
