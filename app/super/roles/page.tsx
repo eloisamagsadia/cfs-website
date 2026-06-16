@@ -19,7 +19,7 @@ export default function RolesPage() {
 
   async function updateRole(userId: string, role: string) {
     setUpdating(userId);
-    await fetch("/api/admin/members/role", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId, role }) });
+    await fetch("/api/admin/members/role", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ targetUserId: userId, role }) });
     setMembers(p => p.map(m => m.id === userId ? { ...m, role } : m));
     setUpdating(null);
   }
