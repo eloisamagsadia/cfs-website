@@ -12,8 +12,6 @@ export async function POST(req: NextRequest) {
   if (!isValid) return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
 
   const payload = JSON.parse(rawBody);
-  console.log("[paymongo] Event:", payload.data?.attributes?.type,
-    "metadata:", JSON.stringify(payload.data?.attributes?.data?.attributes?.metadata));
   const eventType = payload.data?.attributes?.type;
   const eventData = payload.data?.attributes?.data;
   if (!eventType || !eventData) return NextResponse.json({ received: true });
@@ -23,7 +21,6 @@ export async function POST(req: NextRequest) {
   // For link.* events, the link ID is eventData.id.
   // For payment.* events, the link ID is in eventData.attributes.source.id.
   const linkId = eventData.id ?? eventData.attributes?.source?.id;
-  console.log("[paymongo] linkId:", linkId);
   if (!linkId) return NextResponse.json({ received: true });
 
   const supabase = createAdminClient();
@@ -33,11 +30,9 @@ export async function POST(req: NextRequest) {
     .eq("payment_link_id", linkId)
     .single();
 
-  console.log("[paymongo] txn lookup:", txn);
   if (!txn) return NextResponse.json({ received: true });
 
   if (txn.status === "paid") {
-    console.log("[paymongo] Already processed, skipping");
     return NextResponse.json({ received: true });
   }
 
