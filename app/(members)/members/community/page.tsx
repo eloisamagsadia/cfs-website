@@ -56,6 +56,8 @@ export default async function CommunityPage() {
       </div>
 
       <div className="community-sidebar">
+        <FanLettersBulletin letters={(recentLetters as any[]) ?? []} />
+
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "14px", padding: "18px" }}>
           <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px", marginBottom: "14px" }}>COMMUNITY STATS</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -79,8 +81,6 @@ export default async function CommunityPage() {
             ))}
           </div>
         </div>
-
-        <FanLettersBulletin letters={(recentLetters as any[]) ?? []} />
 
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "14px", padding: "18px" }}>
           <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px", marginBottom: "10px" }}>TIPS</div>
