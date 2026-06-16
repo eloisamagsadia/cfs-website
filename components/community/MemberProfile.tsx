@@ -66,19 +66,19 @@ export default function MemberProfile({
             <div style={{ paddingBottom: "10px" }}>
               {!isOwnProfile ? (
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={toggleFollow} disabled={loading} style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: `2px solid ${isFollowing ? "rgba(255,255,255,0.3)" : "#1A8040"}`, background: isFollowing ? "rgba(0,0,0,0.3)" : "#1A8040", color: isFollowing ? "#1B3A2D" : "#080F06", cursor: "pointer", opacity: loading ? 0.7 : 1 }}>
-                    {loading ? "..." : isFollowing ? "Following" : "Follow"}
+                  <button onClick={toggleFollow} disabled={loading} style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: "2px solid rgba(255,255,255,0.5)", background: isFollowing ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.9)", color: isFollowing ? "#FFFFFF" : "#1A8040", cursor: "pointer", opacity: loading ? 0.7 : 1 }}>
+                    {loading ? "..." : isFollowing ? "Following ✓" : "Follow +"}
                   </button>
                   <button onClick={async () => {
                     const res = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ is_group: false, member_ids: [profile.id] }) });
                     const d = await res.json();
                     if (d.room?.id) router.push(`/members/messages/${d.room.id}`);
-                  }} style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: "2px solid rgba(255,255,255,0.3)", background: "rgba(0,0,0,0.3)", color: "#1B3A2D", cursor: "pointer" }}>
+                  }} style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: "2px solid rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.15)", color: "#FFFFFF", cursor: "pointer" }}>
                     MESSAGE
                   </button>
                 </div>
               ) : (
-                <Link href="/members/account" style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: "2px solid rgba(255,255,255,0.2)", color: "#1B3A2D", textDecoration: "none", display: "block", background: "rgba(0,0,0,0.2)" }}>
+                <Link href="/members/account" style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: "2px solid rgba(255,255,255,0.5)", color: "#FFFFFF", textDecoration: "none", display: "block", background: "rgba(255,255,255,0.15)" }}>
                   Edit Profile
                 </Link>
               )}

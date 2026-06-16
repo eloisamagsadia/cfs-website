@@ -522,7 +522,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
         </button>
         <button onClick={sendMessage} disabled={!input.trim() || sending}
           style={{ background: !input.trim() || sending ? "#F2F7F2" : "#1A8040", border: "none", borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill={!input.trim() || sending ? "#3A5A30" : "#080F06"}><path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill={!input.trim() || sending ? "#AACBAA" : "#FFFFFF"}><path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"/></svg>
         </button>
       </div>
       {/* Side Drawer */}

@@ -86,8 +86,8 @@ export default function MemberDirectory({ members, currentUserId, followingIds: 
                   style={{
                     fontFamily:R, fontSize:"11px", letterSpacing:"1px",
                     background: isFollowing ? "transparent" : "#1A8040",
-                    color: isFollowing ? "#1A8040" : "#080F06",
-                    border: `1.5px solid ${isFollowing ? "#1A8040" : "#080F06"}`,
+                    color: isFollowing ? "#1A8040" : "#FFFFFF",
+                    border: "1.5px solid #1A8040",
                     borderRadius:"20px", padding:"5px 16px", cursor:"pointer", width:"100%",
                   }}
                 >
