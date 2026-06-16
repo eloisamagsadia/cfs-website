@@ -120,7 +120,7 @@ export default async function MyDonationsPage() {
                           <span style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6" }}>₱{fmt(intended)}</span>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Processing fee <span style={{ fontSize: "10px" }}>(2.45% + ₱15)</span></span>
+                          <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Processing fee <span style={{ fontSize: "10px" }}>(GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span></span>
                           <span style={{ fontFamily: R, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee!)}</span>
                         </div>
                         <div style={{ borderTop: "1px solid #2C4820", paddingTop: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>

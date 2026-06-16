@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-const PAYMONGO_RATE  = 0.0245;
-const PAYMONGO_FIXED = 15;
+const PAYMONGO_RATE  = 0.025; // GCash rate — most common PH payment method
+const PAYMONGO_FIXED = 0;     // No fixed fee for e-wallets
 function calcFee(base: number) { return (base * PAYMONGO_RATE) + PAYMONGO_FIXED; }
 function fmt(n: number) { return n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 
@@ -256,7 +256,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
               <span style={{ fontFamily: B, fontSize: "12px", color: "#F0EAD6" }}>₱{fmt(basePrice)}</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Processing fee <span style={{ fontSize: "10px" }}>(2.45% + ₱15)</span></span>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Processing fee <span style={{ fontSize: "10px" }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span></span>
               <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee)}</span>
             </div>
             <div style={{ borderTop: "1px solid #2C4820", paddingTop: "6px", display: "flex", justifyContent: "space-between" }}>

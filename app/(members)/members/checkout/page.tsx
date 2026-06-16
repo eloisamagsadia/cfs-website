@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
 const SHIPPING_REGIONS = ["Metro Manila", "Luzon", "Visayas", "Mindanao"];
-const PAYMONGO_RATE = 0.0245;
-const PAYMONGO_FIXED = 15;
+const PAYMONGO_RATE = 0.025; // GCash rate — most common PH payment method
+const PAYMONGO_FIXED = 0;    // No fixed fee for e-wallets
 
 export default function CheckoutPage() {
   const { user, isLoaded } = useUser();
@@ -152,7 +152,7 @@ export default function CheckoutPage() {
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div>
                 <span style={{ fontFamily:B, fontSize:"12px", color:"#8AAA78" }}>Processing fee </span>
-                <span style={{ fontFamily:B, fontSize:"10px", color:"#3A5A30" }}>(2.45% + ₱15)</span>
+                <span style={{ fontFamily:B, fontSize:"10px", color:"#3A5A30" }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span>
               </div>
               <span style={{ fontFamily:B, fontSize:"12px", color:"#F04060" }}>+P{fmt(paymongoFee)}</span>
             </div>

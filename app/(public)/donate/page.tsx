@@ -27,8 +27,8 @@ const TIERS = [
   { name: "Supermoon",    range: "₱8,000+",           color: "#F5C82A", desc: "Special perks included" },
 ];
 
-const PAYMONGO_RATE  = 0.0245;
-const PAYMONGO_FIXED = 15;
+const PAYMONGO_RATE  = 0.025; // GCash rate — most common PH payment method
+const PAYMONGO_FIXED = 0;     // No fixed fee for e-wallets (GCash/Maya/QR PH)
 
 export default function DonatePage() {
   const { isSignedIn } = useUser();
@@ -184,7 +184,7 @@ export default function DonatePage() {
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div>
                 <span style={{ fontFamily:B, fontSize:"13px", color:C.muted }}>Processing fee </span>
-                <span style={{ fontFamily:B, fontSize:"11px", color:C.muted }}>(2.45% + ₱15)</span>
+                <span style={{ fontFamily:B, fontSize:"11px", color:C.muted }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span>
               </div>
               <span style={{ fontFamily:SG, fontSize:"13px", fontWeight:600, color:"#F04060" }}>+₱{fmt(paymongoFee)}</span>
             </div>
