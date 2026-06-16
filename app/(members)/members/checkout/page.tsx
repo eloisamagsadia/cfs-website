@@ -127,7 +127,7 @@ export default function CheckoutPage() {
             </div>
             <div><label style={labelStyle}>ZIP Code</label><input style={inputStyle} value={form.zip_code} onChange={e=>update("zip_code",e.target.value)} placeholder="1234"/></div>
           </div>
-          {error && <div style={{ background:"#3D0A18", border:"1.5px solid #CC3344", borderRadius:"8px", padding:"12px", fontFamily:B, fontSize:"13px", color:"#CC3344" }}>{error}</div>}
+          {error && <div style={{ background:"#FFE8EC", border:"1.5px solid #CC3344", borderRadius:"8px", padding:"12px", fontFamily:B, fontSize:"13px", color:"#CC3344" }}>{error}</div>}
         </div>
 
         <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"20px", position:"sticky", top:"90px" }}>

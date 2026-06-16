@@ -314,7 +314,7 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
             <div style={{ fontFamily:R, fontSize:"14px", color:"#1B3A2D", letterSpacing:"0.5px" }}>{profile.display_name??"Member"}</div>
             <div style={{ fontFamily:B, fontSize:"11px", color:"#5A7A60" }}>{timeAgo(post.created_at)}</div>
           </div>
-          {post.is_pinned&&<span style={{ fontFamily:R, fontSize:"9px", color:"#156530", background:"#3D3000", border:"1px solid #1A804040", borderRadius:"4px", padding:"2px 8px" }}>📌 PINNED</span>}
+          {post.is_pinned&&<span style={{ fontFamily:R, fontSize:"9px", color:"#156530", background:"#E8F4EC", border:"1px solid #1A804040", borderRadius:"4px", padding:"2px 8px" }}>📌 PINNED</span>}
 
           {/* ── ··· MENU BUTTON ── */}
           <button
@@ -420,7 +420,7 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
         </div>
 
         {/* Comment input */}
-        <div style={{ borderTop:"1px solid #DDE8DD", padding:"12px 18px 16px", background:"#131E10" }}>
+        <div style={{ borderTop:"1px solid #DDE8DD", padding:"12px 18px 16px", background:"#FFFFFF" }}>
           <div style={{ display:"flex", gap:"6px", marginBottom:"10px" }}>
             {QUICK_EMOJIS.map(emoji=>(
               <button key={emoji} onClick={()=>{ setCommentText(p=>p+emoji); commentInputRef.current?.focus(); }}
@@ -460,7 +460,7 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
               <div style={{ borderTop:"1px solid #DDE8DD", margin:"4px 0" }}/>
               <button onClick={() => { setShowMenu(false); setMenuPos(null); setShowDeleteConfirm(true); }}
                 style={{ width:"100%", display:"flex", alignItems:"center", gap:"10px", padding:"9px 12px", borderRadius:"8px", background:"none", border:"none", cursor:"pointer", fontFamily:B, fontSize:"13px", color:"#CC3344", textAlign:"left" }}
-                onMouseEnter={e=>(e.currentTarget.style.background="#3D0A14")} onMouseLeave={e=>(e.currentTarget.style.background="none")}>
+                onMouseEnter={e=>(e.currentTarget.style.background="#FFE8EC")} onMouseLeave={e=>(e.currentTarget.style.background="none")}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M10 11v6M14 11v6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M9 6V4h6v2" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/></svg>
                 Delete post
               </button>
@@ -474,7 +474,7 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
       {showDeleteConfirm && createPortal(
         <div style={{ position:"fixed", inset:0, zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(0,0,0,0.7)", backdropFilter:"blur(4px)" }}>
           <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"16px", padding:"28px 28px 22px", maxWidth:"320px", width:"90%", boxShadow:"0 16px 48px rgba(0,0,0,0.6)" }}>
-            <div style={{ width:"44px", height:"44px", borderRadius:"12px", background:"#3D0A14", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"16px" }}>
+            <div style={{ width:"44px", height:"44px", borderRadius:"12px", background:"#FFE8EC", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"16px" }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M10 11v6M14 11v6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M9 6V4h6v2" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/></svg>
             </div>
             <div style={{ fontFamily:R, fontSize:"16px", color:"#1B3A2D", marginBottom:"8px", letterSpacing:"0.5px" }}>Delete post?</div>

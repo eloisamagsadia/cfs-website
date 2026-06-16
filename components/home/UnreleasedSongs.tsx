@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 const C = {
-  forest: "#1A2E1A",
+  forest: "#1B3A2D",
   green:  "#1A8040",
   mist:   "#E8F0E4",
   sage:   "#4A7C59",
@@ -35,7 +35,7 @@ export default function UnreleasedSongs() {
   }
 
   return (
-    <section className="home-songs-section" style={{ padding:"72px 48px", background:"#1A2E1A", position:"relative", overflow:"hidden" }}>
+    <section className="home-songs-section" style={{ padding:"72px 48px", background:"#1B3A2D", position:"relative", overflow:"hidden" }}>
       <style>{`
         @keyframes spin-vinyl {
           from { transform: rotate(0deg); }

@@ -40,7 +40,7 @@ export default function AdminEditProductPage() {
         <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#1B3A2D",letterSpacing:"3px"}}>EDIT PRODUCT</h1>
         <button onClick={()=>router.back()} style={{fontFamily:R,fontSize:"11px",color:"#5A7A60",background:"transparent",border:"none",cursor:"pointer"}}>Back</button>
       </div>
-      {error&&<div style={{background:"#3D0A18",border:"1.5px solid #CC3344",borderRadius:"8px",padding:"12px",fontFamily:B,fontSize:"13px",color:"#CC3344"}}>{error}</div>}
+      {error&&<div style={{background:"#FFE8EC",border:"1.5px solid #CC3344",borderRadius:"8px",padding:"12px",fontFamily:B,fontSize:"13px",color:"#CC3344"}}>{error}</div>}
       {success&&<div style={{background:"#E8F0E4",border:"1.5px solid #1A8040",borderRadius:"8px",padding:"12px",fontFamily:R,fontSize:"13px",color:"#1A8040"}}>{success}</div>}
       {!loading&&(
         <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",padding:"24px",display:"flex",flexDirection:"column",gap:"14px"}}>
@@ -55,7 +55,7 @@ export default function AdminEditProductPage() {
             {form.images.map((img,i)=>(
               <div key={i} style={{display:"flex",gap:"8px",marginBottom:"6px"}}>
                 <input style={{...inp,flex:1}} value={img} onChange={e=>{const a=[...form.images];a[i]=e.target.value;upd("images",a);}} placeholder="Image URL"/>
-                {form.images.length>1&&<button onClick={()=>upd("images",form.images.filter((_,j)=>j!==i))} style={{background:"#3D0A18",border:"1.5px solid #CC3344",borderRadius:"6px",color:"#CC3344",padding:"8px 10px",cursor:"pointer"}}>X</button>}
+                {form.images.length>1&&<button onClick={()=>upd("images",form.images.filter((_,j)=>j!==i))} style={{background:"#FFE8EC",border:"1.5px solid #CC3344",borderRadius:"6px",color:"#CC3344",padding:"8px 10px",cursor:"pointer"}}>X</button>}
               </div>
             ))}
             <button onClick={()=>upd("images",[...form.images,""])} style={{fontFamily:R,fontSize:"11px",color:"#1A8040",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"6px",padding:"6px 12px",cursor:"pointer"}}>+ ADD IMAGE</button>

@@ -124,7 +124,7 @@ export default function AdminCodesPage() {
               <div><span style={{fontFamily:R,fontSize:"10px",color:SC[status],background:SB[status],border:`1.5px solid ${SC[status]}40`,borderRadius:"20px",padding:"2px 10px",letterSpacing:"1px"}}>{status}</span></div>
               <div style={{display:"flex",gap:"6px"}}>
                 <button onClick={()=>toggleActive(c.id,c.is_active)} style={{background:"#E8F4EC",border:"1.5px solid #156530",borderRadius:"6px",color:"#156530",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>{c.is_active?"⏸":"▶"}</button>
-                <button onClick={()=>deleteCode(c.id)} style={{background:"#3D0A18",border:"1.5px solid #CC3344",borderRadius:"6px",color:"#CC3344",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>🗑</button>
+                <button onClick={()=>deleteCode(c.id)} style={{background:"#FFE8EC",border:"1.5px solid #CC3344",borderRadius:"6px",color:"#CC3344",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>🗑</button>
               </div>
             </div>
           );

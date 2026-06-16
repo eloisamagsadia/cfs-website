@@ -63,7 +63,7 @@ export default function AdminEditProductPage() {
         <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#1B3A2D",letterSpacing:"3px"}}>EDIT PRODUCT</h1>
         <button onClick={()=>router.back()} style={{fontFamily:R,fontSize:"11px",color:"#5A7A60",background:"transparent",border:"none",cursor:"pointer"}}>Back</button>
       </div>
-      {error&&<div style={{background:"#3D0A18",border:"1.5px solid #CC3344",borderRadius:"8px",padding:"12px",fontFamily:B,fontSize:"13px",color:"#CC3344"}}>{error}</div>}
+      {error&&<div style={{background:"#FFE8EC",border:"1.5px solid #CC3344",borderRadius:"8px",padding:"12px",fontFamily:B,fontSize:"13px",color:"#CC3344"}}>{error}</div>}
       {success&&<div style={{background:"#E8F0E4",border:"1.5px solid #1A8040",borderRadius:"8px",padding:"12px",fontFamily:R,fontSize:"13px",color:"#1A8040"}}>{success}</div>}
       {!loading&&(
         <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",padding:"24px",display:"flex",flexDirection:"column",gap:"14px"}}>

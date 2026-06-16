@@ -408,7 +408,7 @@ export default function AdminMediaPage() {
         <>
           <div onClick={() => setDeleteModal(null)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.7)", zIndex:9997 }}/>
           <div style={{ position:"fixed", top:"50%", left:"50%", transform:"translate(-50%,-50%)", background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"16px", padding:"32px 28px", zIndex:9998, width:"320px", textAlign:"center" }}>
-            <div style={{ width:"56px", height:"56px", background:"#3A1010", borderRadius:"12px", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", fontSize:"24px" }}>🗑️</div>
+            <div style={{ width:"56px", height:"56px", background:"#FFE8EC", borderRadius:"12px", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", fontSize:"24px" }}>🗑️</div>
             <div style={{ fontFamily:R, fontSize:"1.2rem", color:"#1B3A2D", marginBottom:"10px", letterSpacing:"1px" }}>Delete {deleteModal.keys.length > 1 ? `${deleteModal.keys.length} files` : "file"}?</div>
             <div style={{ fontFamily:B, fontSize:"13px", color:"#4A7C59", marginBottom:"28px", lineHeight:"1.6" }}>This action can&apos;t be undone. The {deleteModal.keys.length > 1 ? "files" : "file"} will be permanently removed.</div>
             <div style={{ display:"flex", gap:"10px" }}>
