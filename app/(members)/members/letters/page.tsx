@@ -24,7 +24,7 @@ function formatDate(dateStr: string) {
 export default function LettersPage() {
   const router = useRouter();
   const { user } = useUser();
-  const [tab, setTab] = useState<"colet" | "wall">("colet");
+  const [tab, setTab] = useState<"colet" | "wall">("wall");
 
   // From Colet (Medium RSS)
   const [letters, setLetters] = useState<any[]>([]);
@@ -81,13 +81,13 @@ export default function LettersPage() {
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header */}
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>LETTERS</h1>
-        <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "14px", color: "#4A7C59" }}>Words to and from Colet 💌</p>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>LETTERS FOR COLET</h1>
+        <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "14px", color: "#4A7C59" }}>Fan letters written from the heart 💌</p>
       </div>
 
       {/* Tabs */}
       <div style={{ display: "flex", gap: "0", borderBottom: "2px solid #DDE8DD" }}>
-        {([["colet", "FROM COLET"], ["wall", "FREEDOM WALL"]] as const).map(([key, label]) => (
+        {([["wall", "FREEDOM WALL"], ["colet", "FROM COLET"]] as const).map(([key, label]) => (
           <button key={key} onClick={() => setTab(key)}
             style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1.5px", padding: "10px 20px", background: "none", border: "none", cursor: "pointer", color: tab === key ? "#1A8040" : "#5A7A60", borderBottom: `2px solid ${tab === key ? "#1A8040" : "transparent"}`, marginBottom: "-2px", transition: "color 0.15s" }}>
             {label}
