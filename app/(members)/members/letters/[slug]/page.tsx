@@ -51,7 +51,7 @@ export default function LetterDetailPage() {
       {letter.tags.length > 0 && (
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
           {letter.tags.map((tag: string) => (
-            <span key={tag} style={{ fontFamily: B, fontSize: "10px", color: "#F07228", background: "#3D1A0A", borderRadius: "20px", padding: "2px 10px" }}>
+            <span key={tag} style={{ fontFamily: B, fontSize: "10px", color: "#1A8040", background: "#3D1A0A", borderRadius: "20px", padding: "2px 10px" }}>
               {tag}
             </span>
           ))}
@@ -73,7 +73,7 @@ export default function LetterDetailPage() {
           <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{formatDate(letter.pubDate)}</div>
         </div>
         <a href={letter.link} target="_blank" rel="noopener noreferrer"
-          style={{ marginLeft: "auto", fontFamily: R, fontSize: "11px", color: "#3CCE2A", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "20px", padding: "5px 14px", letterSpacing: "1px" }}>
+          style={{ marginLeft: "auto", fontFamily: R, fontSize: "11px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "20px", padding: "5px 14px", letterSpacing: "1px" }}>
           READ ON MEDIUM →
         </a>
       </div>
@@ -92,8 +92,8 @@ export default function LetterDetailPage() {
         .letter-content em, .letter-content i { font-style: italic; color: #5A7A60; }
         .letter-content figure { margin: 24px 0; border-radius: 10px; overflow: hidden; }
         .letter-content figure img { width: 100%; height: auto; display: block; border-radius: 10px; }
-        .letter-content blockquote { border-left: 3px solid #2CB520; margin: 24px 0; padding: 12px 20px; background: #E8F0E4; border-radius: 0 8px 8px 0; color: #4A7C59; font-style: italic; }
-        .letter-content a { color: #2CB520; text-decoration: none; }
+        .letter-content blockquote { border-left: 3px solid #1A8040; margin: 24px 0; padding: 12px 20px; background: #E8F0E4; border-radius: 0 8px 8px 0; color: #4A7C59; font-style: italic; }
+        .letter-content a { color: #1A8040; text-decoration: none; }
         .letter-content a:hover { text-decoration: underline; }
         .letter-content h1, .letter-content h2, .letter-content h3 { font-family: ${S}; color: #1B3A2D; margin: 28px 0 12px; }
       `}</style>
@@ -104,7 +104,7 @@ export default function LetterDetailPage() {
           ← Back to Letters
         </Link>
         <a href={letter.link} target="_blank" rel="noopener noreferrer"
-          style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A", textDecoration: "none", letterSpacing: "1px" }}>
+          style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", textDecoration: "none", letterSpacing: "1px" }}>
           CLAP ON MEDIUM →
         </a>
       </div>

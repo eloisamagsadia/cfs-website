@@ -36,7 +36,7 @@ export default function ProductImageGallery({ images, productName, inStock, acce
           }
           {!inStock && (
             <div style={{ position: "absolute", inset: 0, background: "rgba(8,15,6,0.7)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ fontFamily: R, fontSize: "16px", color: "#F04060", letterSpacing: "2px", background: "#3D0A18", border: "2px solid #F04060", borderRadius: "8px", padding: "10px 20px" }}>OUT OF STOCK</span>
+              <span style={{ fontFamily: R, fontSize: "16px", color: "#CC3344", letterSpacing: "2px", background: "#3D0A18", border: "2px solid #CC3344", borderRadius: "8px", padding: "10px 20px" }}>OUT OF STOCK</span>
             </div>
           )}
         </div>

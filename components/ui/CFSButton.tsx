@@ -16,7 +16,7 @@ interface CFSButtonProps {
 }
 
 const variantStyles: Record<Variant, { bg: string; text: string }> = {
-  green:  { bg: "#2CB520", text: "#F5F0E0" },
+  green:  { bg: "#1A8040", text: "#F5F0E0" },
   yellow: { bg: "#F0C020", text: "#1A1E14" },
   orange: { bg: "#E86818", text: "#F5F0E0" },
   cream:  { bg: "#F5F0E0", text: "#1A1E14" },

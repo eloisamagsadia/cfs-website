@@ -7,7 +7,7 @@ export const revalidate = 0;
 export const metadata: Metadata = { title: "Manage Projects" };
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
-const SC: any = { ongoing: "#3CCE2A", completed: "#5A7A60" };
+const SC: any = { ongoing: "#1A8040", completed: "#5A7A60" };
 
 export default async function AdminProjectsPage() {
   const supabase = createAdminClient();
@@ -22,7 +22,7 @@ export default async function AdminProjectsPage() {
         </div>
         <Link href="/admin/projects/create" style={{ textDecoration: "none", position: "relative", display: "inline-block" }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#1B3A2D", padding: "8px 18px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>+ ADD PROJECT</span>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "8px 18px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>+ ADD PROJECT</span>
         </Link>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -40,7 +40,7 @@ export default async function AdminProjectsPage() {
                   {p.status === "ongoing" && (
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                       <div style={{ width: "80px", height: "6px", background: "#F2F7F2", borderRadius: "3px", overflow: "hidden" }}>
-                        <div style={{ height: "100%", width: `${p.progress_percent ?? 0}%`, background: "#3CCE2A" }} />
+                        <div style={{ height: "100%", width: `${p.progress_percent ?? 0}%`, background: "#1A8040" }} />
                       </div>
                       <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{p.progress_percent ?? 0}%</span>
                     </div>

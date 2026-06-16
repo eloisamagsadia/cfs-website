@@ -116,23 +116,23 @@ export default function ProfilePage() {
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "24px" }}>
         <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "2px", marginBottom: "16px" }}>PROFILE PHOTO</div>
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <div style={{ width: "80px", height: "80px", borderRadius: "50%", background: "#E8F0E4", border: "2px solid #3CCE2A", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <div style={{ width: "80px", height: "80px", borderRadius: "50%", background: "#E8F0E4", border: "2px solid #1A8040", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             {form.avatar_url
               ? <img src={form.avatar_url} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
-              : <span style={{ fontFamily: R, fontSize: "28px", color: "#3CCE2A" }}>{(form.display_name || "M")[0].toUpperCase()}</span>
+              : <span style={{ fontFamily: R, fontSize: "28px", color: "#1A8040" }}>{(form.display_name || "M")[0].toUpperCase()}</span>
             }
           </div>
           <div style={{ flex: 1 }}>
             <label style={{ display: "inline-block", cursor: "pointer", position: "relative" }}>
               <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }}/>
-              <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "11px", background: "#E8F0E4", color: "#3CCE2A", padding: "8px 16px", border: "2px solid #DDE8DD", borderRadius: "6px", letterSpacing: "1.5px" }}>
+              <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "11px", background: "#E8F0E4", color: "#1A8040", padding: "8px 16px", border: "2px solid #DDE8DD", borderRadius: "6px", letterSpacing: "1.5px" }}>
                 {uploading ? "UPLOADING..." : "UPLOAD PHOTO"}
               </span>
               <input type="file" accept="image/*" onChange={handleAvatarUpload} disabled={uploading} style={{ display: "none" }}/>
             </label>
             <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "8px" }}>JPG, PNG, WebP — max 5MB</p>
             {form.avatar_url && (
-              <button onClick={() => upd("avatar_url", "")} style={{ fontFamily: B, fontSize: "11px", color: "#F04060", background: "transparent", border: "none", cursor: "pointer", padding: 0, marginTop: "4px" }}>Remove photo</button>
+              <button onClick={() => upd("avatar_url", "")} style={{ fontFamily: B, fontSize: "11px", color: "#CC3344", background: "transparent", border: "none", cursor: "pointer", padding: 0, marginTop: "4px" }}>Remove photo</button>
             )}
           </div>
         </div>
@@ -176,7 +176,7 @@ export default function ProfilePage() {
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px" }}>
         <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "2px", marginBottom: "14px" }}>PRIVACY</div>
         <label style={{ display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
-          <div onClick={() => upd("is_public", !form.is_public)} style={{ width: "40px", height: "22px", borderRadius: "11px", background: form.is_public ? "#3CCE2A" : "#DDE8DD", border: "2px solid #080F06", position: "relative", flexShrink: 0, transition: "background 0.2s", cursor: "pointer" }}>
+          <div onClick={() => upd("is_public", !form.is_public)} style={{ width: "40px", height: "22px", borderRadius: "11px", background: form.is_public ? "#1A8040" : "#DDE8DD", border: "2px solid #080F06", position: "relative", flexShrink: 0, transition: "background 0.2s", cursor: "pointer" }}>
             <div style={{ position: "absolute", top: "2px", left: form.is_public ? "18px" : "2px", width: "14px", height: "14px", borderRadius: "50%", background: "#1B3A2D", transition: "left 0.2s" }}/>
           </div>
           <div>
@@ -186,14 +186,14 @@ export default function ProfilePage() {
         </label>
       </div>
 
-      {error && <div style={{ background: "#3D0A18", border: "1.5px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
-      {success && <div style={{ background: "#E8F0E4", border: "1.5px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: "#3CCE2A", letterSpacing: "1px" }}>✦ PROFILE SAVED!</div>}
+      {error && <div style={{ background: "#3D0A18", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
+      {success && <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "1px" }}>✦ PROFILE SAVED!</div>}
 
       <div style={{ display: "flex", gap: "10px" }}>
         <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "11px 20px", cursor: "pointer", letterSpacing: "1px" }}>BACK</button>
         <button onClick={handleSave} disabled={saving} style={{ position: "relative", background: "transparent", border: "none", padding: 0, cursor: saving ? "not-allowed" : "pointer", flex: 1 }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }}/>
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "13px", background: saving ? "#E8F0E4" : "#3CCE2A", color: saving ? "#5A7A60" : "#080F06", padding: "11px 24px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "2px" }}>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "13px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#080F06", padding: "11px 24px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "2px" }}>
             {saving ? "SAVING..." : "SAVE PROFILE ✦"}
           </span>
         </button>

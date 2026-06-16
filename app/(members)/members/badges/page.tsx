@@ -32,20 +32,20 @@ export default async function BadgesPage() {
 
       <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"20px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"8px" }}>
-          <span style={{ fontFamily:R, fontSize:"12px", color:"#3CCE2A", letterSpacing:"2px" }}>COLLECTION PROGRESS</span>
-          <span style={{ fontFamily:R, fontSize:"12px", color:"#F5C82A" }}>{earnedIds.size}/{allBadges?.length ?? 0}</span>
+          <span style={{ fontFamily:R, fontSize:"12px", color:"#1A8040", letterSpacing:"2px" }}>COLLECTION PROGRESS</span>
+          <span style={{ fontFamily:R, fontSize:"12px", color:"#156530" }}>{earnedIds.size}/{allBadges?.length ?? 0}</span>
         </div>
         <div style={{ background:"#F2F7F2", border:"1.5px solid #DDE8DD", borderRadius:"20px", height:"12px", overflow:"hidden" }}>
-          <div style={{ height:"100%", width:`${((earnedIds.size / (allBadges?.length || 1)) * 100).toFixed(0)}%`, background:"#3CCE2A", borderRadius:"20px", transition:"width 0.5s ease" }}/>
+          <div style={{ height:"100%", width:`${((earnedIds.size / (allBadges?.length || 1)) * 100).toFixed(0)}%`, background:"#1A8040", borderRadius:"20px", transition:"width 0.5s ease" }}/>
         </div>
       </div>
 
       {earnedIds.size > 0 && (
         <div>
-          <h2 style={{ fontFamily:R, fontSize:"13px", color:"#3CCE2A", letterSpacing:"2px", marginBottom:"12px" }}>EARNED ✦</h2>
+          <h2 style={{ fontFamily:R, fontSize:"13px", color:"#1A8040", letterSpacing:"2px", marginBottom:"12px" }}>EARNED ✦</h2>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:"10px" }}>
             {(allBadges ?? []).filter((b:any) => earnedIds.has(b.id)).map((badge:any) => {
-              const color = BADGE_COLORS[badge.name] ?? "#3CCE2A";
+              const color = BADGE_COLORS[badge.name] ?? "#1A8040";
               const icon = BADGE_ICONS[badge.name] ?? "⭐";
               const earnedData = earnedMap[badge.id];
               return (

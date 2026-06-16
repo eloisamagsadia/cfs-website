@@ -106,7 +106,7 @@ export default function AdminNotificationsPage() {
 
       {/* Header */}
       <div>
-        <div style={{ display: "inline-block", background: "#F07228", border: "2px solid #080F06", borderRadius: "6px", padding: "3px 12px", marginBottom: "8px" }}>
+        <div style={{ display: "inline-block", background: "#1A8040", border: "2px solid #080F06", borderRadius: "6px", padding: "3px 12px", marginBottom: "8px" }}>
           <span style={{ fontFamily: R, fontSize: "10px", color: "#080F06", letterSpacing: "2px" }}>⚠ ADMIN ONLY</span>
         </div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>NOTIFICATIONS</h1>
@@ -117,9 +117,9 @@ export default function AdminNotificationsPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: "10px" }}>
         {[
           { label: "TOTAL SENT",   value: loadingStats ? "..." : (stats?.total ?? 0),       color: "#1B3A2D", bg: "#FFFFFF" },
-          { label: "TOTAL READ",   value: loadingStats ? "..." : (stats?.read ?? 0),        color: "#3CCE2A", bg: "#E8F0E4" },
-          { label: "UNREAD",       value: loadingStats ? "..." : (stats?.unread ?? 0),      color: "#F5C82A", bg: "#FFFBE8" },
-          { label: "READ RATE",    value: loadingStats ? "..." : `${stats?.readRate ?? 0}%`, color: "#F07228", bg: "#FFF0E8" },
+          { label: "TOTAL READ",   value: loadingStats ? "..." : (stats?.read ?? 0),        color: "#1A8040", bg: "#E8F0E4" },
+          { label: "UNREAD",       value: loadingStats ? "..." : (stats?.unread ?? 0),      color: "#156530", bg: "#E8F4EC" },
+          { label: "READ RATE",    value: loadingStats ? "..." : `${stats?.readRate ?? 0}%`, color: "#1A8040", bg: "#E8F4EC" },
         ].map(({ label, value, color, bg }) => (
           <div key={label} style={{ position: "relative", padding: "4px 4px 6px 0" }}>
             <div style={{ position: "absolute", bottom: 0, right: 0, width: "calc(100% - 4px)", height: "calc(100% - 4px)", borderRadius: "10px", background: "#080F06" }}/>
@@ -143,9 +143,9 @@ export default function AdminNotificationsPage() {
                   {t.type.replace(/_/g, " ")}
                 </span>
                 <div style={{ flex: 1, height: "8px", background: "#F2F7F2", borderRadius: "20px", overflow: "hidden" }}>
-                  <div style={{ height: "100%", width: `${t.readRate}%`, background: "#3CCE2A", borderRadius: "20px", transition: "width 0.5s" }}/>
+                  <div style={{ height: "100%", width: `${t.readRate}%`, background: "#1A8040", borderRadius: "20px", transition: "width 0.5s" }}/>
                 </div>
-                <span style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A", width: "50px", textAlign: "right", flexShrink: 0 }}>{t.readRate}%</span>
+                <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", width: "50px", textAlign: "right", flexShrink: 0 }}>{t.readRate}%</span>
                 <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", flexShrink: 0 }}>{t.total}</span>
               </div>
             ))}
@@ -155,7 +155,7 @@ export default function AdminNotificationsPage() {
 
       {/* Compose form */}
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "24px" }}>
-        <div style={{ fontFamily: R, fontSize: "14px", color: "#F07228", letterSpacing: "2px", marginBottom: "18px" }}>SEND NOTIFICATION</div>
+        <div style={{ fontFamily: R, fontSize: "14px", color: "#1A8040", letterSpacing: "2px", marginBottom: "18px" }}>SEND NOTIFICATION</div>
 
         {/* Target selector */}
         <div style={{ marginBottom: "18px" }}>
@@ -168,9 +168,9 @@ export default function AdminNotificationsPage() {
             ].map(({ v, label }) => (
               <button key={v} onClick={() => setTarget(v as any)} style={{
                 fontFamily: R, fontSize: "11px", letterSpacing: "1px",
-                background: target === v ? "#FFF0E8" : "transparent",
-                color: target === v ? "#F07228" : "#5A7A60",
-                border: `1.5px solid ${target === v ? "#F07228" : "#DDE8DD"}`,
+                background: target === v ? "#E8F4EC" : "transparent",
+                color: target === v ? "#1A8040" : "#5A7A60",
+                border: `1.5px solid ${target === v ? "#1A8040" : "#DDE8DD"}`,
                 borderRadius: "6px", padding: "8px 14px", cursor: "pointer", flex: 1,
               }}>
                 {label}
@@ -189,7 +189,7 @@ export default function AdminNotificationsPage() {
                 {filteredMembers.slice(0, 8).map(m => (
                   <div key={m.id} onClick={() => { upd("targetUserId", m.id); setMemberSearch(m.display_name ?? ""); }} style={{
                     padding: "10px 14px", cursor: "pointer", fontFamily: B, fontSize: "13px",
-                    color: form.targetUserId === m.id ? "#3CCE2A" : "#1B3A2D",
+                    color: form.targetUserId === m.id ? "#1A8040" : "#1B3A2D",
                     background: form.targetUserId === m.id ? "#E8F0E4" : "transparent",
                     borderBottom: "1px solid #DDE8DD",
                   }}>
@@ -241,14 +241,14 @@ export default function AdminNotificationsPage() {
         </div>
 
         {result && (
-          <div style={{ background: result.ok ? "#E8F0E4" : "#3D0A18", border: `1.5px solid ${result.ok ? "#3CCE2A" : "#F04060"}`, borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: result.ok ? "#3CCE2A" : "#F04060", letterSpacing: "1px", marginBottom: "14px" }}>
+          <div style={{ background: result.ok ? "#E8F0E4" : "#3D0A18", border: `1.5px solid ${result.ok ? "#1A8040" : "#CC3344"}`, borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: result.ok ? "#1A8040" : "#CC3344", letterSpacing: "1px", marginBottom: "14px" }}>
             {result.msg}
           </div>
         )}
 
         <button onClick={handleSend} disabled={sending} style={{ position: "relative", display: "block", background: "transparent", border: "none", padding: 0, cursor: sending ? "not-allowed" : "pointer", width: "100%" }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }}/>
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "14px", background: sending ? "#E8F0E4" : "#F07228", color: sending ? "#5A7A60" : "#1B3A2D", padding: "12px", border: "2px solid #080F06", borderRadius: "6px", textAlign: "center", letterSpacing: "2px" }}>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "14px", background: sending ? "#E8F0E4" : "#1A8040", color: sending ? "#5A7A60" : "#1B3A2D", padding: "12px", border: "2px solid #080F06", borderRadius: "6px", textAlign: "center", letterSpacing: "2px" }}>
             {sending ? "SENDING..." : target === "all" ? "📣 SEND TO ALL MEMBERS" : target === "event" ? "🎫 SEND TO REGISTRANTS" : "👤 SEND TO MEMBER"}
           </span>
         </button>
@@ -267,7 +267,7 @@ export default function AdminNotificationsPage() {
                   <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{n.message}</div>
                 </div>
                 <div style={{ display: "flex", gap: "8px", alignItems: "center", flexShrink: 0 }}>
-                  <span style={{ fontFamily: R, fontSize: "10px", color: n.is_read ? "#3CCE2A" : "#F5C82A", letterSpacing: "1px" }}>
+                  <span style={{ fontFamily: R, fontSize: "10px", color: n.is_read ? "#1A8040" : "#156530", letterSpacing: "1px" }}>
                     {n.is_read ? "READ" : "UNREAD"}
                   </span>
                   <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(n.created_at)}</span>

@@ -5,8 +5,8 @@ import { useRouter, useParams } from "next/navigation";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
-const PC: any = { paid: "#3CCE2A", pending: "#F5C82A", failed: "#F04060", free: "#8EE440", cancelled: "#5A7A60" };
-const OC: any = { processing: "#F07228", shipped: "#8EE440", delivered: "#3CCE2A", pending: "#F5C82A", cancelled: "#F04060" };
+const PC: any = { paid: "#1A8040", pending: "#156530", failed: "#CC3344", free: "#1A8040", cancelled: "#5A7A60" };
+const OC: any = { processing: "#1A8040", shipped: "#1A8040", delivered: "#1A8040", pending: "#156530", cancelled: "#CC3344" };
 const ORDER_STATUSES = ["pending", "processing", "shipped", "delivered", "cancelled"];
 const PAYMENT_STATUSES = ["pending", "paid", "failed", "cancelled"];
 
@@ -51,7 +51,7 @@ export default function AdminOrderDetailPage() {
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
       <SkeletonPage />
     </div>
-  if (!order) return <div style={{ fontFamily: R, color: "#F04060", padding: "40px" }}>Order not found.</div>;
+  if (!order) return <div style={{ fontFamily: R, color: "#CC3344", padding: "40px" }}>Order not found.</div>;
 
   const addr = order.shipping_address;
 
@@ -70,8 +70,8 @@ export default function AdminOrderDetailPage() {
         <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
       </div>
 
-      {error && <div style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
-      {success && <div style={{ background: "#E8F0E4", border: "2px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#3CCE2A" }}>{success}</div>}
+      {error && <div style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
+      {success && <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#1A8040" }}>{success}</div>}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
         {/* Customer info */}
@@ -96,7 +96,7 @@ export default function AdminOrderDetailPage() {
             {[
               { label: "Subtotal", value: `₱${Number(order.subtotal).toLocaleString()}` },
               { label: "Shipping", value: `₱${Number(order.shipping_fee ?? 0).toLocaleString()}` },
-              { label: "Discount", value: `-₱${Number(order.discount ?? 0).toLocaleString()}`, color: "#3CCE2A" },
+              { label: "Discount", value: `-₱${Number(order.discount ?? 0).toLocaleString()}`, color: "#1A8040" },
             ].map(row => (
               <div key={row.label} style={{ display: "flex", justifyContent: "space-between", fontFamily: B, fontSize: "12px", color: row.color ?? "#5A7A60" }}>
                 <span>{row.label}</span><span>{row.value}</span>
@@ -104,7 +104,7 @@ export default function AdminOrderDetailPage() {
             ))}
             <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "8px", display: "flex", justifyContent: "space-between" }}>
               <span style={{ fontFamily: R, fontSize: "14px", color: "#1B3A2D", letterSpacing: "1px" }}>TOTAL</span>
-              <span style={{ fontFamily: R, fontSize: "16px", color: "#F07228" }}>₱{Number(order.total).toLocaleString()}</span>
+              <span style={{ fontFamily: R, fontSize: "16px", color: "#1A8040" }}>₱{Number(order.total).toLocaleString()}</span>
             </div>
           </div>
           {order.paymongo_ref && (
@@ -129,7 +129,7 @@ export default function AdminOrderDetailPage() {
                     {item.variant && ` · ${Object.entries(item.variant).map(([k, v]) => `${k}: ${v}`).join(", ")}`}
                   </div>
                 </div>
-                <span style={{ fontFamily: R, fontSize: "13px", color: "#F07228" }}>
+                <span style={{ fontFamily: R, fontSize: "13px", color: "#1A8040" }}>
                   ₱{(Number(item.product?.price ?? 0) * item.quantity).toLocaleString()}
                 </span>
               </div>
@@ -166,7 +166,7 @@ export default function AdminOrderDetailPage() {
 
         <button onClick={handleSave} disabled={saving} style={{ alignSelf: "flex-start", position: "relative", display: "inline-block", cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1 }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#1B3A2D", padding: "10px 28px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "10px 28px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>
             {saving ? "SAVING..." : "UPDATE ORDER"}
           </span>
         </button>

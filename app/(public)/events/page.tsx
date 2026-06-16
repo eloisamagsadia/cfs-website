@@ -18,14 +18,14 @@ const C = {
   sage:   "#4A7C59",
   border: "#DDE8DD",
   muted:  "#7A8E7A",
-  green:  "#3CCE2A",
+  green:  "#1A8040",
 };
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  upcoming:  { label: "UPCOMING",  color: "#F5C82A", bg: "#3D3000" },
-  ongoing:   { label: "ONGOING",   color: "#3CCE2A", bg: "#F2F7F2" },
+  upcoming:  { label: "UPCOMING",  color: "#156530", bg: "#3D3000" },
+  ongoing:   { label: "ONGOING",   color: "#1A8040", bg: "#F2F7F2" },
   completed: { label: "COMPLETED", color: "#4A7C59", bg: "#ffffff" },
-  cancelled: { label: "CANCELLED", color: "#F04060", bg: "#3D0A14" },
+  cancelled: { label: "CANCELLED", color: "#CC3344", bg: "#3D0A14" },
 };
 
 const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
@@ -45,7 +45,7 @@ export default async function EventsPage() {
     <div style={{ minHeight: "100vh", background: "#FAFDF9" }}>
       <style>{`
         .event-card { transition: border-color 0.2s, transform 0.2s; }
-        .event-card:hover { border-color: #3CCE2A !important; transform: translateY(-2px); }
+        .event-card:hover { border-color: #1A8040 !important; transform: translateY(-2px); }
       `}</style>
 
       {/* ── HERO ── */}
@@ -62,7 +62,7 @@ export default async function EventsPage() {
             <div style={{ display:"flex", gap:"16px", flexWrap:"wrap" }}>
               {[
                 { label:"Total Events", value:String(display.length), color:C.forest },
-                { label:"Upcoming",     value:String(upcoming),       color:"#F5C82A" },
+                { label:"Upcoming",     value:String(upcoming),       color:"#156530" },
                 { label:"Completed",    value:String(completed),      color:C.sage },
               ].map((s) => (
                 <div key={s.label} style={{ background:"rgba(255,255,255,0.9)", border:`1px solid ${C.border}`, borderRadius:"12px", padding:"16px 24px", textAlign:"center", minWidth:"100px", backdropFilter:"blur(8px)" }}>
@@ -148,11 +148,11 @@ export default async function EventsPage() {
                     )}
 
                     <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", marginTop: "auto" }}>
-                      <span style={{ fontFamily: S, fontSize: "15px", color: event.price === 0 ? C.sage : "#F07228" }}>
+                      <span style={{ fontFamily: S, fontSize: "15px", color: event.price === 0 ? C.sage : "#1A8040" }}>
                         {event.price === 0 ? "Free" : `₱${Number(event.price).toLocaleString()}`}
                       </span>
                       {event.is_members_only && (
-                        <span style={{ fontFamily: B, fontSize: "9px", color: "#F5C82A", background: "#F5C82A18", border: "1px solid #F5C82A40", borderRadius: "4px", padding: "2px 8px", letterSpacing: "1px", fontWeight: 700 }}>
+                        <span style={{ fontFamily: B, fontSize: "9px", color: "#156530", background: "#15653018", border: "1px solid #1A804040", borderRadius: "4px", padding: "2px 8px", letterSpacing: "1px", fontWeight: 700 }}>
                           MEMBERS ONLY
                         </span>
                       )}

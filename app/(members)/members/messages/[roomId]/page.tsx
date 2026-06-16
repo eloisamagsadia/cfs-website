@@ -308,12 +308,12 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
       {/* Header */}
       <div style={{ padding: "12px 8px 12px", display: "flex", alignItems: "center", gap: "12px", borderBottom: "1px solid #DDE8DD" }}>
         <button onClick={() => router.push("/members/messages")} style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontFamily: B, fontSize: "12px", padding: "4px 0" }}>← Back</button>
-        <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#E8F0E4", border: "1.5px solid #3CCE2A30", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
+        <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#E8F0E4", border: "1.5px solid #1A804030", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
           {room?.is_group
             ? <span style={{ fontSize: "16px" }}>👥</span>
             : members.find(m => m.user_id !== user?.id)?.profiles?.avatar_url
               ? <img src={members.find(m => m.user_id !== user?.id)?.profiles?.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              : <span style={{ fontFamily: R, fontSize: "14px", color: "#3CCE2A" }}>{(getRoomName()[0] ?? "?").toUpperCase()}</span>
+              : <span style={{ fontFamily: R, fontSize: "14px", color: "#1A8040" }}>{(getRoomName()[0] ?? "?").toUpperCase()}</span>
           }
         </div>
         <div style={{ flex: 1 }}>
@@ -321,7 +321,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
           <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{members.length} member{members.length !== 1 ? "s" : ""}</div>
         </div>
         <button onClick={() => setShowDrawer(s => !s)}
-          style={{ background: showDrawer ? "#E8F0E4" : "none", border: `1.5px solid ${showDrawer ? "#3CCE2A" : "#DDE8DD"}`, borderRadius: "8px", padding: "6px 10px", cursor: "pointer", color: showDrawer ? "#3CCE2A" : "#5A7A60" }}>
+          style={{ background: showDrawer ? "#E8F0E4" : "none", border: `1.5px solid ${showDrawer ? "#1A8040" : "#DDE8DD"}`, borderRadius: "8px", padding: "6px 10px", cursor: "pointer", color: showDrawer ? "#1A8040" : "#5A7A60" }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
           </svg>
@@ -342,9 +342,9 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
       {/* Pinned message */}
       {pinnedMsg && !searchQuery && (
         <div style={{ padding: "8px 12px", background: "#FFFFFF", borderBottom: "1px solid #DDE8DD", display: "flex", alignItems: "center", gap: "10px" }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="#F5C82A" stroke="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#156530" stroke="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: R, fontSize: "9px", color: "#F5C82A", letterSpacing: "1px", marginBottom: "2px" }}>PINNED MESSAGE</div>
+            <div style={{ fontFamily: R, fontSize: "9px", color: "#156530", letterSpacing: "1px", marginBottom: "2px" }}>PINNED MESSAGE</div>
             <div style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pinnedMsg.content || "📷 Photo"}</div>
           </div>
           <button onClick={() => pinMessage(pinnedMsg.id)} style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "14px" }}>✕</button>
@@ -377,21 +377,21 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                   <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#F2F7F2", flexShrink: 0, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", opacity: showAvatar ? 1 : 0 }}>
                     {msg.profiles?.avatar_url
                       ? <img src={msg.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <span style={{ fontFamily: R, fontSize: "10px", color: "#3CCE2A" }}>{(msg.profiles?.display_name ?? "M")[0].toUpperCase()}</span>}
+                      : <span style={{ fontFamily: R, fontSize: "10px", color: "#1A8040" }}>{(msg.profiles?.display_name ?? "M")[0].toUpperCase()}</span>}
                   </div>
                 )}
                 <div style={{ maxWidth: isMe ? "92%" : "75%", display: "flex", flexDirection: "column", gap: "2px", alignItems: isMe ? "flex-end" : "flex-start" }}>
                   {showAvatar && !isMe && <span style={{ fontFamily: R, fontSize: "10px", color: "#5A7A60", letterSpacing: "0.5px", marginLeft: "4px" }}>{getDisplayName(members.find(m => m.user_id === msg.sender_id) ?? {profiles: msg.profiles})}</span>}
                   {replyMsg && (
-                    <div style={{ background: "#162010", borderLeft: "3px solid #3CCE2A", borderRadius: "6px", padding: "4px 10px", marginBottom: "2px", maxWidth: "100%" }}>
-                      <div style={{ fontFamily: R, fontSize: "9px", color: "#3CCE2A", marginBottom: "2px" }}>{replyMsg.profiles?.display_name ?? "Member"}</div>
+                    <div style={{ background: "#162010", borderLeft: "3px solid #1A8040", borderRadius: "6px", padding: "4px 10px", marginBottom: "2px", maxWidth: "100%" }}>
+                      <div style={{ fontFamily: R, fontSize: "9px", color: "#1A8040", marginBottom: "2px" }}>{replyMsg.profiles?.display_name ?? "Member"}</div>
                       <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "240px" }}>{replyMsg.content || "📷 Photo"}</div>
                     </div>
                   )}
-                  <div style={{ background: isMe ? "#E8F0E4" : "#F2F7F2", border: `1px solid ${msg.is_pinned ? "#F5C82A40" : isMe ? "#3CCE2A20" : "#DDE8DD"}`, borderRadius: isMe ? "16px 16px 4px 16px" : "16px 16px 16px 4px", padding: msg.image_url && !msg.content ? "4px" : "9px 14px", overflow: "hidden" }}>
+                  <div style={{ background: isMe ? "#E8F0E4" : "#F2F7F2", border: `1px solid ${msg.is_pinned ? "#1A804040" : isMe ? "#1A804020" : "#DDE8DD"}`, borderRadius: isMe ? "16px 16px 4px 16px" : "16px 16px 16px 4px", padding: msg.image_url && !msg.content ? "4px" : "9px 14px", overflow: "hidden" }}>
                     {msg.image_url && <img src={msg.image_url} alt="" style={{ width: "200px", height: "200px", objectFit: "cover", borderRadius: "10px", display: "block" }} />}
                     {msg.content && <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", lineHeight: 1.6, wordBreak: "break-word", marginTop: msg.image_url ? "6px" : "0" }}>{msg.content}</div>}
-                    {msg.is_pinned && <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "4px" }}><svg width="10" height="10" viewBox="0 0 24 24" fill="#F5C82A"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg><span style={{ fontFamily: R, fontSize: "9px", color: "#F5C82A" }}>pinned</span></div>}
+                    {msg.is_pinned && <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "4px" }}><svg width="10" height="10" viewBox="0 0 24 24" fill="#156530"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg><span style={{ fontFamily: R, fontSize: "9px", color: "#156530" }}>pinned</span></div>}
                   </div>
                   {reactions.length > 0 && (
                     <div style={{ display: "flex", gap: "4px", flexWrap: "wrap", marginTop: "2px" }}>
@@ -412,8 +412,8 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                     <button onClick={() => { setReplyTo(msg); inputRef.current?.focus(); }}
                       style={{ background: "#F2F7F2", border: "1px solid #DDE8DD", borderRadius: "20px", padding: "4px 8px", cursor: "pointer", fontFamily: R, fontSize: "10px", color: "#5A7A60" }}>↩</button>
                     <button onClick={() => pinMessage(msg.id)} title={msg.is_pinned ? "Unpin" : "Pin"}
-                      style={{ background: msg.is_pinned ? "#FFFBE8" : "#F2F7F2", border: `1px solid ${msg.is_pinned ? "#F5C82A" : "#DDE8DD"}`, borderRadius: "20px", padding: "4px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill={msg.is_pinned ? "#F5C82A" : "#5A7A60"} stroke="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                      style={{ background: msg.is_pinned ? "#E8F4EC" : "#F2F7F2", border: `1px solid ${msg.is_pinned ? "#156530" : "#DDE8DD"}`, borderRadius: "20px", padding: "4px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill={msg.is_pinned ? "#156530" : "#5A7A60"} stroke="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
                     </button>
                     {showReactions === msg.id && (
                       <div style={{ position: "absolute", bottom: "32px", left: isMe ? "auto" : "0", right: isMe ? "0" : "auto", background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "8px 10px", display: "flex", gap: "6px", zIndex: 100, boxShadow: "0 4px 20px rgba(0,0,0,0.5)" }}>
@@ -459,7 +459,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
       {replyTo && (
         <div style={{ padding: "8px 12px", background: "#162010", borderTop: "1px solid #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
-            <div style={{ fontFamily: R, fontSize: "10px", color: "#3CCE2A", letterSpacing: "0.5px", marginBottom: "2px" }}>Replying to {replyTo.profiles?.display_name ?? "Member"}</div>
+            <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "0.5px", marginBottom: "2px" }}>Replying to {replyTo.profiles?.display_name ?? "Member"}</div>
             <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "400px" }}>{replyTo.content || "📷 Photo"}</div>
           </div>
           <button onClick={() => setReplyTo(null)} style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "18px" }}>✕</button>
@@ -476,7 +476,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                 style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 14px", cursor: "pointer", background: i === mentionIndex ? "#F2F7F2" : "transparent" }}
                 onMouseEnter={() => setMentionIndex(i)}>
                 <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#F2F7F2", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A" }}>{(m.profiles?.display_name ?? "M")[0].toUpperCase()}</span>}
+                  {m.profiles?.avatar_url ? <img src={m.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040" }}>{(m.profiles?.display_name ?? "M")[0].toUpperCase()}</span>}
                 </div>
                 <span style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{m.profiles?.display_name ?? "Member"}</span>
               </div>
@@ -517,11 +517,11 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
           rows={1}
           style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "20px", padding: "10px 16px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "none", lineHeight: 1.5, maxHeight: "100px", overflowY: "auto", boxSizing: "border-box" }} />
         <button onClick={() => setShowEmojiPicker(p => !p)}
-          style={{ background: showEmojiPicker ? "#E8F0E4" : "#F2F7F2", border: `1.5px solid ${showEmojiPicker ? "#3CCE2A" : "#DDE8DD"}`, borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px" }}>
+          style={{ background: showEmojiPicker ? "#E8F0E4" : "#F2F7F2", border: `1.5px solid ${showEmojiPicker ? "#1A8040" : "#DDE8DD"}`, borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px" }}>
           😊
         </button>
         <button onClick={sendMessage} disabled={!input.trim() || sending}
-          style={{ background: !input.trim() || sending ? "#F2F7F2" : "#3CCE2A", border: "none", borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          style={{ background: !input.trim() || sending ? "#F2F7F2" : "#1A8040", border: "none", borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill={!input.trim() || sending ? "#3A5A30" : "#080F06"}><path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"/></svg>
         </button>
       </div>
@@ -539,12 +539,12 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
             {/* Room name */}
             <div style={{ padding: "16px", borderBottom: "1px solid #DDE8DD" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E8F0E4", border: "2px solid #3CCE2A30", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
+                <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E8F0E4", border: "2px solid #1A804030", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
                   {room?.is_group
                     ? <span style={{ fontSize: "20px" }}>👥</span>
                     : members.find(m => m.user_id !== user?.id)?.profiles?.avatar_url
                       ? <img src={members.find(m => m.user_id !== user?.id)?.profiles?.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <span style={{ fontFamily: R, fontSize: "18px", color: "#3CCE2A" }}>{(getRoomName()[0] ?? "?").toUpperCase()}</span>
+                      : <span style={{ fontFamily: R, fontSize: "18px", color: "#1A8040" }}>{(getRoomName()[0] ?? "?").toUpperCase()}</span>
                   }
                 </div>
                 <div>
@@ -566,11 +566,11 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
             {/* Pinned message */}
             {pinnedMsg && (
               <div style={{ padding: "12px 16px", borderBottom: "1px solid #DDE8DD" }}>
-                <div style={{ fontFamily: R, fontSize: "10px", color: "#F5C82A", letterSpacing: "1.5px", marginBottom: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="#F5C82A"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                <div style={{ fontFamily: R, fontSize: "10px", color: "#156530", letterSpacing: "1.5px", marginBottom: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="#156530"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
                   PINNED MESSAGE
                 </div>
-                <div style={{ background: "#F2F7F2", borderRadius: "8px", padding: "10px 12px", borderLeft: "3px solid #F5C82A" }}>
+                <div style={{ background: "#F2F7F2", borderRadius: "8px", padding: "10px 12px", borderLeft: "3px solid #156530" }}>
                   <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginBottom: "3px" }}>{pinnedMsg.profiles?.display_name ?? "Member"}</div>
                   <div style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", lineHeight: 1.5 }}>{pinnedMsg.content || "📷 Photo"}</div>
                 </div>
@@ -590,11 +590,11 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                     <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                       {m.profiles?.avatar_url
                         ? <img src={m.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                        : <span style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A" }}>{(m.profiles?.display_name ?? "M")[0].toUpperCase()}</span>}
+                        : <span style={{ fontFamily: R, fontSize: "13px", color: "#1A8040" }}>{(m.profiles?.display_name ?? "M")[0].toUpperCase()}</span>}
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{getDisplayName(m)}</div>
-                      {m.user_id === user?.id && <div style={{ fontFamily: R, fontSize: "9px", color: "#3CCE2A", letterSpacing: "1px" }}>YOU</div>}
+                      {m.user_id === user?.id && <div style={{ fontFamily: R, fontSize: "9px", color: "#1A8040", letterSpacing: "1px" }}>YOU</div>}
                     </div>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3A5A30" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
                   </div>
@@ -629,7 +629,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                             await fetch(`/api/chat/${params.roomId}/nickname`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ target_user_id: m.user_id, nickname: nicknameInput }) });
                             setNicknames(prev => ({ ...prev, [m.user_id]: nicknameInput.trim() }));
                             setEditingNickname(null);
-                          }} style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "10px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "6px", padding: "6px 10px", cursor: "pointer" }}>SAVE</button>
+                          }} style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "10px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "6px 10px", cursor: "pointer" }}>SAVE</button>
                           <button onClick={() => setEditingNickname(null)} style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "10px", background: "transparent", color: "#5A7A60", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 8px", cursor: "pointer" }}>✕</button>
                         </div>
                       ) : (
@@ -643,7 +643,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                             <button onClick={async () => {
                               await fetch(`/api/chat/${params.roomId}/nickname`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ target_user_id: m.user_id, nickname: "" }) });
                               setNicknames(prev => { const n = { ...prev }; delete n[m.user_id]; return n; });
-                            }} style={{ background: "none", border: "none", cursor: "pointer", color: "#F04060", fontSize: "12px" }}>✕</button>
+                            }} style={{ background: "none", border: "none", cursor: "pointer", color: "#CC3344", fontSize: "12px" }}>✕</button>
                           )}
                         </div>
                       )}
@@ -656,7 +656,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
             {/* Leave */}
             <div style={{ padding: "16px", borderTop: "1px solid #DDE8DD" }}>
               <button onClick={() => { setShowDrawer(false); router.push("/members/messages"); }}
-                style={{ width: "100%", fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #F04060", borderRadius: "8px", color: "#F04060", padding: "10px", cursor: "pointer", letterSpacing: "1px" }}>
+                style={{ width: "100%", fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #CC3344", borderRadius: "8px", color: "#CC3344", padding: "10px", cursor: "pointer", letterSpacing: "1px" }}>
                 LEAVE CONVERSATION
               </button>
             </div>

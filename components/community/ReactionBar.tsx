@@ -53,14 +53,14 @@ export default function ReactionBar({
       {/* ── LIKE ── */}
       <button onClick={handleLike} style={{ display: "flex", alignItems: "center", gap: "5px", background: "none", border: "none", cursor: "pointer", padding: "2px 0" }}>
         <svg
-          width="22" height="22" viewBox="0 0 24 24" fill={isLiked ? "#3CCE2A" : "none"}
+          width="22" height="22" viewBox="0 0 24 24" fill={isLiked ? "#1A8040" : "none"}
           style={{ transition: "all 0.2s", transform: animating ? "scale(1.3)" : "scale(1)" }}
         >
           <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
-            stroke={isLiked ? "#3CCE2A" : "#5A7A60"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            stroke={isLiked ? "#1A8040" : "#5A7A60"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
         {likeCount > 0 && (
-          <span style={{ fontFamily: B, fontSize: "13px", color: isLiked ? "#3CCE2A" : "#5A7A60", transition: "color 0.2s" }}>{likeCount}</span>
+          <span style={{ fontFamily: B, fontSize: "13px", color: isLiked ? "#1A8040" : "#5A7A60", transition: "color 0.2s" }}>{likeCount}</span>
         )}
       </button>
 
@@ -76,12 +76,12 @@ export default function ReactionBar({
       {/* ── REPOST ── */}
       <button onClick={onRepostClick} style={{ display: "flex", alignItems: "center", gap: "5px", background: "none", border: "none", cursor: "pointer", padding: "2px 0" }}>
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none">
-          <polyline points="17 1 21 5 17 9" stroke={isReposted ? "#3CCE2A" : "#5A7A60"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M3 11V9a4 4 0 014-4h14" stroke={isReposted ? "#3CCE2A" : "#5A7A60"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          <polyline points="7 23 3 19 7 15" stroke={isReposted ? "#3CCE2A" : "#5A7A60"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M21 13v2a4 4 0 01-4 4H3" stroke={isReposted ? "#3CCE2A" : "#5A7A60"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          <polyline points="17 1 21 5 17 9" stroke={isReposted ? "#1A8040" : "#5A7A60"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M3 11V9a4 4 0 014-4h14" stroke={isReposted ? "#1A8040" : "#5A7A60"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          <polyline points="7 23 3 19 7 15" stroke={isReposted ? "#1A8040" : "#5A7A60"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M21 13v2a4 4 0 01-4 4H3" stroke={isReposted ? "#1A8040" : "#5A7A60"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
-        {repostCount > 0 && <span style={{ fontFamily: B, fontSize: "13px", color: isReposted ? "#3CCE2A" : "#5A7A60" }}>{repostCount}</span>}
+        {repostCount > 0 && <span style={{ fontFamily: B, fontSize: "13px", color: isReposted ? "#1A8040" : "#5A7A60" }}>{repostCount}</span>}
       </button>
 
     </div>

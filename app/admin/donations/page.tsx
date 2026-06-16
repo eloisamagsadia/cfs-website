@@ -5,16 +5,16 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const SC: Record<string, string> = {
-  completed: "#3CCE2A",
-  pending:   "#F5C82A",
-  failed:    "#F04060",
+  completed: "#1A8040",
+  pending:   "#156530",
+  failed:    "#CC3344",
 };
 
 const TIERS = [
-  { name: "Supermoon",    min: 8000,  color: "#F5C82A" },
-  { name: "Blue Moon",    min: 5000,  color: "#8EE440" },
-  { name: "Harvest Moon", min: 3000,  color: "#F07228" },
-  { name: "Blood Moon",   min: 1500,  color: "#F04060" },
+  { name: "Supermoon",    min: 8000,  color: "#156530" },
+  { name: "Blue Moon",    min: 5000,  color: "#1A8040" },
+  { name: "Harvest Moon", min: 3000,  color: "#1A8040" },
+  { name: "Blood Moon",   min: 1500,  color: "#CC3344" },
 ];
 
 function getTier(amount: number) {
@@ -63,7 +63,7 @@ export default function AdminDonationsPage() {
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>DONATIONS</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
-          {completedCount} completed · <span style={{ color: "#3CCE2A" }}>₱{totalCollected.toLocaleString()} collected</span>
+          {completedCount} completed · <span style={{ color: "#1A8040" }}>₱{totalCollected.toLocaleString()} collected</span>
         </p>
       </div>
 
@@ -71,9 +71,9 @@ export default function AdminDonationsPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
         {[
           { label: "TOTAL DONATIONS", value: donations.length,                      color: "#1B3A2D" },
-          { label: "COLLECTED",       value: `₱${totalCollected.toLocaleString()}`, color: "#3CCE2A" },
-          { label: "PENDING",         value: pendingCount,                           color: "#F5C82A" },
-          { label: "FAILED",          value: failedCount,                            color: "#F04060" },
+          { label: "COLLECTED",       value: `₱${totalCollected.toLocaleString()}`, color: "#1A8040" },
+          { label: "PENDING",         value: pendingCount,                           color: "#156530" },
+          { label: "FAILED",          value: failedCount,                            color: "#CC3344" },
         ].map(s => (
           <div key={s.label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "14px 18px" }}>
             <div style={{ fontFamily: R, fontSize: "1.4rem", color: s.color }}>{s.value}</div>
@@ -86,7 +86,7 @@ export default function AdminDonationsPage() {
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
         {["all", "completed", "pending", "failed"].map(f => (
           <button key={f} onClick={() => setFilter(f)}
-            style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${filter === f ? "#3CCE2A" : "#DDE8DD"}`, background: filter === f ? "#3CCE2A" : "transparent", color: filter === f ? "#080F06" : "#5A7A60", cursor: "pointer" }}>
+            style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${filter === f ? "#1A8040" : "#DDE8DD"}`, background: filter === f ? "#1A8040" : "transparent", color: filter === f ? "#080F06" : "#5A7A60", cursor: "pointer" }}>
             {f.toUpperCase()}
           </button>
         ))}
@@ -129,7 +129,7 @@ export default function AdminDonationsPage() {
                   <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#F2F7F2", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                     {d.profiles?.avatar_url
                       ? <img src={d.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <span style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A" }}>{(d.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
+                      : <span style={{ fontFamily: R, fontSize: "13px", color: "#1A8040" }}>{(d.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
                     }
                   </div>
                   <div style={{ minWidth: 0 }}>
@@ -167,14 +167,14 @@ export default function AdminDonationsPage() {
                 {/* FEE */}
                 <div>
                   {fee != null ? (
-                    <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee)}</span>
+                    <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>+₱{fmt(fee)}</span>
                   ) : (
                     <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>—</span>
                   )}
                 </div>
 
                 {/* TOTAL PAID */}
-                <span style={{ fontFamily: R, fontSize: "14px", color: "#3CCE2A" }}>₱{fmt(total)}</span>
+                <span style={{ fontFamily: R, fontSize: "14px", color: "#1A8040" }}>₱{fmt(total)}</span>
 
                 {/* STATUS */}
                 <span style={{ fontFamily: R, fontSize: "10px", color: statusColor, background: statusColor + "20", borderRadius: "20px", padding: "3px 10px", letterSpacing: "1px", width: "fit-content" }}>

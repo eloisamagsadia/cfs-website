@@ -11,10 +11,10 @@ const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
 
 const STATUS_COLORS: Record<string,string> = {
-  active: "#3CCE2A",
+  active: "#1A8040",
   used: "#5A7A60",
-  cancelled: "#F04060",
-  pending_payment: "#F5C82A",
+  cancelled: "#CC3344",
+  pending_payment: "#156530",
 };
 
 const STATUS_LABELS: Record<string,string> = {
@@ -48,7 +48,7 @@ export default async function MyEventsPage() {
         <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"48px 24px", textAlign:"center" }}>
           <div style={{ fontSize:"40px", marginBottom:"12px" }}>🎫</div>
           <div style={{ fontFamily:R, fontSize:"14px", color:"#5A7A60", letterSpacing:"2px", marginBottom:"16px" }}>NO TICKETS YET</div>
-          <a href="/events" style={{ fontFamily:R, fontSize:"12px", color:"#3CCE2A", textDecoration:"none", border:"1.5px solid #DDE8DD", borderRadius:"6px", padding:"8px 18px", letterSpacing:"1.5px" }}>BROWSE EVENTS →</a>
+          <a href="/events" style={{ fontFamily:R, fontSize:"12px", color:"#1A8040", textDecoration:"none", border:"1.5px solid #DDE8DD", borderRadius:"6px", padding:"8px 18px", letterSpacing:"1.5px" }}>BROWSE EVENTS →</a>
         </div>
       ) : (
         <div style={{ display:"flex", flexDirection:"column", gap:"10px" }}>
@@ -59,8 +59,8 @@ export default async function MyEventsPage() {
             return (
               <div key={ticket.id} style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"18px 20px", display:"flex", gap:"16px", alignItems:"center" }}>
                 {/* Date box */}
-                <div style={{ background: (tier?.color ?? "#3CCE2A") + "20", border:`2px solid ${(tier?.color ?? "#3CCE2A")}40`, borderRadius:"8px", padding:"10px 14px", textAlign:"center", flexShrink:0 }}>
-                  <div style={{ fontFamily:R, fontSize:"1.4rem", color: tier?.color ?? "#3CCE2A", lineHeight:1 }}>
+                <div style={{ background: (tier?.color ?? "#1A8040") + "20", border:`2px solid ${(tier?.color ?? "#1A8040")}40`, borderRadius:"8px", padding:"10px 14px", textAlign:"center", flexShrink:0 }}>
+                  <div style={{ fontFamily:R, fontSize:"1.4rem", color: tier?.color ?? "#1A8040", lineHeight:1 }}>
                     {event ? new Date(event.date).getDate() : "?"}
                   </div>
                   <div style={{ fontFamily:B, fontSize:"10px", color:"#5A7A60", letterSpacing:"1px" }}>
@@ -87,7 +87,7 @@ export default async function MyEventsPage() {
 
                 {/* View ticket */}
                 <Link href={`/members/tickets/${ticket.id}`}
-                  style={{ flexShrink:0, fontFamily:R, fontSize:"10px", color:"#3CCE2A", border:"1.5px solid #3CCE2A", borderRadius:"6px", padding:"6px 12px", letterSpacing:"1px", textDecoration:"none" }}>
+                  style={{ flexShrink:0, fontFamily:R, fontSize:"10px", color:"#1A8040", border:"1.5px solid #1A8040", borderRadius:"6px", padding:"6px 12px", letterSpacing:"1px", textDecoration:"none" }}>
                   🎫 TICKET
                 </Link>
               </div>

@@ -13,11 +13,11 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const S = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
-const C = { paper:"#FAFDF9", cream:"#F2F7F2", mist:"#E8F0E4", forest:"#1B3A2D", sage:"#4A7C59", border:"#DDE8DD", muted:"#7A8E7A", green:"#3CCE2A" };
+const C = { paper:"#FAFDF9", cream:"#F2F7F2", mist:"#E8F0E4", forest:"#1B3A2D", sage:"#4A7C59", border:"#DDE8DD", muted:"#7A8E7A", green:"#1A8040" };
 
 const CAT_COLORS: Record<string, string> = {
-  apparel: "#F07228", photocards: "#F5C82A", accessories: "#8EE440",
-  bundles: "#F04060", default: "#3CCE2A",
+  apparel: "#1A8040", photocards: "#156530", accessories: "#1A8040",
+  bundles: "#CC3344", default: "#1A8040",
 };
 
 export async function generateMetadata({ params }: { params: { category: string; id: string } }): Promise<Metadata> {
@@ -90,8 +90,8 @@ export default async function ProductDetailPage({ params }: { params: { category
             <div style={{ display: "flex", alignItems: "baseline", gap: "12px" }}>
               <span style={{ fontFamily: S, fontSize: "2rem", color: C.forest }}> ₱{Number(product.price).toLocaleString()}</span>
               {inStock
-                ? <span style={{ fontFamily: B, fontSize: "12px", color: "#3CCE2A" }}>{product.stock <= 5 ? `Only ${product.stock} left!` : "In stock"}</span>
-                : <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>Out of stock</span>
+                ? <span style={{ fontFamily: B, fontSize: "12px", color: "#1A8040" }}>{product.stock <= 5 ? `Only ${product.stock} left!` : "In stock"}</span>
+                : <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>Out of stock</span>
               }
             </div>
 

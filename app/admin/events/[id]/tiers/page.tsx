@@ -7,9 +7,9 @@ import Link from "next/link";
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-const TIER_COLORS = ["#3CCE2A", "#F07228", "#F5C82A", "#F04060", "#69C9D0", "#8EE440"];
+const TIER_COLORS = ["#1A8040", "#1A8040", "#156530", "#CC3344", "#5A7A60", "#1A8040"];
 
-const DEFAULT_FORM = { name: "", price: 0, capacity: "", perks: "", color: "#3CCE2A" };
+const DEFAULT_FORM = { name: "", price: 0, capacity: "", perks: "", color: "#1A8040" };
 
 export default function EventTiersPage() {
   const { id: event_id } = useParams();
@@ -22,7 +22,7 @@ export default function EventTiersPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [template, setTemplate] = useState<any>({ bg_color: "#F7FAF5", accent_color: "#3CCE2A", bg_image_url: "", logo_url: "", custom_message: "" });
+  const [template, setTemplate] = useState<any>({ bg_color: "#F7FAF5", accent_color: "#1A8040", bg_image_url: "", logo_url: "", custom_message: "" });
   const [savingTemplate, setSavingTemplate] = useState(false);
   const [templateSaved, setTemplateSaved] = useState(false);
 
@@ -76,7 +76,7 @@ export default function EventTiersPage() {
       price: tier.price,
       capacity: tier.capacity ?? "",
       perks: (tier.perks ?? []).join("\n"),
-      color: tier.color ?? "#3CCE2A",
+      color: tier.color ?? "#1A8040",
     });
     setEditingId(tier.id);
     setShowForm(true);
@@ -105,11 +105,11 @@ export default function EventTiersPage() {
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
           <Link href={`/admin/events/${event_id}/tickets`}
-            style={{ fontFamily: R, fontSize: "11px", color: "#F07228", textDecoration: "none", border: "1.5px solid #F07228", borderRadius: "6px", padding: "8px 14px", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #1A8040", borderRadius: "6px", padding: "8px 14px", letterSpacing: "1px" }}>
             🎫 VIEW TICKETS
           </Link>
           <button onClick={() => { setShowForm(true); setEditingId(null); setForm(DEFAULT_FORM); }}
-            style={{ fontFamily: R, fontSize: "11px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
             + ADD TIER
           </button>
         </div>
@@ -117,8 +117,8 @@ export default function EventTiersPage() {
 
       {/* Form */}
       {showForm && (
-        <div style={{ background: "#FFFFFF", border: "2px solid #3CCE2A", borderRadius: "12px", padding: "20px" }}>
-          <div style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A", letterSpacing: "2px", marginBottom: "16px" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "12px", padding: "20px" }}>
+          <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", marginBottom: "16px" }}>
             {editingId ? "EDIT TIER" : "NEW TIER"}
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
@@ -157,14 +157,14 @@ export default function EventTiersPage() {
                 style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "vertical", boxSizing: "border-box" }} />
             </div>
           </div>
-          {error && <p style={{ fontFamily: B, fontSize: "12px", color: "#F04060", margin: "8px 0 0" }}>{error}</p>}
+          {error && <p style={{ fontFamily: B, fontSize: "12px", color: "#CC3344", margin: "8px 0 0" }}>{error}</p>}
           <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
             <button onClick={() => { setShowForm(false); setEditingId(null); setForm(DEFAULT_FORM); setError(""); }}
               style={{ fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
               CANCEL
             </button>
             <button onClick={handleSave} disabled={saving}
-              style={{ fontFamily: R, fontSize: "11px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: saving ? 0.7 : 1 }}>
+              style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: saving ? 0.7 : 1 }}>
               {saving ? "SAVING..." : editingId ? "UPDATE TIER" : "CREATE TIER"}
             </button>
           </div>
@@ -190,7 +190,7 @@ export default function EventTiersPage() {
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
                   <span style={{ fontFamily: R, fontSize: "14px", color: "#1B3A2D", letterSpacing: "1px" }}>{tier.name}</span>
-                  <span style={{ fontFamily: R, fontSize: "12px", color: tier.price > 0 ? "#F07228" : "#3CCE2A" }}>
+                  <span style={{ fontFamily: R, fontSize: "12px", color: tier.price > 0 ? "#1A8040" : "#1A8040" }}>
                     {tier.price > 0 ? `₱${Number(tier.price).toLocaleString()}` : "FREE"}
                   </span>
                   {tier.capacity && (
@@ -199,7 +199,7 @@ export default function EventTiersPage() {
                     </span>
                   )}
                   {!tier.is_active && (
-                    <span style={{ fontFamily: R, fontSize: "10px", color: "#F04060", background: "#3D0A14", borderRadius: "20px", padding: "1px 8px" }}>INACTIVE</span>
+                    <span style={{ fontFamily: R, fontSize: "10px", color: "#CC3344", background: "#3D0A14", borderRadius: "20px", padding: "1px 8px" }}>INACTIVE</span>
                   )}
                 </div>
                 {tier.perks?.length > 0 && (
@@ -216,7 +216,7 @@ export default function EventTiersPage() {
                   ✏ EDIT
                 </button>
                 <button onClick={() => handleDelete(tier.id)}
-                  style={{ fontFamily: B, fontSize: "11px", background: "none", border: "1px solid #F04060", borderRadius: "6px", color: "#F04060", padding: "5px 10px", cursor: "pointer" }}>
+                  style={{ fontFamily: B, fontSize: "11px", background: "none", border: "1px solid #CC3344", borderRadius: "6px", color: "#CC3344", padding: "5px 10px", cursor: "pointer" }}>
                   🗑
                 </button>
               </div>
@@ -226,7 +226,7 @@ export default function EventTiersPage() {
       )}
       {/* Ticket Template */}
       <div className="tiers-template-card" style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px" }}>
-        <div style={{ fontFamily: R, fontSize: "13px", color: "#F07228", letterSpacing: "2px", marginBottom: "16px" }}>🎨 TICKET TEMPLATE</div>
+        <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", marginBottom: "16px" }}>🎨 TICKET TEMPLATE</div>
         <div className="ticket-template-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
           <div>
             <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>BACKGROUND COLOR</label>
@@ -297,10 +297,10 @@ export default function EventTiersPage() {
 
         <div style={{ marginTop: "16px", display: "flex", gap: "10px", alignItems: "center" }}>
           <button onClick={saveTemplate} disabled={savingTemplate}
-            style={{ fontFamily: R, fontSize: "11px", background: "#F07228", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: savingTemplate ? 0.7 : 1 }}>
+            style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: savingTemplate ? 0.7 : 1 }}>
             {savingTemplate ? "SAVING..." : "SAVE TEMPLATE"}
           </button>
-          {templateSaved && <span style={{ fontFamily: B, fontSize: "12px", color: "#3CCE2A" }}>✓ Saved!</span>}
+          {templateSaved && <span style={{ fontFamily: B, fontSize: "12px", color: "#1A8040" }}>✓ Saved!</span>}
         </div>
       </div>
 

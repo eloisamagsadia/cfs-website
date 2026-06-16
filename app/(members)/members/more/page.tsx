@@ -82,10 +82,10 @@ export default function MembersMorePage() {
             {section.items.map(item => (
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
                 <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px", position: "relative" }}>
-                  <span style={{ color: "#3CCE2A", flexShrink: 0 }}>{item.icon}</span>
+                  <span style={{ color: "#1A8040", flexShrink: 0 }}>{item.icon}</span>
                   <span style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", flex: 1 }}>{item.label}</span>
                   {item.label === "Messages" && unreadMessages > 0 && (
-                    <span style={{ background: "#F04060", color: "#1B3A2D", borderRadius: "20px", minWidth: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", padding: "0 4px" }}>{unreadMessages}</span>
+                    <span style={{ background: "#CC3344", color: "#1B3A2D", borderRadius: "20px", minWidth: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", padding: "0 4px" }}>{unreadMessages}</span>
                   )}
                 </div>
               </Link>
@@ -99,8 +99,8 @@ export default function MembersMorePage() {
         <div style={{ fontFamily: R, fontSize: "10px", color: "#9AAA98", letterSpacing: "2px", marginBottom: "10px" }}>SESSION</div>
         <button onClick={handleSignOut}
           style={{ width: "100%", background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
-          <span style={{ color: "#F04060", flexShrink: 0 }}>{icons.signout}</span>
-          <span style={{ fontFamily: B, fontSize: "13px", color: "#F04060" }}>Sign Out</span>
+          <span style={{ color: "#CC3344", flexShrink: 0 }}>{icons.signout}</span>
+          <span style={{ fontFamily: B, fontSize: "13px", color: "#CC3344" }}>Sign Out</span>
         </button>
       </div>
     </div>

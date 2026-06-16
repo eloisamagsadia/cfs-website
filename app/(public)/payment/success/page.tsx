@@ -6,7 +6,7 @@ const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
-const C = { paper: "#FAFDF9", forest: "#1B3A2D", sage: "#4A7C59", border: "#DDE8DD", green: "#3CCE2A", muted: "#7A8E7A" };
+const C = { paper: "#FAFDF9", forest: "#1B3A2D", sage: "#4A7C59", border: "#DDE8DD", green: "#1A8040", muted: "#7A8E7A" };
 
 const CONFIG: Record<string, { emoji: string; headline: string; body: string; cta: string; href: string }> = {
   ticket: {

@@ -14,9 +14,9 @@ const sections = [
   {
     label: "SYSTEM",
     items: [
-      { label: "Audit Log",   href: "/super/audit",     icon: icons.audit,     color: "#F5C82A" },
-      { label: "Exclusive",   href: "/super/exclusive", icon: icons.exclusive, color: "#F5C82A" },
-      { label: "Danger Zone", href: "/super/danger",    icon: icons.danger,    color: "#F04060" },
+      { label: "Audit Log",   href: "/super/audit",     icon: icons.audit,     color: "#156530" },
+      { label: "Exclusive",   href: "/super/exclusive", icon: icons.exclusive, color: "#156530" },
+      { label: "Danger Zone", href: "/super/danger",    icon: icons.danger,    color: "#CC3344" },
     ],
   },
 ];
@@ -31,7 +31,7 @@ export default function SuperMorePage() {
 
       {sections.map(section => (
         <div key={section.label}>
-          <div style={{ fontFamily: R, fontSize: "10px", color: "#8A7A48", letterSpacing: "2px", marginBottom: "10px" }}>{section.label}</div>
+          <div style={{ fontFamily: R, fontSize: "10px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "10px" }}>{section.label}</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {section.items.map(item => (
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>

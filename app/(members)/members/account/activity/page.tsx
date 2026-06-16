@@ -47,7 +47,7 @@ export default function MyActivityPage() {
       <div style={{ display: "flex", gap: "8px" }}>
         {(["comments", "reactions"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
-            style={{ fontFamily: R, fontSize: "11px", padding: "6px 16px", borderRadius: "20px", border: `1.5px solid ${tab === t ? "#3CCE2A" : "#DDE8DD"}`, background: tab === t ? "#E8F0E4" : "transparent", color: tab === t ? "#3CCE2A" : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", padding: "6px 16px", borderRadius: "20px", border: `1.5px solid ${tab === t ? "#1A8040" : "#DDE8DD"}`, background: tab === t ? "#E8F0E4" : "transparent", color: tab === t ? "#1A8040" : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
             {t.toUpperCase()} ({t === "comments" ? comments.length : reactions.length})
           </button>
         ))}
@@ -63,7 +63,7 @@ export default function MyActivityPage() {
                   {new Date(c.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric", timeZone: "Asia/Manila" })}
                 </div>
                 <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", lineHeight: 1.6 }}>{c.content}</div>
-                <div style={{ fontFamily: R, fontSize: "10px", color: "#3CCE2A", marginTop: "8px", letterSpacing: "1px" }}>VIEW POST →</div>
+                <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", marginTop: "8px", letterSpacing: "1px" }}>VIEW POST →</div>
               </div>
             </Link>
           ))}
@@ -83,7 +83,7 @@ export default function MyActivityPage() {
                     {new Date(r.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric", timeZone: "Asia/Manila" })}
                   </div>
                 </div>
-                <div style={{ fontFamily: R, fontSize: "10px", color: "#3CCE2A", letterSpacing: "1px" }}>VIEW →</div>
+                <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "1px" }}>VIEW →</div>
               </div>
             </Link>
           ))}

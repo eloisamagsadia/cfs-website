@@ -6,7 +6,7 @@ const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
-const C = { paper: "#FAFDF9", forest: "#1B3A2D", border: "#DDE8DD", red: "#F04060", muted: "#7A8E7A" };
+const C = { paper: "#FAFDF9", forest: "#1B3A2D", border: "#DDE8DD", red: "#CC3344", muted: "#7A8E7A" };
 
 const RETRY_HREF: Record<string, string> = {
   ticket: "/events",

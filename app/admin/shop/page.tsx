@@ -23,7 +23,7 @@ export default async function AdminShopPage() {
         </div>
         <Link href="/admin/shop/create" style={{ textDecoration: "none", position: "relative", display: "inline-block" }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#1B3A2D", padding: "8px 18px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>+ ADD PRODUCT</span>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "8px 18px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>+ ADD PRODUCT</span>
         </Link>
       </div>
 
@@ -39,8 +39,8 @@ export default async function AdminShopPage() {
             <div style={{ padding: "14px", flex: 1 }}>
               <div style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "1px", marginBottom: "4px" }}>{p.name}</div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontFamily: R, fontSize: "14px", color: "#F07228" }}>₱{Number(p.price).toLocaleString()}</span>
-                <span style={{ fontFamily: B, fontSize: "11px", color: p.stock > 0 ? "#3CCE2A" : "#F04060" }}>
+                <span style={{ fontFamily: R, fontSize: "14px", color: "#1A8040" }}>₱{Number(p.price).toLocaleString()}</span>
+                <span style={{ fontFamily: B, fontSize: "11px", color: p.stock > 0 ? "#1A8040" : "#CC3344" }}>
                   {p.stock > 0 ? `${p.stock} in stock` : "OUT OF STOCK"}
                 </span>
               </div>
@@ -48,7 +48,7 @@ export default async function AdminShopPage() {
                 {p.product_categories?.name ?? "Uncategorized"}
               </div>
               {!p.is_active && (
-                <div style={{ marginTop: "6px", display: "inline-block", background: "#2C1010", border: "1px solid #F04060", borderRadius: "4px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#F04060" }}>
+                <div style={{ marginTop: "6px", display: "inline-block", background: "#2C1010", border: "1px solid #CC3344", borderRadius: "4px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#CC3344" }}>
                   INACTIVE
                 </div>
               )}

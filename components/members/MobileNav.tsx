@@ -56,9 +56,9 @@ export default function MobileNav() {
         const isActive = exact ? pathname === href : pathname.startsWith(href);
         return (
           <Link key={href} href={href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", padding: "4px 12px", borderRadius: "10px", background: isActive ? "#E8F0E4" : "transparent", transition: "background 0.15s", position: "relative" }}>
-            <span style={{ color: isActive ? "#3CCE2A" : "#5A7A60" }}>{icon}</span>
-            <span style={{ fontFamily: R, fontSize: "9px", color: isActive ? "#3CCE2A" : "#5A7A60", letterSpacing: "1px" }}>{label.toUpperCase()}</span>
-            {label === "More" && unreadMessages > 0 && <span style={{ position: "absolute", top: "2px", right: "8px", background: "#F04060", borderRadius: "50%", width: "8px", height: "8px" }} />}
+            <span style={{ color: isActive ? "#1A8040" : "#5A7A60" }}>{icon}</span>
+            <span style={{ fontFamily: R, fontSize: "9px", color: isActive ? "#1A8040" : "#5A7A60", letterSpacing: "1px" }}>{label.toUpperCase()}</span>
+            {label === "More" && unreadMessages > 0 && <span style={{ position: "absolute", top: "2px", right: "8px", background: "#CC3344", borderRadius: "50%", width: "8px", height: "8px" }} />}
           </Link>
         );
       })}

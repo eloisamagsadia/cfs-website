@@ -20,7 +20,7 @@ const C = {
   sage:   "#4A7C59",
   border: "#DDE8DD",
   muted:  "#7A8E7A",
-  green:  "#3CCE2A",
+  green:  "#1A8040",
 };
 
 function CategoryIcon({ name, color }: { name: string; color: string }) {
@@ -41,7 +41,7 @@ function CategoryIcon({ name, color }: { name: string; color: string }) {
   // default — shopping bag
   return <svg width="28" height="28" viewBox="0 0 24 24" {...{}}><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18" {...s}/><path d="M16 10a4 4 0 01-8 0" {...s}/></svg>;
 }
-const CAT_COLORS = ["#3CCE2A","#F07228","#F5C82A","#F04060","#8EE440","#3CCE2A","#F07228","#F5C82A"];
+const CAT_COLORS = ["#1A8040","#1A8040","#156530","#CC3344","#1A8040","#1A8040","#1A8040","#156530"];
 
 export default async function ShopPage() {
   const supabase = createAdminClient();
@@ -62,8 +62,8 @@ export default async function ShopPage() {
     <div style={{ minHeight: "100vh", background: "#FAFDF9" }}>
       <style>{`
         .cat-card { transition: border-color 0.2s, transform 0.2s; }
-        .cat-card:hover { border-color: #3CCE2A !important; transform: translateY(-3px); }
-        .cat-card:hover .cat-cta { background: #3CCE2A !important; color: #080F06 !important; }
+        .cat-card:hover { border-color: #1A8040 !important; transform: translateY(-3px); }
+        .cat-card:hover .cat-cta { background: #1A8040 !important; color: #080F06 !important; }
       `}</style>
       {/* ── HERO ── */}
       <section style={{ display:"grid", gridTemplateColumns:"1fr 1fr", minHeight:"420px", overflow:"hidden", maxWidth:"1400px", margin:"0 auto", width:"100%" }}>
@@ -133,7 +133,7 @@ export default async function ShopPage() {
                     }
                     {p.stock === 0 && (
                       <div style={{ position: "absolute", inset: 0, background: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#F04060", letterSpacing: "2px", background: "#fff", padding: "6px 14px", borderRadius: "20px", border: "1px solid #F04060" }}>OUT OF STOCK</span>
+                        <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#CC3344", letterSpacing: "2px", background: "#fff", padding: "6px 14px", borderRadius: "20px", border: "1px solid #CC3344" }}>OUT OF STOCK</span>
                       </div>
                     )}
                   </div>
@@ -143,8 +143,8 @@ export default async function ShopPage() {
                       <div style={{ fontFamily: B, fontSize: "11px", color: C.muted }}>{p.product_categories.name}</div>
                     )}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto", paddingTop: "12px", borderTop: `1px solid ${C.border}` }}>
-                      <span style={{ fontFamily: S, fontSize: "17px", color: "#F07228" }}>₱{Number(p.price).toLocaleString()}</span>
-                      <span style={{ fontFamily: B, fontSize: "10px", fontWeight: 700, color: p.stock > 0 ? C.sage : "#F04060", background: p.stock > 0 ? C.mist : "#FFF0F0", borderRadius: "20px", padding: "3px 10px" }}>
+                      <span style={{ fontFamily: S, fontSize: "17px", color: "#1A8040" }}>₱{Number(p.price).toLocaleString()}</span>
+                      <span style={{ fontFamily: B, fontSize: "10px", fontWeight: 700, color: p.stock > 0 ? C.sage : "#CC3344", background: p.stock > 0 ? C.mist : "#FFF0F0", borderRadius: "20px", padding: "3px 10px" }}>
                         {p.stock > 0 ? "In stock" : "Out of stock"}
                       </span>
                     </div>

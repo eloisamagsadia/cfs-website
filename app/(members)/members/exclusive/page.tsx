@@ -41,8 +41,8 @@ export default function ExclusivePage() {
       <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", maxWidth: "400px", lineHeight: 1.7 }}>
         This section is exclusive to CFS Sponsors. Sponsors get access to behind-the-scenes photos and videos from events and projects.
       </p>
-      <div style={{ background: "#FFFFFF", border: "2px solid #B47FE360", borderRadius: "12px", padding: "20px 24px" }}>
-        <div style={{ fontFamily: R, fontSize: "12px", color: "#B47FE3", letterSpacing: "2px", marginBottom: "8px" }}>HOW TO BECOME A SPONSOR</div>
+      <div style={{ background: "#FFFFFF", border: "2px solid #1A804060", borderRadius: "12px", padding: "20px 24px" }}>
+        <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px", marginBottom: "8px" }}>HOW TO BECOME A SPONSOR</div>
         <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Contact the CFS team to learn more about sponsorship.</div>
       </div>
     </div>
@@ -53,7 +53,7 @@ export default function ExclusivePage() {
       {/* Header */}
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
-          <span style={{ fontFamily: R, fontSize: "11px", color: "#B47FE3", background: "#B47FE320", border: "1px solid #B47FE360", borderRadius: "20px", padding: "3px 12px", letterSpacing: "1px" }}>✦ SPONSORS ONLY</span>
+          <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", background: "#1A804020", border: "1px solid #1A804060", borderRadius: "20px", padding: "3px 12px", letterSpacing: "1px" }}>✦ SPONSORS ONLY</span>
         </div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>EXCLUSIVE CONTENT</h1>
         <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "14px", color: "#4A7C59" }}>Behind-the-scenes photos and videos just for you 💜</p>
@@ -63,7 +63,7 @@ export default function ExclusivePage() {
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
         {CATEGORIES.map(cat => (
           <button key={cat.value} onClick={() => setActiveCategory(cat.value)}
-            style={{ fontFamily: R, fontSize: "11px", background: activeCategory === cat.value ? "#B47FE320" : "transparent", border: `1.5px solid ${activeCategory === cat.value ? "#B47FE3" : "#DDE8DD"}`, color: activeCategory === cat.value ? "#B47FE3" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: activeCategory === cat.value ? "#1A804020" : "transparent", border: `1.5px solid ${activeCategory === cat.value ? "#1A8040" : "#DDE8DD"}`, color: activeCategory === cat.value ? "#1A8040" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
             {cat.icon} {cat.label.toUpperCase()}
           </button>
         ))}
@@ -84,7 +84,7 @@ export default function ExclusivePage() {
           {filtered.map(item => (
             <div key={item.id} onClick={() => setSelected(item)}
               style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden", cursor: "pointer", transition: "border-color 0.15s" }}
-              onMouseEnter={e => (e.currentTarget.style.borderColor = "#B47FE3")}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = "#1A8040")}
               onMouseLeave={e => (e.currentTarget.style.borderColor = "#DDE8DD")}
             >
               <div style={{ position: "relative", height: "180px", background: "#F7FAF5" }}>
@@ -100,7 +100,7 @@ export default function ExclusivePage() {
                   </div>
                 )}
                 <div style={{ position: "absolute", bottom: "8px", left: "8px", background: "rgba(0,0,0,0.6)", borderRadius: "20px", padding: "2px 8px" }}>
-                  <span style={{ fontFamily: B, fontSize: "9px", color: "#B47FE3" }}>
+                  <span style={{ fontFamily: B, fontSize: "9px", color: "#1A8040" }}>
                     {CATEGORIES.find(c => c.value === item.category)?.icon} {item.category.replace("_", " ").toUpperCase()}
                   </span>
                 </div>
@@ -119,7 +119,7 @@ export default function ExclusivePage() {
         <div onClick={() => setSelected(null)}
           style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.9)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
           <div onClick={e => e.stopPropagation()}
-            style={{ background: "#FFFFFF", border: "2px solid #B47FE3", borderRadius: "16px", overflow: "hidden", maxWidth: "800px", width: "100%" }}>
+            style={{ background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "16px", overflow: "hidden", maxWidth: "800px", width: "100%" }}>
             {selected.type === "photo"
               ? <img src={selected.media_url} alt="" style={{ width: "100%", maxHeight: "500px", objectFit: "contain", background: "#F7FAF5" }} />
               : <video src={selected.media_url} controls autoPlay style={{ width: "100%", maxHeight: "500px", background: "#000" }} />

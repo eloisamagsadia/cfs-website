@@ -80,7 +80,7 @@ export default function AdminReportEditPage() {
         <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
       </div>
 
-      {error && <div style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
+      {error && <div style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
 
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
 
@@ -99,7 +99,7 @@ export default function AdminReportEditPage() {
             <label style={labelStyle}>QUARTER *</label>
             <div style={{ display: "flex", gap: "8px" }}>
               {[1, 2, 3, 4].map(q => (
-                <button key={q} onClick={() => set("quarter", String(q))} style={{ flex: 1, fontFamily: R, fontSize: "13px", padding: "10px 0", borderRadius: "8px", border: `2px solid ${form.quarter === String(q) ? "#3CCE2A" : "#DDE8DD"}`, background: form.quarter === String(q) ? "#E8F0E4" : "#0F1A0C", color: form.quarter === String(q) ? "#3CCE2A" : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
+                <button key={q} onClick={() => set("quarter", String(q))} style={{ flex: 1, fontFamily: R, fontSize: "13px", padding: "10px 0", borderRadius: "8px", border: `2px solid ${form.quarter === String(q) ? "#1A8040" : "#DDE8DD"}`, background: form.quarter === String(q) ? "#E8F0E4" : "#0F1A0C", color: form.quarter === String(q) ? "#1A8040" : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
                   Q{q}
                 </button>
               ))}
@@ -115,12 +115,12 @@ export default function AdminReportEditPage() {
         </div>
 
         {/* Publish toggle */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", background: form.is_published ? "#E8F0E4" : "#0F1A0C", border: `2px solid ${form.is_published ? "#3CCE2A" : "#DDE8DD"}`, borderRadius: "8px", padding: "14px 16px" }}>
-          <button onClick={() => set("is_published", !form.is_published)} style={{ width: "44px", height: "24px", borderRadius: "12px", border: "none", cursor: "pointer", background: form.is_published ? "#3CCE2A" : "#DDE8DD", position: "relative", transition: "background 0.2s", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", background: form.is_published ? "#E8F0E4" : "#0F1A0C", border: `2px solid ${form.is_published ? "#1A8040" : "#DDE8DD"}`, borderRadius: "8px", padding: "14px 16px" }}>
+          <button onClick={() => set("is_published", !form.is_published)} style={{ width: "44px", height: "24px", borderRadius: "12px", border: "none", cursor: "pointer", background: form.is_published ? "#1A8040" : "#DDE8DD", position: "relative", transition: "background 0.2s", flexShrink: 0 }}>
             <span style={{ position: "absolute", top: "3px", left: form.is_published ? "22px" : "3px", width: "18px", height: "18px", borderRadius: "50%", background: "#1B3A2D", transition: "left 0.2s" }} />
           </button>
           <div>
-            <div style={{ fontFamily: R, fontSize: "12px", color: form.is_published ? "#3CCE2A" : "#5A7A60", letterSpacing: "1px" }}>
+            <div style={{ fontFamily: R, fontSize: "12px", color: form.is_published ? "#1A8040" : "#5A7A60", letterSpacing: "1px" }}>
               {form.is_published ? "PUBLISHED" : "DRAFT"}
             </div>
             <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "2px" }}>
@@ -134,17 +134,17 @@ export default function AdminReportEditPage() {
         <div style={{ display: "flex", gap: "12px" }}>
           <button onClick={handleSave} disabled={saving} style={{ position: "relative", display: "inline-block", cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1 }}>
             <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#080F06", padding: "10px 28px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>
+            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#080F06", padding: "10px 28px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>
               {saving ? "SAVING..." : "SAVE CHANGES"}
             </span>
           </button>
           <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "none", border: "2px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
         </div>
         {!confirmDelete
-          ? <button onClick={() => setConfirmDelete(true)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #F04060", borderRadius: "6px", color: "#F04060", padding: "10px 16px", cursor: "pointer" }}>🗑 Delete Report</button>
+          ? <button onClick={() => setConfirmDelete(true)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #CC3344", borderRadius: "6px", color: "#CC3344", padding: "10px 16px", cursor: "pointer" }}>🗑 Delete Report</button>
           : <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>Sure?</span>
-              <button onClick={handleDelete} disabled={deleting} style={{ fontFamily: B, fontSize: "12px", background: "#F04060", border: "none", borderRadius: "6px", color: "#fff", padding: "8px 14px", cursor: "pointer" }}>{deleting ? "Deleting..." : "Yes, Delete"}</button>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>Sure?</span>
+              <button onClick={handleDelete} disabled={deleting} style={{ fontFamily: B, fontSize: "12px", background: "#CC3344", border: "none", borderRadius: "6px", color: "#fff", padding: "8px 14px", cursor: "pointer" }}>{deleting ? "Deleting..." : "Yes, Delete"}</button>
               <button onClick={() => setConfirmDelete(false)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "8px 14px", cursor: "pointer" }}>Cancel</button>
             </div>
         }

@@ -6,7 +6,7 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const ROLES = ["super_admin", "admin", "moderator", "sponsor", "member"];
 const ROLE_COLORS: Record<string, string> = {
-  super_admin: "#F5C82A", admin: "#F07228", moderator: "#69C9D0", sponsor: "#B47FE3", member: "#3CCE2A",
+  super_admin: "#156530", admin: "#1A8040", moderator: "#5A7A60", sponsor: "#1A8040", member: "#1A8040",
 };
 
 export default function RolesPage() {
@@ -72,17 +72,17 @@ export default function RolesPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F5C82A", letterSpacing: "3px", marginBottom: "4px" }}>ROLE MANAGEMENT</h1>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#156530", letterSpacing: "3px", marginBottom: "4px" }}>ROLE MANAGEMENT</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Manage member roles across the platform</p>
       </div>
 
       {error && (
-        <div style={{ background: "#3D0A18", border: "1.5px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>
+        <div style={{ background: "#3D0A18", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>
           {error}
         </div>
       )}
       {success && (
-        <div style={{ background: "#E8F0E4", border: "1.5px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#3CCE2A" }}>
+        <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#1A8040" }}>
           {success}
         </div>
       )}
@@ -108,7 +108,7 @@ export default function RolesPage() {
               <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#F2F7F2", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {m.avatar_url
                   ? <img src={m.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <span style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A" }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>}
+                  : <span style={{ fontFamily: R, fontSize: "13px", color: "#1A8040" }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>}
               </div>
               <div>
                 <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{m.display_name ?? "Member"}</div>
@@ -131,7 +131,7 @@ export default function RolesPage() {
             {confirmDelete === m.id ? (
               <div style={{ display: "flex", gap: "6px" }}>
                 <button onClick={() => deleteUser(m.id)} disabled={deleting === m.id}
-                  style={{ fontFamily: B, fontSize: "11px", color: "#F04060", background: "#3D0A18", border: "1px solid #F04060", borderRadius: "5px", padding: "4px 10px", cursor: "pointer" }}>
+                  style={{ fontFamily: B, fontSize: "11px", color: "#CC3344", background: "#3D0A18", border: "1px solid #CC3344", borderRadius: "5px", padding: "4px 10px", cursor: "pointer" }}>
                   {deleting === m.id ? "..." : "YES"}
                 </button>
                 <button onClick={() => setConfirmDelete(null)}
@@ -141,7 +141,7 @@ export default function RolesPage() {
               </div>
             ) : (
               <button onClick={() => setConfirmDelete(m.id)}
-                style={{ fontFamily: B, fontSize: "11px", color: "#F04060", background: "transparent", border: "1px solid #3D1A22", borderRadius: "5px", padding: "4px 10px", cursor: "pointer", whiteSpace: "nowrap" }}>
+                style={{ fontFamily: B, fontSize: "11px", color: "#CC3344", background: "transparent", border: "1px solid #3D1A22", borderRadius: "5px", padding: "4px 10px", cursor: "pointer", whiteSpace: "nowrap" }}>
                 Delete
               </button>
             )}

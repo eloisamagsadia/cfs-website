@@ -95,11 +95,11 @@ export default function MessagesPage() {
           <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>MESSAGES</h1>
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
             {rooms.length} conversation{rooms.length !== 1 ? "s" : ""}
-            {totalUnread > 0 && <span style={{ color: "#3CCE2A", marginLeft: "8px" }}>· {totalUnread} unread</span>}
+            {totalUnread > 0 && <span style={{ color: "#1A8040", marginLeft: "8px" }}>· {totalUnread} unread</span>}
           </p>
         </div>
         <button onClick={() => setShowNew(true)}
-          style={{ fontFamily: R, fontSize: "11px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
           + NEW CHAT
         </button>
       </div>
@@ -111,7 +111,7 @@ export default function MessagesPage() {
         <div style={{ display: "flex", gap: "8px" }}>
           {(["all", "dm", "group"] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)}
-              style={{ fontFamily: R, fontSize: "10px", letterSpacing: "1px", padding: "5px 14px", borderRadius: "20px", border: `1.5px solid ${filter === f ? "#3CCE2A" : "#DDE8DD"}`, background: filter === f ? "#E8F0E4" : "transparent", color: filter === f ? "#3CCE2A" : "#5A7A60", cursor: "pointer" }}>
+              style={{ fontFamily: R, fontSize: "10px", letterSpacing: "1px", padding: "5px 14px", borderRadius: "20px", border: `1.5px solid ${filter === f ? "#1A8040" : "#DDE8DD"}`, background: filter === f ? "#E8F0E4" : "transparent", color: filter === f ? "#1A8040" : "#5A7A60", cursor: "pointer" }}>
               {f === "all" ? "ALL" : f === "dm" ? "DIRECT" : "GROUPS"}
             </button>
           ))}
@@ -129,7 +129,7 @@ export default function MessagesPage() {
           <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "16px" }}>
             {search || filter !== "all" ? "NO CONVERSATIONS FOUND" : "NO CONVERSATIONS YET"}
           </div>
-          {!search && filter === "all" && <button onClick={() => setShowNew(true)} style={{ fontFamily: B, fontSize: "12px", color: "#3CCE2A", background: "none", border: "none", cursor: "pointer" }}>Start a new chat →</button>}
+          {!search && filter === "all" && <button onClick={() => setShowNew(true)} style={{ fontFamily: B, fontSize: "12px", color: "#1A8040", background: "none", border: "none", cursor: "pointer" }}>Start a new chat →</button>}
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
@@ -140,10 +140,10 @@ export default function MessagesPage() {
               style={{ position: "relative", display: "flex", alignItems: "center", gap: "12px", padding: "12px 8px", borderRadius: "12px", cursor: "pointer", background: hoveredRoom === room.id ? "#F2F7F2" : "transparent", transition: "background 0.15s" }}>
               {/* Avatar */}
               <div onClick={() => router.push(`/members/messages/${room.id}`)}
-                style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E8F0E4", border: `2px solid ${room.unread_count > 0 ? "#3CCE2A" : "#DDE8DD"}`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", cursor: "pointer" }}>
+                style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E8F0E4", border: `2px solid ${room.unread_count > 0 ? "#1A8040" : "#DDE8DD"}`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", cursor: "pointer" }}>
                 {getRoomAvatar(room)
                   ? <img src={getRoomAvatar(room)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <span style={{ fontFamily: R, fontSize: "18px", color: "#3CCE2A" }}>{room.is_group ? "👥" : (getRoomName(room)[0] ?? "?").toUpperCase()}</span>
+                  : <span style={{ fontFamily: R, fontSize: "18px", color: "#1A8040" }}>{room.is_group ? "👥" : (getRoomName(room)[0] ?? "?").toUpperCase()}</span>
                 }
               </div>
 
@@ -158,7 +158,7 @@ export default function MessagesPage() {
                     {room.last_message?.content ?? "No messages yet"}
                   </span>
                   {room.unread_count > 0 && (
-                    <span style={{ fontFamily: R, fontSize: "10px", background: "#3CCE2A", color: "#080F06", borderRadius: "20px", padding: "2px 8px", flexShrink: 0, marginLeft: "8px" }}>{room.unread_count}</span>
+                    <span style={{ fontFamily: R, fontSize: "10px", background: "#1A8040", color: "#080F06", borderRadius: "20px", padding: "2px 8px", flexShrink: 0, marginLeft: "8px" }}>{room.unread_count}</span>
                   )}
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function MessagesPage() {
               {/* Actions on hover */}
               {hoveredRoom === room.id && (
                 <button onClick={e => { e.stopPropagation(); setConfirmDelete(room.id); }}
-                  style={{ background: "#2C1010", border: "1.5px solid #F04060", borderRadius: "8px", padding: "5px 10px", cursor: "pointer", fontFamily: R, fontSize: "10px", color: "#F04060", letterSpacing: "1px", flexShrink: 0 }}>
+                  style={{ background: "#2C1010", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "5px 10px", cursor: "pointer", fontFamily: R, fontSize: "10px", color: "#CC3344", letterSpacing: "1px", flexShrink: 0 }}>
                   LEAVE
                 </button>
               )}
@@ -178,12 +178,12 @@ export default function MessagesPage() {
       {/* Confirm leave */}
       {confirmDelete && (
         <div onClick={() => setConfirmDelete(null)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#FFFFFF", border: "2px solid #F04060", borderRadius: "16px", padding: "24px", width: "360px", maxWidth: "90vw", display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "#FFFFFF", border: "2px solid #CC3344", borderRadius: "16px", padding: "24px", width: "360px", maxWidth: "90vw", display: "flex", flexDirection: "column", gap: "16px" }}>
             <div style={{ fontFamily: R, fontSize: "14px", color: "#1B3A2D", letterSpacing: "1px" }}>LEAVE CONVERSATION?</div>
             <div style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>You won't be able to see this conversation anymore.</div>
             <div style={{ display: "flex", gap: "10px" }}>
               <button onClick={() => setConfirmDelete(null)} style={{ flex: 1, fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "10px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
-              <button onClick={() => leaveRoom(confirmDelete)} style={{ flex: 1, fontFamily: R, fontSize: "11px", background: "#F04060", color: "#fff", border: "none", borderRadius: "6px", padding: "10px", cursor: "pointer", letterSpacing: "1px" }}>LEAVE</button>
+              <button onClick={() => leaveRoom(confirmDelete)} style={{ flex: 1, fontFamily: R, fontSize: "11px", background: "#CC3344", color: "#fff", border: "none", borderRadius: "6px", padding: "10px", cursor: "pointer", letterSpacing: "1px" }}>LEAVE</button>
             </div>
           </div>
         </div>
@@ -206,12 +206,12 @@ export default function MessagesPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: "4px", maxHeight: "300px", overflowY: "auto" }}>
               {filteredMembers.map(m => (
                 <div key={m.id} onClick={() => setSelected(prev => prev.includes(m.id) ? prev.filter(id => id !== m.id) : [...prev, m.id])}
-                  style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", background: selected.includes(m.id) ? "#E8F0E4" : "transparent", border: `1.5px solid ${selected.includes(m.id) ? "#3CCE2A" : "transparent"}` }}>
-                  <div style={{ width: "18px", height: "18px", borderRadius: "4px", border: `2px solid ${selected.includes(m.id) ? "#3CCE2A" : "#DDE8DD"}`, background: selected.includes(m.id) ? "#3CCE2A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", background: selected.includes(m.id) ? "#E8F0E4" : "transparent", border: `1.5px solid ${selected.includes(m.id) ? "#1A8040" : "transparent"}` }}>
+                  <div style={{ width: "18px", height: "18px", borderRadius: "4px", border: `2px solid ${selected.includes(m.id) ? "#1A8040" : "#DDE8DD"}`, background: selected.includes(m.id) ? "#1A8040" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     {selected.includes(m.id) && <span style={{ color: "#080F06", fontSize: "12px", fontWeight: "bold" }}>✓</span>}
                   </div>
                   <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#F2F7F2", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    {m.avatar_url ? <img src={m.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A" }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>}
+                    {m.avatar_url ? <img src={m.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span style={{ fontFamily: R, fontSize: "12px", color: "#1A8040" }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>}
                   </div>
                   <span style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{m.display_name}</span>
                 </div>
@@ -221,12 +221,12 @@ export default function MessagesPage() {
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                 {selected.map(id => {
                   const m = members.find(m => m.id === id);
-                  return <span key={id} style={{ fontFamily: B, fontSize: "11px", background: "#E8F0E4", border: "1px solid #3CCE2A", borderRadius: "20px", padding: "3px 10px", color: "#3CCE2A" }}>{m?.display_name}</span>;
+                  return <span key={id} style={{ fontFamily: B, fontSize: "11px", background: "#E8F0E4", border: "1px solid #1A8040", borderRadius: "20px", padding: "3px 10px", color: "#1A8040" }}>{m?.display_name}</span>;
                 })}
               </div>
             )}
             <button onClick={createRoom} disabled={!selected.length || creating}
-              style={{ fontFamily: R, fontSize: "12px", background: !selected.length || creating ? "#F2F7F2" : "#3CCE2A", color: !selected.length || creating ? "#5A7A60" : "#080F06", border: "none", borderRadius: "6px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+              style={{ fontFamily: R, fontSize: "12px", background: !selected.length || creating ? "#F2F7F2" : "#1A8040", color: !selected.length || creating ? "#5A7A60" : "#080F06", border: "none", borderRadius: "6px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
               {creating ? "CREATING..." : selected.length > 1 ? "CREATE GROUP CHAT" : "START CHAT"}
             </button>
           </div>

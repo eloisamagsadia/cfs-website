@@ -14,7 +14,7 @@ const C = {
   sage:   "#4A7C59",
   border: "#DDE8DD",
   muted:  "#7A8E7A",
-  green:  "#3CCE2A",
+  green:  "#1A8040",
 };
 
 export default function AddToCartButton({ productId, isLoggedIn, inStock }: { productId: string; isLoggedIn: boolean; inStock: boolean; accentColor?: string }) {
@@ -49,7 +49,7 @@ export default function AddToCartButton({ productId, isLoggedIn, inStock }: { pr
   }
 
   if (!inStock) return (
-    <div style={{ background: "#FFF0F0", border: `1px solid #F0406040`, borderRadius: "10px", padding: "14px", textAlign: "center", fontFamily: SG, fontSize: "12px", fontWeight: 700, color: "#F04060", letterSpacing: "2px" }}>
+    <div style={{ background: "#FFF0F0", border: `1px solid #CC334440`, borderRadius: "10px", padding: "14px", textAlign: "center", fontFamily: SG, fontSize: "12px", fontWeight: 700, color: "#CC3344", letterSpacing: "2px" }}>
       OUT OF STOCK
     </div>
   );
@@ -70,7 +70,7 @@ export default function AddToCartButton({ productId, isLoggedIn, inStock }: { pr
       </div>
 
       {error && (
-        <div style={{ background: "#FFF0F0", border: "1px solid #F0406040", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>
+        <div style={{ background: "#FFF0F0", border: "1px solid #CC334440", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>
       )}
 
       {/* Add to Cart */}

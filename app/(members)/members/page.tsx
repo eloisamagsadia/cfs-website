@@ -33,17 +33,17 @@ export default async function DashboardPage() {
   ]);
 
   const stats = [
-    { label:"MY EVENTS",     value: eventsCount ?? 0, color:"#3CCE2A", bg:"#FFFFFF", border:"#DDE8DD", href:"/members/events" },
-    { label:"MY ORDERS",     value: ordersCount ?? 0, color:"#F07228", bg:"#FFFFFF", border:"#DDE8DD", href:"/members/orders" },
-    { label:"BADGES EARNED", value: badgesCount ?? 0, color:"#F5C82A", bg:"#FFFFFF", border:"#DDE8DD", href:"/members/badges" },
-    { label:"UNREAD NOTIFS", value: notifCount ?? 0,  color:"#F04060", bg:"#FFFFFF", border:"#DDE8DD", href:"/members/notifications" },
+    { label:"MY EVENTS",     value: eventsCount ?? 0, color:"#1A8040", bg:"#FFFFFF", border:"#DDE8DD", href:"/members/events" },
+    { label:"MY ORDERS",     value: ordersCount ?? 0, color:"#1A8040", bg:"#FFFFFF", border:"#DDE8DD", href:"/members/orders" },
+    { label:"BADGES EARNED", value: badgesCount ?? 0, color:"#156530", bg:"#FFFFFF", border:"#DDE8DD", href:"/members/badges" },
+    { label:"UNREAD NOTIFS", value: notifCount ?? 0,  color:"#CC3344", bg:"#FFFFFF", border:"#DDE8DD", href:"/members/notifications" },
   ];
 
   const quickLinks = [
-    { label:"BROWSE SHOP",     href:"/shop",               color:"#F07228" },
-    { label:"UPCOMING EVENTS", href:"/events",             color:"#3CCE2A" },
-    { label:"COMMUNITY FEED",  href:"/members/community",  color:"#F5C82A" },
-    { label:"DONATE",          href:"/donate",             color:"#F04060" },
+    { label:"BROWSE SHOP",     href:"/shop",               color:"#1A8040" },
+    { label:"UPCOMING EVENTS", href:"/events",             color:"#1A8040" },
+    { label:"COMMUNITY FEED",  href:"/members/community",  color:"#156530" },
+    { label:"DONATE",          href:"/donate",             color:"#CC3344" },
   ];
 
   return (
@@ -51,7 +51,7 @@ export default async function DashboardPage() {
       <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"24px 28px", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(circle,rgba(60,206,42,0.08) 1.5px,transparent 1.5px)", backgroundSize:"18px 18px" }}/>
         <div style={{ position:"relative", zIndex:1 }}>
-          <div style={{ fontFamily:R, fontSize:"0.75rem", color:"#3CCE2A", letterSpacing:"3px", marginBottom:"6px" }}>WELCOME BACK</div>
+          <div style={{ fontFamily:R, fontSize:"0.75rem", color:"#1A8040", letterSpacing:"3px", marginBottom:"6px" }}>WELCOME BACK</div>
           <h1 style={{ fontFamily:R, fontSize:"1.8rem", color:"#1B3A2D", letterSpacing:"2px", marginBottom:"6px" }}>
             {profile?.display_name ?? "Member"} ✦
           </h1>

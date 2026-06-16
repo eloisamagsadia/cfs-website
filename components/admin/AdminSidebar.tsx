@@ -69,10 +69,10 @@ function NavItem({ label, href, icon, exact }: { label: string; href: string; ic
 
   return (
     <Link href={href} style={{ textDecoration: "none", display: "block" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", position: "relative", background: isActive ? "#FFF0E8" : "transparent", transition: "background 0.15s" }}>
-        {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#F07228", borderRadius: "0 3px 3px 0" }} />}
-        <span style={{ color: isActive ? "#F07228" : "#8A6A58", transition: "color 0.15s" }}>{icon}</span>
-        <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#7A3A10" : "#8A6A58", letterSpacing: "0.3px" }}>{label}</span>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", position: "relative", background: isActive ? "#E8F4EC" : "transparent", transition: "background 0.15s" }}>
+        {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#1A8040", borderRadius: "0 3px 3px 0" }} />}
+        <span style={{ color: isActive ? "#1A8040" : "#5A7A60", transition: "color 0.15s" }}>{icon}</span>
+        <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#1B5030" : "#5A7A60", letterSpacing: "0.3px" }}>{label}</span>
       </div>
     </Link>
   );
@@ -82,9 +82,9 @@ export default function AdminSidebar() {
   return (
     <aside style={{ width: "210px", flexShrink: 0 }}>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px", background: "#FFF0E8", border: "1px solid #F0722840", borderRadius: "10px", marginBottom: "20px" }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F07228" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span style={{ fontFamily: R, fontSize: "11px", color: "#F07228", letterSpacing: "2px" }}>ADMIN PANEL</span>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px", background: "#E8F4EC", border: "1px solid #1A804040", borderRadius: "10px", marginBottom: "20px" }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1A8040" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px" }}>ADMIN PANEL</span>
       </div>
 
       <nav style={{ position: "sticky", top: "80px", display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -100,8 +100,8 @@ export default function AdminSidebar() {
         <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "12px" }}>
           <Link href="/members" style={{ textDecoration: "none" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px" }}>
-              <span style={{ color: "#8A6A58" }}>{icons.exit}</span>
-              <span style={{ fontFamily: B, fontSize: "13px", color: "#8A6A58" }}>Exit Admin</span>
+              <span style={{ color: "#5A7A60" }}>{icons.exit}</span>
+              <span style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>Exit Admin</span>
             </div>
           </Link>
         </div>

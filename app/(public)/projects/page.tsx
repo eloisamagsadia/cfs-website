@@ -18,13 +18,13 @@ const C = {
   sage:   "#4A7C59",
   border: "#DDE8DD",
   muted:  "#7A8E7A",
-  green:  "#3CCE2A",
+  green:  "#1A8040",
 };
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  ongoing:   { label: "ONGOING",   color: "#F5C82A", bg: "#FFF8E1" },
+  ongoing:   { label: "ONGOING",   color: "#156530", bg: "#FFF8E1" },
   completed: { label: "COMPLETED", color: C.sage,    bg: C.mist },
-  upcoming:  { label: "UPCOMING",  color: "#F07228", bg: "#FFF3EE" },
+  upcoming:  { label: "UPCOMING",  color: "#1A8040", bg: "#FFF3EE" },
 };
 
 export default async function ProjectsPage() {
@@ -56,8 +56,8 @@ export default async function ProjectsPage() {
             {[
               { label:"Total", value:String(display.length), color:C.forest },
               { label:"Completed", value:String(completed), color:C.sage },
-              { label:"Ongoing", value:String(ongoing), color:"#F5C82A" },
-              { label:"Upcoming", value:String(upcoming), color:"#F07228" },
+              { label:"Ongoing", value:String(ongoing), color:"#156530" },
+              { label:"Upcoming", value:String(upcoming), color:"#1A8040" },
             ].map((s) => (
               <div key={s.label} style={{ background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"12px", padding:"14px 20px", textAlign:"center", minWidth:"80px" }}>
                 <div style={{ fontFamily:S, fontSize:"1.8rem", color:s.color, lineHeight:1 }}>{s.value}</div>
@@ -112,10 +112,10 @@ export default async function ProjectsPage() {
                     <div style={{ marginTop:"4px" }}>
                       <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"6px" }}>
                         <span style={{ fontFamily:B, fontSize:"10px", color:C.muted, letterSpacing:"0.5px" }}>Progress</span>
-                        <span style={{ fontFamily:SG, fontSize:"10px", fontWeight:700, color:"#F5C82A" }}>{p.progress_percent ?? 0}%</span>
+                        <span style={{ fontFamily:SG, fontSize:"10px", fontWeight:700, color:"#156530" }}>{p.progress_percent ?? 0}%</span>
                       </div>
                       <div style={{ background:C.mist, borderRadius:"20px", height:"6px", overflow:"hidden" }}>
-                        <div style={{ height:"100%", width:`${p.progress_percent ?? 0}%`, background:"linear-gradient(90deg,#3CCE2A,#F5C82A)", borderRadius:"20px" }} />
+                        <div style={{ height:"100%", width:`${p.progress_percent ?? 0}%`, background:"linear-gradient(90deg,#1A8040,#156530)", borderRadius:"20px" }} />
                       </div>
                     </div>
                   )}

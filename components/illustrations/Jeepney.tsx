@@ -13,7 +13,7 @@ export default function Jeepney({ width = 230, className = "" }: { width?: numbe
       {/* Chassis */}
       <rect x="20" y="68" width="188" height="10" rx="3" fill="#888" stroke="#1A1E14" strokeWidth="1.5"/>
       {/* Main body */}
-      <path d="M14 24 L14 72 L214 72 L214 30 C214 24 205 18 192 18 L46 18 C30 18 14 24 14 24Z" fill="#2CB520" stroke="#1A1E14" strokeWidth="2"/>
+      <path d="M14 24 L14 72 L214 72 L214 30 C214 24 205 18 192 18 L46 18 C30 18 14 24 14 24Z" fill="#1A8040" stroke="#1A1E14" strokeWidth="2"/>
       {/* Roof rack chrome */}
       <rect x="35" y="12" width="158" height="8" rx="3" fill="#D8D8D8" stroke="#1A1E14" strokeWidth="1.5"/>
       {/* Pennant flags */}

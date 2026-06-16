@@ -54,7 +54,7 @@ export default async function CommunityPage() {
 
       <div className="community-sidebar">
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "14px", padding: "18px" }}>
-          <div style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A", letterSpacing: "2px", marginBottom: "14px" }}>COMMUNITY STATS</div>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px", marginBottom: "14px" }}>COMMUNITY STATS</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {[{ label: "Total Posts", value: statsCount ?? 0 }, { label: "Categories", value: categories?.length ?? 0 }].map(({ label, value }) => (
               <div key={label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -66,11 +66,11 @@ export default async function CommunityPage() {
         </div>
 
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "14px", padding: "18px" }}>
-          <div style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A", letterSpacing: "2px", marginBottom: "14px" }}>CATEGORIES</div>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px", marginBottom: "14px" }}>CATEGORIES</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {(categories ?? []).map((cat: any) => (
               <div key={cat.id} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: cat.color ?? "#3CCE2A", flexShrink: 0 }} />
+                <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: cat.color ?? "#1A8040", flexShrink: 0 }} />
                 <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>{cat.name}</span>
               </div>
             ))}
@@ -78,9 +78,9 @@ export default async function CommunityPage() {
         </div>
 
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "14px", padding: "18px" }}>
-          <div style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A", letterSpacing: "2px", marginBottom: "10px" }}>TIPS</div>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px", marginBottom: "10px" }}>TIPS</div>
           <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", lineHeight: 1.8 }}>
-            Use <span style={{ color: "#3CCE2A" }}>@username</span> to mention a member.<br />
+            Use <span style={{ color: "#1A8040" }}>@username</span> to mention a member.<br />
             React with 👍 ❤️ 🙌 on posts you love.<br />
             Be kind to fellow CFS members! ♥
           </div>

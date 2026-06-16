@@ -109,15 +109,15 @@ export default function AdminExclusivePage() {
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Sponsor-only photos and videos</p>
         </div>
         <button onClick={() => { setShowForm(true); setEditingId(null); setForm(DEFAULT_FORM); }}
-          style={{ fontFamily: R, fontSize: "11px", background: "#B47FE3", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
           + ADD CONTENT
         </button>
       </div>
 
       {/* Form */}
       {showForm && (
-        <div style={{ background: "#FFFFFF", border: "2px solid #B47FE3", borderRadius: "12px", padding: "20px" }}>
-          <div style={{ fontFamily: R, fontSize: "13px", color: "#B47FE3", letterSpacing: "2px", marginBottom: "16px" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "12px", padding: "20px" }}>
+          <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", marginBottom: "16px" }}>
             {editingId ? "EDIT CONTENT" : "NEW EXCLUSIVE CONTENT"}
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
@@ -186,7 +186,7 @@ export default function AdminExclusivePage() {
               CANCEL
             </button>
             <button onClick={handleSave} disabled={saving || !form.title.trim() || !form.media_url}
-              style={{ fontFamily: R, fontSize: "11px", background: "#B47FE3", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: (saving || !form.title.trim() || !form.media_url) ? 0.5 : 1 }}>
+              style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", opacity: (saving || !form.title.trim() || !form.media_url) ? 0.5 : 1 }}>
               {saving ? "SAVING..." : editingId ? "UPDATE" : "PUBLISH"}
             </button>
           </div>
@@ -198,12 +198,12 @@ export default function AdminExclusivePage() {
       {/* Category filter */}
       <div style={{ display: "flex", gap: "8px" }}>
         <button onClick={() => setActiveCategory("all")}
-          style={{ fontFamily: R, fontSize: "11px", background: activeCategory === "all" ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeCategory === "all" ? "#3CCE2A" : "#DDE8DD"}`, color: activeCategory === "all" ? "#3CCE2A" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+          style={{ fontFamily: R, fontSize: "11px", background: activeCategory === "all" ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeCategory === "all" ? "#1A8040" : "#DDE8DD"}`, color: activeCategory === "all" ? "#1A8040" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
           ALL ({content.length})
         </button>
         {CATEGORIES.map(cat => (
           <button key={cat.value} onClick={() => setActiveCategory(cat.value)}
-            style={{ fontFamily: R, fontSize: "11px", background: activeCategory === cat.value ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeCategory === cat.value ? "#3CCE2A" : "#DDE8DD"}`, color: activeCategory === cat.value ? "#3CCE2A" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: activeCategory === cat.value ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeCategory === cat.value ? "#1A8040" : "#DDE8DD"}`, color: activeCategory === cat.value ? "#1A8040" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
             {cat.icon} {cat.label.toUpperCase()} ({content.filter(c => c.category === cat.value).length})
           </button>
         ))}
@@ -235,14 +235,14 @@ export default function AdminExclusivePage() {
                   </div>
                 )}
                 {/* Status badge */}
-                <div style={{ position: "absolute", top: "8px", right: "8px", background: item.is_published ? "#E8F0E4" : "#FFFBE8", border: `1px solid ${item.is_published ? "#3CCE2A" : "#F5C82A"}`, borderRadius: "20px", padding: "2px 8px" }}>
-                  <span style={{ fontFamily: R, fontSize: "9px", color: item.is_published ? "#3CCE2A" : "#F5C82A", letterSpacing: "1px" }}>
+                <div style={{ position: "absolute", top: "8px", right: "8px", background: item.is_published ? "#E8F0E4" : "#E8F4EC", border: `1px solid ${item.is_published ? "#1A8040" : "#156530"}`, borderRadius: "20px", padding: "2px 8px" }}>
+                  <span style={{ fontFamily: R, fontSize: "9px", color: item.is_published ? "#1A8040" : "#156530", letterSpacing: "1px" }}>
                     {item.is_published ? "PUBLISHED" : "DRAFT"}
                   </span>
                 </div>
                 {/* Category badge */}
                 <div style={{ position: "absolute", top: "8px", left: "8px", background: "rgba(0,0,0,0.6)", borderRadius: "20px", padding: "2px 8px" }}>
-                  <span style={{ fontFamily: B, fontSize: "9px", color: "#B47FE3" }}>
+                  <span style={{ fontFamily: B, fontSize: "9px", color: "#1A8040" }}>
                     {CATEGORIES.find(c => c.value === item.category)?.icon} {item.category.replace("_", " ").toUpperCase()}
                   </span>
                 </div>
@@ -253,7 +253,7 @@ export default function AdminExclusivePage() {
                 {item.description && <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginBottom: "8px" }}>{item.description}</div>}
                 <div style={{ display: "flex", gap: "6px" }}>
                   <button onClick={() => togglePublish(item)}
-                    style={{ fontFamily: B, fontSize: "10px", background: "none", border: `1px solid ${item.is_published ? "#F5C82A" : "#3CCE2A"}`, borderRadius: "4px", color: item.is_published ? "#F5C82A" : "#3CCE2A", padding: "4px 8px", cursor: "pointer" }}>
+                    style={{ fontFamily: B, fontSize: "10px", background: "none", border: `1px solid ${item.is_published ? "#156530" : "#1A8040"}`, borderRadius: "4px", color: item.is_published ? "#156530" : "#1A8040", padding: "4px 8px", cursor: "pointer" }}>
                     {item.is_published ? "UNPUBLISH" : "PUBLISH"}
                   </button>
                   <button onClick={() => startEdit(item)}
@@ -261,7 +261,7 @@ export default function AdminExclusivePage() {
                     ✏ EDIT
                   </button>
                   <button onClick={() => handleDelete(item.id)}
-                    style={{ fontFamily: B, fontSize: "10px", background: "none", border: "1px solid #F04060", borderRadius: "4px", color: "#F04060", padding: "4px 8px", cursor: "pointer" }}>
+                    style={{ fontFamily: B, fontSize: "10px", background: "none", border: "1px solid #CC3344", borderRadius: "4px", color: "#CC3344", padding: "4px 8px", cursor: "pointer" }}>
                     🗑
                   </button>
                 </div>

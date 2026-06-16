@@ -5,8 +5,8 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const ACTION_COLORS: Record<string,string> = {
-  update_site_settings: "#F07228", broadcast_notification: "#3CCE2A",
-  change_role: "#F5C82A", ban_member: "#F04060", unban_member: "#3CCE2A",
+  update_site_settings: "#1A8040", broadcast_notification: "#1A8040",
+  change_role: "#156530", ban_member: "#CC3344", unban_member: "#1A8040",
 };
 
 function timeAgo(iso: string) {
@@ -30,7 +30,7 @@ export default function AuditPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F5C82A", letterSpacing: "3px", marginBottom: "4px" }}>AUDIT LOG</h1>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#156530", letterSpacing: "3px", marginBottom: "4px" }}>AUDIT LOG</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Every admin action tracked and logged</p>
       </div>
 
@@ -47,7 +47,7 @@ export default function AuditPage() {
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#F2F7F2", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {log.profiles?.avatar_url ? <img src={log.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <span style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A" }}>{(log.profiles?.display_name ?? "?")[0].toUpperCase()}</span>}
+                  : <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040" }}>{(log.profiles?.display_name ?? "?")[0].toUpperCase()}</span>}
                 </div>
                 <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>{log.profiles?.display_name ?? "Unknown"}</span>
               </div>

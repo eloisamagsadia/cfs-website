@@ -181,9 +181,9 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
       {newPostAlert > 0 && (
         <button className="cf-new-alert" onClick={loadNewPosts}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke="#3CCE2A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke="#1A8040" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <span style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", letterSpacing: "1px" }}>
+          <span style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "1px" }}>
             {newPostAlert} new post{newPostAlert > 1 ? "s" : ""} — tap to refresh
           </span>
         </button>

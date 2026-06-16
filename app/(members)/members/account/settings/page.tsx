@@ -73,7 +73,7 @@ export default function SettingsPage() {
         <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{label}</div>
         <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{desc}</div>
       </div>
-      <div onClick={onChange} style={{ width: "40px", height: "22px", borderRadius: "11px", background: value ? "#3CCE2A" : "#DDE8DD", border: "2px solid #080F06", position: "relative", flexShrink: 0, cursor: "pointer", transition: "background 0.2s" }}>
+      <div onClick={onChange} style={{ width: "40px", height: "22px", borderRadius: "11px", background: value ? "#1A8040" : "#DDE8DD", border: "2px solid #080F06", position: "relative", flexShrink: 0, cursor: "pointer", transition: "background 0.2s" }}>
         <div style={{ position: "absolute", top: "2px", left: value ? "18px" : "2px", width: "14px", height: "14px", borderRadius: "50%", background: "#1B3A2D", transition: "left 0.2s" }}/>
       </div>
     </div>
@@ -114,24 +114,24 @@ export default function SettingsPage() {
         <Toggle value={notifSettings.email_new_follower} onChange={() => setNotifSettings(p => ({ ...p, email_new_follower: !p.email_new_follower }))} label="New Follower" desc="When someone follows you in the community"/>
 
         <button onClick={saveNotifications} disabled={saving}
-          style={{ marginTop: "16px", fontFamily: R, fontSize: "12px", background: saving ? "#E8F0E4" : "#3CCE2A", color: saving ? "#5A7A60" : "#080F06", border: "2px solid #080F06", borderRadius: "6px", padding: "10px 20px", cursor: "pointer", letterSpacing: "1.5px" }}>
+          style={{ marginTop: "16px", fontFamily: R, fontSize: "12px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#080F06", border: "2px solid #080F06", borderRadius: "6px", padding: "10px 20px", cursor: "pointer", letterSpacing: "1.5px" }}>
           {saving ? "SAVING..." : "SAVE PREFERENCES"}
         </button>
       </div>
 
       {/* Danger zone */}
       <div style={{ background: "#1A0A0A", border: "2px solid #3D0A18", borderRadius: "12px", padding: "20px" }}>
-        <div style={{ fontFamily: R, fontSize: "12px", color: "#F04060", letterSpacing: "2px", marginBottom: "10px" }}>DANGER ZONE</div>
+        <div style={{ fontFamily: R, fontSize: "12px", color: "#CC3344", letterSpacing: "2px", marginBottom: "10px" }}>DANGER ZONE</div>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", marginBottom: "14px", lineHeight: 1.6 }}>
           Deleting your account is permanent and cannot be undone. All your posts, orders, and data will be removed.
         </p>
-        <button style={{ fontFamily: R, fontSize: "12px", background: "transparent", border: "1.5px solid #F04060", borderRadius: "6px", color: "#F04060", padding: "8px 18px", cursor: "pointer", letterSpacing: "1px" }}>
+        <button style={{ fontFamily: R, fontSize: "12px", background: "transparent", border: "1.5px solid #CC3344", borderRadius: "6px", color: "#CC3344", padding: "8px 18px", cursor: "pointer", letterSpacing: "1px" }}>
           DELETE ACCOUNT
         </button>
       </div>
 
-      {error && <div style={{ background: "#3D0A18", border: "1.5px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
-      {success && <div style={{ background: "#E8F0E4", border: "1.5px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: "#3CCE2A", letterSpacing: "1px" }}>✦ {success}</div>}
+      {error && <div style={{ background: "#3D0A18", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
+      {success && <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "1px" }}>✦ {success}</div>}
     </div>
   );
 }

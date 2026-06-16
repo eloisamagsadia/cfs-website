@@ -20,7 +20,7 @@ const C = {
   sage:   "#4A7C59",
   border: "#DDE8DD",
   muted:  "#7A8E7A",
-  green:  "#3CCE2A",
+  green:  "#1A8040",
 };
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
@@ -57,7 +57,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
   const spotsLeft = event.capacity ? event.capacity - (regCount ?? 0) : null;
   const eventDate = new Date(event.date);
   const isPast = eventDate < new Date();
-  const statusColors: Record<string, string> = { upcoming: "#3CCE2A", ongoing: "#F5C82A", completed: "#4A7C59", cancelled: "#F04060" };
+  const statusColors: Record<string, string> = { upcoming: "#1A8040", ongoing: "#156530", completed: "#4A7C59", cancelled: "#CC3344" };
   const statusColor = statusColors[event.status] ?? "#4A7C59";
 
   return (
@@ -79,7 +79,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
                 {event.status.toUpperCase()}
               </span>
               {event.is_members_only && (
-                <span style={{ fontFamily: B, fontSize: "10px", fontWeight: 700, color: "#F5C82A", background: "#FFF8E1", border: "1px solid #F5C82A40", borderRadius: "20px", padding: "3px 12px" }}>
+                <span style={{ fontFamily: B, fontSize: "10px", fontWeight: 700, color: "#156530", background: "#FFF8E1", border: "1px solid #1A804040", borderRadius: "20px", padding: "3px 12px" }}>
                   MEMBERS ONLY
                 </span>
               )}
@@ -156,7 +156,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
         <div className="event-register-card" style={{ position: "sticky", top: "90px", display: "flex", flexDirection: "column", gap: "14px" }}>
           <div style={{ background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: "16px", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
             <div style={{ background: C.sage, padding: "16px 24px", textAlign: "center" }}>
-              <div style={{ fontFamily: S, fontSize: "2rem", color: event.price > 0 ? "#F07228" : C.green, lineHeight: 1 }}>
+              <div style={{ fontFamily: S, fontSize: "2rem", color: event.price > 0 ? "#1A8040" : C.green, lineHeight: 1 }}>
                 {event.price > 0 ? `₱${Number(event.price).toLocaleString()}` : "FREE"}
               </div>
               {event.price > 0 && <div style={{ fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.6)", marginTop: "4px" }}>per person</div>}
@@ -171,7 +171,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
                     <span style={{ fontFamily: B, fontSize: "12px", color: C.sage }}>{regCount ?? 0}/{event.capacity}</span>
                   </div>
                   <div style={{ background: C.mist, borderRadius: "20px", height: "8px", overflow: "hidden" }}>
-                    <div style={{ height: "100%", width: `${Math.min(((regCount ?? 0) / event.capacity) * 100, 100)}%`, background: isFull ? "#F04060" : C.green, borderRadius: "20px", transition: "width 0.5s" }} />
+                    <div style={{ height: "100%", width: `${Math.min(((regCount ?? 0) / event.capacity) * 100, 100)}%`, background: isFull ? "#CC3344" : C.green, borderRadius: "20px", transition: "width 0.5s" }} />
                   </div>
                 </div>
               )}

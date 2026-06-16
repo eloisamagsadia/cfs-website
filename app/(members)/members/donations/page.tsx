@@ -12,16 +12,16 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 const S = "var(--font-dm-serif,'DM Serif Display',serif)";
 
 const SC: Record<string, string> = {
-  completed: "#3CCE2A",
-  pending:   "#F5C82A",
-  failed:    "#F04060",
+  completed: "#1A8040",
+  pending:   "#156530",
+  failed:    "#CC3344",
 };
 
 const TIERS = [
-  { name: "Supermoon",    min: 8000,  max: Infinity, color: "#F5C82A" },
-  { name: "Blue Moon",    min: 5000,  max: 7999,     color: "#8EE440" },
-  { name: "Harvest Moon", min: 3000,  max: 4999,     color: "#F07228" },
-  { name: "Blood Moon",   min: 1500,  max: 2999,     color: "#F04060" },
+  { name: "Supermoon",    min: 8000,  max: Infinity, color: "#156530" },
+  { name: "Blue Moon",    min: 5000,  max: 7999,     color: "#1A8040" },
+  { name: "Harvest Moon", min: 3000,  max: 4999,     color: "#1A8040" },
+  { name: "Blood Moon",   min: 1500,  max: 2999,     color: "#CC3344" },
 ];
 
 function getTier(amount: number) {
@@ -52,15 +52,15 @@ export default async function MyDonationsPage() {
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>MY DONATIONS</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
-          {completed.length} donation{completed.length !== 1 ? "s" : ""} · <span style={{ color: "#3CCE2A" }}>₱{totalGiven.toLocaleString()} contributed</span>
+          {completed.length} donation{completed.length !== 1 ? "s" : ""} · <span style={{ color: "#1A8040" }}>₱{totalGiven.toLocaleString()} contributed</span>
         </p>
       </div>
 
       {totalGiven > 0 && (
-        <div style={{ background: "linear-gradient(135deg, #E8F0E4, #D4EAD0)", border: "2px solid #2CB52040", borderRadius: "14px", padding: "24px", display: "flex", alignItems: "center", gap: "20px" }}>
+        <div style={{ background: "linear-gradient(135deg, #E8F0E4, #D4EAD0)", border: "2px solid #1A804040", borderRadius: "14px", padding: "24px", display: "flex", alignItems: "center", gap: "20px" }}>
           <div style={{ fontSize: "36px" }}>💚</div>
           <div>
-            <div style={{ fontFamily: S, fontSize: "1.8rem", color: "#3CCE2A" }}>₱{totalGiven.toLocaleString()}</div>
+            <div style={{ fontFamily: S, fontSize: "1.8rem", color: "#1A8040" }}>₱{totalGiven.toLocaleString()}</div>
             <div style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Total contributed to CFS — thank you for your support!</div>
           </div>
         </div>
@@ -70,7 +70,7 @@ export default async function MyDonationsPage() {
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
           <div style={{ fontSize: "40px", marginBottom: "12px" }}>💚</div>
           <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "16px" }}>NO DONATIONS YET</div>
-          <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>DONATE NOW →</a>
+          <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>DONATE NOW →</a>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -121,17 +121,17 @@ export default async function MyDonationsPage() {
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Processing fee <span style={{ fontSize: "10px" }}>(GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span></span>
-                          <span style={{ fontFamily: R, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee!)}</span>
+                          <span style={{ fontFamily: R, fontSize: "12px", color: "#CC3344" }}>+₱{fmt(fee!)}</span>
                         </div>
                         <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <span style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px" }}>TOTAL CHARGED</span>
-                          <span style={{ fontFamily: S, fontSize: "1.3rem", color: "#3CCE2A" }}>₱{fmt(total)}</span>
+                          <span style={{ fontFamily: S, fontSize: "1.3rem", color: "#1A8040" }}>₱{fmt(total)}</span>
                         </div>
                       </>
                     ) : (
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <span style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px" }}>AMOUNT PAID</span>
-                        <span style={{ fontFamily: S, fontSize: "1.3rem", color: "#3CCE2A" }}>₱{fmt(total)}</span>
+                        <span style={{ fontFamily: S, fontSize: "1.3rem", color: "#1A8040" }}>₱{fmt(total)}</span>
                       </div>
                     )}
                     {d.message && (
@@ -165,7 +165,7 @@ export default async function MyDonationsPage() {
       )}
 
       <div style={{ textAlign: "center" }}>
-        <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 24px", letterSpacing: "1.5px", display: "inline-block" }}>
+        <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 24px", letterSpacing: "1.5px", display: "inline-block" }}>
           DONATE AGAIN →
         </a>
       </div>

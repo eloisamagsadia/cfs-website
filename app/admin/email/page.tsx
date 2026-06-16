@@ -5,8 +5,8 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const ROLE_COLORS: Record<string, string> = {
-  super_admin: "#F5C82A", admin: "#F07228", moderator: "#69C9D0",
-  sponsor: "#B47FE3", member: "#3CCE2A",
+  super_admin: "#156530", admin: "#1A8040", moderator: "#5A7A60",
+  sponsor: "#1A8040", member: "#1A8040",
 };
 
 const TEMPLATES = [
@@ -121,8 +121,8 @@ export default function AdminEmailPage() {
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Send a custom email to any member.</p>
       </div>
 
-      {error && <div style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
-      {success && <div style={{ background: "#E8F0E4", border: "2px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: "#3CCE2A", letterSpacing: "1px" }}>✓ {success}</div>}
+      {error && <div style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
+      {success && <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "1px" }}>✓ {success}</div>}
 
       <div className="email-layout" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", alignItems: "start" }}>
         {/* Recipients */}
@@ -132,7 +132,7 @@ export default function AdminEmailPage() {
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {["all", "sponsor", "admin", "moderator", "member"].map(r => (
               <button key={r} onClick={() => setFilterRole(r)}
-                style={{ fontFamily: R, fontSize: "10px", padding: "4px 10px", borderRadius: "20px", border: `1.5px solid ${filterRole === r ? (ROLE_COLORS[r] ?? "#3CCE2A") : "#DDE8DD"}`, background: filterRole === r ? (ROLE_COLORS[r] ?? "#3CCE2A") + "20" : "transparent", color: filterRole === r ? (ROLE_COLORS[r] ?? "#3CCE2A") : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
+                style={{ fontFamily: R, fontSize: "10px", padding: "4px 10px", borderRadius: "20px", border: `1.5px solid ${filterRole === r ? (ROLE_COLORS[r] ?? "#1A8040") : "#DDE8DD"}`, background: filterRole === r ? (ROLE_COLORS[r] ?? "#1A8040") + "20" : "transparent", color: filterRole === r ? (ROLE_COLORS[r] ?? "#1A8040") : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
                 {r.toUpperCase()}
               </button>
             ))}
@@ -148,11 +148,11 @@ export default function AdminEmailPage() {
           <div style={{ maxHeight: "300px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "4px" }}>
             {filtered.map(m => {
               const isSelected = !!selected.find(s => s.id === m.id);
-              const color = ROLE_COLORS[m.role] ?? "#3CCE2A";
+              const color = ROLE_COLORS[m.role] ?? "#1A8040";
               return (
                 <div key={m.id} onClick={() => toggleMember(m)}
-                  style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", background: isSelected ? "#E8F0E4" : "transparent", border: `1.5px solid ${isSelected ? "#3CCE2A" : "transparent"}` }}>
-                  <div style={{ width: "18px", height: "18px", borderRadius: "4px", border: `2px solid ${isSelected ? "#3CCE2A" : "#DDE8DD"}`, background: isSelected ? "#3CCE2A" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", cursor: "pointer", background: isSelected ? "#E8F0E4" : "transparent", border: `1.5px solid ${isSelected ? "#1A8040" : "transparent"}` }}>
+                  <div style={{ width: "18px", height: "18px", borderRadius: "4px", border: `2px solid ${isSelected ? "#1A8040" : "#DDE8DD"}`, background: isSelected ? "#1A8040" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     {isSelected && <span style={{ color: "#080F06", fontSize: "12px", fontWeight: "bold" }}>✓</span>}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -167,7 +167,7 @@ export default function AdminEmailPage() {
           </div>
 
           {selected.length > 0 && (
-            <div style={{ fontFamily: B, fontSize: "12px", color: "#3CCE2A", padding: "6px 12px", background: "#E8F0E4", borderRadius: "6px" }}>
+            <div style={{ fontFamily: B, fontSize: "12px", color: "#1A8040", padding: "6px 12px", background: "#E8F0E4", borderRadius: "6px" }}>
               {selected.length} recipient{selected.length > 1 ? "s" : ""} selected
             </div>
           )}
@@ -183,7 +183,7 @@ export default function AdminEmailPage() {
                 setSubject(t.subject);
                 setMessage(t.message);
               }}
-                style={{ fontFamily: B, fontSize: "11px", background: activeTemplate === t.id ? "#E8F0E4" : "#F2F7F2", border: `1.5px solid ${activeTemplate === t.id ? "#3CCE2A" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 12px", color: activeTemplate === t.id ? "#3CCE2A" : "#4A7C59", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
+                style={{ fontFamily: B, fontSize: "11px", background: activeTemplate === t.id ? "#E8F0E4" : "#F2F7F2", border: `1.5px solid ${activeTemplate === t.id ? "#1A8040" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 12px", color: activeTemplate === t.id ? "#1A8040" : "#4A7C59", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
                 <span>{t.emoji}</span>{t.label}
               </button>
             ))}
@@ -215,7 +215,7 @@ export default function AdminEmailPage() {
           </div>
 
           <button onClick={handleSend} disabled={sending || !selected.length || !subject || !message}
-            style={{ fontFamily: R, fontSize: "12px", background: sending || !selected.length || !subject || !message ? "#F2F7F2" : "#3CCE2A", color: sending || !selected.length || !subject || !message ? "#5A7A60" : "#080F06", border: "none", borderRadius: "6px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+            style={{ fontFamily: R, fontSize: "12px", background: sending || !selected.length || !subject || !message ? "#F2F7F2" : "#1A8040", color: sending || !selected.length || !subject || !message ? "#5A7A60" : "#080F06", border: "none", borderRadius: "6px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
             {sending ? "SENDING..." : `SEND TO ${selected.length} RECIPIENT${selected.length !== 1 ? "S" : ""}`}
           </button>
         </div>

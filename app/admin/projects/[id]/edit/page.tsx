@@ -68,7 +68,7 @@ export default function AdminProjectEditPage() {
         <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
       </div>
 
-      {error && <div style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
+      {error && <div style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
 
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
         <div><label style={labelStyle}>PROJECT TITLE *</label><input style={inputStyle} value={form.title} onChange={e => set("title", e.target.value)} /></div>
@@ -86,8 +86,8 @@ export default function AdminProjectEditPage() {
         {form.status === "ongoing" && (
           <div>
             <label style={labelStyle}>PROGRESS ({form.progress_percent}%)</label>
-            <input type="range" min="0" max="100" value={form.progress_percent} onChange={e => set("progress_percent", e.target.value)} style={{ width: "100%", accentColor: "#3CCE2A" }} />
-            <div style={{ display: "flex", justifyContent: "space-between", fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "4px" }}><span>0%</span><span style={{ color: "#3CCE2A" }}>{form.progress_percent}%</span><span>100%</span></div>
+            <input type="range" min="0" max="100" value={form.progress_percent} onChange={e => set("progress_percent", e.target.value)} style={{ width: "100%", accentColor: "#1A8040" }} />
+            <div style={{ display: "flex", justifyContent: "space-between", fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "4px" }}><span>0%</span><span style={{ color: "#1A8040" }}>{form.progress_percent}%</span><span>100%</span></div>
           </div>
         )}
       </div>
@@ -96,15 +96,15 @@ export default function AdminProjectEditPage() {
         <div style={{ display: "flex", gap: "12px" }}>
           <button onClick={handleSave} disabled={saving} style={{ position: "relative", display: "inline-block", cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1 }}>
             <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#1B3A2D", padding: "10px 28px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>{saving ? "SAVING..." : "SAVE CHANGES"}</span>
+            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "10px 28px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>{saving ? "SAVING..." : "SAVE CHANGES"}</span>
           </button>
           <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "none", border: "2px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
         </div>
         {!confirmDelete
-          ? <button onClick={() => setConfirmDelete(true)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #F04060", borderRadius: "6px", color: "#F04060", padding: "10px 16px", cursor: "pointer" }}>🗑 Delete Project</button>
+          ? <button onClick={() => setConfirmDelete(true)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #CC3344", borderRadius: "6px", color: "#CC3344", padding: "10px 16px", cursor: "pointer" }}>🗑 Delete Project</button>
           : <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>Sure?</span>
-              <button onClick={handleDelete} disabled={deleting} style={{ fontFamily: B, fontSize: "12px", background: "#F04060", border: "none", borderRadius: "6px", color: "#fff", padding: "8px 14px", cursor: "pointer" }}>{deleting ? "Deleting..." : "Yes, Delete"}</button>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>Sure?</span>
+              <button onClick={handleDelete} disabled={deleting} style={{ fontFamily: B, fontSize: "12px", background: "#CC3344", border: "none", borderRadius: "6px", color: "#fff", padding: "8px 14px", cursor: "pointer" }}>{deleting ? "Deleting..." : "Yes, Delete"}</button>
               <button onClick={() => setConfirmDelete(false)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "8px 14px", cursor: "pointer" }}>Cancel</button>
             </div>
         }

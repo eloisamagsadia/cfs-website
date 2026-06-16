@@ -24,13 +24,13 @@ export default async function AccountPage() {
   const email = clerkUser?.emailAddresses?.[0]?.emailAddress ?? "—";
 
   const sections = [
-    { title:"PROFILE",   desc:"Avatar, display name, bio, social links", href:"/members/account/profile", color:"#3CCE2A", bg:"#E8F0E4" },
-    { title:"SETTINGS",  desc:"Notifications, privacy, 2FA",             href:"/members/account/settings", color:"#F5C82A", bg:"#3D3000" },
-    { title:"MY EVENTS", desc:"Registered events & tickets",             href:"/members/events",           color:"#F07228", bg:"#3D1A0A" },
-    { title:"MY ORDERS", desc:"Order history & tracking",                href:"/members/orders",           color:"#8EE440", bg:"#1E3010" },
-    { title:"MY MEDIA",  desc:"Images you've uploaded across the site",   href:"/members/account/media",    color:"#F07228", bg:"#3D1A0A" },
-    { title:"MY POSTS",   desc:"Your posts and reposts in the community",   href:"/members/account/posts",    color:"#3CCE2A", bg:"#E8F0E4" },
-    { title:"MY ACTIVITY",desc:"Comments, reactions and interactions",      href:"/members/account/activity", color:"#F5C82A", bg:"#3D3000" },
+    { title:"PROFILE",   desc:"Avatar, display name, bio, social links", href:"/members/account/profile", color:"#1A8040", bg:"#E8F0E4" },
+    { title:"SETTINGS",  desc:"Notifications, privacy, 2FA",             href:"/members/account/settings", color:"#156530", bg:"#3D3000" },
+    { title:"MY EVENTS", desc:"Registered events & tickets",             href:"/members/events",           color:"#1A8040", bg:"#3D1A0A" },
+    { title:"MY ORDERS", desc:"Order history & tracking",                href:"/members/orders",           color:"#1A8040", bg:"#1E3010" },
+    { title:"MY MEDIA",  desc:"Images you've uploaded across the site",   href:"/members/account/media",    color:"#1A8040", bg:"#3D1A0A" },
+    { title:"MY POSTS",   desc:"Your posts and reposts in the community",   href:"/members/account/posts",    color:"#1A8040", bg:"#E8F0E4" },
+    { title:"MY ACTIVITY",desc:"Comments, reactions and interactions",      href:"/members/account/activity", color:"#156530", bg:"#3D3000" },
   ];
 
   return (
@@ -42,17 +42,17 @@ export default async function AccountPage() {
 
       <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"24px" }}>
         <div style={{ display:"flex", alignItems:"center", gap:"16px", marginBottom:"20px" }}>
-          <div style={{ width:"60px", height:"60px", borderRadius:"50%", background:profile?.avatar_url?"transparent":"#E8F0E4", border:"2px solid #3CCE2A", overflow:"hidden", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+          <div style={{ width:"60px", height:"60px", borderRadius:"50%", background:profile?.avatar_url?"transparent":"#E8F0E4", border:"2px solid #1A8040", overflow:"hidden", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
             {profile?.avatar_url
               ? <img src={profile.avatar_url} alt="avatar" style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
-              : <span style={{ fontFamily:R, fontSize:"22px", color:"#3CCE2A" }}>{(profile?.display_name ?? "M")[0].toUpperCase()}</span>
+              : <span style={{ fontFamily:R, fontSize:"22px", color:"#1A8040" }}>{(profile?.display_name ?? "M")[0].toUpperCase()}</span>
             }
           </div>
           <div>
             <div style={{ fontFamily:R, fontSize:"1.1rem", color:"#1B3A2D", letterSpacing:"2px", marginBottom:"4px" }}>{profile?.display_name ?? "Member"}</div>
             <div style={{ fontFamily:B, fontSize:"13px", color:"#4A7C59" }}>{email}</div>
             <div style={{ display:"inline-block", background:"#E8F0E4", border:"1px solid #DDE8DD", borderRadius:"20px", padding:"2px 10px", marginTop:"6px" }}>
-              <span style={{ fontFamily:R, fontSize:"10px", color:"#3CCE2A", letterSpacing:"1.5px" }}>{(profile?.role ?? "member").toUpperCase()}</span>
+              <span style={{ fontFamily:R, fontSize:"10px", color:"#1A8040", letterSpacing:"1.5px" }}>{(profile?.role ?? "member").toUpperCase()}</span>
             </div>
           </div>
         </div>

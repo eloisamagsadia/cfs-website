@@ -18,7 +18,7 @@ const C = {
   sage:   "#4A7C59",
   border: "#DDE8DD",
   muted:  "#7A8E7A",
-  green:  "#3CCE2A",
+  green:  "#1A8040",
 };
 
 const QUARTER_LABELS: Record<number, string> = { 1: "JAN–MAR", 2: "APR–JUN", 3: "JUL–SEP", 4: "OCT–DEC" };
@@ -133,8 +133,8 @@ export default async function ReportsPage() {
                             <div style={{ display:"flex", gap:"16px", flexWrap:"wrap", marginBottom:"12px" }}>
                               {[
                                 { label:"Inflow",    value:totals.inflow,    color:C.green },
-                                { label:"Outflow",   value:totals.outflow,   color:"#F04060" },
-                                { label:"Remaining", value:totals.remaining, color:"#F5C82A" },
+                                { label:"Outflow",   value:totals.outflow,   color:"#CC3344" },
+                                { label:"Remaining", value:totals.remaining, color:"#156530" },
                               ].filter(i => i.value > 0).map((item) => (
                                 <div key={item.label} style={{ display:"flex", alignItems:"center", gap:"6px" }}>
                                   <div style={{ width:"6px", height:"6px", borderRadius:"50%", background:item.color, flexShrink:0 }} />

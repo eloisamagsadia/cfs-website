@@ -22,12 +22,12 @@ export default function BroadcastPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px", maxWidth: "600px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F5C82A", letterSpacing: "3px", marginBottom: "4px" }}>BROADCAST</h1>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#156530", letterSpacing: "3px", marginBottom: "4px" }}>BROADCAST</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Send a notification to all members on the platform</p>
       </div>
 
       {sent !== null && (
-        <div style={{ background: "#E8F0E4", border: "2px solid #3CCE2A", borderRadius: "10px", padding: "14px 18px", fontFamily: B, fontSize: "13px", color: "#3CCE2A" }}>
+        <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "10px", padding: "14px 18px", fontFamily: B, fontSize: "13px", color: "#1A8040" }}>
           ✅ Broadcast sent to {sent} members!
         </div>
       )}
@@ -49,7 +49,7 @@ export default function BroadcastPage() {
             style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "vertical", boxSizing: "border-box" as const }} />
         </div>
         <button onClick={send} disabled={sending || !form.title.trim() || !form.message.trim()}
-          style={{ fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#F7FAF5", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", opacity: (sending || !form.title.trim() || !form.message.trim()) ? 0.5 : 1 }}>
+          style={{ fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#F7FAF5", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", opacity: (sending || !form.title.trim() || !form.message.trim()) ? 0.5 : 1 }}>
           {sending ? "SENDING..." : "📣 SEND TO ALL MEMBERS"}
         </button>
       </div>

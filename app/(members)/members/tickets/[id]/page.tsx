@@ -10,10 +10,10 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 const S = "var(--font-dm-serif,'DM Serif Display',serif)";
 
 const STATUS_COLORS: Record<string, string> = {
-  active: "#3CCE2A",
+  active: "#1A8040",
   used: "#5A7A60",
-  cancelled: "#F04060",
-  pending_payment: "#F5C82A",
+  cancelled: "#CC3344",
+  pending_payment: "#156530",
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -50,12 +50,12 @@ export default function TicketPage() {
     <div style={{ textAlign: "center", padding: "80px" }}>
       <div style={{ fontSize: "40px", marginBottom: "12px" }}>🎫</div>
       <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A60", letterSpacing: "2px" }}>TICKET NOT FOUND</div>
-      <Link href="/members/events" style={{ fontFamily: B, fontSize: "13px", color: "#3CCE2A", textDecoration: "none", display: "block", marginTop: "12px" }}>← Back to Events</Link>
+      <Link href="/members/events" style={{ fontFamily: B, fontSize: "13px", color: "#1A8040", textDecoration: "none", display: "block", marginTop: "12px" }}>← Back to Events</Link>
     </div>
   );
 
   const statusColor = STATUS_COLORS[ticket.status] ?? "#5A7A60";
-  const tierColor = ticket.event_tiers?.color ?? "#3CCE2A";
+  const tierColor = ticket.event_tiers?.color ?? "#1A8040";
   const event = ticket.events ?? {};
   const tier = ticket.event_tiers ?? {};
   const qrValue = JSON.stringify({ ticket_id: ticket.id, ticket_number: ticket.ticket_number });
@@ -164,7 +164,7 @@ export default function TicketPage() {
           ) : ticket.status === "pending_payment" ? (
             <div style={{ padding: "24px", textAlign: "center" }}>
               <div style={{ fontSize: "40px", marginBottom: "8px" }}>⏳</div>
-              <div style={{ fontFamily: R, fontSize: "13px", color: "#F5C82A", letterSpacing: "2px" }}>AWAITING PAYMENT</div>
+              <div style={{ fontFamily: R, fontSize: "13px", color: "#156530", letterSpacing: "2px" }}>AWAITING PAYMENT</div>
               <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "6px" }}>Complete payment to activate your ticket</div>
             </div>
           ) : null}

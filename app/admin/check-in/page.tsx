@@ -96,12 +96,12 @@ export default function CheckInPage() {
             <div style={{ padding: "16px", display: "flex", gap: "10px" }}>
               {!scanning ? (
                 <button onClick={startScanner}
-                  style={{ flex: 1, fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+                  style={{ flex: 1, fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
                   START CAMERA
                 </button>
               ) : (
                 <button onClick={stopScanner}
-                  style={{ flex: 1, fontFamily: R, fontSize: "12px", background: "transparent", color: "#F04060", border: "1.5px solid #F04060", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+                  style={{ flex: 1, fontFamily: R, fontSize: "12px", background: "transparent", color: "#CC3344", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
                   STOP CAMERA
                 </button>
               )}
@@ -122,7 +122,7 @@ export default function CheckInPage() {
               <button
                 onClick={() => { if (manualId.trim()) checkIn(manualId.trim()); }}
                 disabled={!manualId.trim() || loading}
-                style={{ fontFamily: R, fontSize: "11px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "8px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1px", opacity: (!manualId.trim() || loading) ? 0.5 : 1 }}>
+                style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "8px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1px", opacity: (!manualId.trim() || loading) ? 0.5 : 1 }}>
                 {loading ? "..." : "CHECK IN"}
               </button>
             </div>
@@ -130,10 +130,10 @@ export default function CheckInPage() {
         </>
       ) : (
         /* Result */
-        <div style={{ background: "#FFFFFF", border: `2px solid ${result.success ? "#3CCE2A" : "#F04060"}`, borderRadius: "16px", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div style={{ background: "#FFFFFF", border: `2px solid ${result.success ? "#1A8040" : "#CC3344"}`, borderRadius: "16px", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: "56px" }}>{result.success ? "✅" : result.error?.includes("already") ? "⚠️" : "❌"}</div>
-            <div style={{ fontFamily: R, fontSize: "1.2rem", color: result.success ? "#3CCE2A" : "#F04060", letterSpacing: "2px", marginTop: "8px" }}>
+            <div style={{ fontFamily: R, fontSize: "1.2rem", color: result.success ? "#1A8040" : "#CC3344", letterSpacing: "2px", marginTop: "8px" }}>
               {result.success ? "CHECKED IN!" : result.error?.includes("already") ? "ALREADY USED" : "INVALID TICKET"}
             </div>
             {result.error && <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", marginTop: "6px" }}>{result.error}</div>}
@@ -145,7 +145,7 @@ export default function CheckInPage() {
                 <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E8F0E4", border: "2px solid #DDE8DD", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {result.ticket.profiles?.avatar_url
                     ? <img src={result.ticket.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <span style={{ fontFamily: R, fontSize: "18px", color: "#3CCE2A" }}>{(result.ticket.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
+                    : <span style={{ fontFamily: R, fontSize: "18px", color: "#1A8040" }}>{(result.ticket.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
                   }
                 </div>
                 <div>
@@ -167,7 +167,7 @@ export default function CheckInPage() {
           )}
 
           <button onClick={reset}
-            style={{ fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+            style={{ fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
             SCAN NEXT TICKET
           </button>
         </div>

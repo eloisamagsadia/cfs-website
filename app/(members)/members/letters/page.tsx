@@ -48,8 +48,8 @@ export default function LettersPage() {
       <SkeletonPage />
     </div>
       ) : error ? (
-        <div style={{ background: "#FFFFFF", border: "2px solid #F04060", borderRadius: "12px", padding: "32px", textAlign: "center" }}>
-          <div style={{ fontFamily: B, fontSize: "13px", color: "#F04060" }}>Failed to load letters. Please try again later.</div>
+        <div style={{ background: "#FFFFFF", border: "2px solid #CC3344", borderRadius: "12px", padding: "32px", textAlign: "center" }}>
+          <div style={{ fontFamily: B, fontSize: "13px", color: "#CC3344" }}>Failed to load letters. Please try again later.</div>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
@@ -61,7 +61,7 @@ export default function LettersPage() {
             >
               <div
                 className="letter-card" style={{ display: "flex", gap: "20px", alignItems: "flex-start", padding: "24px", background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", marginBottom: "10px", transition: "border-color 0.15s", cursor: "pointer" }}
-                onMouseEnter={e => (e.currentTarget.style.borderColor = "#3CCE2A")}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = "#1A8040")}
                 onMouseLeave={e => (e.currentTarget.style.borderColor = "#DDE8DD")}
               >
                 {/* Text content */}
@@ -70,7 +70,7 @@ export default function LettersPage() {
                   {letter.tags.length > 0 && (
                     <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "10px" }}>
                       {letter.tags.slice(0, 3).map((tag: string) => (
-                        <span key={tag} style={{ fontFamily: B, fontSize: "10px", color: "#F07228", background: "#3D1A0A", borderRadius: "20px", padding: "2px 10px", letterSpacing: "0.5px" }}>
+                        <span key={tag} style={{ fontFamily: B, fontSize: "10px", color: "#1A8040", background: "#3D1A0A", borderRadius: "20px", padding: "2px 10px", letterSpacing: "0.5px" }}>
                           {tag}
                         </span>
                       ))}
@@ -96,7 +96,7 @@ export default function LettersPage() {
                       <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>letters from colet</span>
                     </div>
                     <span style={{ fontFamily: B, fontSize: "12px", color: "#3A5A30" }}>{timeAgo(letter.pubDate)}</span>
-                    <span style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A", marginLeft: "auto", letterSpacing: "1px" }}>READ ON MEDIUM →</span>
+                    <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", marginLeft: "auto", letterSpacing: "1px" }}>READ ON MEDIUM →</span>
                   </div>
                 </div>
 

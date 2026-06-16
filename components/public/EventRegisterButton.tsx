@@ -151,14 +151,14 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
   if (registered) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <div style={{ background: "#E8F5E9", border: "2px solid #3CCE2A", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
+        <div style={{ background: "#E8F5E9", border: "2px solid #1A8040", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
           <div style={{ fontSize: "28px", marginBottom: "8px" }}>🎫</div>
-          <div style={{ fontFamily: R, fontSize: "14px", color: "#3CCE2A", letterSpacing: "1.5px", marginBottom: "4px" }}>YOU'RE REGISTERED!</div>
+          <div style={{ fontFamily: R, fontSize: "14px", color: "#1A8040", letterSpacing: "1.5px", marginBottom: "4px" }}>YOU'RE REGISTERED!</div>
           <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Your ticket is ready</div>
         </div>
         {ticketId && (
           <button onClick={() => router.push(`/members/tickets/${ticketId}`)}
-            style={{ width: "100%", fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#1B3A2D", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
+            style={{ width: "100%", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
             VIEW MY TICKET →
           </button>
         )}
@@ -168,8 +168,8 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
 
   if (isFull && !hasTiers) {
     return (
-      <div style={{ background: "#3D0A18", border: "2px solid #F04060", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
-        <div style={{ fontFamily: R, fontSize: "14px", color: "#F04060", letterSpacing: "1.5px" }}>EVENT IS FULL</div>
+      <div style={{ background: "#3D0A18", border: "2px solid #CC3344", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
+        <div style={{ fontFamily: R, fontSize: "14px", color: "#CC3344", letterSpacing: "1.5px" }}>EVENT IS FULL</div>
       </div>
     );
   }
@@ -179,9 +179,9 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
 
       {/* Early access badge */}
       {sponsorDate && isSponsor && memberDate && now < memberDate && (
-        <div style={{ background: "#B47FE320", border: "1.5px solid #B47FE3", borderRadius: "8px", padding: "8px 12px", display: "flex", alignItems: "center", gap: "8px" }}>
+        <div style={{ background: "#1A804020", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "8px 12px", display: "flex", alignItems: "center", gap: "8px" }}>
           <span style={{ fontSize: "14px" }}>✦</span>
-          <span style={{ fontFamily: B, fontSize: "12px", color: "#B47FE3" }}>Early access — open for sponsors {memberDate.toLocaleDateString("en-PH", { month: "long", day: "numeric" })}</span>
+          <span style={{ fontFamily: B, fontSize: "12px", color: "#1A8040" }}>Early access — open for sponsors {memberDate.toLocaleDateString("en-PH", { month: "long", day: "numeric" })}</span>
         </div>
       )}
 
@@ -195,9 +195,9 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
 
       {/* Early access only — show to non-sponsors */}
       {isEarlyAccessOnly && (
-        <div style={{ background: "#B47FE310", border: "1.5px solid #B47FE360", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
+        <div style={{ background: "#1A804010", border: "1.5px solid #1A804060", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
           <div style={{ fontSize: "20px", marginBottom: "6px" }}>✦</div>
-          <div style={{ fontFamily: R, fontSize: "12px", color: "#B47FE3", letterSpacing: "1px", marginBottom: "4px" }}>SPONSOR EARLY ACCESS</div>
+          <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "1px", marginBottom: "4px" }}>SPONSOR EARLY ACCESS</div>
           <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>
             General registration opens {memberDate?.toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}
           </div>
@@ -216,7 +216,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
                 style={{ background: isSelected ? tier.color + "20" : "#ffffff", border: `1.5px solid ${isSelected ? tier.color : "#DDE8DD"}`, borderRadius: "10px", padding: "12px 14px", cursor: isSoldOut ? "not-allowed" : "pointer", textAlign: "left", opacity: isSoldOut ? 0.5 : 1, transition: "all 0.15s" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: tier.perks?.length ? "6px" : 0 }}>
                   <span style={{ fontFamily: R, fontSize: "13px", color: isSelected ? tier.color : "#1B3A2D", letterSpacing: "1px" }}>{tier.name}</span>
-                  <span style={{ fontFamily: R, fontSize: "13px", color: tier.price > 0 ? "#F07228" : "#3CCE2A" }}>
+                  <span style={{ fontFamily: R, fontSize: "13px", color: tier.price > 0 ? "#1A8040" : "#1A8040" }}>
                     {tier.price > 0 ? `₱${Number(tier.price).toLocaleString()}` : "FREE"}
                   </span>
                 </div>
@@ -227,7 +227,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
                     ))}
                   </div>
                 )}
-                {isSoldOut && <div style={{ fontFamily: B, fontSize: "10px", color: "#F04060", marginTop: "4px" }}>SOLD OUT</div>}
+                {isSoldOut && <div style={{ fontFamily: B, fontSize: "10px", color: "#CC3344", marginTop: "4px" }}>SOLD OUT</div>}
                 {!isSoldOut && tier.slots_remaining !== null && (
                   <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", marginTop: "4px" }}>{tier.slots_remaining} slots left</div>
                 )}
@@ -238,7 +238,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
       )}
 
       {error && (
-        <div style={{ background: "#3D0A18", border: "1.5px solid #F04060", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>
+        <div style={{ background: "#3D0A18", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>
           {error}
         </div>
       )}
@@ -257,11 +257,11 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Processing fee <span style={{ fontSize: "10px" }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span></span>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee)}</span>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>+₱{fmt(fee)}</span>
             </div>
             <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "6px", display: "flex", justifyContent: "space-between" }}>
               <span style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "1px" }}>TOTAL</span>
-              <span style={{ fontFamily: R, fontSize: "13px", color: "#F07228" }}>₱{fmt(total)}</span>
+              <span style={{ fontFamily: R, fontSize: "13px", color: "#1A8040" }}>₱{fmt(total)}</span>
             </div>
           </div>
         );
@@ -274,7 +274,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
           <button onClick={handleRegister} disabled={loading}
             style={{ position: "relative", display: "block", width: "100%", background: "transparent", border: "none", padding: 0, cursor: loading ? "not-allowed" : "pointer" }}>
             <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "8px" }} />
-            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "15px", background: loading ? "#E8F5E9" : basePrice ? "#F07228" : "#3CCE2A", color: loading ? "#4A7C59" : "#080F06", padding: "14px", border: "2px solid #080F06", borderRadius: "8px", textAlign: "center", letterSpacing: "2px" }}>
+            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "15px", background: loading ? "#E8F5E9" : basePrice ? "#1A8040" : "#1A8040", color: loading ? "#4A7C59" : "#080F06", padding: "14px", border: "2px solid #080F06", borderRadius: "8px", textAlign: "center", letterSpacing: "2px" }}>
               {loading ? "LOADING..." : !isLoggedIn ? "LOGIN TO REGISTER" : basePrice ? `PAY ₱${fmt(total)} →` : "RSVP FREE ✦"}
             </span>
           </button>

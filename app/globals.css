@@ -6,21 +6,20 @@
 
 :root {
   /* CFS Brand Colors */
-  --cfs-green:        #2CB520;
-  --cfs-green-dark:   #1A8010;
-  --cfs-green-deep:   #0F5008;
-  --cfs-green-light:  #8EE440;
-  --cfs-orange:       #F07228;
-  --cfs-yellow:       #F5C82A;
-  --cfs-red:          #F04060;
+  --cfs-green:        #1A8040;
+  --cfs-green-dark:   #156530;
+  --cfs-green-deep:   #1B3A2D;
+  --cfs-green-light:  #4A9A60;
+  --cfs-accent:       #1A8040;
+  --cfs-red:          #CC3344;
   --cfs-cream:        #1B3A2D;
   --cfs-cream-dim:    #5A7A60;
   --cfs-bg:           #F7FAF5;
   --cfs-surface:      #FFFFFF;
   --cfs-surface-2:    #F2F7F2;
-  --cfs-border:       #DDE8DD;
-  --cfs-dark:         #080F06;
-  --cfs-muted:        #4A7C59;
+  --cfs-border:       #D8E8D8;
+  --cfs-dark:         #1B3A2D;
+  --cfs-muted:        #5A7A60;
 
   /* Typography */
   --font-display: var(--font-righteous, 'Righteous', sans-serif);
@@ -32,10 +31,10 @@
   --foreground: 120 30% 10%;
   --card: 0 0% 100%;
   --card-foreground: 120 30% 10%;
-  --primary: 112 60% 30%;
+  --primary: 145 70% 30%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 45 85% 45%;
-  --secondary-foreground: 120 30% 10%;
+  --secondary: 145 30% 94%;
+  --secondary-foreground: 145 50% 15%;
   --muted: 120 15% 94%;
   --muted-foreground: 120 20% 35%;
   --accent: 112 30% 92%;
@@ -186,10 +185,10 @@
 
 /* Navbar styles */
 .nav-link { position: relative; transition: color 0.2s; }
-.nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1.5px; background: #3CCE2A; border-radius: 2px; transition: width 0.2s; }
+.nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1.5px; background: #1A8040; border-radius: 2px; transition: width 0.2s; }
 .nav-link:hover { color: #1B3A2D !important; }
 .nav-link:hover::after { width: 100%; }
-.cfs-logo:hover .cfs-logo-inner { border-color: #3CCE2A !important; }
+.cfs-logo:hover .cfs-logo-inner { border-color: #1A8040 !important; }
 
 /* ── Responsive ── */
 .desktop-sidebar {
@@ -353,7 +352,7 @@
 
 /* Green glow on focus */
 input:focus, textarea:focus, select:focus {
-  border-color: #3CCE2A !important;
+  border-color: #1A8040 !important;
   box-shadow: 0 0 0 2px rgba(60,206,42,0.15);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -590,7 +589,7 @@ select:focus {
 }
 
 /* ── Community Feed ── */
-.cf-search-input:focus { outline: none !important; box-shadow: none !important; border-color: #3CCE2A !important; }
+.cf-search-input:focus { outline: none !important; box-shadow: none !important; border-color: #1A8040 !important; }
 .cf-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; }
 .cf-chips::-webkit-scrollbar { display: none; }
 .cf-chip { font-family: var(--font-righteous,'Righteous',sans-serif); font-size: 11px; border-radius: 20px; padding: 6px 14px; cursor: pointer; letter-spacing: 1px; white-space: nowrap; border: 1.5px solid #DDE8DD; background: transparent; color: #5A7A60; transition: all 0.15s; flex-shrink: 0; }

@@ -124,12 +124,12 @@ export default function MediaLibraryPage() {
           {/* Folder tabs */}
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             <button onClick={() => setActiveFolder("all")}
-              style={{ fontFamily: R, fontSize: "11px", background: activeFolder === "all" ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeFolder === "all" ? "#3CCE2A" : "#DDE8DD"}`, color: activeFolder === "all" ? "#3CCE2A" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+              style={{ fontFamily: R, fontSize: "11px", background: activeFolder === "all" ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeFolder === "all" ? "#1A8040" : "#DDE8DD"}`, color: activeFolder === "all" ? "#1A8040" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
               ALL ({totalFiles})
             </button>
             {folders.map(folder => (
               <button key={folder} onClick={() => setActiveFolder(folder)}
-                style={{ fontFamily: R, fontSize: "11px", background: activeFolder === folder ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeFolder === folder ? "#3CCE2A" : "#DDE8DD"}`, color: activeFolder === folder ? "#3CCE2A" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+                style={{ fontFamily: R, fontSize: "11px", background: activeFolder === folder ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeFolder === folder ? "#1A8040" : "#DDE8DD"}`, color: activeFolder === folder ? "#1A8040" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
                 {FOLDER_ICONS[folder]} {(FOLDER_LABELS[folder] ?? folder).toUpperCase()} ({media[folder].length})
               </button>
             ))}
@@ -158,7 +158,7 @@ export default function MediaLibraryPage() {
                     </div>
                     <button
                       onClick={() => setConfirmDelete({ key: file.key, url: file.url })}
-                      style={{ position: "absolute", top: "6px", right: "6px", background: "rgba(0,0,0,0.7)", border: "none", borderRadius: "6px", padding: "4px 7px", cursor: "pointer", fontFamily: B, fontSize: "11px", color: "#F04060" }}
+                      style={{ position: "absolute", top: "6px", right: "6px", background: "rgba(0,0,0,0.7)", border: "none", borderRadius: "6px", padding: "4px 7px", cursor: "pointer", fontFamily: B, fontSize: "11px", color: "#CC3344" }}
                     >🗑</button>
                   </div>
                 ))}
@@ -184,7 +184,7 @@ export default function MediaLibraryPage() {
                 Cancel
               </button>
               <button onClick={() => handleDelete(confirmDelete.key)} disabled={deleting === confirmDelete.key}
-                style={{ flex: 1, padding: "10px", borderRadius: "10px", background: "#F04060", border: "none", cursor: "pointer", fontFamily: R, fontSize: "13px", color: "#fff" }}>
+                style={{ flex: 1, padding: "10px", borderRadius: "10px", background: "#CC3344", border: "none", cursor: "pointer", fontFamily: R, fontSize: "13px", color: "#fff" }}>
                 {deleting === confirmDelete.key ? "Deleting..." : "Delete"}
               </button>
             </div>

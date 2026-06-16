@@ -168,42 +168,42 @@ export default function AdminMediaPage() {
     topRow: { display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" },
     uploadBtn: { position: "relative" as const, display: "inline-block" },
     uploadBtnShadow: { position: "absolute" as const, top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" },
-    uploadBtnInner: { position: "relative" as const, display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#1B3A2D", padding: "8px 16px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1px", cursor: "pointer" },
+    uploadBtnInner: { position: "relative" as const, display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "8px 16px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1px", cursor: "pointer" },
     select: { fontFamily: B, fontSize: "12px", background: "#FFFFFF", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "7px 10px" },
     searchBar: { display: "flex", gap: "8px", alignItems: "center" },
     searchInput: { fontFamily: B, fontSize: "12px", background: "#FFFFFF", color: "#1B3A2D", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "7px 12px", width: "200px", outline: "none" },
     folderTabs: { display: "flex", gap: "6px", flexWrap: "wrap" as const },
     tab: { fontFamily: B, fontSize: "11px", background: "#FFFFFF", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 12px", cursor: "pointer", letterSpacing: "0.5px" },
-    tabActive: { fontFamily: B, fontSize: "11px", background: "#2C1A0A", color: "#F07228", border: "1px solid #F07228", borderRadius: "6px", padding: "5px 12px", cursor: "pointer", letterSpacing: "0.5px" },
+    tabActive: { fontFamily: B, fontSize: "11px", background: "#2C1A0A", color: "#1A8040", border: "1px solid #1A8040", borderRadius: "6px", padding: "5px 12px", cursor: "pointer", letterSpacing: "0.5px" },
     statsRow: { display: "flex", gap: "10px", flexWrap: "wrap" as const },
     stat: { background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "8px", padding: "8px 14px", fontFamily: B, fontSize: "11px", color: "#4A7C59" },
     statVal: { fontFamily: R, fontSize: "14px", color: "#1B3A2D", display: "block" },
     toolbar: { display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: "8px" },
     toolbarLeft: { display: "flex", gap: "8px", alignItems: "center" },
     checkAll: { fontFamily: B, fontSize: "11px", color: "#4A7C59", background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 10px", cursor: "pointer" },
-    delSel: { fontFamily: B, fontSize: "11px", color: "#F04060", background: "transparent", border: "1px solid #F04060", borderRadius: "6px", padding: "5px 12px", cursor: "pointer" },
+    delSel: { fontFamily: B, fontSize: "11px", color: "#CC3344", background: "transparent", border: "1px solid #CC3344", borderRadius: "6px", padding: "5px 12px", cursor: "pointer" },
     viewToggle: { display: "flex", gap: "4px" },
     viewBtn: { background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "13px", color: "#4A7C59" },
-    viewBtnActive: { background: "#2C1A0A", border: "1px solid #F07228", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "13px", color: "#F07228" },
+    viewBtnActive: { background: "#2C1A0A", border: "1px solid #1A8040", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "13px", color: "#1A8040" },
     grid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "10px" },
     card: { background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", overflow: "hidden", cursor: "pointer", transition: "border-color 0.15s" },
-    cardSel: { background: "#FFFFFF", border: "2px solid #F07228", borderRadius: "10px", overflow: "hidden", cursor: "pointer" },
+    cardSel: { background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "10px", overflow: "hidden", cursor: "pointer" },
     thumb: { height: "110px", background: "#F2F7F2", position: "relative" as const, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" },
     thumbImg: { width: "100%", height: "100%", objectFit: "cover" as const },
     pdfThumb: { display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", gap: "4px", height: "100%" },
-    checkBadge: { position: "absolute" as const, top: "6px", right: "6px", width: "20px", height: "20px", background: "#F07228", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "white", fontWeight: 700 },
+    checkBadge: { position: "absolute" as const, top: "6px", right: "6px", width: "20px", height: "20px", background: "#1A8040", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "white", fontWeight: 700 },
     folderBadge: { position: "absolute" as const, bottom: "6px", left: "6px", background: "rgba(0,0,0,0.65)", borderRadius: "4px", padding: "2px 6px", fontFamily: B, fontSize: "9px", color: "#4A7C59" },
     cardBody: { padding: "8px 10px 10px" },
     cardName: { fontFamily: B, fontSize: "11px", color: "#1B3A2D", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis", marginBottom: "2px" },
     cardMeta: { fontFamily: B, fontSize: "10px", color: "#5A7A60", marginBottom: "8px" },
     cardActions: { display: "flex", gap: "4px" },
     actBtn: { flex: 1, background: "transparent", border: "1px solid #DDE8DD", borderRadius: "4px", padding: "4px 0", fontFamily: B, fontSize: "10px", color: "#4A7C59", cursor: "pointer", textAlign: "center" as const, letterSpacing: "0.5px" },
-    actDel: { flex: 1, background: "transparent", border: "1px solid #3A1010", borderRadius: "4px", padding: "4px 0", fontFamily: B, fontSize: "10px", color: "#F04060", cursor: "pointer", textAlign: "center" as const },
+    actDel: { flex: 1, background: "transparent", border: "1px solid #3A1010", borderRadius: "4px", padding: "4px 0", fontFamily: B, fontSize: "10px", color: "#CC3344", cursor: "pointer", textAlign: "center" as const },
     listTable: { width: "100%", borderCollapse: "collapse" as const },
     listTh: { fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px", padding: "8px 12px", textAlign: "left" as const, borderBottom: "1px solid #DDE8DD" },
     listTd: { fontFamily: B, fontSize: "12px", color: "#1B3A2D", padding: "8px 12px", borderBottom: "1px solid #DDE8DD", verticalAlign: "middle" as const },
     empty: { textAlign: "center" as const, padding: "48px", fontFamily: R, color: "#5A7A60", fontSize: "13px", letterSpacing: "1px" },
-    toast: { position: "fixed" as const, bottom: "24px", right: "24px", background: "#FFFFFF", border: "1px solid #3CCE2A", borderRadius: "8px", padding: "10px 18px", fontFamily: B, fontSize: "12px", color: "#3CCE2A", zIndex: 9999 },
+    toast: { position: "fixed" as const, bottom: "24px", right: "24px", background: "#FFFFFF", border: "1px solid #1A8040", borderRadius: "8px", padding: "10px 18px", fontFamily: B, fontSize: "12px", color: "#1A8040", zIndex: 9999 },
     lightboxOverlay: { position: "fixed" as const, top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.85)", zIndex: 9998, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" as const, gap: "16px", padding: "24px" },    lightboxImg: { maxWidth: "80vw", maxHeight: "70vh", borderRadius: "8px", objectFit: "contain" as const },
     lightboxName: { fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "1px" },
     lightboxClose: { position: "absolute" as const, top: "20px", right: "20px", background: "transparent", border: "1px solid #5A7A50", color: "#4A7C59", borderRadius: "6px", padding: "6px 14px", fontFamily: B, fontSize: "12px", cursor: "pointer" },
@@ -218,7 +218,7 @@ export default function AdminMediaPage() {
         <div>
           <div style={s.title}>MEDIA LIBRARY</div>
           <div style={s.meta}>{counts.all} files · {counts.images} images · {counts.pdfs} PDFs · {formatSize(totalSize)} total</div>
-          {savings && <div style={{ fontFamily: B, fontSize: "11px", color: "#3CCE2A", marginTop: "2px" }}>✓ {savings}</div>}
+          {savings && <div style={{ fontFamily: B, fontSize: "11px", color: "#1A8040", marginTop: "2px" }}>✓ {savings}</div>}
         </div>
         <div style={s.topRow}>
           <select
@@ -371,7 +371,7 @@ export default function AdminMediaPage() {
                 onClick={() => toggleSelect(item.key)}
               >
                 <td style={{ ...s.listTd, width: "36px" }}>
-                  <div style={{ width: "16px", height: "16px", border: `2px solid ${selected.has(item.key) ? "#F07228" : "#DDE8DD"}`, borderRadius: "4px", background: selected.has(item.key) ? "#F07228" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "white" }}>
+                  <div style={{ width: "16px", height: "16px", border: `2px solid ${selected.has(item.key) ? "#1A8040" : "#DDE8DD"}`, borderRadius: "4px", background: selected.has(item.key) ? "#1A8040" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "white" }}>
                     {selected.has(item.key) ? "✓" : ""}
                   </div>
                 </td>
@@ -413,7 +413,7 @@ export default function AdminMediaPage() {
             <div style={{ fontFamily:B, fontSize:"13px", color:"#4A7C59", marginBottom:"28px", lineHeight:"1.6" }}>This action can&apos;t be undone. The {deleteModal.keys.length > 1 ? "files" : "file"} will be permanently removed.</div>
             <div style={{ display:"flex", gap:"10px" }}>
               <button onClick={() => setDeleteModal(null)} style={{ flex:1, fontFamily:B, fontSize:"13px", background:"transparent", color:"#4A7C59", border:"2px solid #DDE8DD", borderRadius:"10px", padding:"12px", cursor:"pointer" }}>Cancel</button>
-              <button onClick={() => confirmDelete(deleteModal.keys)} style={{ flex:1, fontFamily:B, fontSize:"13px", background:"#F04060", color:"white", border:"none", borderRadius:"10px", padding:"12px", cursor:"pointer", fontWeight:700 }}>Delete</button>
+              <button onClick={() => confirmDelete(deleteModal.keys)} style={{ flex:1, fontFamily:B, fontSize:"13px", background:"#CC3344", color:"white", border:"none", borderRadius:"10px", padding:"12px", cursor:"pointer", fontWeight:700 }}>Delete</button>
             </div>
           </div>
         </>,
@@ -428,7 +428,7 @@ export default function AdminMediaPage() {
           <div style={s.lightboxName}>{lightbox.name} · {formatSize(lightbox.size)} · {lightbox.folder}/</div>
           <div style={s.lightboxActions} onClick={e => e.stopPropagation()}>
             <button style={s.lightboxBtn} onClick={() => copyUrl(lightbox.url)}>Copy URL</button>
-            <button style={{ ...s.lightboxBtn, color: "#F04060", borderColor: "#F04060" }} onClick={() => { handleDelete([lightbox.key]); setLightbox(null); }}>Delete</button>
+            <button style={{ ...s.lightboxBtn, color: "#CC3344", borderColor: "#CC3344" }} onClick={() => { handleDelete([lightbox.key]); setLightbox(null); }}>Delete</button>
           </div>
         </div>,
         document.body

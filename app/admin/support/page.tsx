@@ -6,12 +6,12 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const STATUS_COLORS: Record<string, string> = {
-  open: "#F5C82A", in_progress: "#F07228", resolved: "#3CCE2A", closed: "#5A7A60",
+  open: "#156530", in_progress: "#1A8040", resolved: "#1A8040", closed: "#5A7A60",
 };
 const STATUSES = ["open", "in_progress", "resolved", "closed"];
 const PRIORITIES = ["low", "normal", "high", "urgent"];
 const PRIORITY_COLORS: Record<string, string> = {
-  low: "#5A7A60", normal: "#4A7C59", high: "#F07228", urgent: "#F04060",
+  low: "#5A7A60", normal: "#4A7C59", high: "#1A8040", urgent: "#CC3344",
 };
 
 function timeAgo(date: string) {
@@ -99,7 +99,7 @@ export default function AdminSupportPage() {
           <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px" }}>STATUS</span>
           {["all", ...STATUSES].map(s => (
             <button key={s} onClick={() => setFilterStatus(s)}
-              style={{ fontFamily: R, fontSize: "10px", letterSpacing: "1px", padding: "4px 12px", borderRadius: "20px", border: `1.5px solid ${filterStatus === s ? (STATUS_COLORS[s] ?? "#3CCE2A") : "#DDE8DD"}`, background: filterStatus === s ? (STATUS_COLORS[s] ?? "#3CCE2A") + "20" : "transparent", color: filterStatus === s ? (STATUS_COLORS[s] ?? "#3CCE2A") : "#5A7A60", cursor: "pointer" }}>
+              style={{ fontFamily: R, fontSize: "10px", letterSpacing: "1px", padding: "4px 12px", borderRadius: "20px", border: `1.5px solid ${filterStatus === s ? (STATUS_COLORS[s] ?? "#1A8040") : "#DDE8DD"}`, background: filterStatus === s ? (STATUS_COLORS[s] ?? "#1A8040") + "20" : "transparent", color: filterStatus === s ? (STATUS_COLORS[s] ?? "#1A8040") : "#5A7A60", cursor: "pointer" }}>
               {s.replace("_", " ").toUpperCase()} ({counts[s as keyof typeof counts] ?? tickets.length})
             </button>
           ))}
@@ -108,7 +108,7 @@ export default function AdminSupportPage() {
           <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px" }}>PRIORITY</span>
           {["all", ...PRIORITIES].map(p => (
             <button key={p} onClick={() => setFilterPriority(p)}
-              style={{ fontFamily: R, fontSize: "10px", letterSpacing: "1px", padding: "4px 12px", borderRadius: "20px", border: `1.5px solid ${filterPriority === p ? (PRIORITY_COLORS[p] ?? "#3CCE2A") : "#DDE8DD"}`, background: filterPriority === p ? (PRIORITY_COLORS[p] ?? "#3CCE2A") + "20" : "transparent", color: filterPriority === p ? (PRIORITY_COLORS[p] ?? "#3CCE2A") : "#5A7A60", cursor: "pointer" }}>
+              style={{ fontFamily: R, fontSize: "10px", letterSpacing: "1px", padding: "4px 12px", borderRadius: "20px", border: `1.5px solid ${filterPriority === p ? (PRIORITY_COLORS[p] ?? "#1A8040") : "#DDE8DD"}`, background: filterPriority === p ? (PRIORITY_COLORS[p] ?? "#1A8040") + "20" : "transparent", color: filterPriority === p ? (PRIORITY_COLORS[p] ?? "#1A8040") : "#5A7A60", cursor: "pointer" }}>
               {p.toUpperCase()}
             </button>
           ))}
@@ -143,7 +143,7 @@ export default function AdminSupportPage() {
                     <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "0.5px", marginBottom: "2px" }}>{t.subject}</div>
                     <div style={{ display: "flex", gap: "6px" }}>
                       {t.attachments?.length > 0 && <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60" }}>{t.attachments.length} attachment{t.attachments.length > 1 ? "s" : ""}</span>}
-                      {t.member_reply && <span style={{ fontFamily: B, fontSize: "10px", color: "#F07228" }}>↩ replied</span>}
+                      {t.member_reply && <span style={{ fontFamily: B, fontSize: "10px", color: "#1A8040" }}>↩ replied</span>}
                     </div>
                   </div>
                   <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>{t.profiles?.display_name ?? "Member"}</span>
@@ -179,15 +179,15 @@ export default function AdminSupportPage() {
                     )}
 
                     {t.admin_notes && (
-                      <div style={{ background: "#0F2A0B", border: "1px solid #3CCE2A30", borderRadius: "8px", padding: "12px 14px" }}>
-                        <div style={{ fontFamily: R, fontSize: "10px", color: "#3CCE2A", letterSpacing: "1px", marginBottom: "6px" }}>YOUR REPLY</div>
+                      <div style={{ background: "#0F2A0B", border: "1px solid #1A804030", borderRadius: "8px", padding: "12px 14px" }}>
+                        <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "1px", marginBottom: "6px" }}>YOUR REPLY</div>
                         <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", lineHeight: 1.6 }}>{t.admin_notes}</div>
                       </div>
                     )}
 
                     {t.member_reply && (
-                      <div style={{ background: "#2A1F0A", border: "1px solid #F07228", borderRadius: "8px", padding: "12px 14px" }}>
-                        <div style={{ fontFamily: R, fontSize: "10px", color: "#F07228", letterSpacing: "1px", marginBottom: "6px" }}>
+                      <div style={{ background: "#2A1F0A", border: "1px solid #1A8040", borderRadius: "8px", padding: "12px 14px" }}>
+                        <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "1px", marginBottom: "6px" }}>
                           MEMBER REPLY · {timeAgo(t.member_replied_at)}
                         </div>
                         <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", lineHeight: 1.6 }}>{t.member_reply}</div>
@@ -228,13 +228,13 @@ export default function AdminSupportPage() {
                       </div>
 
                       {saveSuccess === t.id && (
-                        <div style={{ background: "#E8F0E4", border: "1.5px solid #3CCE2A", borderRadius: "8px", padding: "10px 14px", fontFamily: R, fontSize: "12px", color: "#3CCE2A", letterSpacing: "1px", textAlign: "center" }}>
+                        <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "10px 14px", fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "1px", textAlign: "center" }}>
                           ✓ TICKET UPDATED
                         </div>
                       )}
 
                       <button onClick={() => handleSave(t.id)} disabled={saving === t.id || saveSuccess === t.id}
-                        style={{ fontFamily: R, fontSize: "12px", background: saving === t.id || saveSuccess === t.id ? "#F2F7F2" : "#F07228", color: saving === t.id || saveSuccess === t.id ? "#5A7A60" : "#080F06", border: "none", borderRadius: "6px", padding: "10px", cursor: "pointer", letterSpacing: "1.5px" }}>
+                        style={{ fontFamily: R, fontSize: "12px", background: saving === t.id || saveSuccess === t.id ? "#F2F7F2" : "#1A8040", color: saving === t.id || saveSuccess === t.id ? "#5A7A60" : "#080F06", border: "none", borderRadius: "6px", padding: "10px", cursor: "pointer", letterSpacing: "1.5px" }}>
                         {saving === t.id ? "SAVING..." : "UPDATE TICKET"}
                       </button>
                     </div>

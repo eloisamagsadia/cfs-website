@@ -60,9 +60,9 @@ export default function AdminCommunityPage() {
       {/* Stats row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
         {[
-          { label: "TOTAL POSTS", value: totalPosts, color: "#3CCE2A" },
-          { label: "PINNED", value: pinnedPosts, color: "#F5C82A" },
-          { label: "HIDDEN", value: hiddenPosts, color: "#F04060" },
+          { label: "TOTAL POSTS", value: totalPosts, color: "#1A8040" },
+          { label: "PINNED", value: pinnedPosts, color: "#156530" },
+          { label: "HIDDEN", value: hiddenPosts, color: "#CC3344" },
         ].map(s => (
           <div key={s.label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "14px 18px" }}>
             <div style={{ fontFamily: R, fontSize: "1.4rem", color: s.color }}>{s.value}</div>
@@ -81,13 +81,13 @@ export default function AdminCommunityPage() {
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {posts.map((p: any) => (
-              <div key={p.id} style={{ background: p.is_hidden ? "#1A1010" : "#FFFFFF", border: `2px solid ${p.is_pinned ? "#F5C82A" : p.is_hidden ? "#F04060" : "#DDE8DD"}`, borderRadius: "10px", overflow: "hidden" }}>
+              <div key={p.id} style={{ background: p.is_hidden ? "#1A1010" : "#FFFFFF", border: `2px solid ${p.is_pinned ? "#156530" : p.is_hidden ? "#CC3344" : "#DDE8DD"}`, borderRadius: "10px", overflow: "hidden" }}>
                 <div onClick={() => setExpanded(expanded === p.id ? null : p.id)} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", padding: "12px 16px", cursor: "pointer" }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "4px", flexWrap: "wrap" }}>
-                      <span style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", letterSpacing: "1px" }}>{p.profiles?.display_name ?? "Member"}</span>
-                      {p.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F5C82A", background: "#FFFBE8", border: "1px solid #F5C82A40", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>📌 PINNED</span>}
-                      {p.is_hidden && <span style={{ fontFamily: R, fontSize: "9px", color: "#F04060", background: "#3D0A18", border: "1px solid #F0406040", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>🚫 HIDDEN</span>}
+                      <span style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "1px" }}>{p.profiles?.display_name ?? "Member"}</span>
+                      {p.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#156530", background: "#E8F4EC", border: "1px solid #1A804040", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>📌 PINNED</span>}
+                      {p.is_hidden && <span style={{ fontFamily: R, fontSize: "9px", color: "#CC3344", background: "#3D0A18", border: "1px solid #CC334440", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>🚫 HIDDEN</span>}
                       <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60" }}>{new Date(p.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric" })}</span>
                     </div>
                     {p.content && <p style={{ fontFamily: B, fontSize: "13px", color: p.is_hidden ? "#5A4040" : "#5A7A60", margin: "0 0 6px" }}>{p.content.slice(0, 120)}{p.content.length > 120 ? "..." : ""}</p>}
@@ -99,9 +99,9 @@ export default function AdminCommunityPage() {
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: "6px", flexShrink: 0, alignItems: "center" }}>
-                    <button onClick={(e) => { e.stopPropagation(); togglePin(p); }} disabled={actionLoading === p.id + "-pin"} title={p.is_pinned ? "Unpin" : "Pin"} style={{ background: p.is_pinned ? "#FFFBE8" : "#FFFFFF", border: `1px solid ${p.is_pinned ? "#F5C82A" : "#DDE8DD"}`, borderRadius: "6px", color: p.is_pinned ? "#F5C82A" : "#5A7A60", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px" }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
-                    <button onClick={(e) => { e.stopPropagation(); toggleHide(p); }} disabled={actionLoading === p.id + "-hide"} title={p.is_hidden ? "Unhide" : "Hide"} style={{ background: p.is_hidden ? "#3D0A18" : "#FFFFFF", border: `1px solid ${p.is_hidden ? "#F04060" : "#DDE8DD"}`, borderRadius: "6px", color: p.is_hidden ? "#F04060" : "#5A7A60", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px" }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></button>
-                    <button onClick={(e) => { e.stopPropagation(); deletePost(p.id); }} disabled={actionLoading === p.id + "-delete"} title="Delete permanently" style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "6px", color: "#F04060", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px" }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
+                    <button onClick={(e) => { e.stopPropagation(); togglePin(p); }} disabled={actionLoading === p.id + "-pin"} title={p.is_pinned ? "Unpin" : "Pin"} style={{ background: p.is_pinned ? "#E8F4EC" : "#FFFFFF", border: `1px solid ${p.is_pinned ? "#156530" : "#DDE8DD"}`, borderRadius: "6px", color: p.is_pinned ? "#156530" : "#5A7A60", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px" }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                    <button onClick={(e) => { e.stopPropagation(); toggleHide(p); }} disabled={actionLoading === p.id + "-hide"} title={p.is_hidden ? "Unhide" : "Hide"} style={{ background: p.is_hidden ? "#3D0A18" : "#FFFFFF", border: `1px solid ${p.is_hidden ? "#CC3344" : "#DDE8DD"}`, borderRadius: "6px", color: p.is_hidden ? "#CC3344" : "#5A7A60", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px" }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></button>
+                    <button onClick={(e) => { e.stopPropagation(); deletePost(p.id); }} disabled={actionLoading === p.id + "-delete"} title="Delete permanently" style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "6px", color: "#CC3344", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px" }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
                     <span style={{ color: "#5A7A60", fontSize: "11px", marginLeft: "2px" }}>{expanded === p.id ? "▲" : "▼"}</span>
                   </div>
                 </div>
@@ -128,7 +128,7 @@ export default function AdminCommunityPage() {
                     {p.video_url && (
                       <div>
                         <div style={{ fontFamily: R, fontSize: "10px", color: "#5A7A60", letterSpacing: "1px", marginBottom: "6px" }}>VIDEO</div>
-                        <a href={p.video_url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "12px", color: "#3CCE2A" }}>{p.video_url}</a>
+                        <a href={p.video_url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "12px", color: "#1A8040" }}>{p.video_url}</a>
                       </div>
                     )}
                     <div style={{ display: "flex", gap: "20px", paddingTop: "4px", borderTop: "1px solid #1C2E14" }}>

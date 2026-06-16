@@ -63,8 +63,8 @@ export default function AdminEditProductPage() {
         <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#1B3A2D",letterSpacing:"3px"}}>EDIT PRODUCT</h1>
         <button onClick={()=>router.back()} style={{fontFamily:R,fontSize:"11px",color:"#5A7A60",background:"transparent",border:"none",cursor:"pointer"}}>Back</button>
       </div>
-      {error&&<div style={{background:"#3D0A18",border:"1.5px solid #F04060",borderRadius:"8px",padding:"12px",fontFamily:B,fontSize:"13px",color:"#F04060"}}>{error}</div>}
-      {success&&<div style={{background:"#E8F0E4",border:"1.5px solid #3CCE2A",borderRadius:"8px",padding:"12px",fontFamily:R,fontSize:"13px",color:"#3CCE2A"}}>{success}</div>}
+      {error&&<div style={{background:"#3D0A18",border:"1.5px solid #CC3344",borderRadius:"8px",padding:"12px",fontFamily:B,fontSize:"13px",color:"#CC3344"}}>{error}</div>}
+      {success&&<div style={{background:"#E8F0E4",border:"1.5px solid #1A8040",borderRadius:"8px",padding:"12px",fontFamily:R,fontSize:"13px",color:"#1A8040"}}>{success}</div>}
       {!loading&&(
         <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",padding:"24px",display:"flex",flexDirection:"column",gap:"14px"}}>
           <div><label style={lbl}>Name *</label><input style={inp} value={form.name} onChange={e=>upd("name",e.target.value)}/></div>
@@ -79,7 +79,7 @@ export default function AdminEditProductPage() {
             {form.images.map((img, i) => (
               <div key={i} style={{marginBottom:"10px"}}>
                 <div
-                  onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor="#3CCE2A"; }}
+                  onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor="#1A8040"; }}
                   onDragLeave={e => { e.currentTarget.style.borderColor="#DDE8DD"; }}
                   onDrop={e => {
                     e.preventDefault();
@@ -93,7 +93,7 @@ export default function AdminEditProductPage() {
                     <div style={{position:"relative",display:"inline-block"}}>
                       <img src={img} alt="" style={{height:"120px",width:"120px",borderRadius:"8px",objectFit:"cover",display:"block"}} />
                       <button onClick={()=>upd("images",form.images.map((v,j)=>j===i?"":v))}
-                        style={{position:"absolute",top:"-8px",right:"-8px",background:"#F04060",border:"none",borderRadius:"50%",width:"22px",height:"22px",color:"#fff",cursor:"pointer",fontSize:"12px",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+                        style={{position:"absolute",top:"-8px",right:"-8px",background:"#CC3344",border:"none",borderRadius:"50%",width:"22px",height:"22px",color:"#fff",cursor:"pointer",fontSize:"12px",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
                     </div>
                   ) : (
                     <label style={{cursor:"pointer",display:"block"}}>
@@ -106,15 +106,15 @@ export default function AdminEditProductPage() {
                 <input style={{...inp,marginTop:"6px",fontSize:"11px",color:"#5A7A60"}} value={img} onChange={e=>{const a=[...form.images];a[i]=e.target.value;upd("images",a);}} placeholder="Or paste image URL"/>
               </div>
             ))}
-            <button onClick={()=>upd("images",[...form.images,""])} style={{fontFamily:R,fontSize:"11px",color:"#3CCE2A",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"6px",padding:"6px 12px",cursor:"pointer"}}>+ ADD IMAGE</button>
+            <button onClick={()=>upd("images",[...form.images,""])} style={{fontFamily:R,fontSize:"11px",color:"#1A8040",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"6px",padding:"6px 12px",cursor:"pointer"}}>+ ADD IMAGE</button>
           </div>
           <label style={{display:"flex",alignItems:"center",gap:"10px",cursor:"pointer"}}>
-            <input type="checkbox" checked={form.is_active} onChange={e=>upd("is_active",e.target.checked)} style={{width:"18px",height:"18px",accentColor:"#3CCE2A"}}/>
+            <input type="checkbox" checked={form.is_active} onChange={e=>upd("is_active",e.target.checked)} style={{width:"18px",height:"18px",accentColor:"#1A8040"}}/>
             <span style={{fontFamily:R,fontSize:"12px",color:"#4A7C59"}}>ACTIVE IN SHOP</span>
           </label>
           <div style={{display:"flex",gap:"10px",paddingTop:"10px",borderTop:"1px solid #DDE8DD"}}>
-            <button onClick={handleSave} disabled={saving} style={{flex:1,fontFamily:R,fontSize:"12px",background:saving?"#F2F7F2":"#3CCE2A",color:saving?"#5A7A60":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px",cursor:"pointer"}}>{saving?"SAVING...":"SAVE"}</button>
-            <button onClick={handleDelete} style={{fontFamily:R,fontSize:"11px",background:"transparent",border:"1.5px solid #F04060",borderRadius:"6px",color:"#F04060",padding:"10px 14px",cursor:"pointer"}}>DELETE</button>
+            <button onClick={handleSave} disabled={saving} style={{flex:1,fontFamily:R,fontSize:"12px",background:saving?"#F2F7F2":"#1A8040",color:saving?"#5A7A60":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px",cursor:"pointer"}}>{saving?"SAVING...":"SAVE"}</button>
+            <button onClick={handleDelete} style={{fontFamily:R,fontSize:"11px",background:"transparent",border:"1.5px solid #CC3344",borderRadius:"6px",color:"#CC3344",padding:"10px 14px",cursor:"pointer"}}>DELETE</button>
           </div>
         </div>
       )}

@@ -6,14 +6,14 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const ACTION_COLORS: Record<string, string> = {
-  change_role: "#F07228",
-  hide_post: "#F04060",
-  unhide_post: "#3CCE2A",
-  approve_fanwall: "#3CCE2A",
-  reject_fanwall: "#F04060",
-  ban_member: "#F04060",
-  unban_member: "#3CCE2A",
-  delete_post: "#F04060",
+  change_role: "#1A8040",
+  hide_post: "#CC3344",
+  unhide_post: "#1A8040",
+  approve_fanwall: "#1A8040",
+  reject_fanwall: "#CC3344",
+  ban_member: "#CC3344",
+  unban_member: "#1A8040",
+  delete_post: "#CC3344",
 };
 
 function timeAgo(iso: string) {
@@ -65,7 +65,7 @@ export default function ModLogPage() {
                   <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#E8F0E4", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     {action.profiles?.avatar_url
                       ? <img src={action.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <span style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A" }}>{(action.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
+                      : <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040" }}>{(action.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
                     }
                   </div>
                   <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>{action.profiles?.display_name ?? "Unknown"}</span>

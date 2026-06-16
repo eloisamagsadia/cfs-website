@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
-const C  = { paper: "#FAFDF9", forest: "#1B3A2D", sage: "#4A7C59", border: "#DDE8DD", green: "#3CCE2A", muted: "#7A8E7A" };
+const C  = { paper: "#FAFDF9", forest: "#1B3A2D", sage: "#4A7C59", border: "#DDE8DD", green: "#1A8040", muted: "#7A8E7A" };
 
 const CTA: Record<string, { label: string; href: string }> = {
   donation: { label: "VIEW MY DONATIONS", href: "/members/donations" },
@@ -108,7 +108,7 @@ function ProcessingContent() {
   if (status === "failed") {
     return (
       <div style={{ minHeight: "100vh", background: C.paper, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
-        <div style={{ background: "#ffffff", border: "1px solid #F04060", borderRadius: "20px", padding: "48px 40px", maxWidth: "480px", width: "100%", textAlign: "center" }}>
+        <div style={{ background: "#ffffff", border: "1px solid #CC3344", borderRadius: "20px", padding: "48px 40px", maxWidth: "480px", width: "100%", textAlign: "center" }}>
           <div style={{ fontSize: "56px", marginBottom: "20px" }}>❌</div>
           <h1 style={{ fontFamily: S, fontSize: "2rem", color: "#C0122A", marginBottom: "12px" }}>Payment failed</h1>
           <p style={{ fontFamily: B, fontSize: "14px", color: C.muted, marginBottom: "32px" }}>Something went wrong. Please try again.</p>

@@ -7,10 +7,10 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const REGIONS = ["Metro Manila", "Luzon", "Visayas", "Mindanao"];
 const REGION_COLORS: Record<string, string> = {
-  "Metro Manila": "#3CCE2A",
-  "Luzon": "#F07228",
-  "Visayas": "#F5C82A",
-  "Mindanao": "#F04060",
+  "Metro Manila": "#1A8040",
+  "Luzon": "#1A8040",
+  "Visayas": "#156530",
+  "Mindanao": "#CC3344",
 };
 
 export default function AdminShippingPage() {

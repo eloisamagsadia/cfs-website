@@ -92,7 +92,7 @@ export default function ReportReceiptsPage() {
 
       {projects.map((proj, pi) => (
         <div key={pi} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
-          <div style={{ background: "#F2F7F2", padding: "12px 18px", fontFamily: R, fontSize: "12px", color: "#3CCE2A", letterSpacing: "2px" }}>
+          <div style={{ background: "#F2F7F2", padding: "12px 18px", fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px" }}>
             {proj.project}
           </div>
           <div>
@@ -106,7 +106,7 @@ export default function ReportReceiptsPage() {
                   <div style={{ flex: 1 }}>
                     <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{item.description}</div>
                     {item.notes && <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "2px" }}>{item.notes}</div>}
-                    <div style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", marginTop: "4px" }}>
+                    <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", marginTop: "4px" }}>
                       ₱{Number(item.amount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
                     </div>
 
@@ -120,7 +120,7 @@ export default function ReportReceiptsPage() {
                               📎 {r.file_name}
                             </a>
                             <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id}
-                              style={{ background: "none", border: "none", cursor: "pointer", color: "#F04060", fontSize: "12px", padding: "0 2px", opacity: deleting === r.id ? 0.5 : 1 }}>
+                              style={{ background: "none", border: "none", cursor: "pointer", color: "#CC3344", fontSize: "12px", padding: "0 2px", opacity: deleting === r.id ? 0.5 : 1 }}>
                               ×
                             </button>
                           </div>

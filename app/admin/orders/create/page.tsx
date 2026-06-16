@@ -85,18 +85,18 @@ export default function CreateOrderPage() {
         </div>
       </div>
 
-      {error && <div style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
+      {error && <div style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
 
       {/* Member selector */}
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
         <div style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "2px" }}>MEMBER</div>
         {selectedMember ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", background: "#E8F0E4", border: "1.5px solid #3CCE2A", borderRadius: "8px", padding: "10px 14px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "10px 14px" }}>
             <div style={{ flex: 1 }}>
               <div style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D" }}>{selectedMember.display_name}</div>
               <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{selectedMember.id.slice(0, 16)}...</div>
             </div>
-            <button onClick={() => setSelectedMember(null)} style={{ background: "none", border: "none", color: "#F04060", cursor: "pointer", fontSize: "16px" }}>✕</button>
+            <button onClick={() => setSelectedMember(null)} style={{ background: "none", border: "none", color: "#CC3344", cursor: "pointer", fontSize: "16px" }}>✕</button>
           </div>
         ) : (
           <>
@@ -126,7 +126,7 @@ export default function CreateOrderPage() {
           {products.map(p => (
             <button key={p.id} onClick={() => addItem(p)}
               disabled={!!items.find(i => i.product.id === p.id)}
-              style={{ fontFamily: B, fontSize: "11px", background: items.find(i => i.product.id === p.id) ? "#E8F0E4" : "#F2F7F2", border: `1.5px solid ${items.find(i => i.product.id === p.id) ? "#3CCE2A" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 12px", color: items.find(i => i.product.id === p.id) ? "#3CCE2A" : "#4A7C59", cursor: "pointer" }}>
+              style={{ fontFamily: B, fontSize: "11px", background: items.find(i => i.product.id === p.id) ? "#E8F0E4" : "#F2F7F2", border: `1.5px solid ${items.find(i => i.product.id === p.id) ? "#1A8040" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 12px", color: items.find(i => i.product.id === p.id) ? "#1A8040" : "#4A7C59", cursor: "pointer" }}>
               {items.find(i => i.product.id === p.id) ? "✓ " : ""}{p.name} — ₱{Number(p.price).toLocaleString()}
             </button>
           ))}
@@ -144,7 +144,7 @@ export default function CreateOrderPage() {
                   <span style={{ fontFamily: R, fontSize: "14px", color: "#1B3A2D", minWidth: "20px", textAlign: "center" }}>{item.quantity}</span>
                   <button onClick={() => updateQty(item.product.id, item.quantity + 1)} style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#F2F7F2", border: "1.5px solid #DDE8DD", color: "#1B3A2D", cursor: "pointer", fontFamily: R }}>+</button>
                 </div>
-                <div style={{ fontFamily: R, fontSize: "13px", color: "#F07228", minWidth: "80px", textAlign: "right" }}>₱{(item.product.price * item.quantity).toLocaleString()}</div>
+                <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", minWidth: "80px", textAlign: "right" }}>₱{(item.product.price * item.quantity).toLocaleString()}</div>
               </div>
             ))}
           </div>
@@ -166,7 +166,7 @@ export default function CreateOrderPage() {
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid #DDE8DD", paddingTop: "12px" }}>
           <span style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Subtotal: ₱{subtotal.toLocaleString()}</span>
-          <span style={{ fontFamily: R, fontSize: "16px", color: "#F07228" }}>TOTAL: ₱{total.toLocaleString()}</span>
+          <span style={{ fontFamily: R, fontSize: "16px", color: "#1A8040" }}>TOTAL: ₱{total.toLocaleString()}</span>
         </div>
       </div>
 
@@ -178,7 +178,7 @@ export default function CreateOrderPage() {
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {["pending", "paid", "failed", "cancelled"].map(s => (
               <button key={s} onClick={() => setPaymentStatus(s)}
-                style={{ fontFamily: R, fontSize: "11px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${paymentStatus === s ? "#3CCE2A" : "#DDE8DD"}`, background: paymentStatus === s ? "#E8F0E4" : "transparent", color: paymentStatus === s ? "#3CCE2A" : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
+                style={{ fontFamily: R, fontSize: "11px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${paymentStatus === s ? "#1A8040" : "#DDE8DD"}`, background: paymentStatus === s ? "#E8F0E4" : "transparent", color: paymentStatus === s ? "#1A8040" : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
                 {s.toUpperCase()}
               </button>
             ))}
@@ -189,7 +189,7 @@ export default function CreateOrderPage() {
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {["pending", "processing", "shipped", "delivered"].map(s => (
               <button key={s} onClick={() => setOrderStatus(s)}
-                style={{ fontFamily: R, fontSize: "11px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${orderStatus === s ? "#F07228" : "#DDE8DD"}`, background: orderStatus === s ? "#F0722830" : "transparent", color: orderStatus === s ? "#F07228" : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
+                style={{ fontFamily: R, fontSize: "11px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${orderStatus === s ? "#1A8040" : "#DDE8DD"}`, background: orderStatus === s ? "#1A804030" : "transparent", color: orderStatus === s ? "#1A8040" : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
                 {s.toUpperCase()}
               </button>
             ))}
@@ -204,7 +204,7 @@ export default function CreateOrderPage() {
       <button onClick={handleSave} disabled={saving}
         style={{ position: "relative", display: "inline-block", cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1, alignSelf: "flex-start" }}>
         <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-        <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#1B3A2D", padding: "12px 32px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>
+        <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "12px 32px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>
           {saving ? "SAVING..." : "CREATE ORDER"}
         </span>
       </button>

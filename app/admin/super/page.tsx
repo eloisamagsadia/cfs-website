@@ -6,11 +6,11 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const ACTION_COLORS: Record<string, string> = {
-  update_site_settings: "#F07228",
-  broadcast_notification: "#3CCE2A",
-  change_role: "#F5C82A",
-  ban_member: "#F04060",
-  unban_member: "#3CCE2A",
+  update_site_settings: "#1A8040",
+  broadcast_notification: "#1A8040",
+  change_role: "#156530",
+  ban_member: "#CC3344",
+  unban_member: "#1A8040",
   default: "#5A7A60",
 };
 
@@ -150,10 +150,10 @@ export default function SuperAdminPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #FFFBE8, #FFF7D4)", border: "2px solid #F5C82A40", borderRadius: "16px", padding: "24px" }}>
+      <div style={{ background: "linear-gradient(135deg, #FFFBE8, #FFF7D4)", border: "2px solid #1A804040", borderRadius: "16px", padding: "24px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "6px" }}>
           <span style={{ fontSize: "24px" }}>⚡</span>
-          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F5C82A", letterSpacing: "3px", margin: 0 }}>SUPER ADMIN</h1>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#156530", letterSpacing: "3px", margin: 0 }}>SUPER ADMIN</h1>
         </div>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", margin: 0 }}>Full platform control — with great power comes great responsibility.</p>
       </div>
@@ -162,7 +162,7 @@ export default function SuperAdminPage() {
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
         {TABS.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id as any)}
-            style={{ fontFamily: R, fontSize: "11px", background: activeTab === tab.id ? "#FFFBE8" : "transparent", border: `1.5px solid ${activeTab === tab.id ? "#F5C82A" : "#DDE8DD"}`, color: activeTab === tab.id ? "#F5C82A" : "#5A7A60", borderRadius: "8px", padding: "7px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: activeTab === tab.id ? "#E8F4EC" : "transparent", border: `1.5px solid ${activeTab === tab.id ? "#156530" : "#DDE8DD"}`, color: activeTab === tab.id ? "#156530" : "#5A7A60", borderRadius: "8px", padding: "7px 16px", cursor: "pointer", letterSpacing: "1px" }}>
             {tab.label}
           </button>
         ))}
@@ -174,13 +174,13 @@ export default function SuperAdminPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "10px" }}>
             {[
               { label: "TOTAL MEMBERS", value: stats?.total_members ?? "—", color: "#1B3A2D", icon: "👥" },
-              { label: "SPONSORS", value: stats?.sponsors ?? "—", color: "#B47FE3", icon: "✦" },
-              { label: "ADMINS", value: stats?.admins ?? "—", color: "#F07228", icon: "🛡" },
-              { label: "MODERATORS", value: stats?.moderators ?? "—", color: "#69C9D0", icon: "🔧" },
-              { label: "TOTAL POSTS", value: stats?.total_posts ?? "—", color: "#3CCE2A", icon: "💬" },
-              { label: "TOTAL TICKETS", value: stats?.total_tickets ?? "—", color: "#F5C82A", icon: "🎫" },
-              { label: "TOTAL EVENTS", value: stats?.total_events ?? "—", color: "#F07228", icon: "🎪" },
-              { label: "EXCLUSIVE CONTENT", value: stats?.exclusive_content ?? "—", color: "#B47FE3", icon: "✨" },
+              { label: "SPONSORS", value: stats?.sponsors ?? "—", color: "#1A8040", icon: "✦" },
+              { label: "ADMINS", value: stats?.admins ?? "—", color: "#1A8040", icon: "🛡" },
+              { label: "MODERATORS", value: stats?.moderators ?? "—", color: "#5A7A60", icon: "🔧" },
+              { label: "TOTAL POSTS", value: stats?.total_posts ?? "—", color: "#1A8040", icon: "💬" },
+              { label: "TOTAL TICKETS", value: stats?.total_tickets ?? "—", color: "#156530", icon: "🎫" },
+              { label: "TOTAL EVENTS", value: stats?.total_events ?? "—", color: "#1A8040", icon: "🎪" },
+              { label: "EXCLUSIVE CONTENT", value: stats?.exclusive_content ?? "—", color: "#1A8040", icon: "✨" },
             ].map(({ label, value, color, icon }) => (
               <div key={label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "14px 16px" }}>
                 <div style={{ fontSize: "20px", marginBottom: "6px" }}>{icon}</div>
@@ -192,23 +192,23 @@ export default function SuperAdminPage() {
 
           {/* Sponsor slots */}
           {sponsorPerks && (
-            <div style={{ background: "#FFFFFF", border: "2px solid #B47FE360", borderRadius: "12px", padding: "20px" }}>
-              <div style={{ fontFamily: R, fontSize: "12px", color: "#B47FE3", letterSpacing: "2px", marginBottom: "12px" }}>✦ SPONSOR SLOTS</div>
+            <div style={{ background: "#FFFFFF", border: "2px solid #1A804060", borderRadius: "12px", padding: "20px" }}>
+              <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px", marginBottom: "12px" }}>✦ SPONSOR SLOTS</div>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
                 <span style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{stats?.sponsors ?? 0} / {sponsorPerks.max_sponsors} slots used</span>
                 <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>{sponsorPerks.max_sponsors - (stats?.sponsors ?? 0)} remaining</span>
               </div>
               <div style={{ background: "#F2F7F2", borderRadius: "20px", height: "8px", overflow: "hidden" }}>
-                <div style={{ height: "100%", width: `${Math.min(((stats?.sponsors ?? 0) / sponsorPerks.max_sponsors) * 100, 100)}%`, background: "#B47FE3", borderRadius: "20px", transition: "width 0.5s" }} />
+                <div style={{ height: "100%", width: `${Math.min(((stats?.sponsors ?? 0) / sponsorPerks.max_sponsors) * 100, 100)}%`, background: "#1A8040", borderRadius: "20px", transition: "width 0.5s" }} />
               </div>
             </div>
           )}
 
           {/* Site status */}
           {settings && (
-            <div style={{ background: "#FFFFFF", border: `2px solid ${settings.maintenance_mode ? "#F04060" : "#3CCE2A"}30`, borderRadius: "12px", padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ background: "#FFFFFF", border: `2px solid ${settings.maintenance_mode ? "#CC3344" : "#1A8040"}30`, borderRadius: "12px", padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <div style={{ fontFamily: R, fontSize: "12px", color: settings.maintenance_mode ? "#F04060" : "#3CCE2A", letterSpacing: "2px", marginBottom: "4px" }}>
+                <div style={{ fontFamily: R, fontSize: "12px", color: settings.maintenance_mode ? "#CC3344" : "#1A8040", letterSpacing: "2px", marginBottom: "4px" }}>
                   {settings.maintenance_mode ? "🔴 MAINTENANCE MODE ON" : "🟢 SITE LIVE"}
                 </div>
                 <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>
@@ -216,7 +216,7 @@ export default function SuperAdminPage() {
                 </div>
               </div>
               <button onClick={() => saveSetting("maintenance_mode", !settings.maintenance_mode)}
-                style={{ fontFamily: R, fontSize: "11px", background: settings.maintenance_mode ? "#3CCE2A" : "#F04060", color: "#fff", border: "none", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+                style={{ fontFamily: R, fontSize: "11px", background: settings.maintenance_mode ? "#1A8040" : "#CC3344", color: "#fff", border: "none", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
                 {settings.maintenance_mode ? "DISABLE" : "ENABLE"}
               </button>
             </div>
@@ -224,7 +224,7 @@ export default function SuperAdminPage() {
 
           {/* Announcement */}
           {settings?.announcement_active && (
-            <div style={{ background: "#FFF0D8", border: `2px solid ${settings.announcement_color}`, borderRadius: "12px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ background: "#E8F0E4", border: `2px solid ${settings.announcement_color}`, borderRadius: "12px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>📣 {settings.announcement_text}</div>
               <button onClick={() => saveSetting("announcement_active", false)}
                 style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "16px" }}>✕</button>
@@ -237,7 +237,7 @@ export default function SuperAdminPage() {
       {activeTab === "settings" && settings && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div style={{ fontFamily: R, fontSize: "13px", color: "#F07228", letterSpacing: "2px" }}>🔧 SITE SETTINGS</div>
+            <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px" }}>🔧 SITE SETTINGS</div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
               <div>
@@ -255,15 +255,15 @@ export default function SuperAdminPage() {
             </div>
 
             <button onClick={saveSettings} disabled={saving}
-              style={{ fontFamily: R, fontSize: "11px", background: "#F07228", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
+              style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
               {saving ? "SAVING..." : "SAVE SETTINGS"}
             </button>
           </div>
 
           {/* Sponsor settings */}
           {sponsorPerks && (
-            <div style={{ background: "#FFFFFF", border: "2px solid #B47FE360", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div style={{ fontFamily: R, fontSize: "13px", color: "#B47FE3", letterSpacing: "2px" }}>✦ SPONSOR SETTINGS</div>
+            <div style={{ background: "#FFFFFF", border: "2px solid #1A804060", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px" }}>✦ SPONSOR SETTINGS</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>MAX SPONSORS</label>
@@ -279,21 +279,21 @@ export default function SuperAdminPage() {
                 </div>
               </div>
               <button onClick={saveSponsorPerks} disabled={saving}
-                style={{ fontFamily: R, fontSize: "11px", background: "#B47FE3", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
+                style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
                 {saving ? "SAVING..." : "SAVE SPONSOR SETTINGS"}
               </button>
             </div>
           )}
 
           {/* Announcement banner */}
-          <div style={{ background: "#FFFFFF", border: "2px solid #F07228", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
-            <div style={{ fontFamily: R, fontSize: "13px", color: "#F07228", letterSpacing: "2px" }}>📣 SITE ANNOUNCEMENT</div>
+          <div style={{ background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px" }}>📣 SITE ANNOUNCEMENT</div>
             <input value={settings.announcement_text ?? ""} onChange={e => setSettings((p: any) => ({ ...p, announcement_text: e.target.value }))}
               placeholder="e.g. Site maintenance tonight at 12AM"
               style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>Color:</label>
-              <input type="color" value={settings.announcement_color ?? "#F07228"} onChange={e => setSettings((p: any) => ({ ...p, announcement_color: e.target.value }))}
+              <input type="color" value={settings.announcement_color ?? "#1A8040"} onChange={e => setSettings((p: any) => ({ ...p, announcement_color: e.target.value }))}
                 style={{ width: "36px", height: "32px", borderRadius: "6px", border: "1.5px solid #DDE8DD", cursor: "pointer" }} />
               <button onClick={async () => {
                 setSaving(true);
@@ -306,7 +306,7 @@ export default function SuperAdminPage() {
                 if (data.settings) setSettings(data.settings);
                 setSaving(false);
               }}
-                style={{ fontFamily: R, fontSize: "11px", background: settings.announcement_active ? "#F04060" : "#3CCE2A", color: "#080F06", border: "none", borderRadius: "6px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+                style={{ fontFamily: R, fontSize: "11px", background: settings.announcement_active ? "#CC3344" : "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1px" }}>
                 {settings.announcement_active ? "HIDE ANNOUNCEMENT" : "SHOW ANNOUNCEMENT"}
               </button>
             </div>
@@ -316,8 +316,8 @@ export default function SuperAdminPage() {
 
       {/* ── BROADCAST ── */}
       {activeTab === "broadcast" && (
-        <div style={{ background: "#FFFFFF", border: "2px solid #3CCE2A", borderRadius: "12px", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
-          <div style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A", letterSpacing: "2px" }}>📣 BROADCAST TO ALL MEMBERS</div>
+        <div style={{ background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "12px", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px" }}>📣 BROADCAST TO ALL MEMBERS</div>
           <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>This sends a notification to every active member on the platform.</div>
           <div>
             <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>TITLE *</label>
@@ -338,12 +338,12 @@ export default function SuperAdminPage() {
               style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
           </div>
           {broadcastSent && (
-            <div style={{ background: "#E8F0E4", border: "1.5px solid #3CCE2A", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#3CCE2A" }}>
+            <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#1A8040" }}>
               ✅ Broadcast sent successfully!
             </div>
           )}
           <button onClick={sendBroadcast} disabled={broadcasting || !broadcast.title.trim() || !broadcast.message.trim()}
-            style={{ fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", width: "fit-content", opacity: (broadcasting || !broadcast.title.trim() || !broadcast.message.trim()) ? 0.5 : 1 }}>
+            style={{ fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", width: "fit-content", opacity: (broadcasting || !broadcast.title.trim() || !broadcast.message.trim()) ? 0.5 : 1 }}>
             {broadcasting ? "SENDING..." : "📣 SEND TO ALL MEMBERS"}
           </button>
         </div>
@@ -367,7 +367,7 @@ export default function SuperAdminPage() {
                   <div style={{ width: "28px", height: "28px", borderRadius: "50%", background: "#E8F0E4", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     {log.profiles?.avatar_url
                       ? <img src={log.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <span style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A" }}>{(log.profiles?.display_name ?? "?")[0].toUpperCase()}</span>
+                      : <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040" }}>{(log.profiles?.display_name ?? "?")[0].toUpperCase()}</span>
                     }
                   </div>
                   <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>{log.profiles?.display_name ?? "Unknown"}</span>
@@ -386,21 +386,21 @@ export default function SuperAdminPage() {
       {/* ── DANGER ZONE ── */}
       {activeTab === "danger" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          <div style={{ background: "#1A0808", border: "2px solid #F04060", borderRadius: "12px", padding: "20px" }}>
-            <div style={{ fontFamily: R, fontSize: "13px", color: "#F04060", letterSpacing: "2px", marginBottom: "16px" }}>☠️ DANGER ZONE</div>
+          <div style={{ background: "#1A0808", border: "2px solid #CC3344", borderRadius: "12px", padding: "20px" }}>
+            <div style={{ fontFamily: R, fontSize: "13px", color: "#CC3344", letterSpacing: "2px", marginBottom: "16px" }}>☠️ DANGER ZONE</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {[
                 {
                   label: "Reset All Image Post Counts",
                   desc: "Sets all members' monthly image post count to 0",
                   action: resetImagePostCounts,
-                  color: "#F07228",
+                  color: "#1A8040",
                 },
                 {
                   label: "Export Members CSV",
                   desc: "Download all member data as a CSV file",
                   action: exportMembers,
-                  color: "#3CCE2A",
+                  color: "#1A8040",
                   loading: exportLoading,
                 },
               ].map(({ label, desc, action, color, loading: l }) => (

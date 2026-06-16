@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
-const PC: any = { paid: "#3CCE2A", pending: "#F5C82A", failed: "#F04060", free: "#8EE440", cancelled: "#5A7A60" };
-const OC: any = { processing: "#F07228", shipped: "#8EE440", delivered: "#3CCE2A", pending: "#F5C82A", cancelled: "#F04060" };
+const PC: any = { paid: "#1A8040", pending: "#156530", failed: "#CC3344", free: "#1A8040", cancelled: "#5A7A60" };
+const OC: any = { processing: "#1A8040", shipped: "#1A8040", delivered: "#1A8040", pending: "#156530", cancelled: "#CC3344" };
 
 export default function AdminOrdersPage() {
   const router = useRouter();
@@ -46,10 +46,10 @@ export default function AdminOrdersPage() {
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "4px" }}>
           <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px" }}>ORDERS</h1>
-          <button onClick={() => router.push("/admin/orders/create")} style={{ fontFamily: R, fontSize: "11px", background: "#F07228", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>+ ADD ORDER</button>
+          <button onClick={() => router.push("/admin/orders/create")} style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>+ ADD ORDER</button>
         </div>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
-          {orders.length} orders · <span style={{ color: "#F07228" }}>₱{totalRevenue.toLocaleString()} revenue</span>
+          {orders.length} orders · <span style={{ color: "#1A8040" }}>₱{totalRevenue.toLocaleString()} revenue</span>
         </p>
       </div>
 
@@ -57,9 +57,9 @@ export default function AdminOrdersPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
         {[
           { label: "TOTAL ORDERS", value: orders.length, color: "#1B3A2D" },
-          { label: "REVENUE", value: `₱${totalRevenue.toLocaleString()}`, color: "#F07228" },
-          { label: "PENDING PAYMENT", value: pendingCount, color: "#F5C82A" },
-          { label: "TO PROCESS", value: processingCount, color: "#3CCE2A" },
+          { label: "REVENUE", value: `₱${totalRevenue.toLocaleString()}`, color: "#1A8040" },
+          { label: "PENDING PAYMENT", value: pendingCount, color: "#156530" },
+          { label: "TO PROCESS", value: processingCount, color: "#1A8040" },
         ].map(s => (
           <div key={s.label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "14px 18px" }}>
             <div style={{ fontFamily: R, fontSize: "1.4rem", color: s.color }}>{s.value}</div>
@@ -71,7 +71,7 @@ export default function AdminOrdersPage() {
       {/* Filters */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
         {FILTERS.map(f => (
-          <button key={f.key} onClick={() => setFilter(f.key)} style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${filter === f.key ? "#F07228" : "#DDE8DD"}`, background: filter === f.key ? "#F07228" : "transparent", color: filter === f.key ? "#080F06" : "#5A7A60", cursor: "pointer" }}>
+          <button key={f.key} onClick={() => setFilter(f.key)} style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${filter === f.key ? "#1A8040" : "#DDE8DD"}`, background: filter === f.key ? "#1A8040" : "transparent", color: filter === f.key ? "#080F06" : "#5A7A60", cursor: "pointer" }}>
             {f.label}
           </button>
         ))}
@@ -96,7 +96,7 @@ export default function AdminOrdersPage() {
                 </div>
               </div>
               <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
-                <span style={{ fontFamily: R, fontSize: "13px", color: "#F07228" }}>₱{Number(o.total).toLocaleString()}</span>
+                <span style={{ fontFamily: R, fontSize: "13px", color: "#1A8040" }}>₱{Number(o.total).toLocaleString()}</span>
                 <span style={{ fontFamily: R, fontSize: "10px", color: PC[o.payment_status] ?? "#5A7A60", background: (PC[o.payment_status] ?? "#5A7A60") + "20", border: `1px solid ${(PC[o.payment_status] ?? "#5A7A60")}40`, borderRadius: "20px", padding: "2px 10px", letterSpacing: "1px" }}>
                   {o.payment_status.toUpperCase()}
                 </span>

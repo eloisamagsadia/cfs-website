@@ -58,10 +58,10 @@ function NavItem({ label, href, icon, exact, badge, unread }: { label: string; h
   return (
     <Link href={href} style={{ textDecoration: "none", display: "block" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "8px", position: "relative", background: isActive ? "#E8F0E4" : "transparent", transition: "background 0.15s" }}>
-        {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#2CB520", borderRadius: "0 3px 3px 0" }} />}
-        <span style={{ color: isActive ? "#2CB520" : "#5A7A60", transition: "color 0.15s" }}>{icon}</span>
+        {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#1A8040", borderRadius: "0 3px 3px 0" }} />}
+        <span style={{ color: isActive ? "#1A8040" : "#5A7A60", transition: "color 0.15s" }}>{icon}</span>
         <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#1B3A2D" : "#5A7A60", letterSpacing: "0.3px", transition: "color 0.15s", flex: 1 }}>{label}</span>
-        {badge && unread && unread > 0 ? <span style={{ background: "#F04060", color: "#FFFFFF", borderRadius: "20px", minWidth: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", padding: "0 4px", marginLeft: "auto" }}>{unread}</span> : null}
+        {badge && unread && unread > 0 ? <span style={{ background: "#CC3344", color: "#FFFFFF", borderRadius: "20px", minWidth: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", padding: "0 4px", marginLeft: "auto" }}>{unread}</span> : null}
       </div>
     </Link>
   );
@@ -120,9 +120,9 @@ export default function MembersSidebar({ isAdmin = false, role = "member" }: { i
         <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "1px" }}>
           {isAdmin && (
             <Link href="/admin" style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", background: "#FFF0E8", border: "1px solid #F07228" }}>
-                <span style={{ color: "#F07228" }}>{icons.admin}</span>
-                <span style={{ fontFamily: B, fontSize: "13px", color: "#F07228" }}>Admin Panel</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", background: "#E8F4EC", border: "1px solid #1A8040" }}>
+                <span style={{ color: "#1A8040" }}>{icons.admin}</span>
+                <span style={{ fontFamily: B, fontSize: "13px", color: "#1A8040" }}>Admin Panel</span>
               </div>
             </Link>
           )}

@@ -20,17 +20,17 @@ const ICONS: Record<string, React.ReactNode> = {
   default:           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
 };
 const TC: Record<string, { color: string }> = {
-  event_reminder:    { color: "#3CCE2A" },
-  order_update:      { color: "#F07228" },
-  community_reply:   { color: "#F5C82A" },
-  community_mention: { color: "#F5C82A" },
-  badge_earned:      { color: "#8EE440" },
-  new_follower:      { color: "#3CCE2A" },
-  donation_ack:      { color: "#F04060" },
-  new_report:        { color: "#3CCE2A" },
-  announcement:      { color: "#F07228" },
-  new_message:       { color: "#3CCE2A" },
-  support_reply:     { color: "#F07228" },
+  event_reminder:    { color: "#1A8040" },
+  order_update:      { color: "#1A8040" },
+  community_reply:   { color: "#156530" },
+  community_mention: { color: "#156530" },
+  badge_earned:      { color: "#1A8040" },
+  new_follower:      { color: "#1A8040" },
+  donation_ack:      { color: "#CC3344" },
+  new_report:        { color: "#1A8040" },
+  announcement:      { color: "#1A8040" },
+  new_message:       { color: "#1A8040" },
+  support_reply:     { color: "#1A8040" },
 };
 
 function timeAgo(d: string) {
@@ -138,7 +138,7 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
           <path d="M8 16C8 17.1 8.9 18 10 18C11.1 18 12 17.1 12 16" stroke={count > 0 ? "#1B3A2D" : "#7A8E7A"} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
         </svg>
         {count > 0 && (
-          <span style={{ position: "absolute", top: "0px", right: "0px", background: "#F04060", border: "1.5px solid #fff", borderRadius: "20px", minWidth: "16px", height: "16px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", color: "#1B3A2D", padding: "0 3px" }}>
+          <span style={{ position: "absolute", top: "0px", right: "0px", background: "#CC3344", border: "1.5px solid #fff", borderRadius: "20px", minWidth: "16px", height: "16px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", color: "#1B3A2D", padding: "0 3px" }}>
             {count > 99 ? "99+" : count}
           </span>
         )}
@@ -148,7 +148,7 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
         <div style={{ position: "fixed", top: "60px", right: "12px", left: "12px", width: "auto", maxWidth: "420px", marginLeft: "auto", background: "#FAFDF9", border: "1px solid #DDE8DD", borderRadius: "14px", boxShadow: "0 8px 32px rgba(0,0,0,0.12)", zIndex: 200, overflow: "hidden" }}>
           {/* Header */}
           <div style={{ padding: "14px 16px", borderBottom: "1px solid #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center", background: "#fff" }}>
-            <span style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "2px" }}>NOTIFICATIONS {count > 0 && <span style={{ color: "#F04060" }}>({count})</span>}</span>
+            <span style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "2px" }}>NOTIFICATIONS {count > 0 && <span style={{ color: "#CC3344" }}>({count})</span>}</span>
             {count > 0 && <button onClick={markAllRead} style={{ fontFamily: R, fontSize: "9px", color: "#4A7C59", background: "transparent", border: "none", cursor: "pointer", letterSpacing: "1px" }}>MARK ALL READ</button>}
           </div>
 
@@ -202,7 +202,7 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
                     return (
                       <div key={notif.id} style={{ position: "relative", overflow: "hidden" }}>
                         {/* Swipe delete bg */}
-                        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "80px", background: "#F04060", display: swipedId === notif.id && swipeX <= -40 ? "flex" : "none", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+                        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "80px", background: "#CC3344", display: swipedId === notif.id && swipeX <= -40 ? "flex" : "none", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
                           onClick={() => { markRead(notif.id); setNotifications(prev => prev.filter(n => n.id !== notif.id)); }}>
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                         </div>

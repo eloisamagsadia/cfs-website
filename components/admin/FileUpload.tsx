@@ -55,18 +55,18 @@ export default function FileUpload({ folder, accept = "image/*", label = "IMAGE"
       {preview ? (
         <div style={{ position: "relative", display: "inline-block" }}>
           {isPdf ? (
-            <div style={{ background: "#E8F0E4", border: "2px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "10px" }}>
               <span style={{ fontSize: "24px" }}>📄</span>
               <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A", letterSpacing: "1px" }}>PDF UPLOADED</div>
+                <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "1px" }}>PDF UPLOADED</div>
                 <a href={preview} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59", wordBreak: "break-all" }}>View PDF →</a>
               </div>
-              <button onClick={handleRemove} style={{ background: "#2C1010", border: "1px solid #F04060", borderRadius: "4px", color: "#F04060", padding: "4px 8px", cursor: "pointer", fontFamily: B, fontSize: "11px" }}>✕ Remove</button>
+              <button onClick={handleRemove} style={{ background: "#2C1010", border: "1px solid #CC3344", borderRadius: "4px", color: "#CC3344", padding: "4px 8px", cursor: "pointer", fontFamily: B, fontSize: "11px" }}>✕ Remove</button>
             </div>
           ) : (
-            <div style={{ position: "relative", width: "160px", height: "120px", borderRadius: "8px", overflow: "hidden", border: "2px solid #3CCE2A" }}>
+            <div style={{ position: "relative", width: "160px", height: "120px", borderRadius: "8px", overflow: "hidden", border: "2px solid #1A8040" }}>
               <img src={preview} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              <button onClick={handleRemove} style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(0,0,0,0.7)", border: "none", borderRadius: "4px", color: "#F04060", padding: "2px 6px", cursor: "pointer", fontSize: "12px" }}>✕</button>
+              <button onClick={handleRemove} style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(0,0,0,0.7)", border: "none", borderRadius: "4px", color: "#CC3344", padding: "2px 6px", cursor: "pointer", fontSize: "12px" }}>✕</button>
             </div>
           )}
         </div>
@@ -78,7 +78,7 @@ export default function FileUpload({ folder, accept = "image/*", label = "IMAGE"
           style={{ border: "2px dashed #DDE8DD", borderRadius: "8px", padding: "24px", textAlign: "center", cursor: uploading ? "not-allowed" : "pointer", background: "#0F1A0C", transition: "border-color 0.2s" }}
         >
           {uploading ? (
-            <div style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", letterSpacing: "2px" }}>UPLOADING...</div>
+            <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px" }}>UPLOADING...</div>
           ) : (
             <>
               <div style={{ fontSize: "28px", marginBottom: "6px" }}>{isPdf ? "📄" : "🖼"}</div>
@@ -93,7 +93,7 @@ export default function FileUpload({ folder, accept = "image/*", label = "IMAGE"
         </div>
       )}
 
-      {error && <div style={{ fontFamily: B, fontSize: "11px", color: "#F04060" }}>{error}</div>}
+      {error && <div style={{ fontFamily: B, fontSize: "11px", color: "#CC3344" }}>{error}</div>}
 
       <input
         ref={inputRef}

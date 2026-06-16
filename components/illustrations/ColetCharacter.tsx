@@ -20,8 +20,8 @@ export default function ColetCharacter({
       aria-label="Colet chibi character illustration"
     >
       {/* Beret hat */}
-      <ellipse cx="50" cy="30" rx="30" ry="24" fill="#2CB520" stroke="#1A1E14" strokeWidth="2"/>
-      <ellipse cx="62" cy="14" rx="10" ry="8" fill="#2CB520" stroke="#1A1E14" strokeWidth="1.5"/>
+      <ellipse cx="50" cy="30" rx="30" ry="24" fill="#1A8040" stroke="#1A1E14" strokeWidth="2"/>
+      <ellipse cx="62" cy="14" rx="10" ry="8" fill="#1A8040" stroke="#1A1E14" strokeWidth="1.5"/>
       {/* Hat band */}
       <rect x="22" y="44" width="56" height="9" rx="3" fill="#1A6E0E" stroke="#1A1E14" strokeWidth="2"/>
       {/* Flower on beret */}
@@ -59,12 +59,12 @@ export default function ColetCharacter({
       <rect x="24" y="100" width="52" height="28" rx="7" fill="#F5F0E0" stroke="#1A1E14" strokeWidth="2.5"/>
       <path d="M40 100 L50 110 L60 100" fill="#F5F0E0" stroke="#1A1E14" strokeWidth="1.5"/>
       {/* Green bow */}
-      <path d="M38 104 L50 112 L62 104" fill="#2CB520" stroke="#1A1E14" strokeWidth="1.5"/>
-      <circle cx="50" cy="112" r="3.5" fill="#2CB520" stroke="#1A1E14" strokeWidth="1.2"/>
+      <path d="M38 104 L50 112 L62 104" fill="#1A8040" stroke="#1A1E14" strokeWidth="1.5"/>
+      <circle cx="50" cy="112" r="3.5" fill="#1A8040" stroke="#1A1E14" strokeWidth="1.2"/>
       {/* Star on shirt */}
       <path d="M32 116L33 113.5L35.5 112.5L33 111.5L32 109L31 111.5L28.5 112.5L31 113.5Z" fill="#F0C020" stroke="#1A1E14" strokeWidth="0.8"/>
       {/* Green skirt */}
-      <path d="M22 126 C20 138 22 144 24 147 L76 147 C78 144 80 138 78 126 Z" fill="#2CB520" stroke="#1A1E14" strokeWidth="2.5"/>
+      <path d="M22 126 C20 138 22 144 24 147 L76 147 C78 144 80 138 78 126 Z" fill="#1A8040" stroke="#1A1E14" strokeWidth="2.5"/>
       <line x1="38" y1="127" x2="36" y2="146" stroke="#1A6E0E" strokeWidth="1.2"/>
       <line x1="50" y1="127" x2="50" y2="147" stroke="#1A6E0E" strokeWidth="1.2"/>
       <line x1="62" y1="127" x2="64" y2="146" stroke="#1A6E0E" strokeWidth="1.2"/>

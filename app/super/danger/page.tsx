@@ -30,18 +30,18 @@ export default function DangerPage() {
   }
 
   const actions = [
-    { label: "Reset All Image Post Counts", desc: "Sets all members monthly image post count to 0", action: resetImageCounts, color: "#F07228" },
-    { label: "Export Members CSV", desc: "Download all member data as a CSV file", action: exportMembers, color: "#3CCE2A", loading: exportLoading },
+    { label: "Reset All Image Post Counts", desc: "Sets all members monthly image post count to 0", action: resetImageCounts, color: "#1A8040" },
+    { label: "Export Members CSV", desc: "Download all member data as a CSV file", action: exportMembers, color: "#1A8040", loading: exportLoading },
   ];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px", maxWidth: "600px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F04060", letterSpacing: "3px", marginBottom: "4px" }}>☠️ DANGER ZONE</h1>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#CC3344", letterSpacing: "3px", marginBottom: "4px" }}>☠️ DANGER ZONE</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Irreversible actions — proceed with caution</p>
       </div>
 
-      <div style={{ background: "#1A0808", border: "2px solid #F04060", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
+      <div style={{ background: "#1A0808", border: "2px solid #CC3344", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
         {actions.map(({ label, desc, action, color, loading: l }) => (
           <div key={label} style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "10px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>

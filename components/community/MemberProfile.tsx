@@ -51,22 +51,22 @@ export default function MemberProfile({
 
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", marginBottom: "12px" }}>
         {/* Cover with avatar inside */}
-        <div style={{ background: "linear-gradient(135deg,#2CB520 0%,#4A7C59 50%,#F07228 100%)", borderRadius: "14px 14px 0 0", padding: "16px 20px 0", position: "relative", overflow: "hidden" }}>
+        <div style={{ background: "linear-gradient(135deg,#1A8040 0%,#4A7C59 50%,#1A8040 100%)", borderRadius: "14px 14px 0 0", padding: "16px 20px 0", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(60,206,42,0.12) 1.5px,transparent 1.5px)", backgroundSize: "18px 18px" }} />
           <div style={{ height: "48px" }} />
           <div style={{ position: "relative", zIndex: 1, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-            <div style={{ width: "76px", height: "76px", borderRadius: "50%", background: "linear-gradient(135deg,#3CCE2A,#F07228)", padding: "3px", border: "4px solid #FFFFFF" }}>
+            <div style={{ width: "76px", height: "76px", borderRadius: "50%", background: "linear-gradient(135deg,#1A8040,#1A8040)", padding: "3px", border: "4px solid #FFFFFF" }}>
               <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
                 {profile.avatar_url
                   ? <img src={profile.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <span style={{ fontFamily: R, fontSize: "28px", color: "#3CCE2A" }}>{(profile.display_name ?? "M")[0].toUpperCase()}</span>
+                  : <span style={{ fontFamily: R, fontSize: "28px", color: "#1A8040" }}>{(profile.display_name ?? "M")[0].toUpperCase()}</span>
                 }
               </div>
             </div>
             <div style={{ paddingBottom: "10px" }}>
               {!isOwnProfile ? (
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button onClick={toggleFollow} disabled={loading} style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: `2px solid ${isFollowing ? "rgba(255,255,255,0.3)" : "#3CCE2A"}`, background: isFollowing ? "rgba(0,0,0,0.3)" : "#3CCE2A", color: isFollowing ? "#1B3A2D" : "#080F06", cursor: "pointer", opacity: loading ? 0.7 : 1 }}>
+                  <button onClick={toggleFollow} disabled={loading} style={{ fontFamily: R, fontSize: "12px", letterSpacing: "1px", padding: "7px 20px", borderRadius: "20px", border: `2px solid ${isFollowing ? "rgba(255,255,255,0.3)" : "#1A8040"}`, background: isFollowing ? "rgba(0,0,0,0.3)" : "#1A8040", color: isFollowing ? "#1B3A2D" : "#080F06", cursor: "pointer", opacity: loading ? 0.7 : 1 }}>
                     {loading ? "..." : isFollowing ? "Following" : "Follow"}
                   </button>
                   <button onClick={async () => {
@@ -113,7 +113,7 @@ export default function MemberProfile({
         {/* Tabs */}
         <div style={{ display: "flex", borderTop: "1px solid #DDE8DD" }}>
           {(["posts","reposts"] as const).map(t => (
-            <button key={t} onClick={() => setTab(t)} style={{ flex: 1, padding: "12px", background: "none", border: "none", borderBottom: tab === t ? "2px solid #3CCE2A" : "2px solid transparent", cursor: "pointer", fontFamily: R, fontSize: "12px", color: tab === t ? "#3CCE2A" : "#5A7A60", letterSpacing: "1.5px" }}>
+            <button key={t} onClick={() => setTab(t)} style={{ flex: 1, padding: "12px", background: "none", border: "none", borderBottom: tab === t ? "2px solid #1A8040" : "2px solid transparent", cursor: "pointer", fontFamily: R, fontSize: "12px", color: tab === t ? "#1A8040" : "#5A7A60", letterSpacing: "1.5px" }}>
               {t.toUpperCase()} ({t === "posts" ? posts.length : reposts.length})
             </button>
           ))}

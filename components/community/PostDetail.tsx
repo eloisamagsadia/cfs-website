@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import ReactionBar from "./ReactionBar";
 import { createClient } from "@/lib/supabase/client";
 
-const PLATFORM_COLORS: Record<string, string> = { youtube: "#FF0000", tiktok: "#69C9D0", gdrive: "#4285F4", instagram: "#E1306C" };
+const PLATFORM_COLORS: Record<string, string> = { youtube: "#FF0000", tiktok: "#5A7A60", gdrive: "#4285F4", instagram: "#E1306C" };
 const PLATFORM_LABELS: Record<string, string> = { youtube: "YouTube", tiktok: "TikTok", gdrive: "Google Drive", instagram: "Instagram" };
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -33,8 +33,8 @@ function formatCount(n: number) {
 function renderContent(content: string) {
   const clean = content.replace(/<[^>]*>/g, "");
   return clean
-    .replace(/@(\w+)/g,`<a href="#" onclick="event.preventDefault();fetch('/api/community/member-by-name?name=$1').then(r=>r.json()).then(d=>{if(d.userId)window.location.href='/members/community/members/'+d.userId})" style="color:#3CCE2A;font-weight:600;text-decoration:none;cursor:pointer;">@$1</a>`)
-    .replace(/#(?![0-9A-Fa-f]{3,6}\b)(\w+)/g,`<span style="color:#F5C82A;font-weight:600;">#$1</span>`);
+    .replace(/@(\w+)/g,`<a href="#" onclick="event.preventDefault();fetch('/api/community/member-by-name?name=$1').then(r=>r.json()).then(d=>{if(d.userId)window.location.href='/members/community/members/'+d.userId})" style="color:#1A8040;font-weight:600;text-decoration:none;cursor:pointer;">@$1</a>`)
+    .replace(/#(?![0-9A-Fa-f]{3,6}\b)(\w+)/g,`<span style="color:#156530;font-weight:600;">#$1</span>`);
 }
 
 function Avatar({ profile, size=36, ring=false }: { profile:any; size?:number; ring?:boolean }) {
@@ -42,13 +42,13 @@ function Avatar({ profile, size=36, ring=false }: { profile:any; size?:number; r
     <div style={{ width:ring?size-4:size, height:ring?size-4:size, borderRadius:"50%", background:"#E8F0E4", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden" }}>
       {profile?.avatar_url
         ? <img src={profile.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
-        : <span style={{ fontFamily:R, fontSize:(ring?size-4:size)*0.38, color:"#3CCE2A" }}>{(profile?.display_name??"M")[0].toUpperCase()}</span>
+        : <span style={{ fontFamily:R, fontSize:(ring?size-4:size)*0.38, color:"#1A8040" }}>{(profile?.display_name??"M")[0].toUpperCase()}</span>
       }
     </div>
   );
   if (!ring) return <div style={{ width:size, height:size, borderRadius:"50%", flexShrink:0, overflow:"hidden", border:"2px solid #DDE8DD" }}>{inner}</div>;
   return (
-    <div style={{ width:size, height:size, borderRadius:"50%", background:"linear-gradient(135deg,#3CCE2A,#F07228)", padding:"2px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+    <div style={{ width:size, height:size, borderRadius:"50%", background:"linear-gradient(135deg,#1A8040,#1A8040)", padding:"2px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
       {inner}
     </div>
   );
@@ -99,7 +99,7 @@ function CommentReactionBar({ commentId, myReaction, onChange }: { commentId:str
         <div style={{ position:"absolute", bottom:"calc(100% + 6px)", left:0, background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"14px", padding:"6px 8px", display:"flex", gap:"4px", zIndex:30, boxShadow:"0 4px 20px rgba(0,0,0,0.5)", animation:"fadeUp 0.15s ease" }}>
           {COMMENT_REACTIONS.map(({emoji,label}) => (
             <button key={emoji} onClick={() => handlePick(emoji)} title={label}
-              style={{ background:myReaction===emoji?"#E8F0E4":"none", border:myReaction===emoji?"1.5px solid #3CCE2A":"1.5px solid transparent", borderRadius:"8px", padding:"5px 7px", cursor:"pointer", fontSize:"18px", transition:"all 0.15s" }}
+              style={{ background:myReaction===emoji?"#E8F0E4":"none", border:myReaction===emoji?"1.5px solid #1A8040":"1.5px solid transparent", borderRadius:"8px", padding:"5px 7px", cursor:"pointer", fontSize:"18px", transition:"all 0.15s" }}
               onMouseEnter={e=>(e.currentTarget.style.transform="scale(1.2) translateY(-2px)")}
               onMouseLeave={e=>(e.currentTarget.style.transform="scale(1)")}>
               {emoji}
@@ -135,7 +135,7 @@ const ReplyInput = memo(function ReplyInput({ commentId, authorName, currentUser
   return (
     <div style={{ marginLeft:"46px", marginTop:"8px", display:"flex", gap:"8px", alignItems:"flex-end" }}>
       <Avatar profile={currentUser} size={26}/>
-      <div style={{ flex:1, background:"#F2F7F2", border:"1.5px solid #3CCE2A", borderRadius:"12px", padding:"8px 14px" }}>
+      <div style={{ flex:1, background:"#F2F7F2", border:"1.5px solid #1A8040", borderRadius:"12px", padding:"8px 14px" }}>
         <textarea
           ref={ref}
           value={text}
@@ -146,7 +146,7 @@ const ReplyInput = memo(function ReplyInput({ commentId, authorName, currentUser
         />
         {text.trim() && (
           <div style={{ display:"flex", justifyContent:"flex-end", marginTop:"4px" }}>
-            <button onClick={handleSubmit} disabled={submitting} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:R, fontSize:"11px", color:"#3CCE2A", letterSpacing:"1px", padding:0 }}>
+            <button onClick={handleSubmit} disabled={submitting} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:R, fontSize:"11px", color:"#1A8040", letterSpacing:"1px", padding:0 }}>
               {submitting?"...":"SEND"}
             </button>
           </div>
@@ -176,13 +176,13 @@ function CommentItem({ comment, level=0, currentUser, replies, commentReactions,
           <div style={{ display:"flex", gap:"12px", alignItems:"center", paddingLeft:"4px" }}>
             <CommentReactionBar commentId={comment.id} myReaction={myReaction} onChange={onReactionChange}/>
             <span style={{ fontFamily:B, fontSize:"10px", color:"#3A5A30" }}>{timeAgo(comment.created_at)}</span>
-            {level===0 && <button onClick={()=>onReply(comment.id===replyingToId?null:comment.id,cp.display_name??"Member")} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:B, fontSize:"11px", color:comment.id===replyingToId?"#3CCE2A":"#5A7A60", padding:0 }}>
+            {level===0 && <button onClick={()=>onReply(comment.id===replyingToId?null:comment.id,cp.display_name??"Member")} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:B, fontSize:"11px", color:comment.id===replyingToId?"#1A8040":"#5A7A60", padding:0 }}>
               {comment.id===replyingToId?"Cancel":"Reply"}
             </button>}
             {isOwner && <button onClick={()=>onDelete(comment.id)} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:B, fontSize:"11px", color:"#3A5A30", padding:0 }}>Delete</button>}
           </div>
           {replies?.length>0 && level===0 && (
-            <button onClick={()=>setShowReplies(p=>!p)} style={{ display:"flex", alignItems:"center", gap:"6px", background:"none", border:"none", cursor:"pointer", fontFamily:B, fontSize:"11px", color:"#3CCE2A", padding:"6px 0 0 4px" }}>
+            <button onClick={()=>setShowReplies(p=>!p)} style={{ display:"flex", alignItems:"center", gap:"6px", background:"none", border:"none", cursor:"pointer", fontFamily:B, fontSize:"11px", color:"#1A8040", padding:"6px 0 0 4px" }}>
               <div style={{ width:"24px", height:"1px", background:"#DDE8DD" }}/>
               {showReplies?"Hide replies":`View ${replies.length} repl${replies.length>1?"ies":"y"}`}
             </button>
@@ -314,7 +314,7 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
             <div style={{ fontFamily:R, fontSize:"14px", color:"#1B3A2D", letterSpacing:"0.5px" }}>{profile.display_name??"Member"}</div>
             <div style={{ fontFamily:B, fontSize:"11px", color:"#5A7A60" }}>{timeAgo(post.created_at)}</div>
           </div>
-          {post.is_pinned&&<span style={{ fontFamily:R, fontSize:"9px", color:"#F5C82A", background:"#3D3000", border:"1px solid #F5C82A40", borderRadius:"4px", padding:"2px 8px" }}>📌 PINNED</span>}
+          {post.is_pinned&&<span style={{ fontFamily:R, fontSize:"9px", color:"#156530", background:"#3D3000", border:"1px solid #1A804040", borderRadius:"4px", padding:"2px 8px" }}>📌 PINNED</span>}
 
           {/* ── ··· MENU BUTTON ── */}
           <button
@@ -392,7 +392,7 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
             </span>}
             {totalReactions>0&&<span style={{ fontFamily:B, fontSize:"12px", color:"#3A5A30" }}>{formatCount(totalReactions)} likes</span>}
             {comments.length>0&&<span style={{ fontFamily:B, fontSize:"12px", color:"#3A5A30" }}>{formatCount(comments.length)} comments</span>}
-            {viewCount>0&&totalReactions>0&&<span style={{ fontFamily:R, fontSize:"11px", color:"#3CCE2A", marginLeft:"auto" }}>{((totalReactions/viewCount)*100).toFixed(1)}% engagement</span>}
+            {viewCount>0&&totalReactions>0&&<span style={{ fontFamily:R, fontSize:"11px", color:"#1A8040", marginLeft:"auto" }}>{((totalReactions/viewCount)*100).toFixed(1)}% engagement</span>}
           </div>
           <div style={{ fontFamily:B, fontSize:"11px", color:"#3A5A30", marginTop:"6px" }}>
             {new Date(post.created_at).toLocaleDateString("en-PH",{month:"long",day:"numeric",year:"numeric",hour:"2-digit",minute:"2-digit"})}
@@ -439,7 +439,7 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
                 onKeyDown={e=>{ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();submitComment(commentText);} }}
                 placeholder="Add a comment..." rows={1}
                 style={{ flex:1, background:"transparent", border:"none", outline:"none", color:"#1B3A2D", fontFamily:B, fontSize:"13px", resize:"none", lineHeight:1.5, maxHeight:"100px", overflow:"auto" }}/>
-              {commentText.trim()&&<button onClick={()=>submitComment(commentText)} disabled={submitting} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:R, fontSize:"12px", color:"#3CCE2A", letterSpacing:"1px", padding:"0 0 1px", flexShrink:0, opacity:submitting?0.5:1 }}>POST</button>}
+              {commentText.trim()&&<button onClick={()=>submitComment(commentText)} disabled={submitting} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:R, fontSize:"12px", color:"#1A8040", letterSpacing:"1px", padding:"0 0 1px", flexShrink:0, opacity:submitting?0.5:1 }}>POST</button>}
             </div>
           </div>
         </div>
@@ -459,9 +459,9 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
             {isOwner && <>
               <div style={{ borderTop:"1px solid #DDE8DD", margin:"4px 0" }}/>
               <button onClick={() => { setShowMenu(false); setMenuPos(null); setShowDeleteConfirm(true); }}
-                style={{ width:"100%", display:"flex", alignItems:"center", gap:"10px", padding:"9px 12px", borderRadius:"8px", background:"none", border:"none", cursor:"pointer", fontFamily:B, fontSize:"13px", color:"#F04060", textAlign:"left" }}
+                style={{ width:"100%", display:"flex", alignItems:"center", gap:"10px", padding:"9px 12px", borderRadius:"8px", background:"none", border:"none", cursor:"pointer", fontFamily:B, fontSize:"13px", color:"#CC3344", textAlign:"left" }}
                 onMouseEnter={e=>(e.currentTarget.style.background="#3D0A14")} onMouseLeave={e=>(e.currentTarget.style.background="none")}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M10 11v6M14 11v6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M9 6V4h6v2" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M10 11v6M14 11v6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M9 6V4h6v2" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/></svg>
                 Delete post
               </button>
             </>}
@@ -475,19 +475,19 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
         <div style={{ position:"fixed", inset:0, zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(0,0,0,0.7)", backdropFilter:"blur(4px)" }}>
           <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"16px", padding:"28px 28px 22px", maxWidth:"320px", width:"90%", boxShadow:"0 16px 48px rgba(0,0,0,0.6)" }}>
             <div style={{ width:"44px", height:"44px", borderRadius:"12px", background:"#3D0A14", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"16px" }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M10 11v6M14 11v6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M9 6V4h6v2" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M10 11v6M14 11v6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M9 6V4h6v2" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/></svg>
             </div>
             <div style={{ fontFamily:R, fontSize:"16px", color:"#1B3A2D", marginBottom:"8px", letterSpacing:"0.5px" }}>Delete post?</div>
             <div style={{ fontFamily:B, fontSize:"13px", color:"#5A7A60", lineHeight:1.6, marginBottom:"24px" }}>This action can't be undone. The post will be permanently removed.</div>
             <div style={{ display:"flex", gap:"10px" }}>
               <button onClick={() => setShowDeleteConfirm(false)}
                 style={{ flex:1, padding:"10px", borderRadius:"10px", background:"none", border:"2px solid #DDE8DD", cursor:"pointer", fontFamily:R, fontSize:"13px", color:"#5A7A60", letterSpacing:"0.5px" }}
-                onMouseEnter={e=>(e.currentTarget.style.borderColor="#3CCE2A")} onMouseLeave={e=>(e.currentTarget.style.borderColor="#DDE8DD")}>
+                onMouseEnter={e=>(e.currentTarget.style.borderColor="#1A8040")} onMouseLeave={e=>(e.currentTarget.style.borderColor="#DDE8DD")}>
                 Cancel
               </button>
               <button onClick={() => { setShowDeleteConfirm(false); handleDelete(); }}
-                style={{ flex:1, padding:"10px", borderRadius:"10px", background:"#F04060", border:"none", cursor:"pointer", fontFamily:R, fontSize:"13px", color:"#fff", letterSpacing:"0.5px" }}
-                onMouseEnter={e=>(e.currentTarget.style.background="#C0304A")} onMouseLeave={e=>(e.currentTarget.style.background="#F04060")}>
+                style={{ flex:1, padding:"10px", borderRadius:"10px", background:"#CC3344", border:"none", cursor:"pointer", fontFamily:R, fontSize:"13px", color:"#fff", letterSpacing:"0.5px" }}
+                onMouseEnter={e=>(e.currentTarget.style.background="#C0304A")} onMouseLeave={e=>(e.currentTarget.style.background="#CC3344")}>
                 Delete
               </button>
             </div>

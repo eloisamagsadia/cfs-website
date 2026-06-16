@@ -48,10 +48,10 @@ function NavItem({ label, href, icon, exact }: { label: string; href: string; ic
 
   return (
     <Link href={href} style={{ textDecoration: "none", display: "block" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", position: "relative", background: isActive ? "#FFFBE8" : "transparent", transition: "background 0.15s" }}>
-        {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#F5C82A", borderRadius: "0 3px 3px 0" }} />}
-        <span style={{ color: isActive ? "#F5C82A" : "#8A7A48", transition: "color 0.15s" }}>{icon}</span>
-        <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#7A5A10" : "#8A7A48", letterSpacing: "0.3px" }}>{label}</span>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", position: "relative", background: isActive ? "#E8F4EC" : "transparent", transition: "background 0.15s" }}>
+        {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#156530", borderRadius: "0 3px 3px 0" }} />}
+        <span style={{ color: isActive ? "#156530" : "#5A7A60", transition: "color 0.15s" }}>{icon}</span>
+        <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#156530" : "#5A7A60", letterSpacing: "0.3px" }}>{label}</span>
       </div>
     </Link>
   );
@@ -61,11 +61,11 @@ export default function SuperSidebar() {
   return (
     <aside style={{ width: "210px", flexShrink: 0 }}>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px", background: "linear-gradient(135deg, #FFFBE8, #FFF7D4)", border: "1px solid #F5C82A20", borderRadius: "10px", marginBottom: "20px" }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5C82A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px", background: "#E8F4EC", border: "1px solid #1A804020", borderRadius: "10px", marginBottom: "20px" }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#156530" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         <div>
-          <div style={{ fontFamily: R, fontSize: "11px", color: "#C8960A", letterSpacing: "2px" }}>SUPER ADMIN</div>
-          <div style={{ fontFamily: B, fontSize: "9px", color: "#8A7A48", marginTop: "1px" }}>Command Center</div>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#156530", letterSpacing: "2px" }}>SUPER ADMIN</div>
+          <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A60", marginTop: "1px" }}>Command Center</div>
         </div>
       </div>
 
@@ -81,9 +81,9 @@ export default function SuperSidebar() {
 
         <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "1px" }}>
           <Link href="/admin" style={{ textDecoration: "none" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", background: "#FFF0E8", border: "1px solid #F0722830" }}>
-              <span style={{ color: "#F07228" }}>{icons.admin}</span>
-              <span style={{ fontFamily: B, fontSize: "13px", color: "#F07228" }}>Admin Panel</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", background: "#E8F4EC", border: "1px solid #1A804030" }}>
+              <span style={{ color: "#1A8040" }}>{icons.admin}</span>
+              <span style={{ fontFamily: B, fontSize: "13px", color: "#1A8040" }}>Admin Panel</span>
             </div>
           </Link>
           <Link href="/members" style={{ textDecoration: "none" }}>

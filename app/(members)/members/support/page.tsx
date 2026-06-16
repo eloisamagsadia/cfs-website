@@ -62,9 +62,9 @@ export default function SupportPage() {
 
   if (success) return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px", maxWidth: "600px" }}>
-      <div style={{ background: "#E8F0E4", border: "2px solid #3CCE2A", borderRadius: "16px", padding: "40px", textAlign: "center" }}>
-        <div style={{ marginBottom: "16px", display: "flex", justifyContent: "center" }}><svg width="56" height="56" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#E8F0E4"/><circle cx="28" cy="28" r="26" stroke="#3CCE2A" strokeWidth="2"/><path d="M17 28.5L24 36L39 21" stroke="#3CCE2A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
-        <div style={{ fontFamily: R, fontSize: "1.2rem", color: "#3CCE2A", letterSpacing: "2px", marginBottom: "8px" }}>TICKET SUBMITTED</div>
+      <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "16px", padding: "40px", textAlign: "center" }}>
+        <div style={{ marginBottom: "16px", display: "flex", justifyContent: "center" }}><svg width="56" height="56" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="28" fill="#E8F0E4"/><circle cx="28" cy="28" r="26" stroke="#1A8040" strokeWidth="2"/><path d="M17 28.5L24 36L39 21" stroke="#1A8040" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
+        <div style={{ fontFamily: R, fontSize: "1.2rem", color: "#1A8040", letterSpacing: "2px", marginBottom: "8px" }}>TICKET SUBMITTED</div>
         <div style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", lineHeight: 1.6, marginBottom: "24px" }}>
           We received your message and will get back to you soon. You can track your tickets below.
         </div>
@@ -74,7 +74,7 @@ export default function SupportPage() {
             SUBMIT ANOTHER
           </button>
           <button onClick={() => router.push("/members/support/tickets")}
-            style={{ fontFamily: R, fontSize: "11px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
             VIEW MY TICKETS
           </button>
         </div>
@@ -89,7 +89,7 @@ export default function SupportPage() {
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Submit a ticket and we'll get back to you.</p>
       </div>
 
-      {error && <div style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
+      {error && <div style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
 
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
         <div>
@@ -97,7 +97,7 @@ export default function SupportPage() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
             {CATEGORIES.map(c => (
               <button key={c} onClick={() => setForm(p => ({ ...p, category: c }))}
-                style={{ fontFamily: B, fontSize: "11px", background: form.category === c ? "#E8F0E4" : "transparent", border: `1.5px solid ${form.category === c ? "#3CCE2A" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 12px", color: form.category === c ? "#3CCE2A" : "#5A7A60", cursor: "pointer" }}>
+                style={{ fontFamily: B, fontSize: "11px", background: form.category === c ? "#E8F0E4" : "transparent", border: `1.5px solid ${form.category === c ? "#1A8040" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 12px", color: form.category === c ? "#1A8040" : "#5A7A60", cursor: "pointer" }}>
                 {CATEGORY_LABELS[c]}
               </button>
             ))}
@@ -131,7 +131,7 @@ export default function SupportPage() {
                 <div key={i} style={{ position: "relative" }}>
                   <img src={a.preview} alt="" style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px", border: "1.5px solid #DDE8DD" }} />
                   <button onClick={() => setAttachments(prev => prev.filter((_, j) => j !== i))}
-                    style={{ position: "absolute", top: "-6px", right: "-6px", width: "20px", height: "20px", background: "#F04060", border: "none", borderRadius: "50%", color: "#fff", cursor: "pointer", fontSize: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
+                    style={{ position: "absolute", top: "-6px", right: "-6px", width: "20px", height: "20px", background: "#CC3344", border: "none", borderRadius: "50%", color: "#fff", cursor: "pointer", fontSize: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
                 </div>
               ))}
             </div>
@@ -139,7 +139,7 @@ export default function SupportPage() {
         </div>
 
         <button onClick={handleSubmit} disabled={saving}
-          style={{ fontFamily: R, fontSize: "12px", background: saving ? "#F2F7F2" : "#3CCE2A", color: saving ? "#5A7A60" : "#080F06", border: "none", borderRadius: "6px", padding: "12px", cursor: saving ? "not-allowed" : "pointer", letterSpacing: "1.5px", opacity: saving ? 0.7 : 1 }}>
+          style={{ fontFamily: R, fontSize: "12px", background: saving ? "#F2F7F2" : "#1A8040", color: saving ? "#5A7A60" : "#080F06", border: "none", borderRadius: "6px", padding: "12px", cursor: saving ? "not-allowed" : "pointer", letterSpacing: "1.5px", opacity: saving ? 0.7 : 1 }}>
           {uploading ? "UPLOADING..." : saving ? "SUBMITTING..." : "SUBMIT TICKET"}
         </button>
       </div>

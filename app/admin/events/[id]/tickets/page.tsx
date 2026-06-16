@@ -8,10 +8,10 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const STATUS_COLORS: Record<string, string> = {
-  active: "#3CCE2A",
+  active: "#1A8040",
   used: "#5A7A60",
-  cancelled: "#F04060",
-  pending_payment: "#F5C82A",
+  cancelled: "#CC3344",
+  pending_payment: "#156530",
 };
 
 function timeAgo(iso: string) {
@@ -54,7 +54,7 @@ export default function EventTicketsPage() {
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", margin: 0 }}>{tickets.length} total registrations</p>
         </div>
         <Link href="/admin/check-in"
-          style={{ fontFamily: R, fontSize: "11px", background: "#3CCE2A", color: "#080F06", textDecoration: "none", borderRadius: "6px", padding: "8px 16px", letterSpacing: "1px" }}>
+          style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#080F06", textDecoration: "none", borderRadius: "6px", padding: "8px 16px", letterSpacing: "1px" }}>
           📷 CHECK-IN SCANNER
         </Link>
       </div>
@@ -62,10 +62,10 @@ export default function EventTicketsPage() {
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
         {[
-          { label: "REGISTERED", value: counts.active, color: "#3CCE2A" },
+          { label: "REGISTERED", value: counts.active, color: "#1A8040" },
           { label: "CHECKED IN", value: counts.used, color: "#5A7A60" },
-          { label: "PENDING", value: counts.pending_payment, color: "#F5C82A" },
-          { label: "CANCELLED", value: counts.cancelled, color: "#F04060" },
+          { label: "PENDING", value: counts.pending_payment, color: "#156530" },
+          { label: "CANCELLED", value: counts.cancelled, color: "#CC3344" },
         ].map(({ label, value, color }) => (
           <div key={label} style={{ background: "#FFFFFF", border: `2px solid ${color}30`, borderRadius: "10px", padding: "14px 16px", textAlign: "center" }}>
             <div style={{ fontFamily: R, fontSize: "1.6rem", color }}>{value}</div>
@@ -78,7 +78,7 @@ export default function EventTicketsPage() {
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
         {["all", "active", "used", "pending_payment", "cancelled"].map(s => (
           <button key={s} onClick={() => setFilter(s)}
-            style={{ fontFamily: R, fontSize: "11px", background: filter === s ? "#E8F0E4" : "transparent", border: `1.5px solid ${filter === s ? "#3CCE2A" : "#DDE8DD"}`, color: filter === s ? "#3CCE2A" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: filter === s ? "#E8F0E4" : "transparent", border: `1.5px solid ${filter === s ? "#1A8040" : "#DDE8DD"}`, color: filter === s ? "#1A8040" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
             {s.replace("_", " ").toUpperCase()} ({counts[s as keyof typeof counts]})
           </button>
         ))}
@@ -103,7 +103,7 @@ export default function EventTicketsPage() {
                 <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#E8F0E4", border: "1.5px solid #DDE8DD", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {ticket.profiles?.avatar_url
                     ? <img src={ticket.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <span style={{ fontFamily: R, fontSize: "14px", color: "#3CCE2A" }}>{(ticket.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
+                    : <span style={{ fontFamily: R, fontSize: "14px", color: "#1A8040" }}>{(ticket.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
                   }
                 </div>
                 {/* Info */}

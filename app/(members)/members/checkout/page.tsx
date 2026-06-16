@@ -127,7 +127,7 @@ export default function CheckoutPage() {
             </div>
             <div><label style={labelStyle}>ZIP Code</label><input style={inputStyle} value={form.zip_code} onChange={e=>update("zip_code",e.target.value)} placeholder="1234"/></div>
           </div>
-          {error && <div style={{ background:"#3D0A18", border:"1.5px solid #F04060", borderRadius:"8px", padding:"12px", fontFamily:B, fontSize:"13px", color:"#F04060" }}>{error}</div>}
+          {error && <div style={{ background:"#3D0A18", border:"1.5px solid #CC3344", borderRadius:"8px", padding:"12px", fontFamily:B, fontSize:"13px", color:"#CC3344" }}>{error}</div>}
         </div>
 
         <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"20px", position:"sticky", top:"90px" }}>
@@ -154,16 +154,16 @@ export default function CheckoutPage() {
                 <span style={{ fontFamily:B, fontSize:"12px", color:"#4A7C59" }}>Processing fee </span>
                 <span style={{ fontFamily:B, fontSize:"10px", color:"#3A5A30" }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span>
               </div>
-              <span style={{ fontFamily:B, fontSize:"12px", color:"#F04060" }}>+P{fmt(paymongoFee)}</span>
+              <span style={{ fontFamily:B, fontSize:"12px", color:"#CC3344" }}>+P{fmt(paymongoFee)}</span>
             </div>
             <div style={{ borderTop:"1px solid #DDE8DD", paddingTop:"8px", display:"flex", justifyContent:"space-between" }}>
               <span style={{ fontFamily:R, fontSize:"13px", color:"#1B3A2D", letterSpacing:"1px" }}>TOTAL</span>
-              <span style={{ fontFamily:R, fontSize:"15px", color:"#F07228" }}>P{fmt(total)}</span>
+              <span style={{ fontFamily:R, fontSize:"15px", color:"#1A8040" }}>P{fmt(total)}</span>
             </div>
           </div>
           <button onClick={handleCheckout} disabled={submitting} style={{ position:"relative", display:"block", width:"100%", background:"transparent", border:"none", cursor: submitting ? "not-allowed" : "pointer", padding:0, opacity: submitting ? 0.6 : 1 }}>
             <span style={{ position:"absolute", top:"3px", left:"3px", width:"100%", height:"100%", background:"#080F06", borderRadius:"6px", display:"block" }}/>
-            <span style={{ position:"relative", display:"block", background:"#F07228", border:"2px solid #080F06", borderRadius:"6px", padding:"12px", textAlign:"center" }}>
+            <span style={{ position:"relative", display:"block", background:"#1A8040", border:"2px solid #080F06", borderRadius:"6px", padding:"12px", textAlign:"center" }}>
               <span style={{ fontFamily:R, fontSize:"13px", color:"#1B3A2D", letterSpacing:"2px" }}>PAY P{fmt(total)}</span>
             </span>
           </button>

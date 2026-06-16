@@ -18,17 +18,17 @@ const ICONS:Record<string,React.ReactNode>={
   default:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
 };
 const TC:Record<string,{color:string;label:string}>={
-  event_reminder:{color:"#3CCE2A",label:"Events"},
-  order_update:{color:"#F07228",label:"Orders"},
-  community_reply:{color:"#F5C82A",label:"Community"},
-  community_mention:{color:"#F5C82A",label:"Community"},
-  badge_earned:{color:"#8EE440",label:"Badges"},
-  new_follower:{color:"#3CCE2A",label:"Social"},
-  donation_ack:{color:"#F04060",label:"Donations"},
-  new_report:{color:"#3CCE2A",label:"Reports"},
-  announcement:{color:"#F07228",label:"Announcements"},
-  new_message:{color:"#3CCE2A",label:"Messages"},
-  support_reply:{color:"#F07228",label:"Support"},
+  event_reminder:{color:"#1A8040",label:"Events"},
+  order_update:{color:"#1A8040",label:"Orders"},
+  community_reply:{color:"#156530",label:"Community"},
+  community_mention:{color:"#156530",label:"Community"},
+  badge_earned:{color:"#1A8040",label:"Badges"},
+  new_follower:{color:"#1A8040",label:"Social"},
+  donation_ack:{color:"#CC3344",label:"Donations"},
+  new_report:{color:"#1A8040",label:"Reports"},
+  announcement:{color:"#1A8040",label:"Announcements"},
+  new_message:{color:"#1A8040",label:"Messages"},
+  support_reply:{color:"#1A8040",label:"Support"},
 };
 const FILTERS=["ALL","Events","Orders","Community","Badges","Social","Donations","Announcements"];
 const TYPE_LABELS: Record<string,string> = {
@@ -118,15 +118,15 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
         <div>
           <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#1B3A2D",letterSpacing:"3px",marginBottom:"4px"}}>NOTIFICATIONS</h1>
           <p style={{fontFamily:B,fontSize:"13px",color:"#4A7C59"}}>
-            {unreadCount>0?<span style={{color:"#F04060"}}>{unreadCount} unread</span>:"All caught up!"}
+            {unreadCount>0?<span style={{color:"#CC3344"}}>{unreadCount} unread</span>:"All caught up!"}
             {" · "}{notifications.length} total
           </p>
         </div>
         <div style={{display:"flex",gap:"8px",flexWrap:"wrap",alignItems:"center"}}>
-          <button onClick={toggleSound} style={{display:"flex",alignItems:"center",gap:"5px",fontFamily:R,fontSize:"11px",letterSpacing:"1px",background:soundOn?"#E8F0E4":"transparent",color:soundOn?"#3CCE2A":"#5A7A60",border:`1.5px solid ${soundOn?"#3CCE2A":"#DDE8DD"}`,borderRadius:"20px",padding:"6px 12px",cursor:"pointer"}}>
+          <button onClick={toggleSound} style={{display:"flex",alignItems:"center",gap:"5px",fontFamily:R,fontSize:"11px",letterSpacing:"1px",background:soundOn?"#E8F0E4":"transparent",color:soundOn?"#1A8040":"#5A7A60",border:`1.5px solid ${soundOn?"#1A8040":"#DDE8DD"}`,borderRadius:"20px",padding:"6px 12px",cursor:"pointer"}}>
             <span style={{fontSize:"13px"}}>{soundOn?"🔔":"🔕"}</span>{soundOn?"SOUND ON":"SOUND OFF"}
           </button>
-          {unreadCount>0&&<button onClick={markAllRead} disabled={markingAll} style={{fontFamily:R,fontSize:"11px",color:"#3CCE2A",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"20px",padding:"6px 14px",cursor:"pointer",letterSpacing:"1px"}}>{markingAll?"...":"MARK ALL READ ✓"}</button>}
+          {unreadCount>0&&<button onClick={markAllRead} disabled={markingAll} style={{fontFamily:R,fontSize:"11px",color:"#1A8040",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"20px",padding:"6px 14px",cursor:"pointer",letterSpacing:"1px"}}>{markingAll?"...":"MARK ALL READ ✓"}</button>}
           {notifications.some(n=>n.is_read)&&<button onClick={clearRead} style={{fontFamily:R,fontSize:"11px",color:"#5A7A60",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"20px",padding:"6px 14px",cursor:"pointer",letterSpacing:"1px"}}>CLEAR READ</button>}
         </div>
       </div>
@@ -135,9 +135,9 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
           const count=f==="ALL"?notifications.filter(n=>!n.is_read).length:notifications.filter(n=>!n.is_read&&TC[n.type]?.label===f).length;
           const isActive=filter===f;
           return(
-            <button key={f} onClick={()=>setFilter(f)} style={{fontFamily:R,fontSize:"10px",letterSpacing:"1px",background:isActive?"#E8F0E4":"transparent",border:`1.5px solid ${isActive?"#3CCE2A":"#DDE8DD"}`,color:isActive?"#3CCE2A":"#5A7A60",borderRadius:"20px",padding:"5px 12px",cursor:"pointer",display:"flex",alignItems:"center",gap:"4px"}}>
+            <button key={f} onClick={()=>setFilter(f)} style={{fontFamily:R,fontSize:"10px",letterSpacing:"1px",background:isActive?"#E8F0E4":"transparent",border:`1.5px solid ${isActive?"#1A8040":"#DDE8DD"}`,color:isActive?"#1A8040":"#5A7A60",borderRadius:"20px",padding:"5px 12px",cursor:"pointer",display:"flex",alignItems:"center",gap:"4px"}}>
               {f.toUpperCase()}
-              {count>0&&<span style={{background:"#F04060",color:"#1B3A2D",borderRadius:"20px",padding:"0 5px",fontSize:"9px",fontFamily:R,lineHeight:"16px",display:"inline-block"}}>{count}</span>}
+              {count>0&&<span style={{background:"#CC3344",color:"#1B3A2D",borderRadius:"20px",padding:"0 5px",fontSize:"9px",fontFamily:R,lineHeight:"16px",display:"inline-block"}}>{count}</span>}
             </button>
           );
         })}
@@ -157,7 +157,7 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
               <div key={group}>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
                   <span style={{fontFamily:R,fontSize:"11px",color:"#5A7A60",letterSpacing:"2px"}}>{group}</span>
-                  {gu>0&&<span style={{background:"#F04060",color:"#1B3A2D",borderRadius:"20px",padding:"1px 8px",fontSize:"10px",fontFamily:R}}>{gu} unread</span>}
+                  {gu>0&&<span style={{background:"#CC3344",color:"#1B3A2D",borderRadius:"20px",padding:"1px 8px",fontSize:"10px",fontFamily:R}}>{gu} unread</span>}
                   <div style={{flex:1,height:"1px",background:"#DDE8DD"}}/>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>

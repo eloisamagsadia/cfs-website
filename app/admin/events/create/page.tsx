@@ -17,7 +17,7 @@ export default function CreateEventPage() {
   const inputStyle = { width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
   const labelStyle = { fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px", textTransform: "uppercase" as const, display: "block", marginBottom: "6px" };
   const STATUS_OPTIONS = ["upcoming", "ongoing", "completed", "cancelled"];
-  const STATUS_COLORS: any = { upcoming: "#3CCE2A", ongoing: "#F5C82A", completed: "#5A7A60", cancelled: "#F04060" };
+  const STATUS_COLORS: any = { upcoming: "#1A8040", ongoing: "#156530", completed: "#5A7A60", cancelled: "#CC3344" };
 
   async function handleSave() {
     if (!form.title || !form.date) { setError("Title and date are required."); return; }
@@ -43,7 +43,7 @@ export default function CreateEventPage() {
         <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
       </div>
 
-      {error && <div style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
+      {error && <div style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
 
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
         <div><label style={labelStyle}>Event Title *</label><input style={inputStyle} value={form.title} onChange={e => upd("title", e.target.value)} placeholder="CFS Fam Meet 2026" /></div>
@@ -84,13 +84,13 @@ export default function CreateEventPage() {
 
         {/* Members only */}
         <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}>
-          <input type="checkbox" checked={form.is_members_only} onChange={e => upd("is_members_only", e.target.checked)} style={{ width: "18px", height: "18px", accentColor: "#3CCE2A" }} />
+          <input type="checkbox" checked={form.is_members_only} onChange={e => upd("is_members_only", e.target.checked)} style={{ width: "18px", height: "18px", accentColor: "#1A8040" }} />
           <span style={{ fontFamily: R, fontSize: "12px", color: "#4A7C59", letterSpacing: "1px" }}>MEMBERS ONLY EVENT</span>
         </label>
 
         {/* Early access */}
-        <div style={{ background: "#B47FE310", border: "1.5px solid #B47FE360", borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
-          <div style={{ fontFamily: R, fontSize: "11px", color: "#B47FE3", letterSpacing: "2px" }}>✦ SPONSOR EARLY ACCESS (optional)</div>
+        <div style={{ background: "#1A804010", border: "1.5px solid #1A804060", borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px" }}>✦ SPONSOR EARLY ACCESS (optional)</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div>
               <label style={labelStyle}>Early Access Opens</label>
@@ -109,7 +109,7 @@ export default function CreateEventPage() {
           <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
           <button onClick={handleSave} disabled={saving} style={{ position: "relative", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
             <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: saving ? "#E8F0E4" : "#3CCE2A", color: saving ? "#5A7A60" : "#080F06", padding: "10px 22px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>{saving ? "SAVING..." : "SAVE EVENT ✦"}</span>
+            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#080F06", padding: "10px 22px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>{saving ? "SAVING..." : "SAVE EVENT ✦"}</span>
           </button>
         </div>
       </div>

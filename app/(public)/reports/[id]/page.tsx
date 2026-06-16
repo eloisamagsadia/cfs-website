@@ -19,7 +19,7 @@ const C = {
   sage:   "#4A7C59",
   border: "#DDE8DD",
   muted:  "#7A8E7A",
-  green:  "#3CCE2A",
+  green:  "#1A8040",
 };
 
 function renderMarkdown(text: string): string {
@@ -70,7 +70,7 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
   const totalOutflow = isStructured ? Number(raw.total_outflow ?? 0) : 0;
   const remaining    = isStructured ? Number(raw.remaining     ?? 0) : 0;
 
-  const colors = [C.sage, "#F07228", "#F5C82A", "#8EE440", "#F04060"];
+  const colors = [C.sage, "#1A8040", "#156530", "#1A8040", "#CC3344"];
 
   function BreakdownBar({ items, total }: { items: { label: string; amount: number; color?: string }[]; total: number; accent?: string }) {
     if (!items.length) return null;
@@ -115,7 +115,7 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
             <span style={{ fontFamily:SG, fontSize:"10px", fontWeight:700, color:C.sage, background:C.mist, border:`1px solid ${C.border}`, borderRadius:"6px", padding:"3px 12px", letterSpacing:"1px" }}>
               Q{report.quarter} {report.year} — {QUARTER_LABELS[report.quarter]}
             </span>
-            <span style={{ fontFamily:SG, fontSize:"10px", fontWeight:700, color:"#F5C82A", background:"#FFF8E1", border:"1px solid #F5C82A40", borderRadius:"6px", padding:"3px 12px" }}>
+            <span style={{ fontFamily:SG, fontSize:"10px", fontWeight:700, color:"#156530", background:"#FFF8E1", border:"1px solid #1A804040", borderRadius:"6px", padding:"3px 12px" }}>
               TRANSPARENCY REPORT
             </span>
           </div>
@@ -147,8 +147,8 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
           <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"16px" }}>
             {[
               { label:"Total Inflow",    amount:totalInflow,  color:C.green },
-              { label:"Total Outflow",   amount:totalOutflow, color:"#F04060" },
-              { label:"Remaining Funds", amount:remaining,    color:"#F5C82A" },
+              { label:"Total Outflow",   amount:totalOutflow, color:"#CC3344" },
+              { label:"Remaining Funds", amount:remaining,    color:"#156530" },
             ].map((item) => (
               <div key={item.label} style={{ background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"16px", overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,0.04)" }}>
                 <div style={{ background:C.forest, padding:"12px 20px" }}>
@@ -185,10 +185,10 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
           <div style={{ background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"16px", overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,0.04)" }}>
             <div style={{ background:C.forest, padding:"16px 24px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div style={{ fontFamily:SG, fontSize:"10px", fontWeight:700, color:"rgba(255,255,255,0.7)", letterSpacing:"3px" }}>OUTFLOW BREAKDOWN</div>
-              <span style={{ fontFamily:SG, fontSize:"11px", fontWeight:600, color:"#F04060" }}>₱{totalOutflow.toLocaleString()}</span>
+              <span style={{ fontFamily:SG, fontSize:"11px", fontWeight:600, color:"#CC3344" }}>₱{totalOutflow.toLocaleString()}</span>
             </div>
             <div style={{ padding:"24px" }}>
-              <BreakdownChart items={outflow} total={totalOutflow} title="Outflow Breakdown" accentColor="#F04060" />
+              <BreakdownChart items={outflow} total={totalOutflow} title="Outflow Breakdown" accentColor="#CC3344" />
             </div>
           </div>
         )}
@@ -211,7 +211,7 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
           <div style={{ background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"16px", overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,0.04)" }}>
             <div style={{ background:C.forest, padding:"16px 24px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div style={{ fontFamily:SG, fontSize:"10px", fontWeight:700, color:"rgba(255,255,255,0.7)", letterSpacing:"3px" }}>EXPENSE BREAKDOWN BY PROJECT</div>
-              <span style={{ fontFamily:SG, fontSize:"11px", fontWeight:600, color:"#F04060" }}>₱{totalOutflow.toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
+              <span style={{ fontFamily:SG, fontSize:"11px", fontWeight:600, color:"#CC3344" }}>₱{totalOutflow.toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
             </div>
             <div style={{ padding:"16px 24px", display:"flex", flexDirection:"column", gap:"16px" }}>
               {(raw.outflow_detailed as { project: string; items: { description: string; amount: number; notes?: string }[] }[]).map((proj, pi) => {
@@ -246,7 +246,7 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
                               <ReportReceiptPreview receipts={itemReceipts} />
                             </div>
                             <span style={{ fontFamily:B, fontSize:"11px", color:C.muted }}>{item.notes || "—"}</span>
-                            <span style={{ fontFamily:SG, fontSize:"12px", fontWeight:600, color:"#F04060", textAlign:"right", whiteSpace:"nowrap" }}>₱{Number(item.amount).toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
+                            <span style={{ fontFamily:SG, fontSize:"12px", fontWeight:600, color:"#CC3344", textAlign:"right", whiteSpace:"nowrap" }}>₱{Number(item.amount).toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
                           </div>
                         );
                       })}

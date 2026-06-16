@@ -15,16 +15,16 @@ const C = {
   sage:   "#4A7C59",
   border: "#DDE8DD",
   muted:  "#7A8E7A",
-  green:  "#3CCE2A",
+  green:  "#1A8040",
 };
 
 const AMOUNTS = [100, 250, 500, 1000, 2500, 5000];
 
 const TIERS = [
-  { name: "Blood Moon",   range: "₱1,500 – ₱2,999", color: "#F04060", desc: "Entry-level supporter" },
-  { name: "Harvest Moon", range: "₱3,000 – ₱4,999", color: "#F07228", desc: "Mid-tier supporter" },
-  { name: "Blue Moon",    range: "₱5,000 – ₱7,999", color: "#8EE440", desc: "High-tier supporter" },
-  { name: "Supermoon",    range: "₱8,000+",           color: "#F5C82A", desc: "Special perks included" },
+  { name: "Blood Moon",   range: "₱1,500 – ₱2,999", color: "#CC3344", desc: "Entry-level supporter" },
+  { name: "Harvest Moon", range: "₱3,000 – ₱4,999", color: "#1A8040", desc: "Mid-tier supporter" },
+  { name: "Blue Moon",    range: "₱5,000 – ₱7,999", color: "#1A8040", desc: "High-tier supporter" },
+  { name: "Supermoon",    range: "₱8,000+",           color: "#156530", desc: "Special perks included" },
 ];
 
 const PAYMONGO_RATE  = 0.025; // GCash rate — most common PH payment method
@@ -186,7 +186,7 @@ export default function DonatePage() {
                 <span style={{ fontFamily:B, fontSize:"13px", color:C.muted }}>Processing fee </span>
                 <span style={{ fontFamily:B, fontSize:"11px", color:C.muted }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span>
               </div>
-              <span style={{ fontFamily:SG, fontSize:"13px", fontWeight:600, color:"#F04060" }}>+₱{fmt(paymongoFee)}</span>
+              <span style={{ fontFamily:SG, fontSize:"13px", fontWeight:600, color:"#CC3344" }}>+₱{fmt(paymongoFee)}</span>
             </div>
             <div style={{ borderTop:`1px solid ${C.border}`, paddingTop:"12px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div>
@@ -201,7 +201,7 @@ export default function DonatePage() {
         {/* ── DONATE BUTTON ── */}
         <div>
           {error && (
-            <div style={{ background:"#FFF0F3", border:"1px solid #F04060", borderRadius:"10px", padding:"12px 16px", fontFamily:B, fontSize:"13px", color:"#F04060", marginBottom:"12px" }}>
+            <div style={{ background:"#FFF0F3", border:"1px solid #CC3344", borderRadius:"10px", padding:"12px 16px", fontFamily:B, fontSize:"13px", color:"#CC3344", marginBottom:"12px" }}>
               {error}
             </div>
           )}

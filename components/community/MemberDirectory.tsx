@@ -62,10 +62,10 @@ export default function MemberDirectory({ members, currentUserId, followingIds: 
           return (
             <div key={member.id} style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"16px", textAlign:"center" }} className="card-hover">
               {/* Avatar */}
-              <div style={{ width:"56px", height:"56px", borderRadius:"50%", background:"#E8F0E4", border:"2px solid #3CCE2A", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", margin:"0 auto 10px" }}>
+              <div style={{ width:"56px", height:"56px", borderRadius:"50%", background:"#E8F0E4", border:"2px solid #1A8040", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", margin:"0 auto 10px" }}>
                 {member.avatar_url
                   ? <img src={member.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
-                  : <span style={{ fontFamily:R, fontSize:"22px", color:"#3CCE2A" }}>{(member.display_name ?? "M")[0].toUpperCase()}</span>
+                  : <span style={{ fontFamily:R, fontSize:"22px", color:"#1A8040" }}>{(member.display_name ?? "M")[0].toUpperCase()}</span>
                 }
               </div>
               <div style={{ fontFamily:R, fontSize:"13px", color:"#1B3A2D", letterSpacing:"1px", marginBottom:"4px" }}>
@@ -85,9 +85,9 @@ export default function MemberDirectory({ members, currentUserId, followingIds: 
                   disabled={loading === member.id}
                   style={{
                     fontFamily:R, fontSize:"11px", letterSpacing:"1px",
-                    background: isFollowing ? "transparent" : "#3CCE2A",
-                    color: isFollowing ? "#3CCE2A" : "#080F06",
-                    border: `1.5px solid ${isFollowing ? "#3CCE2A" : "#080F06"}`,
+                    background: isFollowing ? "transparent" : "#1A8040",
+                    color: isFollowing ? "#1A8040" : "#080F06",
+                    border: `1.5px solid ${isFollowing ? "#1A8040" : "#080F06"}`,
                     borderRadius:"20px", padding:"5px 16px", cursor:"pointer", width:"100%",
                   }}
                 >

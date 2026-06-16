@@ -48,7 +48,7 @@ export default function AdminFanSubmissionsPage() {
       {/* Filter tabs */}
       <div style={{ display: "flex", gap: "8px" }}>
         {["pending", "approved", "rejected", "all"].map(f => (
-          <button key={f} onClick={() => setFilter(f)} style={{ fontFamily: B, fontSize: "11px", background: filter === f ? "#2C1A0A" : "#FFFFFF", color: filter === f ? "#F07228" : "#5A7A60", border: `1.5px solid ${filter === f ? "#F07228" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px", textTransform: "uppercase" as const }}>
+          <button key={f} onClick={() => setFilter(f)} style={{ fontFamily: B, fontSize: "11px", background: filter === f ? "#2C1A0A" : "#FFFFFF", color: filter === f ? "#1A8040" : "#5A7A60", border: `1.5px solid ${filter === f ? "#1A8040" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px", textTransform: "uppercase" as const }}>
             {f}
           </button>
         ))}
@@ -73,7 +73,7 @@ export default function AdminFanSubmissionsPage() {
                 <div style={{ position: "absolute", top: "8px", left: "8px", background: "rgba(0,0,0,0.7)", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: "#4A7C59" }}>
                   {ICONS[s.platform]} {s.platform}
                 </div>
-                <div style={{ position: "absolute", top: "8px", right: "8px", background: s.status === "approved" ? "#E8F0E4" : s.status === "rejected" ? "#3D0A18" : "#2C1A0A", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: s.status === "approved" ? "#3CCE2A" : s.status === "rejected" ? "#F04060" : "#F07228" }}>
+                <div style={{ position: "absolute", top: "8px", right: "8px", background: s.status === "approved" ? "#E8F0E4" : s.status === "rejected" ? "#3D0A18" : "#2C1A0A", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: s.status === "approved" ? "#1A8040" : s.status === "rejected" ? "#CC3344" : "#1A8040" }}>
                   {s.status}
                 </div>
               </div>
@@ -81,7 +81,7 @@ export default function AdminFanSubmissionsPage() {
               {/* Info */}
               <div style={{ padding: "12px 14px" }}>
                 {s.caption && <p style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", marginBottom: "6px" }}>{s.caption}</p>}
-                <a href={s.url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "11px", color: "#3CCE2A", wordBreak: "break-all" as const }}>{s.url}</a>
+                <a href={s.url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "11px", color: "#1A8040", wordBreak: "break-all" as const }}>{s.url}</a>
                 <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "6px" }}>
                   {new Date(s.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}
                 </p>
@@ -90,12 +90,12 @@ export default function AdminFanSubmissionsPage() {
               {/* Actions */}
               <div style={{ display: "flex", gap: "6px", padding: "0 14px 14px" }}>
                 {s.status !== "approved" && (
-                  <button onClick={() => updateStatus(s.id, "approved")} style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "transparent", color: "#3CCE2A", border: "1.5px solid #3CCE2A", borderRadius: "6px", padding: "7px", cursor: "pointer" }}>
+                  <button onClick={() => updateStatus(s.id, "approved")} style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "transparent", color: "#1A8040", border: "1.5px solid #1A8040", borderRadius: "6px", padding: "7px", cursor: "pointer" }}>
                     ✓ Approve
                   </button>
                 )}
                 {s.status !== "rejected" && (
-                  <button onClick={() => updateStatus(s.id, "rejected")} style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "transparent", color: "#F04060", border: "1.5px solid #F04060", borderRadius: "6px", padding: "7px", cursor: "pointer" }}>
+                  <button onClick={() => updateStatus(s.id, "rejected")} style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "transparent", color: "#CC3344", border: "1.5px solid #CC3344", borderRadius: "6px", padding: "7px", cursor: "pointer" }}>
                     ✕ Reject
                   </button>
                 )}

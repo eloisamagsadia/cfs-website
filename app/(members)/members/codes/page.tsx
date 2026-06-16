@@ -27,9 +27,9 @@ export default async function CodesPage() {
 
   const getStatus = (code:any) => {
     if (!code.is_active) return { label:"INACTIVE", color:"#5A7A60" };
-    if (code.expires_at && new Date(code.expires_at) < new Date()) return { label:"EXPIRED", color:"#F04060" };
-    if (code.max_uses && code.used_count >= code.max_uses) return { label:"USED UP", color:"#F04060" };
-    return { label:"ACTIVE", color:"#3CCE2A" };
+    if (code.expires_at && new Date(code.expires_at) < new Date()) return { label:"EXPIRED", color:"#CC3344" };
+    if (code.max_uses && code.used_count >= code.max_uses) return { label:"USED UP", color:"#CC3344" };
+    return { label:"ACTIVE", color:"#1A8040" };
   };
 
   return (
@@ -50,7 +50,7 @@ export default async function CodesPage() {
           {codes.map((code:any) => {
             const status = getStatus(code);
             return (
-              <div key={code.id} style={{ background:"#FFFFFF", border:`2px solid ${status.color === "#3CCE2A" ? "#DDE8DD" : "#2C2020"}`, borderRadius:"12px", padding:"20px 22px" }}>
+              <div key={code.id} style={{ background:"#FFFFFF", border:`2px solid ${status.color === "#1A8040" ? "#DDE8DD" : "#2C2020"}`, borderRadius:"12px", padding:"20px 22px" }}>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"12px" }}>
                   {/* Code display */}
                   <div>
@@ -59,7 +59,7 @@ export default async function CodesPage() {
                       <span style={{ fontFamily:R, fontSize:"10px", color:status.color, background:`${status.color}20`, border:`1px solid ${status.color}40`, borderRadius:"20px", padding:"2px 10px", letterSpacing:"1px" }}>
                         {status.label}
                       </span>
-                      <span style={{ fontFamily:R, fontSize:"12px", color:"#F5C82A", letterSpacing:"1px" }}>
+                      <span style={{ fontFamily:R, fontSize:"12px", color:"#156530", letterSpacing:"1px" }}>
                         {code.discount_type === "percent" ? `${code.discount_value}% OFF` : `₱${code.discount_value} OFF`}
                       </span>
                     </div>
@@ -68,7 +68,7 @@ export default async function CodesPage() {
                   {status.label === "ACTIVE" && (
                     <button
                       onClick={() => navigator.clipboard?.writeText(code.code)}
-                      style={{ fontFamily:R, fontSize:"11px", background:"#E8F0E4", border:"1.5px solid #DDE8DD", borderRadius:"6px", color:"#3CCE2A", padding:"8px 16px", cursor:"pointer", letterSpacing:"1px" }}
+                      style={{ fontFamily:R, fontSize:"11px", background:"#E8F0E4", border:"1.5px solid #DDE8DD", borderRadius:"6px", color:"#1A8040", padding:"8px 16px", cursor:"pointer", letterSpacing:"1px" }}
                     >
                       COPY
                     </button>

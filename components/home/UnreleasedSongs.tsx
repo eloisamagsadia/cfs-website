@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const C = {
   forest: "#1A2E1A",
-  green:  "#3CCE2A",
+  green:  "#1A8040",
   mist:   "#E8F0E4",
   sage:   "#4A7C59",
 };
@@ -54,7 +54,7 @@ export default function UnreleasedSongs() {
             <span style={{ fontFamily:SG, fontSize:"9px", fontWeight:700, color:"#4A7C59", letterSpacing:"3px" }}>COLET ORIGINALS</span>
           </div>
           <h2 style={{ fontFamily:S, fontSize:"36px", color:"#ffffff", lineHeight:1.1, marginBottom:"8px", marginTop:"8px" }}>
-            Songs Written<br /><em style={{ fontStyle:"italic", color:"#3CCE2A" }}>By Colet</em>
+            Songs Written<br /><em style={{ fontStyle:"italic", color:"#1A8040" }}>By Colet</em>
           </h2>
           <p style={{ fontFamily:B, fontSize:"14px", color:"rgba(255,255,255,0.6)", lineHeight:1.9, marginBottom:"28px" }}>
             Colet has written and composed songs for BINI and beyond. Here are some of her original works.

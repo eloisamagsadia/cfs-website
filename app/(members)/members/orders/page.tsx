@@ -8,8 +8,8 @@ export const revalidate = 0;
 export const metadata: Metadata = { title:"My Orders" };
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
-const payColors:Record<string,string>={paid:"#3CCE2A",pending:"#F5C82A",failed:"#F04060",cancelled:"#5A7A60"};
-const orderColors:Record<string,string>={processing:"#F07228",shipped:"#8EE440",delivered:"#3CCE2A",cancelled:"#F04060",pending:"#F5C82A"};
+const payColors:Record<string,string>={paid:"#1A8040",pending:"#156530",failed:"#CC3344",cancelled:"#5A7A60"};
+const orderColors:Record<string,string>={processing:"#1A8040",shipped:"#1A8040",delivered:"#1A8040",cancelled:"#CC3344",pending:"#156530"};
 
 export default async function MyOrdersPage() {
   const supabase = createAdminClient();
@@ -34,7 +34,7 @@ export default async function MyOrdersPage() {
         <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"48px 24px", textAlign:"center" }}>
           <div style={{ fontSize:"40px", marginBottom:"12px" }}>🛍</div>
           <div style={{ fontFamily:R, fontSize:"14px", color:"#5A7A60", letterSpacing:"2px", marginBottom:"16px" }}>NO ORDERS YET</div>
-          <a href="/shop" style={{ fontFamily:R, fontSize:"12px", color:"#F07228", textDecoration:"none", border:"1.5px solid #3D1A0A", borderRadius:"6px", padding:"8px 18px", letterSpacing:"1.5px" }}>SHOP NOW →</a>
+          <a href="/shop" style={{ fontFamily:R, fontSize:"12px", color:"#1A8040", textDecoration:"none", border:"1.5px solid #3D1A0A", borderRadius:"6px", padding:"8px 18px", letterSpacing:"1.5px" }}>SHOP NOW →</a>
         </div>
       ) : (
         <div style={{ display:"flex", flexDirection:"column", gap:"10px" }}>
@@ -50,7 +50,7 @@ export default async function MyOrdersPage() {
                     <div style={{ fontFamily:B, fontSize:"12px", color:"#4A7C59" }}>{order.id.slice(0,8).toUpperCase()}...</div>
                   </div>
                   <div style={{ textAlign:"right" }}>
-                    <div style={{ fontFamily:R, fontSize:"1.1rem", color:"#F07228", letterSpacing:"1px" }}>₱{Number(order.total).toLocaleString()}</div>
+                    <div style={{ fontFamily:R, fontSize:"1.1rem", color:"#1A8040", letterSpacing:"1px" }}>₱{Number(order.total).toLocaleString()}</div>
                     <div style={{ fontFamily:B, fontSize:"11px", color:"#5A7A60" }}>
                       {new Date(order.created_at).toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"})}
                     </div>

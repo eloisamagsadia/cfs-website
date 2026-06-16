@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
-const SC: any = { upcoming: "#3CCE2A", ongoing: "#F5C82A", completed: "#5A7A60", cancelled: "#F04060" };
+const SC: any = { upcoming: "#1A8040", ongoing: "#156530", completed: "#5A7A60", cancelled: "#CC3344" };
 
 export default async function AdminEventsPage() {
   const admin = createAdminClient();
@@ -23,7 +23,7 @@ export default async function AdminEventsPage() {
         </div>
         <Link href="/admin/events/create" style={{ textDecoration: "none", position: "relative", display: "inline-block" }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#080F06", padding: "8px 18px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>+ CREATE EVENT</span>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#080F06", padding: "8px 18px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>+ CREATE EVENT</span>
         </Link>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -42,12 +42,12 @@ export default async function AdminEventsPage() {
                   <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>📍 {event.location ?? "TBD"}</span>
                   <span style={{ fontFamily: R, fontSize: "11px", color, background: color + "20", borderRadius: "20px", padding: "1px 8px", letterSpacing: "1px" }}>{event.status.toUpperCase()}</span>
                   <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>{regCount} registered</span>
-                  {event.price > 0 ? <span style={{ fontFamily: R, fontSize: "11px", color: "#F07228" }}>₱{Number(event.price).toLocaleString()}</span> : <span style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A" }}>FREE</span>}
+                  {event.price > 0 ? <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040" }}>₱{Number(event.price).toLocaleString()}</span> : <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040" }}>FREE</span>}
                 </div>
               </div>
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", width: "100%" }}>
-                <Link href={`/admin/events/${event.id}/tiers`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#F07228", border: "1px solid #F07228", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>🎟 TIERS</Link>
-                <Link href={`/admin/events/${event.id}/tickets`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#3CCE2A", border: "1px solid #3CCE2A", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>🎫 TICKETS</Link>
+                <Link href={`/admin/events/${event.id}/tiers`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#1A8040", border: "1px solid #1A8040", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>🎟 TIERS</Link>
+                <Link href={`/admin/events/${event.id}/tickets`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#1A8040", border: "1px solid #1A8040", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>🎫 TICKETS</Link>
                 <Link href={`/admin/events/${event.id}/edit`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>✏ EDIT</Link>
               </div>
             </div>

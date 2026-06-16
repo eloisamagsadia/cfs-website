@@ -7,10 +7,10 @@ const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
 const C = {
   forest: "#1B3A2D", sage: "#4A7C59", border: "#DDE8DD",
-  muted: "#7A8E7A", green: "#3CCE2A", cream: "#F2F7F2", mist: "#E8F0E4",
+  muted: "#7A8E7A", green: "#1A8040", cream: "#F2F7F2", mist: "#E8F0E4",
 };
 
-const COLORS = ["#4A7C59","#F07228","#F5C82A","#8EE440","#F04060","#3CCE2A","#8B5CF6","#F07228"];
+const COLORS = ["#4A7C59","#1A8040","#156530","#1A8040","#CC3344","#1A8040","#8B5CF6","#1A8040"];
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -91,9 +91,9 @@ export function BreakdownChart({ items, total, title, accentColor }: {
 
 export function CashflowBar({ inflow, outflow, remaining }: { inflow: number; outflow: number; remaining: number }) {
   const data = [
-    { name: "Inflow",    amount: inflow,    fill: "#3CCE2A" },
-    { name: "Outflow",   amount: outflow,   fill: "#F04060" },
-    { name: "Remaining", amount: remaining, fill: "#F5C82A" },
+    { name: "Inflow",    amount: inflow,    fill: "#1A8040" },
+    { name: "Outflow",   amount: outflow,   fill: "#CC3344" },
+    { name: "Remaining", amount: remaining, fill: "#156530" },
   ];
 
   return (
