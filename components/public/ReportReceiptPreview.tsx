@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
@@ -21,7 +22,6 @@ export default function ReportReceiptPreview({ receipts }: { receipts: Receipt[]
       return;
     }
     document.body.style.overflow = "hidden";
-    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
     window.addEventListener("keydown", onKey);
     return () => {
@@ -48,7 +48,7 @@ export default function ReportReceiptPreview({ receipts }: { receipts: Receipt[]
         ))}
       </div>
 
-      {active && (
+      {active && createPortal(
         <div
           onClick={close}
           style={{
@@ -99,7 +99,8 @@ export default function ReportReceiptPreview({ receipts }: { receipts: Receipt[]
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
