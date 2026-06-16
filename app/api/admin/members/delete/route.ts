@@ -20,12 +20,16 @@ export async function POST(req: NextRequest) {
   if (!targetUserId) return NextResponse.json({ error: "Missing targetUserId" }, { status: 400 });
   if (targetUserId === userId) return NextResponse.json({ error: "Cannot delete yourself" }, { status: 400 });
 
-  // Delete from Clerk
+  // Delete from Clerk (ignore Not Found — user may not exist in Clerk)
   try {
     await clerkClient.users.deleteUser(targetUserId);
   } catch (e: any) {
-    console.error("[delete] Clerk delete failed:", e?.message ?? e);
-    return NextResponse.json({ error: `Clerk delete failed: ${e?.message ?? "unknown"}` }, { status: 500 });
+    const msg = e?.message ?? String(e);
+    if (!msg.includes("Not Found") && !msg.includes("not found")) {
+      console.error("[delete] Clerk delete failed:", msg);
+      return NextResponse.json({ error: `Clerk delete failed: ${msg}` }, { status: 500 });
+    }
+    console.warn("[delete] User not found in Clerk, proceeding to delete from DB:", targetUserId);
   }
 
   // Delete from Supabase (CASCADE handles related rows)
