@@ -34,7 +34,7 @@ export default async function SuperCommandCenter() {
   const { data: sponsorPerks } = await (db as any).from("sponsor_perks").select("*").single();
 
   const stats = [
-    { label: "TOTAL MEMBERS", value: total_members ?? 0, color: "#F0EAD6", icon: "◈", href: "/super/roles" },
+    { label: "TOTAL MEMBERS", value: total_members ?? 0, color: "#1B3A2D", icon: "◈", href: "/super/roles" },
     { label: "SPONSORS", value: sponsors ?? 0, color: "#B47FE3", icon: "✦", href: "/super/roles" },
     { label: "ADMINS", value: admins ?? 0, color: "#F07228", icon: "▲", href: "/super/roles" },
     { label: "MODERATORS", value: moderators ?? 0, color: "#69C9D0", icon: "◆", href: "/super/roles" },
@@ -46,7 +46,7 @@ export default async function SuperCommandCenter() {
 
   const quickActions = [
     { label: "MANAGE ROLES", href: "/super/roles", color: "#B47FE3", bg: "#2A1A3D" },
-    { label: "BROADCAST", href: "/super/broadcast", color: "#3CCE2A", bg: "#1A3D14" },
+    { label: "BROADCAST", href: "/super/broadcast", color: "#3CCE2A", bg: "#E8F0E4" },
     { label: "SITE SETTINGS", href: "/super/settings", color: "#F07228", bg: "#3D1A0A" },
     { label: "AUDIT LOG", href: "/super/audit", color: "#F5C82A", bg: "#3D3000" },
   ];
@@ -59,11 +59,11 @@ export default async function SuperCommandCenter() {
           <span style={{ fontSize: "28px" }}>⚡</span>
           <h1 style={{ fontFamily: R, fontSize: "1.8rem", color: "#F5C82A", letterSpacing: "4px", margin: 0 }}>COMMAND CENTER</h1>
         </div>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78", margin: 0 }}>Full platform control — with great power comes great responsibility.</p>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", margin: 0 }}>Full platform control — with great power comes great responsibility.</p>
 
         {/* Site status */}
         <div style={{ display: "flex", gap: "12px", marginTop: "16px", flexWrap: "wrap" }}>
-          <div style={{ background: settings?.maintenance_mode ? "#3D0A14" : "#1A3D14", border: `1px solid ${settings?.maintenance_mode ? "#F04060" : "#3CCE2A"}40`, borderRadius: "8px", padding: "8px 16px" }}>
+          <div style={{ background: settings?.maintenance_mode ? "#3D0A14" : "#E8F0E4", border: `1px solid ${settings?.maintenance_mode ? "#F04060" : "#3CCE2A"}40`, borderRadius: "8px", padding: "8px 16px" }}>
             <span style={{ fontFamily: R, fontSize: "11px", color: settings?.maintenance_mode ? "#F04060" : "#3CCE2A", letterSpacing: "1px" }}>
               {settings?.maintenance_mode ? "🔴 MAINTENANCE MODE" : "🟢 SITE LIVE"}
             </span>
@@ -85,11 +85,11 @@ export default async function SuperCommandCenter() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "10px" }}>
         {stats.map(({ label, value, color, icon, href }) => (
           <Link key={label} href={href} style={{ textDecoration: "none" }}>
-            <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", padding: "16px", transition: "border-color 0.15s" }}
+            <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "16px", transition: "border-color 0.15s" }}
 >
               <div style={{ fontSize: "20px", marginBottom: "6px" }}>{icon}</div>
               <div style={{ fontFamily: R, fontSize: "1.6rem", color }}>{value}</div>
-              <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A50", letterSpacing: "1.5px", marginTop: "2px" }}>{label}</div>
+              <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A60", letterSpacing: "1.5px", marginTop: "2px" }}>{label}</div>
             </div>
           </Link>
         ))}
@@ -97,7 +97,7 @@ export default async function SuperCommandCenter() {
 
       {/* Quick actions */}
       <div>
-        <div style={{ fontFamily: R, fontSize: "12px", color: "#5A7A50", letterSpacing: "2px", marginBottom: "12px" }}>QUICK ACTIONS</div>
+        <div style={{ fontFamily: R, fontSize: "12px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "12px" }}>QUICK ACTIONS</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "10px" }}>
           {quickActions.map(({ label, href, color, bg }) => (
             <Link key={label} href={href} style={{ textDecoration: "none" }}>

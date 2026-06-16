@@ -70,8 +70,8 @@ export default function AdminMorePage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>MORE</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>All admin tools</p>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>MORE</h1>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>All admin tools</p>
       </div>
 
       {sections.map(section => (
@@ -80,9 +80,9 @@ export default function AdminMorePage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
             {section.items.map(item => (
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
-                <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
                   <span style={{ color: "#F07228", flexShrink: 0 }}>{item.icon}</span>
-                  <span style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>{item.label}</span>
+                  <span style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{item.label}</span>
                 </div>
               </Link>
             ))}

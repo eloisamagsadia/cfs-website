@@ -83,7 +83,7 @@ export default async function Navbar() {
                 <Suspense fallback={<div style={{ width: "34px", height: "34px" }} />}>
                   <BellWithCount userId={userId} />
                 </Suspense>
-                <Suspense fallback={<div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#1A2614", border: "1.5px solid #2C4820" }} />}>
+                <Suspense fallback={<div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#FFFFFF", border: "1.5px solid #DDE8DD" }} />}>
                   <AvatarWithProfile userId={userId} role={role} />
                 </Suspense>
               </>

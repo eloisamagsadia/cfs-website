@@ -40,22 +40,22 @@ export default function AdminShopCreatePage() {
     finally { setLoading(false); }
   };
 
-  const inputStyle = { width: "100%", background: "#0F1A0C", border: "2px solid #2C4820", borderRadius: "8px", padding: "10px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
-  const labelStyle = { fontFamily: B, fontSize: "12px", color: "#8AAA78", letterSpacing: "1px", marginBottom: "6px", display: "block" };
+  const inputStyle = { width: "100%", background: "#0F1A0C", border: "2px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
+  const labelStyle = { fontFamily: B, fontSize: "12px", color: "#4A7C59", letterSpacing: "1px", marginBottom: "6px", display: "block" };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "720px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>ADD PRODUCT</h1>
-          <p style={{ fontFamily: B, fontSize: "13px", color: "#5A7A50" }}>Fill in the details below</p>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>ADD PRODUCT</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>Fill in the details below</p>
         </div>
-        <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
+        <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
       </div>
 
       {error && <div style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
 
-      <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
         <div><label style={labelStyle}>PRODUCT NAME *</label><input style={inputStyle} placeholder="e.g. CFS Tote Bag" value={form.name} onChange={e => set("name", e.target.value)} /></div>
         <div><label style={labelStyle}>DESCRIPTION</label><textarea style={{ ...inputStyle, minHeight: "100px", resize: "vertical" }} placeholder="Describe the product..." value={form.description} onChange={e => set("description", e.target.value)} /></div>
 
@@ -83,7 +83,7 @@ export default function AdminShopCreatePage() {
                 </div>
               </div>
             ))}
-            <button onClick={() => setImages(imgs => [...imgs, ""])} style={{ alignSelf: "flex-start", background: "none", border: "2px dashed #2C4820", borderRadius: "6px", color: "#5A7A50", fontFamily: B, fontSize: "12px", padding: "6px 14px", cursor: "pointer" }}>
+            <button onClick={() => setImages(imgs => [...imgs, ""])} style={{ alignSelf: "flex-start", background: "none", border: "2px dashed #DDE8DD", borderRadius: "6px", color: "#5A7A60", fontFamily: B, fontSize: "12px", padding: "6px 14px", cursor: "pointer" }}>
               + Add Image
             </button>
           </div>
@@ -100,25 +100,25 @@ export default function AdminShopCreatePage() {
                 <button onClick={() => removeVariant(i)} style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "6px", color: "#F04060", fontFamily: B, fontSize: "11px", padding: "8px 10px", cursor: "pointer" }}>✕</button>
               </div>
             ))}
-            <button onClick={addVariant} style={{ alignSelf: "flex-start", background: "none", border: "2px dashed #2C4820", borderRadius: "6px", color: "#5A7A50", fontFamily: B, fontSize: "12px", padding: "6px 14px", cursor: "pointer" }}>+ Add Variant</button>
+            <button onClick={addVariant} style={{ alignSelf: "flex-start", background: "none", border: "2px dashed #DDE8DD", borderRadius: "6px", color: "#5A7A60", fontFamily: B, fontSize: "12px", padding: "6px 14px", cursor: "pointer" }}>+ Add Variant</button>
           </div>
         </div>
 
         {/* Active toggle */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <button onClick={() => set("is_active", !form.is_active)} style={{ width: "44px", height: "24px", borderRadius: "12px", border: "none", cursor: "pointer", background: form.is_active ? "#3CCE2A" : "#2C4820", position: "relative", transition: "background 0.2s" }}>
-            <span style={{ position: "absolute", top: "3px", left: form.is_active ? "22px" : "3px", width: "18px", height: "18px", borderRadius: "50%", background: "#F0EAD6", transition: "left 0.2s" }} />
+          <button onClick={() => set("is_active", !form.is_active)} style={{ width: "44px", height: "24px", borderRadius: "12px", border: "none", cursor: "pointer", background: form.is_active ? "#3CCE2A" : "#DDE8DD", position: "relative", transition: "background 0.2s" }}>
+            <span style={{ position: "absolute", top: "3px", left: form.is_active ? "22px" : "3px", width: "18px", height: "18px", borderRadius: "50%", background: "#1B3A2D", transition: "left 0.2s" }} />
           </button>
-          <span style={{ fontFamily: B, fontSize: "13px", color: form.is_active ? "#3CCE2A" : "#5A7A50" }}>{form.is_active ? "Active — visible in shop" : "Inactive — hidden from shop"}</span>
+          <span style={{ fontFamily: B, fontSize: "13px", color: form.is_active ? "#3CCE2A" : "#5A7A60" }}>{form.is_active ? "Active — visible in shop" : "Inactive — hidden from shop"}</span>
         </div>
       </div>
 
       <div style={{ display: "flex", gap: "12px" }}>
         <button onClick={handleSubmit} disabled={loading} style={{ position: "relative", display: "inline-block", cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.7 : 1 }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#F0EAD6", padding: "10px 28px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>{loading ? "SAVING..." : "CREATE PRODUCT"}</span>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#1B3A2D", padding: "10px 28px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>{loading ? "SAVING..." : "CREATE PRODUCT"}</span>
         </button>
-        <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "none", border: "2px solid #2C4820", borderRadius: "6px", color: "#5A7A50", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
+        <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "none", border: "2px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
       </div>
     </div>
   );

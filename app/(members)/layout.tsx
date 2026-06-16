@@ -38,11 +38,11 @@ export default async function MembersLayout({ children }: { children: React.Reac
   const announcement = siteSettings?.announcement_active ? siteSettings : null;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", minHeight:"100vh", background:"#0F1A0B" }}>
+    <div style={{ display:"flex", flexDirection:"column", minHeight:"100vh", background:"#F7FAF5" }}>
       <Navbar/>
       {announcement && (
         <div style={{ background: announcement.announcement_color + "20", borderBottom: `2px solid ${announcement.announcement_color}`, padding: "10px 24px", textAlign: "center" }}>
-          <span style={{ fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#F0EAD6" }}>{announcement.announcement_text}</span>
+          <span style={{ fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#1B3A2D" }}>{announcement.announcement_text}</span>
         </div>
       )}
       <div style={{ flex:1, maxWidth:"1280px", margin:"0 auto", width:"100%", padding:"24px 16px 90px", display:"flex", gap:"28px" }}>

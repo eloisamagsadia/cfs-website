@@ -51,13 +51,13 @@ export default function MobileNav() {
   }, []);
 
   return (
-    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: "#0A1008", backdropFilter: "blur(12px)", borderTop: "1px solid #1E3318", padding: "8px 0 calc(8px + env(safe-area-inset-bottom))", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: "rgba(247,250,245,0.96)", backdropFilter: "blur(12px)", borderTop: "1px solid #DDE8DD", padding: "8px 0 calc(8px + env(safe-area-inset-bottom))", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
       {tabs.map(({ label, href, icon, exact }) => {
         const isActive = exact ? pathname === href : pathname.startsWith(href);
         return (
-          <Link key={href} href={href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", padding: "4px 12px", borderRadius: "10px", background: isActive ? "#1A3D14" : "transparent", transition: "background 0.15s", position: "relative" }}>
-            <span style={{ color: isActive ? "#3CCE2A" : "#3A5230" }}>{icon}</span>
-            <span style={{ fontFamily: R, fontSize: "9px", color: isActive ? "#3CCE2A" : "#3A5230", letterSpacing: "1px" }}>{label.toUpperCase()}</span>
+          <Link key={href} href={href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", padding: "4px 12px", borderRadius: "10px", background: isActive ? "#E8F0E4" : "transparent", transition: "background 0.15s", position: "relative" }}>
+            <span style={{ color: isActive ? "#3CCE2A" : "#5A7A60" }}>{icon}</span>
+            <span style={{ fontFamily: R, fontSize: "9px", color: isActive ? "#3CCE2A" : "#5A7A60", letterSpacing: "1px" }}>{label.toUpperCase()}</span>
             {label === "More" && unreadMessages > 0 && <span style={{ position: "absolute", top: "2px", right: "8px", background: "#F04060", borderRadius: "50%", width: "8px", height: "8px" }} />}
           </Link>
         );

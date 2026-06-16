@@ -12,7 +12,7 @@ const ROLE_BADGES: Record<string, { label: string; color: string; bg: string }> 
   admin:       { label: "ADMIN",          color: "#F07228", bg: "#3D1A0A" },
   moderator:   { label: "MOD",            color: "#69C9D0", bg: "#0A2A2A" },
   sponsor:     { label: "✦ SPONSOR",      color: "#B47FE3", bg: "#2A1A3D" },
-  member:      { label: "MEMBER",         color: "#3CCE2A", bg: "#1A3D14" },
+  member:      { label: "MEMBER",         color: "#3CCE2A", bg: "#E8F0E4" },
 };
 
 const icons = {
@@ -80,10 +80,10 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
       </button>
 
       {open && (
-        <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, background: "#111A0F", border: "1.5px solid #2C4820", borderRadius: "14px", padding: "6px", zIndex: 100, minWidth: "210px", boxShadow: "0 12px 40px rgba(0,0,0,0.7)" }}>
+        <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, background: "#111A0F", border: "1.5px solid #DDE8DD", borderRadius: "14px", padding: "6px", zIndex: 100, minWidth: "210px", boxShadow: "0 12px 40px rgba(0,0,0,0.7)" }}>
 
           {/* Profile header */}
-          <div style={{ padding: "10px 12px 12px", borderBottom: "1px solid #2C4820", marginBottom: "4px", display: "flex", alignItems: "center", gap: "10px" }}>
+          <div style={{ padding: "10px 12px 12px", borderBottom: "1px solid #DDE8DD", marginBottom: "4px", display: "flex", alignItems: "center", gap: "10px" }}>
             {avatarUrl
               ? <img src={avatarUrl} alt="" style={{ width: "38px", height: "38px", borderRadius: "50%", objectFit: "cover", border: `2px solid ${badge.color}`, flexShrink: 0 }} />
               : <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: badge.bg, border: `2px solid ${badge.color}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -91,7 +91,7 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
                 </div>
             }
             <div>
-              <div style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "0.5px", marginBottom: "4px" }}>{displayName}</div>
+              <div style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "0.5px", marginBottom: "4px" }}>{displayName}</div>
               <span style={{ fontFamily: R, fontSize: "9px", color: badge.color, background: badge.bg, borderRadius: "4px", padding: "2px 7px", letterSpacing: "1.5px" }}>{badge.label}</span>
             </div>
           </div>
@@ -100,14 +100,14 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
           {menuItems.map(({ label, href, icon }) => (
             <Link key={href} href={href} onClick={() => setOpen(false)}
               style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", textDecoration: "none", color: "#B0C4A8" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#1A2614"; e.currentTarget.style.color = "#F0EAD6"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = "#FFFFFF"; e.currentTarget.style.color = "#1B3A2D"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "#B0C4A8"; }}>
               <span style={{ opacity: 0.7 }}>{icon}</span>
               <span style={{ fontFamily: B, fontSize: "13px" }}>{label}</span>
             </Link>
           ))}
 
-          <div style={{ height: "1px", background: "#2C4820", margin: "4px 0" }} />
+          <div style={{ height: "1px", background: "#DDE8DD", margin: "4px 0" }} />
 
           {isAdmin && (
             <Link href="/admin" onClick={() => setOpen(false)}
@@ -129,7 +129,7 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
             </Link>
           )}
 
-          <div style={{ height: "1px", background: "#2C4820", margin: "4px 0" }} />
+          <div style={{ height: "1px", background: "#DDE8DD", margin: "4px 0" }} />
 
           <button onClick={handleSignOut}
             style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", background: "none", border: "none", cursor: "pointer", color: "#F04060", textAlign: "left" }}

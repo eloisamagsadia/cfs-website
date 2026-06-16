@@ -68,15 +68,15 @@ export default function ReportReceiptsPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <a href="/admin/reports" style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", textDecoration: "none", letterSpacing: "1px" }}>← REPORTS</a>
-        <span style={{ color: "#2C4820" }}>/</span>
-        <h1 style={{ fontFamily: R, fontSize: "1.4rem", color: "#F0EAD6", letterSpacing: "3px", margin: 0 }}>RECEIPTS</h1>
+        <a href="/admin/reports" style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", textDecoration: "none", letterSpacing: "1px" }}>← REPORTS</a>
+        <span style={{ color: "#9AAA98" }}>/</span>
+        <h1 style={{ fontFamily: R, fontSize: "1.4rem", color: "#1B3A2D", letterSpacing: "3px", margin: 0 }}>RECEIPTS</h1>
       </div>
 
       {report && (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", padding: "12px 18px" }}>
-          <div style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>{report.title}</div>
-          <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", marginTop: "2px" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "12px 18px" }}>
+          <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{report.title}</div>
+          <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "2px" }}>
             {receipts.length} receipt{receipts.length !== 1 ? "s" : ""} uploaded
           </div>
         </div>
@@ -85,14 +85,14 @@ export default function ReportReceiptsPage() {
       <input ref={fileInputRef} type="file" accept="image/*,.pdf" style={{ display: "none" }} onChange={handleFileChange} />
 
       {projects.length === 0 && (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A50" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A60" }}>
           NO EXPENSE DATA IN THIS REPORT
         </div>
       )}
 
       {projects.map((proj, pi) => (
-        <div key={pi} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
-          <div style={{ background: "#243520", padding: "12px 18px", fontFamily: R, fontSize: "12px", color: "#3CCE2A", letterSpacing: "2px" }}>
+        <div key={pi} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
+          <div style={{ background: "#F2F7F2", padding: "12px 18px", fontFamily: R, fontSize: "12px", color: "#3CCE2A", letterSpacing: "2px" }}>
             {proj.project}
           </div>
           <div>
@@ -102,10 +102,10 @@ export default function ReportReceiptsPage() {
               const isUploading = uploading === key;
 
               return (
-                <div key={ii} style={{ padding: "14px 18px", borderTop: "1px solid #2C4820", display: "flex", alignItems: "flex-start", gap: "16px" }}>
+                <div key={ii} style={{ padding: "14px 18px", borderTop: "1px solid #DDE8DD", display: "flex", alignItems: "flex-start", gap: "16px" }}>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>{item.description}</div>
-                    {item.notes && <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", marginTop: "2px" }}>{item.notes}</div>}
+                    <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{item.description}</div>
+                    {item.notes && <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "2px" }}>{item.notes}</div>}
                     <div style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", marginTop: "4px" }}>
                       ₱{Number(item.amount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
                     </div>
@@ -114,9 +114,9 @@ export default function ReportReceiptsPage() {
                     {itemReceipts.length > 0 && (
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "10px" }}>
                         {itemReceipts.map(r => (
-                          <div key={r.id} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#0F1A0B", border: "1px solid #2C4820", borderRadius: "6px", padding: "5px 10px" }}>
+                          <div key={r.id} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 10px" }}>
                             <a href={r.file_url} target="_blank" rel="noopener noreferrer"
-                              style={{ fontFamily: B, fontSize: "11px", color: "#8AAA78", textDecoration: "none" }}>
+                              style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59", textDecoration: "none" }}>
                               📎 {r.file_name}
                             </a>
                             <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id}
@@ -135,8 +135,8 @@ export default function ReportReceiptsPage() {
                     style={{
                       fontFamily: R, fontSize: "10px", letterSpacing: "1px",
                       padding: "6px 14px", borderRadius: "6px", flexShrink: 0,
-                      border: "1.5px solid #2C4820", background: isUploading ? "#243520" : "transparent",
-                      color: isUploading ? "#5A7A50" : "#8AAA78", cursor: isUploading ? "default" : "pointer",
+                      border: "1.5px solid #DDE8DD", background: isUploading ? "#F2F7F2" : "transparent",
+                      color: isUploading ? "#5A7A60" : "#4A7C59", cursor: isUploading ? "default" : "pointer",
                     }}>
                     {isUploading ? "UPLOADING..." : "+ RECEIPT"}
                   </button>

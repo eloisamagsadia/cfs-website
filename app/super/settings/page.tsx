@@ -46,16 +46,16 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
     <div style={{ display: "flex", flexDirection: "column", gap: "20px", maxWidth: "720px" }}>
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F5C82A", letterSpacing: "3px", marginBottom: "4px" }}>SITE SETTINGS</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Configure platform-wide settings</p>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Configure platform-wide settings</p>
       </div>
 
-      {saved && <div style={{ background: "#1A3D14", border: "2px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#3CCE2A" }}>✅ Settings saved!</div>}
+      {saved && <div style={{ background: "#E8F0E4", border: "2px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#3CCE2A" }}>✅ Settings saved!</div>}
 
       {/* Site status */}
-      <div style={{ background: "#1A2614", border: `2px solid ${settings.maintenance_mode ? "#F04060" : "#3CCE2A"}40`, borderRadius: "12px", padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ background: "#FFFFFF", border: `2px solid ${settings.maintenance_mode ? "#F04060" : "#3CCE2A"}40`, borderRadius: "12px", padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
           <div style={{ fontFamily: R, fontSize: "12px", color: settings.maintenance_mode ? "#F04060" : "#3CCE2A", letterSpacing: "1.5px" }}>{settings.maintenance_mode ? "🔴 MAINTENANCE MODE ON" : "🟢 SITE LIVE"}</div>
-          <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", marginTop: "4px" }}>{settings.maintenance_mode ? "Members cannot access the site" : "coletfs.com is live"}</div>
+          <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", marginTop: "4px" }}>{settings.maintenance_mode ? "Members cannot access the site" : "coletfs.com is live"}</div>
         </div>
         <button onClick={toggleMaintenance} style={{ fontFamily: R, fontSize: "11px", background: settings.maintenance_mode ? "#3CCE2A" : "#F04060", color: "#fff", border: "none", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
           {settings.maintenance_mode ? "DISABLE" : "ENABLE"}
@@ -63,7 +63,7 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
       </div>
 
       {/* General settings */}
-      <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
+      <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
         <div style={{ fontFamily: R, fontSize: "12px", color: "#F07228", letterSpacing: "2px" }}>🔧 GENERAL SETTINGS</div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
           {[
@@ -71,9 +71,9 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
             { label: "MAX POST LENGTH (chars)", key: "max_community_post_length" },
           ].map(({ label, key }) => (
             <div key={key}>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>{label}</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>{label}</label>
               <input type="number" value={settings[key]} onChange={e => setSettings((p: any) => ({ ...p, [key]: Number(e.target.value) }))}
-                style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
+                style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
             </div>
           ))}
         </div>
@@ -81,7 +81,7 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
 
       {/* Sponsor settings */}
       {perks && (
-        <div style={{ background: "#1A2614", border: "2px solid #B47FE360", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #B47FE360", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ fontFamily: R, fontSize: "12px", color: "#B47FE3", letterSpacing: "2px" }}>✦ SPONSOR SETTINGS</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             {[
@@ -89,9 +89,9 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
               { label: "EARLY ACCESS DAYS", key: "early_access_days" },
             ].map(({ label, key }) => (
               <div key={key}>
-                <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>{label}</label>
+                <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>{label}</label>
                 <input type="number" value={perks[key]} onChange={e => setPerks((p: any) => ({ ...p, [key]: Number(e.target.value) }))}
-                  style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
+                  style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
               </div>
             ))}
           </div>
@@ -99,14 +99,14 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
       )}
 
       {/* Announcement */}
-      <div style={{ background: "#1A2614", border: "2px solid #F07228", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
+      <div style={{ background: "#FFFFFF", border: "2px solid #F07228", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
         <div style={{ fontFamily: R, fontSize: "12px", color: "#F07228", letterSpacing: "2px" }}>📣 SITE ANNOUNCEMENT</div>
         <input value={settings.announcement_text ?? ""} onChange={e => setSettings((p: any) => ({ ...p, announcement_text: e.target.value }))} placeholder="Announcement text..."
-          style={{ background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }} />
+          style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>Color:</label>
+          <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>Color:</label>
           <input type="color" value={settings.announcement_color ?? "#F07228"} onChange={e => setSettings((p: any) => ({ ...p, announcement_color: e.target.value }))}
-            style={{ width: "36px", height: "32px", borderRadius: "6px", border: "1.5px solid #2C4820", cursor: "pointer" }} />
+            style={{ width: "36px", height: "32px", borderRadius: "6px", border: "1.5px solid #DDE8DD", cursor: "pointer" }} />
           <button onClick={toggleAnnouncement} style={{ fontFamily: R, fontSize: "11px", background: settings.announcement_active ? "#F04060" : "#3CCE2A", color: "#080F06", border: "none", borderRadius: "6px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1px" }}>
             {settings.announcement_active ? "HIDE" : "SHOW"}
           </button>

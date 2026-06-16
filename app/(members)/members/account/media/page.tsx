@@ -96,15 +96,15 @@ export default function MediaLibraryPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
-            <Link href="/members/account" style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", textDecoration: "none" }}>← Account</Link>
+            <Link href="/members/account" style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", textDecoration: "none" }}>← Account</Link>
           </div>
-          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>MY MEDIA</h1>
-          <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Your uploaded images and files</p>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>MY MEDIA</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Your uploaded images and files</p>
         </div>
         {!loading && (
           <div style={{ textAlign: "right" }}>
-            <div style={{ fontFamily: R, fontSize: "20px", color: "#F0EAD6" }}>{totalFiles}</div>
-            <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>files · {formatBytes(totalSize)}</div>
+            <div style={{ fontFamily: R, fontSize: "20px", color: "#1B3A2D" }}>{totalFiles}</div>
+            <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>files · {formatBytes(totalSize)}</div>
           </div>
         )}
       </div>
@@ -114,22 +114,22 @@ export default function MediaLibraryPage() {
       <SkeletonPage />
     </div>
       ) : totalFiles === 0 ? (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "60px 24px", textAlign: "center" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "60px 24px", textAlign: "center" }}>
           <div style={{ fontSize: "40px", marginBottom: "12px" }}>📭</div>
-          <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A50", letterSpacing: "2px" }}>NO MEDIA YET</div>
-          <div style={{ fontFamily: B, fontSize: "13px", color: "#5A7A50", marginTop: "8px" }}>Upload images in community posts or update your avatar to see them here.</div>
+          <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A60", letterSpacing: "2px" }}>NO MEDIA YET</div>
+          <div style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60", marginTop: "8px" }}>Upload images in community posts or update your avatar to see them here.</div>
         </div>
       ) : (
         <>
           {/* Folder tabs */}
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             <button onClick={() => setActiveFolder("all")}
-              style={{ fontFamily: R, fontSize: "11px", background: activeFolder === "all" ? "#1A3D14" : "transparent", border: `1.5px solid ${activeFolder === "all" ? "#3CCE2A" : "#2C4820"}`, color: activeFolder === "all" ? "#3CCE2A" : "#5A7A50", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+              style={{ fontFamily: R, fontSize: "11px", background: activeFolder === "all" ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeFolder === "all" ? "#3CCE2A" : "#DDE8DD"}`, color: activeFolder === "all" ? "#3CCE2A" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
               ALL ({totalFiles})
             </button>
             {folders.map(folder => (
               <button key={folder} onClick={() => setActiveFolder(folder)}
-                style={{ fontFamily: R, fontSize: "11px", background: activeFolder === folder ? "#1A3D14" : "transparent", border: `1.5px solid ${activeFolder === folder ? "#3CCE2A" : "#2C4820"}`, color: activeFolder === folder ? "#3CCE2A" : "#5A7A50", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+                style={{ fontFamily: R, fontSize: "11px", background: activeFolder === folder ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeFolder === folder ? "#3CCE2A" : "#DDE8DD"}`, color: activeFolder === folder ? "#3CCE2A" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
                 {FOLDER_ICONS[folder]} {(FOLDER_LABELS[folder] ?? folder).toUpperCase()} ({media[folder].length})
               </button>
             ))}
@@ -140,20 +140,20 @@ export default function MediaLibraryPage() {
             <div key={folder}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
                 <span style={{ fontSize: "16px" }}>{FOLDER_ICONS[folder]}</span>
-                <span style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "2px" }}>{(FOLDER_LABELS[folder] ?? folder).toUpperCase()}</span>
-                <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{files.length} file{files.length !== 1 ? "s" : ""} · {formatBytes(files.reduce((s, f) => s + f.size, 0))}</span>
+                <span style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "2px" }}>{(FOLDER_LABELS[folder] ?? folder).toUpperCase()}</span>
+                <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{files.length} file{files.length !== 1 ? "s" : ""} · {formatBytes(files.reduce((s, f) => s + f.size, 0))}</span>
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "10px" }}>
                 {files.map(file => (
-                  <div key={file.key} style={{ position: "relative", borderRadius: "10px", overflow: "hidden", border: "1.5px solid #2C4820", background: "#1A2614" }}>
+                  <div key={file.key} style={{ position: "relative", borderRadius: "10px", overflow: "hidden", border: "1.5px solid #DDE8DD", background: "#FFFFFF" }}>
                     <img
                       src={file.url}
                       alt=""
                       style={{ width: "100%", height: "120px", objectFit: "cover", display: "block" }}
                     />
                     <div style={{ padding: "6px 8px" }}>
-                      <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>{formatBytes(file.size)}</div>
+                      <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60" }}>{formatBytes(file.size)}</div>
                       <div style={{ fontFamily: B, fontSize: "10px", color: "#3A5A30" }}>{timeAgo(file.uploaded)}</div>
                     </div>
                     <button
@@ -171,16 +171,16 @@ export default function MediaLibraryPage() {
       {/* Delete confirm modal */}
       {confirmDelete && (
         <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }}>
-          <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", padding: "28px", maxWidth: "320px", width: "90%" }}>
+          <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", padding: "28px", maxWidth: "320px", width: "90%" }}>
             <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: "#3D0A14", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px", fontSize: "20px" }}>🗑️</div>
-            <div style={{ fontFamily: R, fontSize: "16px", color: "#F0EAD6", marginBottom: "8px" }}>Delete this file?</div>
+            <div style={{ fontFamily: R, fontSize: "16px", color: "#1B3A2D", marginBottom: "8px" }}>Delete this file?</div>
             <div style={{ marginBottom: "16px", borderRadius: "8px", overflow: "hidden" }}>
               <img src={confirmDelete.url} alt="" style={{ width: "100%", height: "120px", objectFit: "cover" }} />
             </div>
-            <div style={{ fontFamily: B, fontSize: "13px", color: "#5A7A50", marginBottom: "24px" }}>This will permanently remove the file from storage. Posts that used this image will show a broken image.</div>
+            <div style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60", marginBottom: "24px" }}>This will permanently remove the file from storage. Posts that used this image will show a broken image.</div>
             <div style={{ display: "flex", gap: "10px" }}>
               <button onClick={() => setConfirmDelete(null)}
-                style={{ flex: 1, padding: "10px", borderRadius: "10px", background: "none", border: "2px solid #2C4820", cursor: "pointer", fontFamily: R, fontSize: "13px", color: "#5A7A50" }}>
+                style={{ flex: 1, padding: "10px", borderRadius: "10px", background: "none", border: "2px solid #DDE8DD", cursor: "pointer", fontFamily: R, fontSize: "13px", color: "#5A7A60" }}>
                 Cancel
               </button>
               <button onClick={() => handleDelete(confirmDelete.key)} disabled={deleting === confirmDelete.key}

@@ -105,8 +105,8 @@ export default function AdminExclusivePage() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>EXCLUSIVE CONTENT</h1>
-          <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Sponsor-only photos and videos</p>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>EXCLUSIVE CONTENT</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Sponsor-only photos and videos</p>
         </div>
         <button onClick={() => { setShowForm(true); setEditingId(null); setForm(DEFAULT_FORM); }}
           style={{ fontFamily: R, fontSize: "11px", background: "#B47FE3", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
@@ -116,40 +116,40 @@ export default function AdminExclusivePage() {
 
       {/* Form */}
       {showForm && (
-        <div style={{ background: "#1A2614", border: "2px solid #B47FE3", borderRadius: "12px", padding: "20px" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #B47FE3", borderRadius: "12px", padding: "20px" }}>
           <div style={{ fontFamily: R, fontSize: "13px", color: "#B47FE3", letterSpacing: "2px", marginBottom: "16px" }}>
             {editingId ? "EDIT CONTENT" : "NEW EXCLUSIVE CONTENT"}
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div style={{ gridColumn: "1 / -1" }}>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>TITLE *</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>TITLE *</label>
               <input value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
                 placeholder="e.g. Behind the scenes at BINI concert"
-                style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+                style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
             </div>
             <div>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>TYPE</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>TYPE</label>
               <select value={form.type} onChange={e => setForm(p => ({ ...p, type: e.target.value }))}
-                style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }}>
+                style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }}>
                 <option value="photo">📷 Photo</option>
                 <option value="video">🎬 Video</option>
               </select>
             </div>
             <div>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>CATEGORY</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>CATEGORY</label>
               <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
-                style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }}>
+                style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }}>
                 {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.icon} {c.label}</option>)}
               </select>
             </div>
             <div style={{ gridColumn: "1 / -1" }}>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>MEDIA *</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>MEDIA *</label>
               <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                 <input value={form.media_url} onChange={e => setForm(p => ({ ...p, media_url: e.target.value }))}
                   placeholder="Paste URL or upload file"
-                  style={{ flex: 1, background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }} />
+                  style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
                 <button onClick={() => fileInputRef.current?.click()} disabled={uploading}
-                  style={{ fontFamily: B, fontSize: "11px", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#8AAA78", cursor: "pointer" }}>
+                  style={{ fontFamily: B, fontSize: "11px", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#4A7C59", cursor: "pointer" }}>
                   {uploading ? "..." : "📁 Upload"}
                 </button>
               </div>
@@ -158,31 +158,31 @@ export default function AdminExclusivePage() {
               )}
             </div>
             <div style={{ gridColumn: "1 / -1" }}>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>THUMBNAIL (optional)</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>THUMBNAIL (optional)</label>
               <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                 <input value={form.thumbnail_url} onChange={e => setForm(p => ({ ...p, thumbnail_url: e.target.value }))}
                   placeholder="Paste URL or upload thumbnail"
-                  style={{ flex: 1, background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }} />
+                  style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
                 <button onClick={() => thumbInputRef.current?.click()} disabled={uploading}
-                  style={{ fontFamily: B, fontSize: "11px", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#8AAA78", cursor: "pointer" }}>
+                  style={{ fontFamily: B, fontSize: "11px", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#4A7C59", cursor: "pointer" }}>
                   {uploading ? "..." : "📁 Upload"}
                 </button>
               </div>
             </div>
             <div style={{ gridColumn: "1 / -1" }}>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>DESCRIPTION</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>DESCRIPTION</label>
               <textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
                 rows={2} placeholder="Optional description..."
-                style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", resize: "vertical", boxSizing: "border-box" }} />
+                style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "vertical", boxSizing: "border-box" }} />
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <input type="checkbox" checked={form.is_published} onChange={e => setForm(p => ({ ...p, is_published: e.target.checked }))} id="publish" />
-              <label htmlFor="publish" style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78", cursor: "pointer" }}>Publish immediately</label>
+              <label htmlFor="publish" style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", cursor: "pointer" }}>Publish immediately</label>
             </div>
           </div>
           <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
             <button onClick={() => { setShowForm(false); setEditingId(null); setForm(DEFAULT_FORM); }}
-              style={{ fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #2C4820", borderRadius: "6px", color: "#5A7A50", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+              style={{ fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
               CANCEL
             </button>
             <button onClick={handleSave} disabled={saving || !form.title.trim() || !form.media_url}
@@ -198,12 +198,12 @@ export default function AdminExclusivePage() {
       {/* Category filter */}
       <div style={{ display: "flex", gap: "8px" }}>
         <button onClick={() => setActiveCategory("all")}
-          style={{ fontFamily: R, fontSize: "11px", background: activeCategory === "all" ? "#1A3D14" : "transparent", border: `1.5px solid ${activeCategory === "all" ? "#3CCE2A" : "#2C4820"}`, color: activeCategory === "all" ? "#3CCE2A" : "#5A7A50", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+          style={{ fontFamily: R, fontSize: "11px", background: activeCategory === "all" ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeCategory === "all" ? "#3CCE2A" : "#DDE8DD"}`, color: activeCategory === "all" ? "#3CCE2A" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
           ALL ({content.length})
         </button>
         {CATEGORIES.map(cat => (
           <button key={cat.value} onClick={() => setActiveCategory(cat.value)}
-            style={{ fontFamily: R, fontSize: "11px", background: activeCategory === cat.value ? "#1A3D14" : "transparent", border: `1.5px solid ${activeCategory === cat.value ? "#3CCE2A" : "#2C4820"}`, color: activeCategory === cat.value ? "#3CCE2A" : "#5A7A50", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: activeCategory === cat.value ? "#E8F0E4" : "transparent", border: `1.5px solid ${activeCategory === cat.value ? "#3CCE2A" : "#DDE8DD"}`, color: activeCategory === cat.value ? "#3CCE2A" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
             {cat.icon} {cat.label.toUpperCase()} ({content.filter(c => c.category === cat.value).length})
           </button>
         ))}
@@ -215,27 +215,27 @@ export default function AdminExclusivePage() {
       <SkeletonPage />
     </div>
       ) : filtered.length === 0 ? (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "48px", textAlign: "center" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center" }}>
           <div style={{ fontSize: "32px", marginBottom: "12px" }}>✨</div>
-          <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A50", letterSpacing: "2px" }}>NO CONTENT YET</div>
+          <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px" }}>NO CONTENT YET</div>
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "12px" }}>
           {filtered.map(item => (
-            <div key={item.id} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
+            <div key={item.id} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
               {/* Thumbnail */}
-              <div style={{ position: "relative", height: "160px", background: "#0F1A0B" }}>
+              <div style={{ position: "relative", height: "160px", background: "#F7FAF5" }}>
                 {(item.thumbnail_url || item.media_url) && item.type === "photo" && (
                   <img src={item.thumbnail_url || item.media_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 )}
                 {item.type === "video" && (
                   <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "8px" }}>
                     <span style={{ fontSize: "32px" }}>🎬</span>
-                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>VIDEO</span>
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>VIDEO</span>
                   </div>
                 )}
                 {/* Status badge */}
-                <div style={{ position: "absolute", top: "8px", right: "8px", background: item.is_published ? "#1A3D14" : "#3D3000", border: `1px solid ${item.is_published ? "#3CCE2A" : "#F5C82A"}`, borderRadius: "20px", padding: "2px 8px" }}>
+                <div style={{ position: "absolute", top: "8px", right: "8px", background: item.is_published ? "#E8F0E4" : "#3D3000", border: `1px solid ${item.is_published ? "#3CCE2A" : "#F5C82A"}`, borderRadius: "20px", padding: "2px 8px" }}>
                   <span style={{ fontFamily: R, fontSize: "9px", color: item.is_published ? "#3CCE2A" : "#F5C82A", letterSpacing: "1px" }}>
                     {item.is_published ? "PUBLISHED" : "DRAFT"}
                   </span>
@@ -249,15 +249,15 @@ export default function AdminExclusivePage() {
               </div>
               {/* Info */}
               <div style={{ padding: "12px 14px" }}>
-                <div style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", marginBottom: "6px" }}>{item.title}</div>
-                {item.description && <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", marginBottom: "8px" }}>{item.description}</div>}
+                <div style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", marginBottom: "6px" }}>{item.title}</div>
+                {item.description && <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginBottom: "8px" }}>{item.description}</div>}
                 <div style={{ display: "flex", gap: "6px" }}>
                   <button onClick={() => togglePublish(item)}
                     style={{ fontFamily: B, fontSize: "10px", background: "none", border: `1px solid ${item.is_published ? "#F5C82A" : "#3CCE2A"}`, borderRadius: "4px", color: item.is_published ? "#F5C82A" : "#3CCE2A", padding: "4px 8px", cursor: "pointer" }}>
                     {item.is_published ? "UNPUBLISH" : "PUBLISH"}
                   </button>
                   <button onClick={() => startEdit(item)}
-                    style={{ fontFamily: B, fontSize: "10px", background: "none", border: "1px solid #2C4820", borderRadius: "4px", color: "#8AAA78", padding: "4px 8px", cursor: "pointer" }}>
+                    style={{ fontFamily: B, fontSize: "10px", background: "none", border: "1px solid #DDE8DD", borderRadius: "4px", color: "#4A7C59", padding: "4px 8px", cursor: "pointer" }}>
                     ✏ EDIT
                   </button>
                   <button onClick={() => handleDelete(item.id)}

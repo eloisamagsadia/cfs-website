@@ -163,52 +163,52 @@ export default function AdminMediaPage() {
   const s: Record<string, React.CSSProperties> = {
     page: { display: "flex", flexDirection: "column", gap: "20px" },
     header: { display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: "12px" },
-    title: { fontFamily: R, fontSize: "1.5rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" },
-    meta: { fontFamily: B, fontSize: "12px", color: "#8AAA78" },
+    title: { fontFamily: R, fontSize: "1.5rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" },
+    meta: { fontFamily: B, fontSize: "12px", color: "#4A7C59" },
     topRow: { display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" },
     uploadBtn: { position: "relative" as const, display: "inline-block" },
     uploadBtnShadow: { position: "absolute" as const, top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" },
-    uploadBtnInner: { position: "relative" as const, display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#F0EAD6", padding: "8px 16px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1px", cursor: "pointer" },
-    select: { fontFamily: B, fontSize: "12px", background: "#1A2614", color: "#8AAA78", border: "1px solid #2C4820", borderRadius: "6px", padding: "7px 10px" },
+    uploadBtnInner: { position: "relative" as const, display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#1B3A2D", padding: "8px 16px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1px", cursor: "pointer" },
+    select: { fontFamily: B, fontSize: "12px", background: "#FFFFFF", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "7px 10px" },
     searchBar: { display: "flex", gap: "8px", alignItems: "center" },
-    searchInput: { fontFamily: B, fontSize: "12px", background: "#1A2614", color: "#F0EAD6", border: "1px solid #2C4820", borderRadius: "6px", padding: "7px 12px", width: "200px", outline: "none" },
+    searchInput: { fontFamily: B, fontSize: "12px", background: "#FFFFFF", color: "#1B3A2D", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "7px 12px", width: "200px", outline: "none" },
     folderTabs: { display: "flex", gap: "6px", flexWrap: "wrap" as const },
-    tab: { fontFamily: B, fontSize: "11px", background: "#1A2614", color: "#8AAA78", border: "1px solid #2C4820", borderRadius: "6px", padding: "5px 12px", cursor: "pointer", letterSpacing: "0.5px" },
+    tab: { fontFamily: B, fontSize: "11px", background: "#FFFFFF", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 12px", cursor: "pointer", letterSpacing: "0.5px" },
     tabActive: { fontFamily: B, fontSize: "11px", background: "#2C1A0A", color: "#F07228", border: "1px solid #F07228", borderRadius: "6px", padding: "5px 12px", cursor: "pointer", letterSpacing: "0.5px" },
     statsRow: { display: "flex", gap: "10px", flexWrap: "wrap" as const },
-    stat: { background: "#1A2614", border: "1px solid #2C4820", borderRadius: "8px", padding: "8px 14px", fontFamily: B, fontSize: "11px", color: "#8AAA78" },
-    statVal: { fontFamily: R, fontSize: "14px", color: "#F0EAD6", display: "block" },
+    stat: { background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "8px", padding: "8px 14px", fontFamily: B, fontSize: "11px", color: "#4A7C59" },
+    statVal: { fontFamily: R, fontSize: "14px", color: "#1B3A2D", display: "block" },
     toolbar: { display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: "8px" },
     toolbarLeft: { display: "flex", gap: "8px", alignItems: "center" },
-    checkAll: { fontFamily: B, fontSize: "11px", color: "#8AAA78", background: "#1A2614", border: "1px solid #2C4820", borderRadius: "6px", padding: "5px 10px", cursor: "pointer" },
+    checkAll: { fontFamily: B, fontSize: "11px", color: "#4A7C59", background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 10px", cursor: "pointer" },
     delSel: { fontFamily: B, fontSize: "11px", color: "#F04060", background: "transparent", border: "1px solid #F04060", borderRadius: "6px", padding: "5px 12px", cursor: "pointer" },
     viewToggle: { display: "flex", gap: "4px" },
-    viewBtn: { background: "#1A2614", border: "1px solid #2C4820", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "13px", color: "#8AAA78" },
+    viewBtn: { background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "13px", color: "#4A7C59" },
     viewBtnActive: { background: "#2C1A0A", border: "1px solid #F07228", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "13px", color: "#F07228" },
     grid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "10px" },
-    card: { background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", overflow: "hidden", cursor: "pointer", transition: "border-color 0.15s" },
-    cardSel: { background: "#1A2614", border: "2px solid #F07228", borderRadius: "10px", overflow: "hidden", cursor: "pointer" },
-    thumb: { height: "110px", background: "#243520", position: "relative" as const, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" },
+    card: { background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", overflow: "hidden", cursor: "pointer", transition: "border-color 0.15s" },
+    cardSel: { background: "#FFFFFF", border: "2px solid #F07228", borderRadius: "10px", overflow: "hidden", cursor: "pointer" },
+    thumb: { height: "110px", background: "#F2F7F2", position: "relative" as const, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" },
     thumbImg: { width: "100%", height: "100%", objectFit: "cover" as const },
     pdfThumb: { display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", gap: "4px", height: "100%" },
     checkBadge: { position: "absolute" as const, top: "6px", right: "6px", width: "20px", height: "20px", background: "#F07228", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "white", fontWeight: 700 },
-    folderBadge: { position: "absolute" as const, bottom: "6px", left: "6px", background: "rgba(0,0,0,0.65)", borderRadius: "4px", padding: "2px 6px", fontFamily: B, fontSize: "9px", color: "#8AAA78" },
+    folderBadge: { position: "absolute" as const, bottom: "6px", left: "6px", background: "rgba(0,0,0,0.65)", borderRadius: "4px", padding: "2px 6px", fontFamily: B, fontSize: "9px", color: "#4A7C59" },
     cardBody: { padding: "8px 10px 10px" },
-    cardName: { fontFamily: B, fontSize: "11px", color: "#F0EAD6", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis", marginBottom: "2px" },
-    cardMeta: { fontFamily: B, fontSize: "10px", color: "#5A7A50", marginBottom: "8px" },
+    cardName: { fontFamily: B, fontSize: "11px", color: "#1B3A2D", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis", marginBottom: "2px" },
+    cardMeta: { fontFamily: B, fontSize: "10px", color: "#5A7A60", marginBottom: "8px" },
     cardActions: { display: "flex", gap: "4px" },
-    actBtn: { flex: 1, background: "transparent", border: "1px solid #2C4820", borderRadius: "4px", padding: "4px 0", fontFamily: B, fontSize: "10px", color: "#8AAA78", cursor: "pointer", textAlign: "center" as const, letterSpacing: "0.5px" },
+    actBtn: { flex: 1, background: "transparent", border: "1px solid #DDE8DD", borderRadius: "4px", padding: "4px 0", fontFamily: B, fontSize: "10px", color: "#4A7C59", cursor: "pointer", textAlign: "center" as const, letterSpacing: "0.5px" },
     actDel: { flex: 1, background: "transparent", border: "1px solid #3A1010", borderRadius: "4px", padding: "4px 0", fontFamily: B, fontSize: "10px", color: "#F04060", cursor: "pointer", textAlign: "center" as const },
     listTable: { width: "100%", borderCollapse: "collapse" as const },
-    listTh: { fontFamily: B, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px", padding: "8px 12px", textAlign: "left" as const, borderBottom: "1px solid #2C4820" },
-    listTd: { fontFamily: B, fontSize: "12px", color: "#F0EAD6", padding: "8px 12px", borderBottom: "1px solid #1A2614", verticalAlign: "middle" as const },
-    empty: { textAlign: "center" as const, padding: "48px", fontFamily: R, color: "#5A7A50", fontSize: "13px", letterSpacing: "1px" },
-    toast: { position: "fixed" as const, bottom: "24px", right: "24px", background: "#1A2614", border: "1px solid #3CCE2A", borderRadius: "8px", padding: "10px 18px", fontFamily: B, fontSize: "12px", color: "#3CCE2A", zIndex: 9999 },
+    listTh: { fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px", padding: "8px 12px", textAlign: "left" as const, borderBottom: "1px solid #DDE8DD" },
+    listTd: { fontFamily: B, fontSize: "12px", color: "#1B3A2D", padding: "8px 12px", borderBottom: "1px solid #1A2614", verticalAlign: "middle" as const },
+    empty: { textAlign: "center" as const, padding: "48px", fontFamily: R, color: "#5A7A60", fontSize: "13px", letterSpacing: "1px" },
+    toast: { position: "fixed" as const, bottom: "24px", right: "24px", background: "#FFFFFF", border: "1px solid #3CCE2A", borderRadius: "8px", padding: "10px 18px", fontFamily: B, fontSize: "12px", color: "#3CCE2A", zIndex: 9999 },
     lightboxOverlay: { position: "fixed" as const, top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.85)", zIndex: 9998, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" as const, gap: "16px", padding: "24px" },    lightboxImg: { maxWidth: "80vw", maxHeight: "70vh", borderRadius: "8px", objectFit: "contain" as const },
-    lightboxName: { fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "1px" },
-    lightboxClose: { position: "absolute" as const, top: "20px", right: "20px", background: "transparent", border: "1px solid #5A7A50", color: "#8AAA78", borderRadius: "6px", padding: "6px 14px", fontFamily: B, fontSize: "12px", cursor: "pointer" },
+    lightboxName: { fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "1px" },
+    lightboxClose: { position: "absolute" as const, top: "20px", right: "20px", background: "transparent", border: "1px solid #5A7A50", color: "#4A7C59", borderRadius: "6px", padding: "6px 14px", fontFamily: B, fontSize: "12px", cursor: "pointer" },
     lightboxActions: { display: "flex", gap: "10px" },
-    lightboxBtn: { background: "#1A2614", border: "1px solid #2C4820", borderRadius: "6px", padding: "7px 18px", fontFamily: B, fontSize: "12px", color: "#8AAA78", cursor: "pointer" },
+    lightboxBtn: { background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "7px 18px", fontFamily: B, fontSize: "12px", color: "#4A7C59", cursor: "pointer" },
   };
 
   return (
@@ -332,7 +332,7 @@ export default function AdminMediaPage() {
                 ) : item.type === "pdf" ? (
                   <div style={s.pdfThumb}>
                     <span style={{ fontSize: "32px" }}>📄</span>
-                    <span style={{ fontFamily: B, fontSize: "10px", color: "#8AAA78" }}>PDF</span>
+                    <span style={{ fontFamily: B, fontSize: "10px", color: "#4A7C59" }}>PDF</span>
                   </div>
                 ) : (
                   <span style={{ fontSize: "28px" }}>📁</span>
@@ -371,23 +371,23 @@ export default function AdminMediaPage() {
                 onClick={() => toggleSelect(item.key)}
               >
                 <td style={{ ...s.listTd, width: "36px" }}>
-                  <div style={{ width: "16px", height: "16px", border: `2px solid ${selected.has(item.key) ? "#F07228" : "#2C4820"}`, borderRadius: "4px", background: selected.has(item.key) ? "#F07228" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "white" }}>
+                  <div style={{ width: "16px", height: "16px", border: `2px solid ${selected.has(item.key) ? "#F07228" : "#DDE8DD"}`, borderRadius: "4px", background: selected.has(item.key) ? "#F07228" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", color: "white" }}>
                     {selected.has(item.key) ? "✓" : ""}
                   </div>
                 </td>
                 <td style={s.listTd}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     {item.type === "image" ? (
-                      <img src={item.url} alt={item.name} style={{ width: "36px", height: "36px", objectFit: "cover", borderRadius: "4px", border: "1px solid #2C4820" }} loading="lazy" />
+                      <img src={item.url} alt={item.name} style={{ width: "36px", height: "36px", objectFit: "cover", borderRadius: "4px", border: "1px solid #DDE8DD" }} loading="lazy" />
                     ) : (
-                      <div style={{ width: "36px", height: "36px", background: "#243520", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px" }}>📄</div>
+                      <div style={{ width: "36px", height: "36px", background: "#F2F7F2", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px" }}>📄</div>
                     )}
-                    <span style={{ fontFamily: B, fontSize: "12px", color: "#F0EAD6", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name}</span>
+                    <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name}</span>
                   </div>
                 </td>
-                <td style={{ ...s.listTd, color: "#8AAA78" }} className="media-list-col-folder">{item.folder}/</td>
-                <td style={{ ...s.listTd, color: "#8AAA78" }} className="media-list-col-size">{formatSize(item.size)}</td>
-                <td style={{ ...s.listTd, color: "#8AAA78" }} className="media-list-col-uploaded">{formatDate(item.lastModified)}</td>
+                <td style={{ ...s.listTd, color: "#4A7C59" }} className="media-list-col-folder">{item.folder}/</td>
+                <td style={{ ...s.listTd, color: "#4A7C59" }} className="media-list-col-size">{formatSize(item.size)}</td>
+                <td style={{ ...s.listTd, color: "#4A7C59" }} className="media-list-col-uploaded">{formatDate(item.lastModified)}</td>
                 <td style={s.listTd} className="media-list-col-actions" onClick={e => e.stopPropagation()}>
                   <div style={{ display: "flex", gap: "6px" }}>
                     <button style={s.actBtn} onClick={() => copyUrl(item.url)}>Copy URL</button>
@@ -407,12 +407,12 @@ export default function AdminMediaPage() {
       {deleteModal && createPortal(
         <>
           <div onClick={() => setDeleteModal(null)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.7)", zIndex:9997 }}/>
-          <div style={{ position:"fixed", top:"50%", left:"50%", transform:"translate(-50%,-50%)", background:"#1A2614", border:"2px solid #2C4820", borderRadius:"16px", padding:"32px 28px", zIndex:9998, width:"320px", textAlign:"center" }}>
+          <div style={{ position:"fixed", top:"50%", left:"50%", transform:"translate(-50%,-50%)", background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"16px", padding:"32px 28px", zIndex:9998, width:"320px", textAlign:"center" }}>
             <div style={{ width:"56px", height:"56px", background:"#3A1010", borderRadius:"12px", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 20px", fontSize:"24px" }}>🗑️</div>
-            <div style={{ fontFamily:R, fontSize:"1.2rem", color:"#F0EAD6", marginBottom:"10px", letterSpacing:"1px" }}>Delete {deleteModal.keys.length > 1 ? `${deleteModal.keys.length} files` : "file"}?</div>
-            <div style={{ fontFamily:B, fontSize:"13px", color:"#8AAA78", marginBottom:"28px", lineHeight:"1.6" }}>This action can&apos;t be undone. The {deleteModal.keys.length > 1 ? "files" : "file"} will be permanently removed.</div>
+            <div style={{ fontFamily:R, fontSize:"1.2rem", color:"#1B3A2D", marginBottom:"10px", letterSpacing:"1px" }}>Delete {deleteModal.keys.length > 1 ? `${deleteModal.keys.length} files` : "file"}?</div>
+            <div style={{ fontFamily:B, fontSize:"13px", color:"#4A7C59", marginBottom:"28px", lineHeight:"1.6" }}>This action can&apos;t be undone. The {deleteModal.keys.length > 1 ? "files" : "file"} will be permanently removed.</div>
             <div style={{ display:"flex", gap:"10px" }}>
-              <button onClick={() => setDeleteModal(null)} style={{ flex:1, fontFamily:B, fontSize:"13px", background:"transparent", color:"#8AAA78", border:"2px solid #2C4820", borderRadius:"10px", padding:"12px", cursor:"pointer" }}>Cancel</button>
+              <button onClick={() => setDeleteModal(null)} style={{ flex:1, fontFamily:B, fontSize:"13px", background:"transparent", color:"#4A7C59", border:"2px solid #DDE8DD", borderRadius:"10px", padding:"12px", cursor:"pointer" }}>Cancel</button>
               <button onClick={() => confirmDelete(deleteModal.keys)} style={{ flex:1, fontFamily:B, fontSize:"13px", background:"#F04060", color:"white", border:"none", borderRadius:"10px", padding:"12px", cursor:"pointer", fontWeight:700 }}>Delete</button>
             </div>
           </div>

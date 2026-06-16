@@ -7,7 +7,7 @@ import { useRouter, useParams } from "next/navigation";
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 const STATUS_OPTIONS = ["upcoming", "ongoing", "completed", "cancelled"];
-const STATUS_COLORS: any = { upcoming: "#3CCE2A", ongoing: "#F5C82A", completed: "#5A7A50", cancelled: "#F04060" };
+const STATUS_COLORS: any = { upcoming: "#3CCE2A", ongoing: "#F5C82A", completed: "#5A7A60", cancelled: "#F04060" };
 
 export default function AdminEventEditPage() {
   const router = useRouter();
@@ -75,8 +75,8 @@ export default function AdminEventEditPage() {
     } catch (e: any) { setError(e.message); setDeleting(false); setConfirmDelete(false); }
   };
 
-  const inputStyle = { width: "100%", background: "#0F1A0C", border: "2px solid #2C4820", borderRadius: "8px", padding: "10px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
-  const labelStyle = { fontFamily: B, fontSize: "12px", color: "#8AAA78", letterSpacing: "1px", marginBottom: "6px", display: "block" };
+  const inputStyle = { width: "100%", background: "#0F1A0C", border: "2px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
+  const labelStyle = { fontFamily: B, fontSize: "12px", color: "#4A7C59", letterSpacing: "1px", marginBottom: "6px", display: "block" };
 
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
       <SkeletonPage />
@@ -86,15 +86,15 @@ export default function AdminEventEditPage() {
     <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "720px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>EDIT EVENT</h1>
-          <p style={{ fontFamily: B, fontSize: "13px", color: "#5A7A50" }}>Update or remove this event</p>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>EDIT EVENT</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>Update or remove this event</p>
         </div>
-        <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
+        <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
       </div>
 
       {error && <div style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
 
-      <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
         <div><label style={labelStyle}>EVENT TITLE *</label><input style={inputStyle} value={form.title} onChange={e => set("title", e.target.value)} /></div>
         <div><label style={labelStyle}>DESCRIPTION</label><textarea style={{ ...inputStyle, minHeight: "80px", resize: "vertical" }} value={form.description} onChange={e => set("description", e.target.value)} /></div>
 
@@ -125,10 +125,10 @@ export default function AdminEventEditPage() {
 
         {/* Members only */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <button onClick={() => set("is_members_only", !form.is_members_only)} style={{ width: "44px", height: "24px", borderRadius: "12px", border: "none", cursor: "pointer", background: form.is_members_only ? "#3CCE2A" : "#2C4820", position: "relative", transition: "background 0.2s" }}>
-            <span style={{ position: "absolute", top: "3px", left: form.is_members_only ? "22px" : "3px", width: "18px", height: "18px", borderRadius: "50%", background: "#F0EAD6", transition: "left 0.2s" }} />
+          <button onClick={() => set("is_members_only", !form.is_members_only)} style={{ width: "44px", height: "24px", borderRadius: "12px", border: "none", cursor: "pointer", background: form.is_members_only ? "#3CCE2A" : "#DDE8DD", position: "relative", transition: "background 0.2s" }}>
+            <span style={{ position: "absolute", top: "3px", left: form.is_members_only ? "22px" : "3px", width: "18px", height: "18px", borderRadius: "50%", background: "#1B3A2D", transition: "left 0.2s" }} />
           </button>
-          <span style={{ fontFamily: B, fontSize: "13px", color: form.is_members_only ? "#3CCE2A" : "#5A7A50" }}>
+          <span style={{ fontFamily: B, fontSize: "13px", color: form.is_members_only ? "#3CCE2A" : "#5A7A60" }}>
             {form.is_members_only ? "Members only" : "Open to everyone"}
           </span>
         </div>
@@ -141,12 +141,12 @@ export default function AdminEventEditPage() {
           <div>
             <label style={labelStyle}>Early Access Opens</label>
             <input type="datetime-local" style={inputStyle} value={form.sponsor_access_at} onChange={e => set("sponsor_access_at", e.target.value)} />
-            <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>Sponsors get first access from this date & time (PHT)</span>
+            <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60" }}>Sponsors get first access from this date & time (PHT)</span>
           </div>
           <div>
             <label style={labelStyle}>General Registration Opens</label>
             <input type="datetime-local" style={inputStyle} value={form.member_access_at} onChange={e => set("member_access_at", e.target.value)} />
-            <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>Open to all members from this date & time (PHT)</span>
+            <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60" }}>Open to all members from this date & time (PHT)</span>
           </div>
         </div>
       </div>
@@ -159,14 +159,14 @@ export default function AdminEventEditPage() {
               {saving ? "SAVING..." : "SAVE CHANGES"}
             </span>
           </button>
-          <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "none", border: "2px solid #2C4820", borderRadius: "6px", color: "#5A7A50", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
+          <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "none", border: "2px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
         </div>
         {!confirmDelete
           ? <button onClick={() => setConfirmDelete(true)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #F04060", borderRadius: "6px", color: "#F04060", padding: "10px 16px", cursor: "pointer" }}>🗑 Delete Event</button>
           : <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>Sure?</span>
               <button onClick={handleDelete} disabled={deleting} style={{ fontFamily: B, fontSize: "12px", background: "#F04060", border: "none", borderRadius: "6px", color: "#fff", padding: "8px 14px", cursor: "pointer" }}>{deleting ? "Deleting..." : "Yes, Delete"}</button>
-              <button onClick={() => setConfirmDelete(false)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #2C4820", borderRadius: "6px", color: "#5A7A50", padding: "8px 14px", cursor: "pointer" }}>Cancel</button>
+              <button onClick={() => setConfirmDelete(false)} style={{ fontFamily: B, fontSize: "12px", background: "none", border: "2px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "8px 14px", cursor: "pointer" }}>Cancel</button>
             </div>
         }
       </div>

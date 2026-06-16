@@ -39,8 +39,8 @@ export default function LettersPage() {
 
       {/* Header */}
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>LETTERS FROM COLET</h1>
-        <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "14px", color: "#8AAA78" }}>Thoughts, reflections, and words from the heart 💌</p>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>LETTERS FROM COLET</h1>
+        <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "14px", color: "#4A7C59" }}>Thoughts, reflections, and words from the heart 💌</p>
       </div>
 
       {loading ? (
@@ -48,7 +48,7 @@ export default function LettersPage() {
       <SkeletonPage />
     </div>
       ) : error ? (
-        <div style={{ background: "#1A2614", border: "2px solid #F04060", borderRadius: "12px", padding: "32px", textAlign: "center" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #F04060", borderRadius: "12px", padding: "32px", textAlign: "center" }}>
           <div style={{ fontFamily: B, fontSize: "13px", color: "#F04060" }}>Failed to load letters. Please try again later.</div>
         </div>
       ) : (
@@ -60,9 +60,9 @@ export default function LettersPage() {
               style={{ textDecoration: "none", cursor: "pointer" }}
             >
               <div
-                className="letter-card" style={{ display: "flex", gap: "20px", alignItems: "flex-start", padding: "24px", background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", marginBottom: "10px", transition: "border-color 0.15s", cursor: "pointer" }}
+                className="letter-card" style={{ display: "flex", gap: "20px", alignItems: "flex-start", padding: "24px", background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", marginBottom: "10px", transition: "border-color 0.15s", cursor: "pointer" }}
                 onMouseEnter={e => (e.currentTarget.style.borderColor = "#3CCE2A")}
-                onMouseLeave={e => (e.currentTarget.style.borderColor = "#2C4820")}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = "#DDE8DD")}
               >
                 {/* Text content */}
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -78,22 +78,22 @@ export default function LettersPage() {
                   )}
 
                   {/* Title */}
-                  <div style={{ fontFamily: S, fontSize: "1.2rem", color: "#F0EAD6", lineHeight: 1.4, marginBottom: "10px" }}>
+                  <div style={{ fontFamily: S, fontSize: "1.2rem", color: "#1B3A2D", lineHeight: 1.4, marginBottom: "10px" }}>
                     {letter.title}
                   </div>
 
                   {/* Excerpt */}
-                  <div style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78", lineHeight: 1.7, marginBottom: "14px" }}>
+                  <div style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", lineHeight: 1.7, marginBottom: "14px" }}>
                     {letter.excerpt}
                   </div>
 
                   {/* Footer */}
                   <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <div style={{ width: "24px", height: "24px", borderRadius: "50%", overflow: "hidden", border: "1.5px solid #2C4820" }}>
+                      <div style={{ width: "24px", height: "24px", borderRadius: "50%", overflow: "hidden", border: "1.5px solid #DDE8DD" }}>
                         <img src="https://cdn-images-1.medium.com/fit/c/150/150/1*OKtnsFxtdnvoBrTZ_8o1Nw@2x.jpeg" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       </div>
-                      <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50" }}>letters from colet</span>
+                      <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>letters from colet</span>
                     </div>
                     <span style={{ fontFamily: B, fontSize: "12px", color: "#3A5A30" }}>{timeAgo(letter.pubDate)}</span>
                     <span style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A", marginLeft: "auto", letterSpacing: "1px" }}>READ ON MEDIUM →</span>
@@ -116,7 +116,7 @@ export default function LettersPage() {
       {!loading && letters.length > 0 && (
         <div style={{ textAlign: "center", paddingBottom: "16px" }}>
           <a href="https://medium.com/@lettersfromcolet" target="_blank" rel="noopener noreferrer"
-            style={{ fontFamily: R, fontSize: "12px", color: "#5A7A50", textDecoration: "none", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "12px", color: "#5A7A60", textDecoration: "none", letterSpacing: "1px" }}>
             VIEW ALL ON MEDIUM →
           </a>
         </div>

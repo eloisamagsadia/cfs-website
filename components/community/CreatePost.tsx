@@ -68,7 +68,7 @@ const PLATFORM_COLORS: Record<string, string> = {
   tiktok: "#69C9D0",
   instagram: "#E1306C",
   drive: "#4285F4",
-  unknown: "#5A7A50",
+  unknown: "#5A7A60",
 };
 
 const PLATFORM_LABELS: Record<string, string> = {
@@ -205,11 +205,11 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
   const canPost = (content.trim() || mediaFiles.length > 0 || videoEmbed) && !submitting;
 
   return (
-    <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", padding: "20px", marginBottom: "12px" }}>
+    <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", padding: "20px", marginBottom: "12px" }}>
       <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
         {/* Avatar */}
         <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "linear-gradient(135deg,#3CCE2A,#F07228)", padding: "2px", flexShrink: 0 }}>
-          <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#1A2614", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+          <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
             {currentUser?.avatar_url
               ? <img src={currentUser.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               : <span style={{ fontFamily: R, fontSize: "16px", color: "#3CCE2A" }}>{(currentUser?.display_name ?? "M")[0].toUpperCase()}</span>
@@ -224,7 +224,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
             onFocus={() => setExpanded(true)}
             placeholder="What's on your mind? Use @username to mention someone ♪"
             rows={expanded ? 4 : 2}
-            style={{ width: "100%", background: "transparent", border: "none", borderBottom: expanded ? "1px solid #2C4820" : "none", padding: "6px 0", color: "#F0EAD6", fontFamily: B, fontSize: "14px", outline: "none", resize: "none", WebkitAppearance: "none", boxSizing: "border-box", lineHeight: 1.6, transition: "all 0.2s" }}
+            style={{ width: "100%", background: "transparent", border: "none", borderBottom: expanded ? "1px solid #DDE8DD" : "none", padding: "6px 0", color: "#1B3A2D", fontFamily: B, fontSize: "14px", outline: "none", resize: "none", WebkitAppearance: "none", boxSizing: "border-box", lineHeight: 1.6, transition: "all 0.2s" }}
           />
 
           {/* Photo previews */}
@@ -248,11 +248,11 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
                   value={videoUrl}
                   onChange={e => handleVideoInput(e.target.value)}
                   placeholder="Paste YouTube, TikTok, Instagram, or Google Drive link..."
-                  style={{ flex: 1, background: "#243520", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }}
+                  style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }}
                 />
                 {videoUrl && (
                   <button onClick={() => { setVideoUrl(""); setVideoEmbed(null); setVideoError(""); setTiktokFailed(false); }}
-                    style={{ background: "none", border: "none", color: "#5A7A50", cursor: "pointer", fontSize: "16px" }}>✕</button>
+                    style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "16px" }}>✕</button>
                 )}
               </div>
               {videoError && (
@@ -261,7 +261,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
 
               {/* Video embed preview */}
               {videoEmbed && (
-                <div style={{ marginTop: "10px", borderRadius: "10px", overflow: "hidden", border: "1.5px solid #2C4820", position: "relative" }}>
+                <div style={{ marginTop: "10px", borderRadius: "10px", overflow: "hidden", border: "1.5px solid #DDE8DD", position: "relative" }}>
                   {/* Platform badge */}
                   <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 2, background: PLATFORM_COLORS[videoEmbed.platform], borderRadius: "6px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#fff", fontWeight: 700 }}>
                     {PLATFORM_LABELS[videoEmbed.platform]}
@@ -269,11 +269,11 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
                   {videoEmbed.platform === "tiktok" && tiktokFailed ? (
                     /* TikTok fallback — link card */
                     <a href={videoEmbed.url} target="_blank" rel="noopener noreferrer"
-                      style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px", background: "#243520", textDecoration: "none" }}>
+                      style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px", background: "#F2F7F2", textDecoration: "none" }}>
                       <span style={{ fontSize: "28px" }}>🎵</span>
                       <div>
-                        <p style={{ fontFamily: B, fontSize: "12px", color: "#F0EAD6", margin: 0 }}>TikTok Video</p>
-                        <p style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", margin: "2px 0 0" }}>Click to open on TikTok</p>
+                        <p style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", margin: 0 }}>TikTok Video</p>
+                        <p style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", margin: "2px 0 0" }}>Click to open on TikTok</p>
                       </div>
                     </a>
                   ) : (
@@ -293,7 +293,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
           {/* Image post counter */}
           {allowsMedia && imagePostCount > 0 && (
             <div style={{ marginTop: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
-              <span style={{ fontFamily: B, fontSize: "11px", color: imagePostsRemaining <= 5 ? "#F07228" : "#5A7A50" }}>
+              <span style={{ fontFamily: B, fontSize: "11px", color: imagePostsRemaining <= 5 ? "#F07228" : "#5A7A60" }}>
                 🖼 {imagePostCount}/{IMAGE_POST_LIMIT} image posts used this month
                 {imagePostsRemaining <= 5 && imagePostsRemaining > 0 && ` — ${imagePostsRemaining} left`}
                 {imagePostsRemaining === 0 && " — limit reached!"}
@@ -320,10 +320,10 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
                       onClick={() => switchMedia("photo")}
                       disabled={mediaFiles.length >= 4}
                       title="Add photos"
-                      style={{ background: activeMedia === "photo" ? "#2C4820" : "none", border: `1.5px solid ${activeMedia === "photo" ? "#3CCE2A" : "#2C4820"}`, borderRadius: "8px", padding: "6px 10px", cursor: mediaFiles.length >= 4 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: "5px", opacity: mediaFiles.length >= 4 && activeMedia !== "photo" ? 0.4 : 1, transition: "all 0.15s" }}
+                      style={{ background: activeMedia === "photo" ? "#DDE8DD" : "none", border: `1.5px solid ${activeMedia === "photo" ? "#3CCE2A" : "#DDE8DD"}`, borderRadius: "8px", padding: "6px 10px", cursor: mediaFiles.length >= 4 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: "5px", opacity: mediaFiles.length >= 4 && activeMedia !== "photo" ? 0.4 : 1, transition: "all 0.15s" }}
                     >
                       <span style={{ fontSize: "15px" }}>📷</span>
-                      <span style={{ fontFamily: B, fontSize: "11px", color: activeMedia === "photo" ? "#3CCE2A" : "#5A7A50" }}>
+                      <span style={{ fontFamily: B, fontSize: "11px", color: activeMedia === "photo" ? "#3CCE2A" : "#5A7A60" }}>
                         {mediaFiles.length > 0 ? `${mediaFiles.length}/4` : "Photo"}
                       </span>
                     </button>
@@ -332,10 +332,10 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
                     <button
                       onClick={() => switchMedia("video")}
                       title="Add video link"
-                      style={{ background: activeMedia === "video" ? "#2C4820" : "none", border: `1.5px solid ${activeMedia === "video" ? "#F07228" : "#2C4820"}`, borderRadius: "8px", padding: "6px 10px", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px", transition: "all 0.15s" }}
+                      style={{ background: activeMedia === "video" ? "#DDE8DD" : "none", border: `1.5px solid ${activeMedia === "video" ? "#F07228" : "#DDE8DD"}`, borderRadius: "8px", padding: "6px 10px", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px", transition: "all 0.15s" }}
                     >
                       <span style={{ fontSize: "15px" }}>🎬</span>
-                      <span style={{ fontFamily: B, fontSize: "11px", color: activeMedia === "video" ? "#F07228" : "#5A7A50" }}>
+                      <span style={{ fontFamily: B, fontSize: "11px", color: activeMedia === "video" ? "#F07228" : "#5A7A60" }}>
                         {videoEmbed ? PLATFORM_LABELS[videoEmbed.platform] : "Video"}
                       </span>
                     </button>
@@ -351,7 +351,7 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
                       clearMedia();
                     }
                   }}
-                  style={{ background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "6px 10px", color: categoryId ? "#F0EAD6" : "#5A7A50", fontFamily: B, fontSize: "12px", outline: "none" }}
+                  style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "6px 10px", color: categoryId ? "#1B3A2D" : "#5A7A60", fontFamily: B, fontSize: "12px", outline: "none" }}
                 >
                   <option value="">Category</option>
                   {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
@@ -361,13 +361,13 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
               {/* Right: cancel + post */}
               <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end", marginLeft: "auto" }}>
                 <button onClick={() => { setExpanded(false); setContent(""); clearMedia(); }}
-                  style={{ fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #2C4820", borderRadius: "6px", color: "#5A7A50", padding: "7px 12px", cursor: "pointer", letterSpacing: "1px" }}>
+                  style={{ fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "7px 12px", cursor: "pointer", letterSpacing: "1px" }}>
                   CANCEL
                 </button>
                 <button onClick={handleSubmit} disabled={!canPost}
                   style={{ position: "relative", display: "inline-block", background: "transparent", border: "none", padding: 0, cursor: canPost ? "pointer" : "not-allowed", opacity: submitting ? 0.7 : 1 }}>
                   <span style={{ position: "absolute", top: "2px", left: "2px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-                  <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "11px", background: canPost ? "#3CCE2A" : "#1A3D14", color: canPost ? "#080F06" : "#5A7A50", padding: "7px 16px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>
+                  <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "11px", background: canPost ? "#3CCE2A" : "#E8F0E4", color: canPost ? "#080F06" : "#5A7A60", padding: "7px 16px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>
                     {uploading ? "UPLOADING..." : submitting ? "POSTING..." : "POST ✦"}
                   </span>
                 </button>

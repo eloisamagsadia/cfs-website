@@ -76,21 +76,21 @@ export default function CheckInPage() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>CHECK-IN</h1>
-          <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Scan QR or enter ticket ID</p>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>CHECK-IN</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Scan QR or enter ticket ID</p>
         </div>
-        <Link href="/admin/events" style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", textDecoration: "none" }}>← Events</Link>
+        <Link href="/admin/events" style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", textDecoration: "none" }}>← Events</Link>
       </div>
 
       {!result ? (
         <>
           {/* QR Scanner */}
-          <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", overflow: "hidden" }}>
+          <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", overflow: "hidden" }}>
             <div id="qr-reader" style={{ width: "100%" }} />
             {!scanning && (
               <div style={{ padding: "40px", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
                 <div style={{ fontSize: "48px" }}>📷</div>
-                <div style={{ fontFamily: B, fontSize: "13px", color: "#5A7A50" }}>Camera not started</div>
+                <div style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>Camera not started</div>
               </div>
             )}
             <div style={{ padding: "16px", display: "flex", gap: "10px" }}>
@@ -109,15 +109,15 @@ export default function CheckInPage() {
           </div>
 
           {/* Manual entry */}
-          <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "16px" }}>
-            <div style={{ fontFamily: R, fontSize: "12px", color: "#5A7A50", letterSpacing: "2px", marginBottom: "12px" }}>MANUAL ENTRY</div>
+          <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "16px" }}>
+            <div style={{ fontFamily: R, fontSize: "12px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "12px" }}>MANUAL ENTRY</div>
             <div style={{ display: "flex", gap: "8px" }}>
               <input
                 value={manualId}
                 onChange={e => setManualId(e.target.value)}
                 onKeyDown={e => { if (e.key === "Enter" && manualId.trim()) checkIn(manualId.trim()); }}
                 placeholder="Enter CFS-1000 or ticket UUID"
-                style={{ flex: 1, background: "#243520", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "10px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }}
+                style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }}
               />
               <button
                 onClick={() => { if (manualId.trim()) checkIn(manualId.trim()); }}
@@ -130,27 +130,27 @@ export default function CheckInPage() {
         </>
       ) : (
         /* Result */
-        <div style={{ background: "#1A2614", border: `2px solid ${result.success ? "#3CCE2A" : "#F04060"}`, borderRadius: "16px", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div style={{ background: "#FFFFFF", border: `2px solid ${result.success ? "#3CCE2A" : "#F04060"}`, borderRadius: "16px", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: "56px" }}>{result.success ? "✅" : result.error?.includes("already") ? "⚠️" : "❌"}</div>
             <div style={{ fontFamily: R, fontSize: "1.2rem", color: result.success ? "#3CCE2A" : "#F04060", letterSpacing: "2px", marginTop: "8px" }}>
               {result.success ? "CHECKED IN!" : result.error?.includes("already") ? "ALREADY USED" : "INVALID TICKET"}
             </div>
-            {result.error && <div style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78", marginTop: "6px" }}>{result.error}</div>}
+            {result.error && <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", marginTop: "6px" }}>{result.error}</div>}
           </div>
 
           {result.ticket && (
-            <div style={{ background: "#0F1A0B", borderRadius: "12px", padding: "16px", display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ background: "#F7FAF5", borderRadius: "12px", padding: "16px", display: "flex", flexDirection: "column", gap: "10px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#1A3D14", border: "2px solid #2C4820", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#E8F0E4", border: "2px solid #DDE8DD", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {result.ticket.profiles?.avatar_url
                     ? <img src={result.ticket.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     : <span style={{ fontFamily: R, fontSize: "18px", color: "#3CCE2A" }}>{(result.ticket.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
                   }
                 </div>
                 <div>
-                  <div style={{ fontFamily: R, fontSize: "15px", color: "#F0EAD6" }}>{result.ticket.profiles?.display_name ?? result.ticket.qr_data?.member_name ?? "Member"}</div>
-                  <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{result.ticket.ticket_number}</div>
+                  <div style={{ fontFamily: R, fontSize: "15px", color: "#1B3A2D" }}>{result.ticket.profiles?.display_name ?? result.ticket.qr_data?.member_name ?? "Member"}</div>
+                  <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{result.ticket.ticket_number}</div>
                 </div>
               </div>
               {[
@@ -159,8 +159,8 @@ export default function CheckInPage() {
                 { label: "Date", value: result.ticket.events?.date ? new Date(result.ticket.events.date).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" }) : "—" },
               ].map(({ label, value }) => (
                 <div key={label} style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50" }}>{label}</span>
-                  <span style={{ fontFamily: B, fontSize: "12px", color: "#F0EAD6" }}>{value ?? "—"}</span>
+                  <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>{label}</span>
+                  <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>{value ?? "—"}</span>
                 </div>
               ))}
             </div>

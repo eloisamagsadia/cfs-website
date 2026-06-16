@@ -40,7 +40,7 @@ const PLATFORM_COLORS: Record<string, string> = {
   tiktok: "#69C9D0",
   instagram: "#E1306C",
   drive: "#4285F4",
-  unknown: "#5A7A50",
+  unknown: "#5A7A60",
 };
 
 const PLATFORM_LABELS: Record<string, string> = {
@@ -186,26 +186,26 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
         if (window.getSelection()?.toString()) return;
         router.push(`/members/community/${post.id}`);
       }}
-      style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", marginBottom: "12px", cursor: "pointer", position: "relative" }}
+      style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", marginBottom: "12px", cursor: "pointer", position: "relative" }}
     >
 
       {/* Repost header */}
       {isRepost && post.reposted_by?.id !== post.user_id && (
         <div style={{ padding: "8px 16px 0", display: "flex", alignItems: "center", gap: "6px" }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-            <polyline points="17 1 21 5 17 9" stroke="#5A7A50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M3 11V9a4 4 0 014-4h14" stroke="#5A7A50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <polyline points="7 23 3 19 7 15" stroke="#5A7A50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M21 13v2a4 4 0 01-4 4H3" stroke="#5A7A50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <polyline points="17 1 21 5 17 9" stroke="#5A7A60" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M3 11V9a4 4 0 014-4h14" stroke="#5A7A60" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <polyline points="7 23 3 19 7 15" stroke="#5A7A60" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M21 13v2a4 4 0 01-4 4H3" stroke="#5A7A60" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{post.reposted_by?.display_name ?? profile.display_name} reposted</span>
+          <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{post.reposted_by?.display_name ?? profile.display_name} reposted</span>
         </div>
       )}
 
       {/* ── HEADER ── */}
       <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px" }}>
         <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "linear-gradient(135deg,#3CCE2A,#F07228)", padding: "2px", flexShrink: 0 }}>
-          <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#1A2614", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+          <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
             {profile.avatar_url
               ? <img src={profile.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               : <span style={{ fontFamily: R, fontSize: "15px", color: "#3CCE2A" }}>{(profile.display_name ?? "M")[0].toUpperCase()}</span>
@@ -214,7 +214,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <a href={`/members/community/members/${profile.id}`} onClick={e => e.stopPropagation()} style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "0.5px", textDecoration: "none", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color="#3CCE2A")} onMouseLeave={e => (e.currentTarget.style.color="#F0EAD6")}>{profile.display_name ?? "Member"}</a>
+              <a href={`/members/community/members/${profile.id}`} onClick={e => e.stopPropagation()} style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "0.5px", textDecoration: "none", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color="#3CCE2A")} onMouseLeave={e => (e.currentTarget.style.color="#1B3A2D")}>{profile.display_name ?? "Member"}</a>
               {profile.role && ROLE_BADGES[profile.role] && (
                 <span style={{ fontFamily: R, fontSize: "9px", color: ROLE_BADGES[profile.role].color, background: ROLE_BADGES[profile.role].bg, borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>
                   {ROLE_BADGES[profile.role].label}
@@ -222,38 +222,38 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
               )}
             </div>
           <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-            <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{timeAgo(post.created_at)}</span>
+            <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(post.created_at)}</span>
             {post.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F5C82A", background: "#3D3000", borderRadius: "4px", padding: "1px 5px" }}>📌</span>}
           </div>
         </div>
         <div style={{ position: "relative" }} onClick={e => e.stopPropagation()}>
           <button
             onClick={(e) => { e.stopPropagation(); setShowMenu(p => !p); }}
-            style={{ background: "none", border: "none", color: "#5A7A50", cursor: "pointer", fontSize: "20px", padding: "4px", lineHeight: 1 }}
+            style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "20px", padding: "4px", lineHeight: 1 }}
           >···</button>
           {showMenu && (
-            <div style={{ position: "absolute", top: "calc(100% + 4px)", right: 0, background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "6px", zIndex: 40, minWidth: "170px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
+            <div style={{ position: "absolute", top: "calc(100% + 4px)", right: 0, background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "6px", zIndex: 40, minWidth: "170px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
               {isOwner ? (<>
-                <a href={`/members/community/${post.id}`} onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", textDecoration: "none", fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#F0EAD6" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "#243520")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#F0EAD6" strokeWidth="2"/><path d="M12 8v4l3 3" stroke="#F0EAD6" strokeWidth="2" strokeLinecap="round"/></svg>
+                <a href={`/members/community/${post.id}`} onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", textDecoration: "none", fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#1B3A2D" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#F2F7F2")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#1B3A2D" strokeWidth="2"/><path d="M12 8v4l3 3" stroke="#1B3A2D" strokeWidth="2" strokeLinecap="round"/></svg>
                   View post
                 </a>
-                <button onClick={(e) => { e.stopPropagation(); handleCopyPostLink(); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#F0EAD6", textAlign: "left" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "#243520")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#F0EAD6" strokeWidth="2" strokeLinecap="round"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#F0EAD6" strokeWidth="2" strokeLinecap="round"/></svg>
+                <button onClick={(e) => { e.stopPropagation(); handleCopyPostLink(); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#1B3A2D", textAlign: "left" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#F2F7F2")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#1B3A2D" strokeWidth="2" strokeLinecap="round"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#1B3A2D" strokeWidth="2" strokeLinecap="round"/></svg>
                   Copy link
                 </button>
-                <div style={{ borderTop: "1px solid #2C4820", margin: "4px 0" }}/>
+                <div style={{ borderTop: "1px solid #DDE8DD", margin: "4px 0" }}/>
                 <button onClick={(e) => { e.stopPropagation(); setShowMenu(false); setShowDeleteConfirm(true); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#F04060", textAlign: "left" }}
                   onMouseEnter={e => (e.currentTarget.style.background = "#3D0A14")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M10 11v6M14 11v6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M9 6V4h6v2" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/></svg>
                   Delete post
                 </button>
               </>) : (
-                <button onClick={(e) => { e.stopPropagation(); handleCopyPostLink(); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#F0EAD6", textAlign: "left" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "#243520")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#F0EAD6" strokeWidth="2" strokeLinecap="round"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#F0EAD6" strokeWidth="2" strokeLinecap="round"/></svg>
+                <button onClick={(e) => { e.stopPropagation(); handleCopyPostLink(); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#1B3A2D", textAlign: "left" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#F2F7F2")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#1B3A2D" strokeWidth="2" strokeLinecap="round"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#1B3A2D" strokeWidth="2" strokeLinecap="round"/></svg>
                   Copy link
                 </button>
               )}
@@ -265,10 +265,10 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
       {/* ── CONTENT ── */}
       {content && (
         <div style={{ padding: "0 16px 10px" }}>
-          <div style={{ fontFamily: B, fontSize: "14px", color: "#C8C0A8", lineHeight: 1.75, whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+          <div style={{ fontFamily: B, fontSize: "14px", color: "#5A7A60", lineHeight: 1.75, whiteSpace: "pre-wrap", wordBreak: "break-word" }}
             dangerouslySetInnerHTML={{ __html: renderContent(expanded || !isLong ? content : content.slice(0, 200) + "...") }}
           />
-          {isLong && <button onClick={() => setExpanded(e => !e)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "12px", color: "#5A7A50", padding: "2px 0 0" }}>{expanded ? " see less" : " see more"}</button>}
+          {isLong && <button onClick={() => setExpanded(e => !e)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "12px", color: "#5A7A60", padding: "2px 0 0" }}>{expanded ? " see less" : " see more"}</button>}
         </div>
       )}
 
@@ -302,12 +302,12 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
 
       {/* ── VIDEO EMBED ── */}
       {post.video_embed_url && (
-        <div style={{ margin: "0 16px 10px", borderRadius: "10px", overflow: "hidden", border: "1.5px solid #2C4820", position: "relative" }}>
-          <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 2, background: PLATFORM_COLORS[post.video_platform] ?? "#5A7A50", borderRadius: "6px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#fff", fontWeight: 700 }}>
+        <div style={{ margin: "0 16px 10px", borderRadius: "10px", overflow: "hidden", border: "1.5px solid #DDE8DD", position: "relative" }}>
+          <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 2, background: PLATFORM_COLORS[post.video_platform] ?? "#5A7A60", borderRadius: "6px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#fff", fontWeight: 700 }}>
             {PLATFORM_LABELS[post.video_platform] ?? "Video"}
           </div>
           {(post.video_platform === "tiktok" || post.video_platform === "instagram") ? (
-            <div style={{ background: "#0F1A0B", position: "relative" }}>
+            <div style={{ background: "#F7FAF5", position: "relative" }}>
               {!embedFailed ? (
                 post.video_platform === "tiktok" ? (
                   /* TikTok — fixed height, crop white sides + bottom */
@@ -335,15 +335,15 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
               ) : (
                 /* Fallback link card */
                 <a href={post.video_url ?? post.video_embed_url} target="_blank" rel="noopener noreferrer"
-                  style={{ display: "flex", alignItems: "center", gap: "14px", padding: "16px", background: "#1A2614", textDecoration: "none" }}>
-                  <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "#243520", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  style={{ display: "flex", alignItems: "center", gap: "14px", padding: "16px", background: "#FFFFFF", textDecoration: "none" }}>
+                  <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "#F2F7F2", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <span style={{ fontSize: "24px" }}>{post.video_platform === "tiktok" ? "🎵" : "📸"}</span>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ fontFamily: R, fontSize: "12px", color: PLATFORM_COLORS[post.video_platform], margin: 0, letterSpacing: "1px" }}>
                       {PLATFORM_LABELS[post.video_platform].toUpperCase()} VIDEO
                     </p>
-                    <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", margin: "4px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", margin: "4px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {post.video_url ?? post.video_embed_url}
                     </p>
                     <p style={{ fontFamily: B, fontSize: "11px", color: "#3CCE2A", margin: "4px 0 0" }}>Tap to open ↗</p>
@@ -381,24 +381,24 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
         />
 
         {showRepostMenu && (
-          <div style={{ position: "absolute", bottom: "calc(100% - 8px)", left: "80px", background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "6px", zIndex: 30, minWidth: "180px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
+          <div style={{ position: "absolute", bottom: "calc(100% - 8px)", left: "80px", background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "6px", zIndex: 30, minWidth: "180px", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>
             <button onClick={handleRepost}
-              style={{ width: "100%", background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "13px", color: isReposted ? "#3CCE2A" : "#F0EAD6", padding: "9px 12px", textAlign: "left", borderRadius: "8px", display: "flex", alignItems: "center", gap: "10px" }}
-              onMouseEnter={e => (e.currentTarget.style.background = "#243520")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
+              style={{ width: "100%", background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "13px", color: isReposted ? "#3CCE2A" : "#1B3A2D", padding: "9px 12px", textAlign: "left", borderRadius: "8px", display: "flex", alignItems: "center", gap: "10px" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "#F2F7F2")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <polyline points="17 1 21 5 17 9" stroke={isReposted ? "#3CCE2A" : "#F0EAD6"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 11V9a4 4 0 014-4h14" stroke={isReposted ? "#3CCE2A" : "#F0EAD6"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <polyline points="7 23 3 19 7 15" stroke={isReposted ? "#3CCE2A" : "#F0EAD6"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M21 13v2a4 4 0 01-4 4H3" stroke={isReposted ? "#3CCE2A" : "#F0EAD6"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <polyline points="17 1 21 5 17 9" stroke={isReposted ? "#3CCE2A" : "#1B3A2D"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 11V9a4 4 0 014-4h14" stroke={isReposted ? "#3CCE2A" : "#1B3A2D"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <polyline points="7 23 3 19 7 15" stroke={isReposted ? "#3CCE2A" : "#1B3A2D"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 13v2a4 4 0 01-4 4H3" stroke={isReposted ? "#3CCE2A" : "#1B3A2D"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               {isReposted ? "Undo Repost" : "Repost"}
             </button>
             <button onClick={handleCopyLink}
-              style={{ width: "100%", background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "13px", color: "#F0EAD6", padding: "9px 12px", textAlign: "left", borderRadius: "8px", display: "flex", alignItems: "center", gap: "10px" }}
-              onMouseEnter={e => (e.currentTarget.style.background = "#243520")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
+              style={{ width: "100%", background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "13px", color: "#1B3A2D", padding: "9px 12px", textAlign: "left", borderRadius: "8px", display: "flex", alignItems: "center", gap: "10px" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "#F2F7F2")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#F0EAD6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#F0EAD6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#1B3A2D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#1B3A2D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               Copy link
             </button>
@@ -428,7 +428,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
 
       {/* ── COMMENT PREVIEW ── */}
       {showComments && (
-        <div style={{ borderTop: "1px solid #2C4820", padding: "10px 16px 12px" }}>
+        <div style={{ borderTop: "1px solid #DDE8DD", padding: "10px 16px 12px" }}>
           {loadingComments ? (
             <div style={{ fontFamily: B, fontSize: "12px", color: "#3A5A30" }}>Loading...</div>
           ) : (
@@ -436,7 +436,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
               {previewComments.map((comment: any) => (
                 <div key={comment.id} style={{ display: "flex", gap: "10px", alignItems: "flex-start", marginBottom: "14px" }}>
                   {/* Avatar — no bubble box */}
-                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#1A3D14", border: "1.5px solid #2C4820", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
+                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#E8F0E4", border: "1.5px solid #DDE8DD", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
                     {comment.profiles?.avatar_url
                       ? <img src={comment.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       : <span style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A" }}>{(comment.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
@@ -445,10 +445,10 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
                   <div style={{ flex: 1, minWidth: 0 }}>
                     {/* Name + content inline, no bubble */}
                     <div style={{ paddingBottom: "5px" }}>
-                      <span style={{ fontFamily: R, fontSize: "12px", color: "#F0EAD6", letterSpacing: "0.5px", marginRight: "7px" }}>
-                        <a href={`/members/community/members/${comment.profiles?.id}`} onClick={e => e.stopPropagation()} style={{ color: "#F0EAD6", textDecoration: "none", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color="#3CCE2A")} onMouseLeave={e => (e.currentTarget.style.color="#F0EAD6")}>{comment.profiles?.display_name ?? "Member"}</a>
+                      <span style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "0.5px", marginRight: "7px" }}>
+                        <a href={`/members/community/members/${comment.profiles?.id}`} onClick={e => e.stopPropagation()} style={{ color: "#1B3A2D", textDecoration: "none", cursor: "pointer" }} onMouseEnter={e => (e.currentTarget.style.color="#3CCE2A")} onMouseLeave={e => (e.currentTarget.style.color="#1B3A2D")}>{comment.profiles?.display_name ?? "Member"}</a>
                       </span>
-                      <span style={{ fontFamily: B, fontSize: "13px", color: "#C8C0A8", lineHeight: 1.65, wordBreak: "break-word" }}
+                      <span style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60", lineHeight: 1.65, wordBreak: "break-word" }}
                         dangerouslySetInnerHTML={{ __html: renderContent((comment.content || "").replace(/<[^>]*>/g, "")) }}
                       />
                     </div>
@@ -460,16 +460,16 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
                       >
                         {commentReactions[comment.id]
                           ? <span style={{ fontSize: "15px" }}>{commentReactions[comment.id]}</span>
-                          : <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke="#5A7A50" strokeWidth="1.8" fill="none"/></svg>
+                          : <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke="#5A7A60" strokeWidth="1.8" fill="none"/></svg>
                         }
                       </button>
                       <span style={{ fontFamily: B, fontSize: "10px", color: "#3A5A30" }}>{timeAgo(comment.created_at)}</span>
-                      <button onClick={() => router.push(`/members/community/${post.id}`)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "11px", color: "#5A7A50", padding: 0 }}>Reply</button>
+                      <button onClick={() => router.push(`/members/community/${post.id}`)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "11px", color: "#5A7A60", padding: 0 }}>Reply</button>
                       {showCommentReactions === comment.id && (
-                        <div style={{ position: "absolute", bottom: "calc(100% + 4px)", left: 0, background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", padding: "6px 8px", display: "flex", gap: "4px", zIndex: 20, boxShadow: "0 4px 16px rgba(0,0,0,0.4)" }}>
+                        <div style={{ position: "absolute", bottom: "calc(100% + 4px)", left: 0, background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "6px 8px", display: "flex", gap: "4px", zIndex: 20, boxShadow: "0 4px 16px rgba(0,0,0,0.4)" }}>
                           {COMMENT_REACTIONS.map(emoji => (
                             <button key={emoji} onClick={() => toggleCommentReaction(comment.id, emoji)}
-                              style={{ background: commentReactions[comment.id] === emoji ? "#1A3D14" : "none", border: commentReactions[comment.id] === emoji ? "1.5px solid #3CCE2A" : "1.5px solid transparent", borderRadius: "6px", padding: "4px 6px", cursor: "pointer", fontSize: "16px" }}
+                              style={{ background: commentReactions[comment.id] === emoji ? "#E8F0E4" : "none", border: commentReactions[comment.id] === emoji ? "1.5px solid #3CCE2A" : "1.5px solid transparent", borderRadius: "6px", padding: "4px 6px", cursor: "pointer", fontSize: "16px" }}
                               onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.2)")}
                               onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}>
                               {emoji}
@@ -483,20 +483,20 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
               ))}
 
               {commentCount > 2 && (
-                <Link href={`/members/community/${post.id}`} style={{ display: "block", fontFamily: B, fontSize: "12px", color: "#5A7A50", textDecoration: "none", marginBottom: "8px" }}>
+                <Link href={`/members/community/${post.id}`} style={{ display: "block", fontFamily: B, fontSize: "12px", color: "#5A7A60", textDecoration: "none", marginBottom: "8px" }}>
                   View all {commentCount} comments →
                 </Link>
               )}
 
               <div style={{ display: "flex", gap: "8px", alignItems: "center", marginTop: "6px" }}>
-                <div style={{ flex: 1, background: "#243520", border: "1.5px solid #2C4820", borderRadius: "20px", padding: "7px 14px", display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "20px", padding: "7px 14px", display: "flex", alignItems: "center", gap: "8px" }}>
                   <input
                     ref={commentInputRef}
                     value={newComment}
                     onChange={e => setNewComment(e.target.value)}
                     onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); handleSubmitComment(); } }}
                     placeholder="Add a comment..."
-                    style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "#F0EAD6", fontFamily: B, fontSize: "12px", minWidth: 0 }}
+                    style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "#1B3A2D", fontFamily: B, fontSize: "12px", minWidth: 0 }}
                   />
                   {newComment.trim() && (
                     <button onClick={handleSubmitComment} disabled={submitting}
@@ -514,17 +514,17 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
       {/* ── DELETE CONFIRM MODAL ── */}
       {showDeleteConfirm && createPortal(
         <div onMouseDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()} style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }}>
-          <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", padding: "28px 28px 22px", maxWidth: "320px", width: "90%", boxShadow: "0 16px 48px rgba(0,0,0,0.6)" }}>
+          <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", padding: "28px 28px 22px", maxWidth: "320px", width: "90%", boxShadow: "0 16px 48px rgba(0,0,0,0.6)" }}>
             {/* Icon */}
             <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: "#3D0A14", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M10 11v6M14 11v6" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/><path d="M9 6V4h6v2" stroke="#F04060" strokeWidth="2" strokeLinecap="round"/></svg>
             </div>
-            <div style={{ fontFamily: R, fontSize: "16px", color: "#F0EAD6", marginBottom: "8px", letterSpacing: "0.5px" }}>Delete post?</div>
-            <div style={{ fontFamily: B, fontSize: "13px", color: "#5A7A50", lineHeight: 1.6, marginBottom: "24px" }}>This action can't be undone. The post will be permanently removed.</div>
+            <div style={{ fontFamily: R, fontSize: "16px", color: "#1B3A2D", marginBottom: "8px", letterSpacing: "0.5px" }}>Delete post?</div>
+            <div style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60", lineHeight: 1.6, marginBottom: "24px" }}>This action can't be undone. The post will be permanently removed.</div>
             <div style={{ display: "flex", gap: "10px" }}>
               <button onClick={() => setShowDeleteConfirm(false)}
-                style={{ flex: 1, padding: "10px", borderRadius: "10px", background: "none", border: "2px solid #2C4820", cursor: "pointer", fontFamily: R, fontSize: "13px", color: "#5A7A50", letterSpacing: "0.5px" }}
-                onMouseEnter={e => (e.currentTarget.style.borderColor = "#3CCE2A")} onMouseLeave={e => (e.currentTarget.style.borderColor = "#2C4820")}>
+                style={{ flex: 1, padding: "10px", borderRadius: "10px", background: "none", border: "2px solid #DDE8DD", cursor: "pointer", fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "0.5px" }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = "#3CCE2A")} onMouseLeave={e => (e.currentTarget.style.borderColor = "#DDE8DD")}>
                 Cancel
               </button>
               <button onClick={() => { setShowDeleteConfirm(false); handleDelete(); }}

@@ -95,7 +95,7 @@ export default async function ShopPage() {
               const accent = CAT_COLORS[i % CAT_COLORS.length];
               return (
                 <Link key={cat.id} href={`/shop/${cat.slug}`} style={{ textDecoration: "none" }}>
-                  <div className="cat-card" style={{ background: "#ffffff", border: "2px solid #2C4820", borderRadius: "14px", padding: "32px 24px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+                  <div className="cat-card" style={{ background: "#ffffff", border: "2px solid #DDE8DD", borderRadius: "14px", padding: "32px 24px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
                     {/* Icon circle */}
                     <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "#FAFDF9", border: `2px solid ${accent}60`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <CategoryIcon name={cat.name} color={accent} />

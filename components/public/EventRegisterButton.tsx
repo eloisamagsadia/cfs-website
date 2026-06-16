@@ -154,7 +154,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         <div style={{ background: "#E8F5E9", border: "2px solid #3CCE2A", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
           <div style={{ fontSize: "28px", marginBottom: "8px" }}>🎫</div>
           <div style={{ fontFamily: R, fontSize: "14px", color: "#3CCE2A", letterSpacing: "1.5px", marginBottom: "4px" }}>YOU'RE REGISTERED!</div>
-          <div style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Your ticket is ready</div>
+          <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Your ticket is ready</div>
         </div>
         {ticketId && (
           <button onClick={() => router.push(`/members/tickets/${ticketId}`)}
@@ -188,8 +188,8 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
       {/* Not open yet */}
       {isNotOpenYet && (
         <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
-          <div style={{ fontFamily: R, fontSize: "12px", color: "#5A7A50", letterSpacing: "1px" }}>REGISTRATION OPENS</div>
-          <div style={{ fontFamily: R, fontSize: "14px", color: "#F0EAD6", marginTop: "4px" }}>{sponsorDate?.toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}</div>
+          <div style={{ fontFamily: R, fontSize: "12px", color: "#5A7A60", letterSpacing: "1px" }}>REGISTRATION OPENS</div>
+          <div style={{ fontFamily: R, fontSize: "14px", color: "#1B3A2D", marginTop: "4px" }}>{sponsorDate?.toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}</div>
         </div>
       )}
 
@@ -198,7 +198,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         <div style={{ background: "#B47FE310", border: "1.5px solid #B47FE360", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
           <div style={{ fontSize: "20px", marginBottom: "6px" }}>✦</div>
           <div style={{ fontFamily: R, fontSize: "12px", color: "#B47FE3", letterSpacing: "1px", marginBottom: "4px" }}>SPONSOR EARLY ACCESS</div>
-          <div style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>
+          <div style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>
             General registration opens {memberDate?.toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}
           </div>
         </div>
@@ -207,7 +207,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
       {/* Tier selection */}
       {hasTiers && (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          <div style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", letterSpacing: "2px", marginBottom: "4px" }}>SELECT TIER</div>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "4px" }}>SELECT TIER</div>
           {tiers.map(tier => {
             const isSoldOut = tier.slots_remaining !== null && tier.slots_remaining <= 0;
             const isSelected = selectedTier?.id === tier.id;
@@ -229,7 +229,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
                 )}
                 {isSoldOut && <div style={{ fontFamily: B, fontSize: "10px", color: "#F04060", marginTop: "4px" }}>SOLD OUT</div>}
                 {!isSoldOut && tier.slots_remaining !== null && (
-                  <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", marginTop: "4px" }}>{tier.slots_remaining} slots left</div>
+                  <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", marginTop: "4px" }}>{tier.slots_remaining} slots left</div>
                 )}
               </button>
             );
@@ -250,17 +250,17 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         const fee   = calcFee(basePrice);
         const total = basePrice + fee;
         return (
-          <div style={{ background: "#0F1A0B", border: "1px solid #2C4820", borderRadius: "10px", padding: "12px 14px", display: "flex", flexDirection: "column", gap: "6px" }}>
+          <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "10px", padding: "12px 14px", display: "flex", flexDirection: "column", gap: "6px" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Ticket price</span>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#F0EAD6" }}>₱{fmt(basePrice)}</span>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Ticket price</span>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>₱{fmt(basePrice)}</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Processing fee <span style={{ fontSize: "10px" }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span></span>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Processing fee <span style={{ fontSize: "10px" }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span></span>
               <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee)}</span>
             </div>
-            <div style={{ borderTop: "1px solid #2C4820", paddingTop: "6px", display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontFamily: R, fontSize: "12px", color: "#F0EAD6", letterSpacing: "1px" }}>TOTAL</span>
+            <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "6px", display: "flex", justifyContent: "space-between" }}>
+              <span style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "1px" }}>TOTAL</span>
               <span style={{ fontFamily: R, fontSize: "13px", color: "#F07228" }}>₱{fmt(total)}</span>
             </div>
           </div>
@@ -281,7 +281,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         );
       })()}
       {!isLoggedIn && (
-        <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", textAlign: "center" }}>Login required to register</p>
+        <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", textAlign: "center" }}>Login required to register</p>
       )}
     </div>
   );

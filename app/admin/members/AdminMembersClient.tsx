@@ -12,7 +12,7 @@ const ROLE_COLORS: Record<string, string> = {
   moderator: "#69C9D0",
   sponsor: "#B47FE3",
   member: "#3CCE2A",
-  guest: "#5A7A50",
+  guest: "#5A7A60",
 };
 
 const ROLE_LABELS: Record<string, string> = {
@@ -110,14 +110,14 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       {/* Header */}
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>MEMBERS</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>{counts.total} registered members</p>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>MEMBERS</h1>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>{counts.total} registered members</p>
       </div>
 
       {/* Stats */}
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
         {[
-          { label: "TOTAL", value: counts.total, color: "#F0EAD6" },
+          { label: "TOTAL", value: counts.total, color: "#1B3A2D" },
           { label: "SUPER ADMIN", value: counts.super_admin, color: ROLE_COLORS.super_admin },
           { label: "ADMIN", value: counts.admin, color: ROLE_COLORS.admin },
           { label: "MOD", value: counts.moderator, color: ROLE_COLORS.moderator },
@@ -125,9 +125,9 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
           { label: "MEMBER", value: counts.member, color: ROLE_COLORS.member },
           { label: "BANNED", value: counts.banned, color: "#F04060" },
         ].map(s => (
-          <div key={s.label} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", padding: "10px 16px", textAlign: "center" }}>
+          <div key={s.label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", textAlign: "center" }}>
             <div style={{ fontFamily: R, fontSize: "1.2rem", color: s.color }}>{s.value}</div>
-            <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A50", letterSpacing: "1.5px" }}>{s.label}</div>
+            <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A60", letterSpacing: "1.5px" }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -136,11 +136,11 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
         <input value={search} onChange={e => setSearch(e.target.value)}
           placeholder="Search by name or ID..."
-          style={{ flex: 1, minWidth: "200px", background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "10px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }} />
+          style={{ flex: 1, minWidth: "200px", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
           {["all", ...ROLES, "banned"].map(f => (
             <button key={f} onClick={() => setFilter(f)}
-              style={{ fontFamily: R, fontSize: "10px", background: filter === f ? "#1A3D14" : "transparent", border: `1.5px solid ${filter === f ? (ROLE_COLORS[f] ?? "#3CCE2A") : "#2C4820"}`, color: filter === f ? (ROLE_COLORS[f] ?? "#3CCE2A") : "#5A7A50", borderRadius: "6px", padding: "5px 12px", cursor: "pointer", letterSpacing: "1px" }}>
+              style={{ fontFamily: R, fontSize: "10px", background: filter === f ? "#E8F0E4" : "transparent", border: `1.5px solid ${filter === f ? (ROLE_COLORS[f] ?? "#3CCE2A") : "#DDE8DD"}`, color: filter === f ? (ROLE_COLORS[f] ?? "#3CCE2A") : "#5A7A60", borderRadius: "6px", padding: "5px 12px", cursor: "pointer", letterSpacing: "1px" }}>
               {f === "all" ? "ALL" : ROLE_LABELS[f] ?? f.toUpperCase()}
             </button>
           ))}
@@ -148,10 +148,10 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
       </div>
 
       {/* Table — desktop only */}
-      <div className="members-table-desktop" style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", background: "#243520", padding: "12px 20px" }}>
+      <div className="members-table-desktop" style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", background: "#F2F7F2", padding: "12px 20px" }}>
           {["MEMBER", "ROLE", "JOINED", "POSTS", "BADGES", "ACTIONS"].map(h => (
-            <span key={h} style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", letterSpacing: "1.5px" }}>{h}</span>
+            <span key={h} style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "1.5px" }}>{h}</span>
           ))}
         </div>
 
@@ -161,14 +161,14 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
 
         {filtered.map((m: any, i: number) => {
           const isLoading = loadingId === m.id;
-          const roleColor = ROLE_COLORS[m.role] ?? "#5A7A50";
+          const roleColor = ROLE_COLORS[m.role] ?? "#5A7A60";
           const canChange = canChangeRole(m);
           return (
             <div key={m.id}
               onClick={() => setSelectedMember(m)}
-              style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", padding: "12px 20px", borderTop: "1px solid #2C4820", background: m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#1A2614" : "#162212", alignItems: "center", cursor: "pointer" }}
+              style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", padding: "12px 20px", borderTop: "1px solid #DDE8DD", background: m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#FFFFFF" : "#EDF7ED", alignItems: "center", cursor: "pointer" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#1F3018")}
-              onMouseLeave={e => (e.currentTarget.style.background = m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#1A2614" : "#162212")}
+              onMouseLeave={e => (e.currentTarget.style.background = m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#FFFFFF" : "#EDF7ED")}
             >
               {/* Member */}
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -179,7 +179,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                   }
                 </div>
                 <div>
-                  <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#F0EAD6", display: "flex", alignItems: "center", gap: "6px" }}>
+                  <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#1B3A2D", display: "flex", alignItems: "center", gap: "6px" }}>
                     {m.display_name ?? "—"}
                     {m.is_banned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F04060", background: "#3D0A14", borderRadius: "4px", padding: "1px 6px" }}>BANNED</span>}
                   </div>
@@ -192,10 +192,10 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
               </span>
 
               {/* Joined */}
-              <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{timeAgo(m.created_at)}</span>
+              <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(m.created_at)}</span>
 
               {/* Posts */}
-              <span style={{ fontFamily: R, fontSize: "13px", color: "#8AAA78" }}>{m.post_count}</span>
+              <span style={{ fontFamily: R, fontSize: "13px", color: "#4A7C59" }}>{m.post_count}</span>
 
               {/* Badges */}
               <span style={{ fontFamily: R, fontSize: "13px", color: "#F5C82A" }}>{m.user_badges?.length ?? 0}</span>
@@ -207,7 +207,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                     value={m.role}
                     onChange={e => changeRole(m, e.target.value)}
                     disabled={isLoading}
-                    style={{ background: "#243520", border: "1px solid #2C4820", borderRadius: "4px", padding: "4px 6px", color: roleColor, fontFamily: B, fontSize: "10px", outline: "none", cursor: "pointer" }}>
+                    style={{ background: "#F2F7F2", border: "1px solid #DDE8DD", borderRadius: "4px", padding: "4px 6px", color: roleColor, fontFamily: B, fontSize: "10px", outline: "none", cursor: "pointer" }}>
                     {ROLES.filter(r => isSuperAdmin || !["super_admin", "admin"].includes(r)).map(r => (
                       <option key={r} value={r}>{ROLE_LABELS[r]}</option>
                     ))}
@@ -230,12 +230,12 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
         )}
         {filtered.map((m: any) => {
           const isLoading = loadingId === m.id;
-          const roleColor = ROLE_COLORS[m.role] ?? "#5A7A50";
+          const roleColor = ROLE_COLORS[m.role] ?? "#5A7A60";
           const canChange = canChangeRole(m);
           return (
             <div key={m.id}
               onClick={() => setSelectedMember(m)}
-              style={{ background: m.is_banned ? "#2A0A0A" : "#1A2614", border: `2px solid ${m.is_banned ? "#F0406040" : "#2C4820"}`, borderRadius: "12px", padding: "14px 16px", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}
+              style={{ background: m.is_banned ? "#2A0A0A" : "#FFFFFF", border: `2px solid ${m.is_banned ? "#F0406040" : "#DDE8DD"}`, borderRadius: "12px", padding: "14px 16px", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}
             >
               <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: `2px solid ${roleColor}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
                 {m.avatar_url
@@ -244,7 +244,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                 }
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#F0EAD6", display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+                <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#1B3A2D", display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
                   {m.display_name ?? "—"}
                   {m.is_banned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F04060", background: "#3D0A14", borderRadius: "4px", padding: "1px 6px" }}>BANNED</span>}
                 </div>
@@ -252,8 +252,8 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                   <span style={{ fontFamily: R, fontSize: "10px", color: roleColor, background: roleColor + "20", borderRadius: "20px", padding: "2px 8px", letterSpacing: "1px" }}>
                     {ROLE_LABELS[m.role] ?? m.role?.toUpperCase()}
                   </span>
-                  <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{timeAgo(m.created_at)}</span>
-                  <span style={{ fontFamily: B, fontSize: "11px", color: "#8AAA78" }}>{m.post_count} posts</span>
+                  <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(m.created_at)}</span>
+                  <span style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59" }}>{m.post_count} posts</span>
                 </div>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px", flexShrink: 0 }} onClick={e => e.stopPropagation()}>
@@ -262,7 +262,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                     value={m.role}
                     onChange={e => changeRole(m, e.target.value)}
                     disabled={isLoading}
-                    style={{ background: "#243520", border: "1px solid #2C4820", borderRadius: "4px", padding: "4px 6px", color: roleColor, fontFamily: B, fontSize: "10px", outline: "none", cursor: "pointer" }}
+                    style={{ background: "#F2F7F2", border: "1px solid #DDE8DD", borderRadius: "4px", padding: "4px 6px", color: roleColor, fontFamily: B, fontSize: "10px", outline: "none", cursor: "pointer" }}
                   >
                     {ROLES.filter(r => isSuperAdmin || !["super_admin", "admin"].includes(r)).map(r => (
                       <option key={r} value={r}>{ROLE_LABELS[r]}</option>
@@ -284,7 +284,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
         <div onClick={() => setSelectedMember(null)}
           style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div onClick={e => e.stopPropagation()}
-            style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", padding: "28px", width: "420px", maxWidth: "90vw", display: "flex", flexDirection: "column", gap: "16px" }}>
+            style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", padding: "28px", width: "420px", maxWidth: "90vw", display: "flex", flexDirection: "column", gap: "16px" }}>
 
             {/* Profile */}
             <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
@@ -295,17 +295,17 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                 }
               </div>
               <div>
-                <div style={{ fontFamily: R, fontSize: "16px", color: "#F0EAD6", letterSpacing: "1px" }}>{selectedMember.display_name ?? "Member"}</div>
+                <div style={{ fontFamily: R, fontSize: "16px", color: "#1B3A2D", letterSpacing: "1px" }}>{selectedMember.display_name ?? "Member"}</div>
                 <span style={{ fontFamily: R, fontSize: "10px", color: ROLE_COLORS[selectedMember.role], background: (ROLE_COLORS[selectedMember.role] ?? "#3CCE2A") + "20", borderRadius: "20px", padding: "2px 10px" }}>
                   {ROLE_LABELS[selectedMember.role] ?? selectedMember.role}
                 </span>
               </div>
               <button onClick={() => setSelectedMember(null)}
-                style={{ marginLeft: "auto", background: "none", border: "none", color: "#5A7A50", cursor: "pointer", fontSize: "20px" }}>✕</button>
+                style={{ marginLeft: "auto", background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "20px" }}>✕</button>
             </div>
 
             {/* Details grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", background: "#0F1A0B", borderRadius: "10px", padding: "16px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", background: "#F7FAF5", borderRadius: "10px", padding: "16px" }}>
               {[
                 { label: "Member ID", value: selectedMember.id.slice(0, 16) + "..." },
                 { label: "Joined", value: new Date(selectedMember.created_at).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" }) },
@@ -315,16 +315,16 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                 { label: "Status", value: selectedMember.is_banned ? "🚫 BANNED" : "✅ ACTIVE" },
               ].map(({ label, value }) => (
                 <div key={label}>
-                  <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", letterSpacing: "1px", marginBottom: "2px" }}>{label}</div>
-                  <div style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>{value}</div>
+                  <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", letterSpacing: "1px", marginBottom: "2px" }}>{label}</div>
+                  <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{value}</div>
                 </div>
               ))}
             </div>
 
             {selectedMember.bio && (
-              <div style={{ background: "#0F1A0B", borderRadius: "10px", padding: "12px 16px" }}>
-                <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", marginBottom: "4px" }}>BIO</div>
-                <div style={{ fontFamily: B, fontSize: "12px", color: "#C8C0A8", lineHeight: 1.6 }}>{selectedMember.bio}</div>
+              <div style={{ background: "#F7FAF5", borderRadius: "10px", padding: "12px 16px" }}>
+                <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", marginBottom: "4px" }}>BIO</div>
+                <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", lineHeight: 1.6 }}>{selectedMember.bio}</div>
               </div>
             )}
 
@@ -338,7 +338,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                   </button>
                 ))}
                 <button onClick={() => toggleBan(selectedMember)} disabled={loadingId === selectedMember.id}
-                  style={{ fontFamily: R, fontSize: "10px", background: selectedMember.is_banned ? "#1A3D14" : "#3D0A14", border: `1.5px solid ${selectedMember.is_banned ? "#3CCE2A" : "#F04060"}`, color: selectedMember.is_banned ? "#3CCE2A" : "#F04060", borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+                  style={{ fontFamily: R, fontSize: "10px", background: selectedMember.is_banned ? "#E8F0E4" : "#3D0A14", border: `1.5px solid ${selectedMember.is_banned ? "#3CCE2A" : "#F04060"}`, color: selectedMember.is_banned ? "#3CCE2A" : "#F04060", borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px" }}>
                   {selectedMember.is_banned ? "UNBAN" : "BAN"}
                 </button>
               </div>

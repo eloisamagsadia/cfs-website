@@ -33,7 +33,7 @@ export default async function AdminDashboard() {
   const totalRevenue = (revenue ?? []).reduce((s:number,o:any)=>s+Number(o.total),0);
 
   const stats = [
-    { label:"TOTAL MEMBERS",   value: members ?? 0,                       color:"#3CCE2A", bg:"#1A3D14", href:"/admin/members" },
+    { label:"TOTAL MEMBERS",   value: members ?? 0,                       color:"#3CCE2A", bg:"#E8F0E4", href:"/admin/members" },
     { label:"PAID ORDERS",     value: orders ?? 0,                        color:"#F07228", bg:"#3D1A0A", href:"/admin/orders" },
     { label:"UPCOMING EVENTS", value: events ?? 0,                        color:"#F5C82A", bg:"#3D3000", href:"/admin/events" },
     { label:"TOTAL REVENUE",   value:`₱${totalRevenue.toLocaleString()}`, color:"#8EE440", bg:"#1E3010", href:"/admin/orders" },
@@ -41,7 +41,7 @@ export default async function AdminDashboard() {
 
   const quickActions = [
     { label:"CREATE EVENT",    href:"/admin/events/create",  bg:"#3CCE2A", color:"#080F06" },
-    { label:"ADD PRODUCT",     href:"/admin/shop/create",    bg:"#F07228", color:"#F0EAD6" },
+    { label:"ADD PRODUCT",     href:"/admin/shop/create",    bg:"#F07228", color:"#1B3A2D" },
     { label:"GENERATE CODE",   href:"/admin/codes",          bg:"#F5C82A", color:"#080F06" },
     { label:"UPLOAD REPORT",   href:"/admin/reports",        bg:"#8EE440", color:"#080F06" },
   ];
@@ -52,8 +52,8 @@ export default async function AdminDashboard() {
         <div style={{ display:"inline-block", background:"#F07228", border:"2px solid #080F06", borderRadius:"6px", padding:"3px 12px", marginBottom:"8px" }}>
           <span style={{ fontFamily:R, fontSize:"10px", color:"#080F06", letterSpacing:"2px" }}>⚠ ADMIN ONLY</span>
         </div>
-        <h1 style={{ fontFamily:R, fontSize:"1.8rem", color:"#F0EAD6", letterSpacing:"3px", marginBottom:"4px" }}>ADMIN DASHBOARD</h1>
-        <p style={{ fontFamily:S, fontStyle:"italic", fontSize:"14px", color:"#8AAA78" }}>Overview of all CFS operations</p>
+        <h1 style={{ fontFamily:R, fontSize:"1.8rem", color:"#1B3A2D", letterSpacing:"3px", marginBottom:"4px" }}>ADMIN DASHBOARD</h1>
+        <p style={{ fontFamily:S, fontStyle:"italic", fontSize:"14px", color:"#4A7C59" }}>Overview of all CFS operations</p>
       </div>
 
       {/* Stats */}
@@ -62,9 +62,9 @@ export default async function AdminDashboard() {
           <Link key={label} href={href} style={{ textDecoration:"none" }}>
             <div style={{ position:"relative", padding:"4px 4px 6px 0" }}>
               <div style={{ position:"absolute", bottom:0, right:0, width:"calc(100% - 4px)", height:"calc(100% - 4px)", borderRadius:"10px", background:"#080F06" }}/>
-              <div style={{ position:"relative", background:bg, border:"2px solid #2C4820", borderRadius:"10px", padding:"18px 16px", zIndex:1 }}>
+              <div style={{ position:"relative", background:bg, border:"2px solid #DDE8DD", borderRadius:"10px", padding:"18px 16px", zIndex:1 }}>
                 <div style={{ fontFamily:R, fontSize:"1.8rem", color, letterSpacing:"1px", marginBottom:"4px" }}>{value}</div>
-                <div style={{ fontFamily:B, fontSize:"11px", color:"#8AAA78", letterSpacing:"1px" }}>{label}</div>
+                <div style={{ fontFamily:B, fontSize:"11px", color:"#4A7C59", letterSpacing:"1px" }}>{label}</div>
               </div>
             </div>
           </Link>
@@ -73,7 +73,7 @@ export default async function AdminDashboard() {
 
       {/* Quick actions */}
       <div>
-        <h2 style={{ fontFamily:R, fontSize:"13px", color:"#F0EAD6", letterSpacing:"2px", marginBottom:"12px" }}>QUICK ACTIONS</h2>
+        <h2 style={{ fontFamily:R, fontSize:"13px", color:"#1B3A2D", letterSpacing:"2px", marginBottom:"12px" }}>QUICK ACTIONS</h2>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))", gap:"10px" }}>
           {quickActions.map(({ label, href, bg, color }) => (
             <Link key={label} href={href} style={{ textDecoration:"none" }}>
@@ -91,13 +91,13 @@ export default async function AdminDashboard() {
       {/* Recent activity */}
       <div className="admin-recent-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"16px" }}>
         {/* Recent orders */}
-        <div style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"18px" }}>
+        <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"18px" }}>
           <div style={{ fontFamily:R, fontSize:"13px", color:"#F07228", letterSpacing:"2px", marginBottom:"14px" }}>RECENT ORDERS</div>
           {(recentOrders ?? []).length === 0
-            ? <p style={{ fontFamily:B, fontSize:"13px", color:"#5A7A50" }}>No orders yet</p>
+            ? <p style={{ fontFamily:B, fontSize:"13px", color:"#5A7A60" }}>No orders yet</p>
             : (recentOrders ?? []).map((o:any) => (
-              <div key={o.id} style={{ display:"flex", justifyContent:"space-between", padding:"8px 0", borderBottom:"1px solid #2C4820" }}>
-                <span style={{ fontFamily:B, fontSize:"12px", color:"#8AAA78" }}>#{o.id.slice(0,8).toUpperCase()}</span>
+              <div key={o.id} style={{ display:"flex", justifyContent:"space-between", padding:"8px 0", borderBottom:"1px solid #DDE8DD" }}>
+                <span style={{ fontFamily:B, fontSize:"12px", color:"#4A7C59" }}>#{o.id.slice(0,8).toUpperCase()}</span>
                 <span style={{ fontFamily:R, fontSize:"12px", color:"#F07228" }}>₱{Number(o.total).toLocaleString()}</span>
               </div>
             ))
@@ -106,14 +106,14 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Recent members */}
-        <div style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"18px" }}>
+        <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"18px" }}>
           <div style={{ fontFamily:R, fontSize:"13px", color:"#3CCE2A", letterSpacing:"2px", marginBottom:"14px" }}>NEW MEMBERS</div>
           {(recentMembers ?? []).length === 0
-            ? <p style={{ fontFamily:B, fontSize:"13px", color:"#5A7A50" }}>No members yet</p>
+            ? <p style={{ fontFamily:B, fontSize:"13px", color:"#5A7A60" }}>No members yet</p>
             : (recentMembers ?? []).map((m:any) => (
-              <div key={m.id} style={{ display:"flex", justifyContent:"space-between", padding:"8px 0", borderBottom:"1px solid #2C4820" }}>
-                <span style={{ fontFamily:B, fontSize:"12px", color:"#8AAA78" }}>{m.display_name ?? "Member"}</span>
-                <span style={{ fontFamily:B, fontSize:"11px", color:"#5A7A50" }}>{new Date(m.created_at).toLocaleDateString("en-PH",{month:"short",day:"numeric"})}</span>
+              <div key={m.id} style={{ display:"flex", justifyContent:"space-between", padding:"8px 0", borderBottom:"1px solid #DDE8DD" }}>
+                <span style={{ fontFamily:B, fontSize:"12px", color:"#4A7C59" }}>{m.display_name ?? "Member"}</span>
+                <span style={{ fontFamily:B, fontSize:"11px", color:"#5A7A60" }}>{new Date(m.created_at).toLocaleDateString("en-PH",{month:"short",day:"numeric"})}</span>
               </div>
             ))
           }

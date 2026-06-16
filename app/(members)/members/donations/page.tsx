@@ -50,27 +50,27 @@ export default async function MyDonationsPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>MY DONATIONS</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>MY DONATIONS</h1>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
           {completed.length} donation{completed.length !== 1 ? "s" : ""} · <span style={{ color: "#3CCE2A" }}>₱{totalGiven.toLocaleString()} contributed</span>
         </p>
       </div>
 
       {totalGiven > 0 && (
-        <div style={{ background: "linear-gradient(135deg, #0A2614, #1A3D14)", border: "2px solid #3CCE2A40", borderRadius: "14px", padding: "24px", display: "flex", alignItems: "center", gap: "20px" }}>
+        <div style={{ background: "linear-gradient(135deg, #E8F0E4, #D4EAD0)", border: "2px solid #2CB52040", borderRadius: "14px", padding: "24px", display: "flex", alignItems: "center", gap: "20px" }}>
           <div style={{ fontSize: "36px" }}>💚</div>
           <div>
             <div style={{ fontFamily: S, fontSize: "1.8rem", color: "#3CCE2A" }}>₱{totalGiven.toLocaleString()}</div>
-            <div style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Total contributed to CFS — thank you for your support!</div>
+            <div style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Total contributed to CFS — thank you for your support!</div>
           </div>
         </div>
       )}
 
       {display.length === 0 ? (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
           <div style={{ fontSize: "40px", marginBottom: "12px" }}>💚</div>
-          <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A50", letterSpacing: "2px", marginBottom: "16px" }}>NO DONATIONS YET</div>
-          <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", textDecoration: "none", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>DONATE NOW →</a>
+          <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "16px" }}>NO DONATIONS YET</div>
+          <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>DONATE NOW →</a>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -80,20 +80,20 @@ export default async function MyDonationsPage() {
             const fee        = intended != null ? total - intended : null;
             const refNo      = (d.id as string).slice(0, 8).toUpperCase();
             const tier       = intended != null ? getTier(intended) : getTier(total);
-            const statusColor = SC[d.status] ?? "#5A7A50";
+            const statusColor = SC[d.status] ?? "#5A7A60";
             const dt         = new Date(d.created_at);
             const dateStr    = dt.toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" });
             const timeStr    = dt.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", hour12: true });
 
             return (
-              <div key={d.id} style={{ background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
+              <div key={d.id} style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
                 {/* Header row */}
-                <div style={{ background: "#243520", padding: "10px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
+                <div style={{ background: "#F2F7F2", padding: "10px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <span style={{ fontFamily: R, fontSize: "10px", color: "#5A7A50", letterSpacing: "1.5px" }}>REF #</span>
-                    <span style={{ fontFamily: "monospace", fontSize: "12px", color: "#F0EAD6", letterSpacing: "2px", fontWeight: 700 }}>{refNo}</span>
+                    <span style={{ fontFamily: R, fontSize: "10px", color: "#5A7A60", letterSpacing: "1.5px" }}>REF #</span>
+                    <span style={{ fontFamily: "monospace", fontSize: "12px", color: "#1B3A2D", letterSpacing: "2px", fontWeight: 700 }}>{refNo}</span>
                     {d.is_anonymous && (
-                      <span style={{ fontFamily: R, fontSize: "9px", color: "#8AAA78", background: "#2C4820", borderRadius: "10px", padding: "2px 8px", letterSpacing: "1px" }}>ANON</span>
+                      <span style={{ fontFamily: R, fontSize: "9px", color: "#4A7C59", background: "#DDE8DD", borderRadius: "10px", padding: "2px 8px", letterSpacing: "1px" }}>ANON</span>
                     )}
                     {tier && (
                       <span style={{ fontFamily: R, fontSize: "9px", color: tier.color, background: tier.color + "18", border: `1px solid ${tier.color}40`, borderRadius: "10px", padding: "2px 8px", letterSpacing: "1px" }}>
@@ -102,7 +102,7 @@ export default async function MyDonationsPage() {
                     )}
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{dateStr} · {timeStr}</span>
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{dateStr} · {timeStr}</span>
                     <span style={{ fontFamily: R, fontSize: "10px", color: statusColor, background: statusColor + "20", borderRadius: "20px", padding: "3px 10px", letterSpacing: "1px" }}>
                       {(d.status ?? "pending").toUpperCase()}
                     </span>
@@ -116,28 +116,28 @@ export default async function MyDonationsPage() {
                     {intended != null ? (
                       <>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Donation amount</span>
-                          <span style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6" }}>₱{fmt(intended)}</span>
+                          <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Donation amount</span>
+                          <span style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D" }}>₱{fmt(intended)}</span>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Processing fee <span style={{ fontSize: "10px" }}>(GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span></span>
+                          <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Processing fee <span style={{ fontSize: "10px" }}>(GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span></span>
                           <span style={{ fontFamily: R, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee!)}</span>
                         </div>
-                        <div style={{ borderTop: "1px solid #2C4820", paddingTop: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px" }}>TOTAL CHARGED</span>
+                        <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <span style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px" }}>TOTAL CHARGED</span>
                           <span style={{ fontFamily: S, fontSize: "1.3rem", color: "#3CCE2A" }}>₱{fmt(total)}</span>
                         </div>
                       </>
                     ) : (
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <span style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px" }}>AMOUNT PAID</span>
+                        <span style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px" }}>AMOUNT PAID</span>
                         <span style={{ fontFamily: S, fontSize: "1.3rem", color: "#3CCE2A" }}>₱{fmt(total)}</span>
                       </div>
                     )}
                     {d.message && (
-                      <div style={{ marginTop: "4px", background: "#0F1A0B", border: "1px solid #2C4820", borderRadius: "8px", padding: "8px 12px" }}>
-                        <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px" }}>MESSAGE · </span>
-                        <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78", fontStyle: "italic" }}>"{d.message}"</span>
+                      <div style={{ marginTop: "4px", background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "8px", padding: "8px 12px" }}>
+                        <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px" }}>MESSAGE · </span>
+                        <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", fontStyle: "italic" }}>"{d.message}"</span>
                       </div>
                     )}
                   </div>
@@ -145,13 +145,13 @@ export default async function MyDonationsPage() {
                   {/* Right: payment info */}
                   <div style={{ display: "flex", flexDirection: "column", gap: "6px", alignItems: "flex-end", minWidth: "120px" }}>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "3px" }}>
-                      <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A50", letterSpacing: "1.5px" }}>PAYMENT METHOD</span>
-                      <span style={{ fontFamily: B, fontSize: "11px", color: "#8AAA78" }}>QR PH / Online</span>
+                      <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A60", letterSpacing: "1.5px" }}>PAYMENT METHOD</span>
+                      <span style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59" }}>QR PH / Online</span>
                     </div>
                     {d.paymongo_ref && (
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "3px" }}>
-                        <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A50", letterSpacing: "1.5px" }}>PAYMONGO REF</span>
-                        <span style={{ fontFamily: "monospace", fontSize: "10px", color: "#5A7A50" }}>
+                        <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A60", letterSpacing: "1.5px" }}>PAYMONGO REF</span>
+                        <span style={{ fontFamily: "monospace", fontSize: "10px", color: "#5A7A60" }}>
                           {(d.paymongo_ref as string).slice(-12)}
                         </span>
                       </div>
@@ -165,7 +165,7 @@ export default async function MyDonationsPage() {
       )}
 
       <div style={{ textAlign: "center" }}>
-        <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", textDecoration: "none", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "10px 24px", letterSpacing: "1.5px", display: "inline-block" }}>
+        <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 24px", letterSpacing: "1.5px", display: "inline-block" }}>
           DONATE AGAIN →
         </a>
       </div>

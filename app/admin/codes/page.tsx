@@ -51,16 +51,16 @@ export default function AdminCodesPage() {
     if(search&&!c.code.toLowerCase().includes(search.toLowerCase()))return false;
     return true;
   });
-  const inp={background:"#243520",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"10px 12px",color:"#F0EAD6",fontFamily:B,fontSize:"13px",outline:"none",width:"100%",boxSizing:"border-box" as const};
-  const SC={ACTIVE:"#3CCE2A",INACTIVE:"#5A7A50",EXPIRED:"#F04060","USED UP":"#F07228"};
-  const SB={ACTIVE:"#1A3D14",INACTIVE:"#243520",EXPIRED:"#3D0A18","USED UP":"#3D1A0A"};
+  const inp={background:"#F2F7F2",border:"1.5px solid #DDE8DD",borderRadius:"6px",padding:"10px 12px",color:"#1B3A2D",fontFamily:B,fontSize:"13px",outline:"none",width:"100%",boxSizing:"border-box" as const};
+  const SC={ACTIVE:"#3CCE2A",INACTIVE:"#5A7A60",EXPIRED:"#F04060","USED UP":"#F07228"};
+  const SB={ACTIVE:"#E8F0E4",INACTIVE:"#F2F7F2",EXPIRED:"#3D0A18","USED UP":"#3D1A0A"};
   return(
     <div style={{display:"flex",flexDirection:"column",gap:"20px"}}>
       <div>
-        <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#F0EAD6",letterSpacing:"3px",marginBottom:"4px"}}>PROMO CODES</h1>
-        <p style={{fontFamily:B,fontSize:"13px",color:"#8AAA78"}}>{codes.length} total · {codes.filter(c=>getStatus(c)==="ACTIVE").length} active</p>
+        <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#1B3A2D",letterSpacing:"3px",marginBottom:"4px"}}>PROMO CODES</h1>
+        <p style={{fontFamily:B,fontSize:"13px",color:"#4A7C59"}}>{codes.length} total · {codes.filter(c=>getStatus(c)==="ACTIVE").length} active</p>
       </div>
-      <div style={{background:"#1A2614",border:"2px solid #2C4820",borderRadius:"12px",padding:"20px"}}>
+      <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",padding:"20px"}}>
         <div style={{fontFamily:R,fontSize:"13px",color:"#F5C82A",letterSpacing:"2px",marginBottom:"14px"}}>GENERATE NEW CODE</div>
         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"14px"}}>
           <div style={{display:"flex",gap:"10px"}}>
@@ -78,13 +78,13 @@ export default function AdminCodesPage() {
           </div>
         </div>
         <div style={{marginBottom:"14px"}}>
-          <div style={{fontFamily:B,fontSize:"11px",color:"#5A7A50",letterSpacing:"1px",marginBottom:"8px"}}>RESTRICT TO PRODUCTS (leave empty = applies to all)</div>
+          <div style={{fontFamily:B,fontSize:"11px",color:"#5A7A60",letterSpacing:"1px",marginBottom:"8px"}}>RESTRICT TO PRODUCTS (leave empty = applies to all)</div>
           <div style={{display:"flex",flexWrap:"wrap",gap:"8px"}}>
             {products.map((p:any)=>{
               const selected=form.product_ids.includes(p.id);
               return(
                 <button key={p.id} onClick={()=>setForm(prev=>({...prev,product_ids:selected?prev.product_ids.filter((id:string)=>id!==p.id):[...prev.product_ids,p.id]}))}
-                  style={{fontFamily:B,fontSize:"11px",background:selected?"#1A3D14":"#243520",border:`1.5px solid ${selected?"#3CCE2A":"#2C4820"}`,borderRadius:"6px",padding:"6px 12px",color:selected?"#3CCE2A":"#8AAA78",cursor:"pointer"}}>
+                  style={{fontFamily:B,fontSize:"11px",background:selected?"#E8F0E4":"#F2F7F2",border:`1.5px solid ${selected?"#3CCE2A":"#DDE8DD"}`,borderRadius:"6px",padding:"6px 12px",color:selected?"#3CCE2A":"#4A7C59",cursor:"pointer"}}>
                   {selected?"✓ ":""}{p.name} — ₱{Number(p.price).toLocaleString()}
                 </button>
               );
@@ -92,35 +92,35 @@ export default function AdminCodesPage() {
             {products.length===0&&<span style={{fontFamily:B,fontSize:"12px",color:"#3A5A30"}}>No products found</span>}
           </div>
         </div>
-        <button onClick={saveCode} disabled={saving||!form.code} style={{fontFamily:R,fontSize:"12px",background:saving||!form.code?"#243520":"#F5C82A",color:saving||!form.code?"#5A7A50":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px 24px",cursor:"pointer",letterSpacing:"1.5px"}}>
+        <button onClick={saveCode} disabled={saving||!form.code} style={{fontFamily:R,fontSize:"12px",background:saving||!form.code?"#F2F7F2":"#F5C82A",color:saving||!form.code?"#5A7A60":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px 24px",cursor:"pointer",letterSpacing:"1.5px"}}>
           {saving?"SAVING...":"SAVE CODE ✦"}
         </button>
       </div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"10px"}}>
         <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
           {FILTERS.map(f=>(
-            <button key={f} onClick={()=>setFilter(f)} style={{fontFamily:R,fontSize:"11px",letterSpacing:"1px",background:filter===f?"#1A3D14":"transparent",border:`1.5px solid ${filter===f?"#3CCE2A":"#2C4820"}`,color:filter===f?"#3CCE2A":"#5A7A50",borderRadius:"20px",padding:"5px 14px",cursor:"pointer"}}>{f}</button>
+            <button key={f} onClick={()=>setFilter(f)} style={{fontFamily:R,fontSize:"11px",letterSpacing:"1px",background:filter===f?"#E8F0E4":"transparent",border:`1.5px solid ${filter===f?"#3CCE2A":"#DDE8DD"}`,color:filter===f?"#3CCE2A":"#5A7A60",borderRadius:"20px",padding:"5px 14px",cursor:"pointer"}}>{f}</button>
           ))}
         </div>
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search code..." style={{...inp,width:"220px"}}/>
       </div>
-      <div style={{background:"#1A2614",border:"2px solid #2C4820",borderRadius:"12px",overflow:"hidden"}}>
-        <div className="codes-table-header" style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",background:"#243520",borderBottom:"2px solid #2C4820",padding:"10px 18px",gap:"0"}}>
+      <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",overflow:"hidden"}}>
+        <div className="codes-table-header" style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",background:"#F2F7F2",borderBottom:"2px solid #DDE8DD",padding:"10px 18px",gap:"0"}}>
           {["CODE","DISCOUNT","USES","EXPIRES","STATUS","ACTIONS"].map(h=>(
-            <div key={h} style={{fontFamily:B,fontSize:"11px",color:"#5A7A50",letterSpacing:"1.5px"}}>{h}</div>
+            <div key={h} style={{fontFamily:B,fontSize:"11px",color:"#5A7A60",letterSpacing:"1.5px"}}>{h}</div>
           ))}
         </div>
         {filtered.length===0?(
-          <div style={{padding:"48px",textAlign:"center",fontFamily:R,fontSize:"13px",color:"#5A7A50",letterSpacing:"2px"}}>NO CODES FOUND</div>
+          <div style={{padding:"48px",textAlign:"center",fontFamily:R,fontSize:"13px",color:"#5A7A60",letterSpacing:"2px"}}>NO CODES FOUND</div>
         ):filtered.map(c=>{
           const status=getStatus(c);
           return(
-            <div key={c.id} className="codes-table-row" style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",padding:"12px 18px",borderBottom:"1px solid #2C4820",alignItems:"center",gap:"0"}}>
+            <div key={c.id} className="codes-table-row" style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",padding:"12px 18px",borderBottom:"1px solid #DDE8DD",alignItems:"center",gap:"0"}}>
               <div><div style={{fontFamily:R,fontSize:"15px",color:"#F5C82A",letterSpacing:"2px"}}>{c.code}</div>
-              <div style={{fontFamily:B,fontSize:"10px",color:"#5A7A50",marginTop:"2px"}}>{c.product_ids?.length>0?c.product_ids.map((id:string)=>{const p=products.find((pr:any)=>pr.id===id);return p?.name??id;}).join(", "):"All products"}</div></div>
+              <div style={{fontFamily:B,fontSize:"10px",color:"#5A7A60",marginTop:"2px"}}>{c.product_ids?.length>0?c.product_ids.map((id:string)=>{const p=products.find((pr:any)=>pr.id===id);return p?.name??id;}).join(", "):"All products"}</div></div>
               <div style={{fontFamily:R,fontSize:"13px",color:"#F07228"}}>{c.discount_type==="percent"?`${c.discount_value}% OFF`:`₱${c.discount_value} OFF`}</div>
-              <div style={{fontFamily:B,fontSize:"12px",color:"#8AAA78"}}>{c.used_count??0}/{c.max_uses??"∞"}</div>
-              <div style={{fontFamily:B,fontSize:"12px",color:"#8AAA78"}}>{c.expires_at?new Date(c.expires_at).toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"}):"Never"}</div>
+              <div style={{fontFamily:B,fontSize:"12px",color:"#4A7C59"}}>{c.used_count??0}/{c.max_uses??"∞"}</div>
+              <div style={{fontFamily:B,fontSize:"12px",color:"#4A7C59"}}>{c.expires_at?new Date(c.expires_at).toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"}):"Never"}</div>
               <div><span style={{fontFamily:R,fontSize:"10px",color:SC[status],background:SB[status],border:`1.5px solid ${SC[status]}40`,borderRadius:"20px",padding:"2px 10px",letterSpacing:"1px"}}>{status}</span></div>
               <div style={{display:"flex",gap:"6px"}}>
                 <button onClick={()=>toggleActive(c.id,c.is_active)} style={{background:"#3D3000",border:"1.5px solid #F5C82A",borderRadius:"6px",color:"#F5C82A",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>{c.is_active?"⏸":"▶"}</button>

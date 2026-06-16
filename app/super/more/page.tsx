@@ -25,8 +25,8 @@ export default function SuperMorePage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>MORE</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Additional super admin tools</p>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>MORE</h1>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Additional super admin tools</p>
       </div>
 
       {sections.map(section => (
@@ -37,7 +37,7 @@ export default function SuperMorePage() {
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
                 <div style={{ background: "#1A1400", border: `2px solid ${item.color}30`, borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
                   <span style={{ color: item.color, flexShrink: 0 }}>{item.icon}</span>
-                  <span style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>{item.label}</span>
+                  <span style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{item.label}</span>
                 </div>
               </Link>
             ))}

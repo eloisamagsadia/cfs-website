@@ -52,8 +52,8 @@ export default function AdminShippingPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>SHIPPING RATES</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Weight-based rates per region. Click a rate to edit.</p>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>SHIPPING RATES</h1>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Weight-based rates per region. Click a rate to edit.</p>
       </div>
 
       {loading ? (
@@ -66,27 +66,27 @@ export default function AdminShippingPage() {
             const color = REGION_COLORS[region];
             const regionRates = byRegion[region] ?? [];
             return (
-              <div key={region} style={{ background: "#1A2614", border: `2px solid ${color}40`, borderRadius: "12px", overflow: "hidden" }}>
+              <div key={region} style={{ background: "#FFFFFF", border: `2px solid ${color}40`, borderRadius: "12px", overflow: "hidden" }}>
                 <div style={{ background: color + "15", padding: "12px 16px", borderBottom: `1px solid ${color}30` }}>
                   <span style={{ fontFamily: R, fontSize: "12px", color, letterSpacing: "2px" }}>{region.toUpperCase()}</span>
                 </div>
                 <div style={{ padding: "4px 0" }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "8px 16px", borderBottom: "1px solid #2C4820" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "8px 16px", borderBottom: "1px solid #DDE8DD" }}>
                     {["FROM", "TO", "RATE"].map(h => (
-                      <span key={h} style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", letterSpacing: "1.5px" }}>{h}</span>
+                      <span key={h} style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", letterSpacing: "1.5px" }}>{h}</span>
                     ))}
                   </div>
                   {regionRates.map(r => (
                     <div key={r.id} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "10px 16px", borderBottom: "1px solid #1E3018", alignItems: "center" }}>
-                      <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>{r.weight_from}kg</span>
-                      <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>{r.weight_to}kg</span>
+                      <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>{r.weight_from}kg</span>
+                      <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>{r.weight_to}kg</span>
                       {editingId === r.id ? (
                         <div style={{ display: "flex", gap: "4px" }}>
                           <input
                             value={editValue}
                             onChange={e => setEditValue(e.target.value)}
                             type="number"
-                            style={{ width: "70px", background: "#243520", border: `1.5px solid ${color}`, borderRadius: "4px", padding: "4px 6px", color: "#F0EAD6", fontFamily: B, fontSize: "12px", outline: "none" }}
+                            style={{ width: "70px", background: "#F2F7F2", border: `1.5px solid ${color}`, borderRadius: "4px", padding: "4px 6px", color: "#1B3A2D", fontFamily: B, fontSize: "12px", outline: "none" }}
                             onKeyDown={e => { if (e.key === "Enter") saveRate(r.id); if (e.key === "Escape") setEditingId(null); }}
                             autoFocus
                           />

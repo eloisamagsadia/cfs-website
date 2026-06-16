@@ -151,18 +151,18 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
     <div>
       <div style={{ position: "relative", marginBottom: "14px" }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
-          <circle cx="11" cy="11" r="8" stroke="#5A7A50" strokeWidth="2" />
-          <path d="M21 21l-4.35-4.35" stroke="#5A7A50" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="11" cy="11" r="8" stroke="#5A7A60" strokeWidth="2" />
+          <path d="M21 21l-4.35-4.35" stroke="#5A7A60" strokeWidth="2" strokeLinecap="round" />
         </svg>
         <input
           className="cf-search-input"
           value={searchInput}
           onChange={e => handleSearchInput(e.target.value)}
           placeholder="Search posts..."
-          style={{ width: "100%", background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "12px", padding: "11px 40px 11px 38px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box", transition: "border-color 0.15s" }}
+          style={{ width: "100%", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "12px", padding: "11px 40px 11px 38px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box", transition: "border-color 0.15s" }}
         />
         {searchInput && (
-          <button onClick={clearSearch} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#5A7A50", cursor: "pointer", fontSize: "16px", padding: 0 }}>✕</button>
+          <button onClick={clearSearch} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "16px", padding: 0 }}>✕</button>
         )}
       </div>
 
@@ -175,7 +175,7 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
           </button>
         ))}
         </div>
-        <div style={{ position: "absolute", right: 0, top: 0, bottom: 4, width: "48px", background: "linear-gradient(to right, transparent, #0F1A0B)", pointerEvents: "none", borderRadius: "0 20px 20px 0" }} />
+        <div style={{ position: "absolute", right: 0, top: 0, bottom: 4, width: "48px", background: "linear-gradient(to right, transparent, #F7FAF5)", pointerEvents: "none", borderRadius: "0 20px 20px 0" }} />
       </div>
 
       {newPostAlert > 0 && (
@@ -192,17 +192,17 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
       <CreatePost categories={categories} currentUser={currentUser} onPostCreated={handlePostCreated} imagePostCount={imagePostCount} />
 
       {search && (
-        <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", marginBottom: "10px" }}>
+        <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", marginBottom: "10px" }}>
           {loading ? "Searching..." : `${posts.length} result${posts.length !== 1 ? "s" : ""} for "${search}"`}
         </div>
       )}
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "48px 24px", fontFamily: R, color: "#5A7A50", letterSpacing: "2px", fontSize: "12px" }}>LOADING...</div>
+        <div style={{ textAlign: "center", padding: "48px 24px", fontFamily: R, color: "#5A7A60", letterSpacing: "2px", fontSize: "12px" }}>LOADING...</div>
       ) : posts.length === 0 ? (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "16px", padding: "48px 24px", textAlign: "center" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", padding: "48px 24px", textAlign: "center" }}>
           <div style={{ fontSize: "36px", marginBottom: "12px" }}>💬</div>
-          <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A50", letterSpacing: "2px", marginBottom: "6px" }}>
+          <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "6px" }}>
             {search ? "NO POSTS FOUND" : "NO POSTS YET"}
           </div>
           <div style={{ fontFamily: B, fontSize: "13px", color: "#3A5A30" }}>

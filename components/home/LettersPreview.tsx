@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 const S = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
-const C = { forest:"#1A2E1A", sage:"#4A7C59", border:"#2C4820", muted:"#8AAA78", paper:"#FAFDF9" };
+const C = { forest:"#1A2E1A", sage:"#4A7C59", border:"#DDE8DD", muted:"#4A7C59", paper:"#FAFDF9" };
 
 function timeAgo(d) {
   const days = Math.floor((Date.now() - new Date(d).getTime()) / 86400000);

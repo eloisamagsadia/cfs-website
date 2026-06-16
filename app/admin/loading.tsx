@@ -21,14 +21,14 @@ export default function AdminLoading() {
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:"10px" }}>
             {Array.from({length:4}).map((_,i) => (
-              <div key={i} style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"10px", padding:"18px 16px", display:"flex", flexDirection:"column", gap:"8px" }}>
+              <div key={i} style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"10px", padding:"18px 16px", display:"flex", flexDirection:"column", gap:"8px" }}>
                 <Sk h="32px" w="50px"/>
                 <Sk h="12px" w="90px"/>
               </div>
             ))}
           </div>
           {Array.from({length:5}).map((_,i) => (
-            <div key={i} style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"14px 20px", display:"flex", gap:"12px", alignItems:"center" }}>
+            <div key={i} style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"14px 20px", display:"flex", gap:"12px", alignItems:"center" }}>
               <div style={{ flex:1, display:"flex", flexDirection:"column", gap:"7px" }}>
                 <Sk h="14px" w="50%"/>
                 <Sk h="12px" w="30%"/>

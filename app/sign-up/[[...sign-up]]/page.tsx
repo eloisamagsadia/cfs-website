@@ -9,7 +9,7 @@ export default function SignUpPage() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#0F1A0B",
+        backgroundColor: "#F7FAF5",
         padding: "24px",
         gap: "24px",
       }}
@@ -42,23 +42,23 @@ export default function SignUpPage() {
         appearance={{
           variables: {
             colorPrimary: "#3CCE2A",
-            colorBackground: "#1A2614",
-            colorText: "#F0EAD6",
+            colorBackground: "#FFFFFF",
+            colorText: "#1B3A2D",
             colorTextSecondary: "#9DB88A",
-            colorInputBackground: "#0F1A0B",
-            colorInputText: "#F0EAD6",
-            colorNeutral: "#2C4820",
+            colorInputBackground: "#F7FAF5",
+            colorInputText: "#1B3A2D",
+            colorNeutral: "#DDE8DD",
             borderRadius: "10px",
             fontFamily: "var(--font-barlow, Barlow, sans-serif)",
           },
           elements: {
             card: {
-              border: "1px solid #2C4820",
+              border: "1px solid #DDE8DD",
               boxShadow: "none",
-              backgroundColor: "#1A2614",
+              backgroundColor: "#FFFFFF",
             },
             headerTitle: {
-              color: "#F0EAD6",
+              color: "#1B3A2D",
               fontFamily: "var(--font-righteous, Righteous, sans-serif)",
             },
             headerSubtitle: {
@@ -66,7 +66,7 @@ export default function SignUpPage() {
             },
             formButtonPrimary: {
               backgroundColor: "#3CCE2A",
-              color: "#0F1A0B",
+              color: "#F7FAF5",
               fontWeight: "700",
               "&:hover": { backgroundColor: "#2db824" },
             },
@@ -74,23 +74,23 @@ export default function SignUpPage() {
               color: "#3CCE2A",
             },
             formFieldInput: {
-              borderColor: "#2C4820",
-              backgroundColor: "#0F1A0B",
-              color: "#F0EAD6",
+              borderColor: "#DDE8DD",
+              backgroundColor: "#F7FAF5",
+              color: "#1B3A2D",
             },
             formFieldLabel: {
               color: "#9DB88A",
             },
             dividerLine: {
-              backgroundColor: "#2C4820",
+              backgroundColor: "#DDE8DD",
             },
             dividerText: {
               color: "#9DB88A",
             },
             socialButtonsBlockButton: {
-              borderColor: "#2C4820",
-              backgroundColor: "#0F1A0B",
-              color: "#F0EAD6",
+              borderColor: "#DDE8DD",
+              backgroundColor: "#F7FAF5",
+              color: "#1B3A2D",
             },
           },
         }}

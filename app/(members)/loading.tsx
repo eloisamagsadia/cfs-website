@@ -4,7 +4,7 @@ function Skeleton({ w = "100%", h = "16px", radius = "6px" }: { w?: string; h?: 
   return (
     <div style={{
       width: w, height: h, borderRadius: radius,
-      background: "linear-gradient(90deg, #1A2614 25%, #243520 50%, #1A2614 75%)",
+      background: "linear-gradient(90deg, #E4EDE4 25%, #DDE8DD 50%, #E4EDE4 75%)",
       backgroundSize: "200% 100%",
       animation: "shimmer 1.5s infinite",
     }}/>
@@ -43,7 +43,7 @@ export default function MembersLoading() {
           {/* Stat cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", padding: "18px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div key={i} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "18px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
                 <Skeleton h="32px" w="50px" />
                 <Skeleton h="12px" w="90px" />
               </div>
@@ -53,7 +53,7 @@ export default function MembersLoading() {
           {/* Content rows */}
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "16px 20px", display: "flex", gap: "14px", alignItems: "center" }}>
+              <div key={i} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "16px 20px", display: "flex", gap: "14px", alignItems: "center" }}>
                 <Skeleton w="48px" h="48px" radius="50%" />
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "8px" }}>
                   <Skeleton h="14px" w="60%" />

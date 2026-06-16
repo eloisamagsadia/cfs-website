@@ -61,8 +61,8 @@ export default function AdminDonationsPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>DONATIONS</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>DONATIONS</h1>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
           {completedCount} completed · <span style={{ color: "#3CCE2A" }}>₱{totalCollected.toLocaleString()} collected</span>
         </p>
       </div>
@@ -70,14 +70,14 @@ export default function AdminDonationsPage() {
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
         {[
-          { label: "TOTAL DONATIONS", value: donations.length,                      color: "#F0EAD6" },
+          { label: "TOTAL DONATIONS", value: donations.length,                      color: "#1B3A2D" },
           { label: "COLLECTED",       value: `₱${totalCollected.toLocaleString()}`, color: "#3CCE2A" },
           { label: "PENDING",         value: pendingCount,                           color: "#F5C82A" },
           { label: "FAILED",          value: failedCount,                            color: "#F04060" },
         ].map(s => (
-          <div key={s.label} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", padding: "14px 18px" }}>
+          <div key={s.label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "14px 18px" }}>
             <div style={{ fontFamily: R, fontSize: "1.4rem", color: s.color }}>{s.value}</div>
-            <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", letterSpacing: "1px" }}>{s.label}</div>
+            <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", letterSpacing: "1px" }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -86,27 +86,27 @@ export default function AdminDonationsPage() {
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
         {["all", "completed", "pending", "failed"].map(f => (
           <button key={f} onClick={() => setFilter(f)}
-            style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${filter === f ? "#3CCE2A" : "#2C4820"}`, background: filter === f ? "#3CCE2A" : "transparent", color: filter === f ? "#080F06" : "#5A7A50", cursor: "pointer" }}>
+            style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${filter === f ? "#3CCE2A" : "#DDE8DD"}`, background: filter === f ? "#3CCE2A" : "transparent", color: filter === f ? "#080F06" : "#5A7A60", cursor: "pointer" }}>
             {f.toUpperCase()}
           </button>
         ))}
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search donor, message, ref..."
-          style={{ marginLeft: "auto", background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "7px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "12px", outline: "none", minWidth: "220px" }} />
+          style={{ marginLeft: "auto", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "7px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "12px", outline: "none", minWidth: "220px" }} />
       </div>
 
       {/* Table */}
       {loading ? (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: B, color: "#5A7A50" }}>Loading...</div>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: B, color: "#5A7A60" }}>Loading...</div>
       ) : filtered.length === 0 ? (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A50" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A60" }}>
           NO DONATIONS {filter !== "all" ? `WITH STATUS "${filter.toUpperCase()}"` : "YET"}
         </div>
       ) : (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "auto" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "auto" }}>
           {/* Header */}
-          <div style={{ background: "#243520", padding: "10px 20px", display: "grid", gridTemplateColumns: COLS, gap: "12px", minWidth: "900px" }}>
+          <div style={{ background: "#F2F7F2", padding: "10px 20px", display: "grid", gridTemplateColumns: COLS, gap: "12px", minWidth: "900px" }}>
             {HEADERS.map(h => (
-              <span key={h} style={{ fontFamily: R, fontSize: "10px", color: "#5A7A50", letterSpacing: "1.5px" }}>{h}</span>
+              <span key={h} style={{ fontFamily: R, fontSize: "10px", color: "#5A7A60", letterSpacing: "1.5px" }}>{h}</span>
             ))}
           </div>
 
@@ -115,18 +115,18 @@ export default function AdminDonationsPage() {
             const intended = d.donation_amount ? Number(d.donation_amount) : null;
             const fee      = intended != null ? total - intended : null;
             const tier     = getTier(intended ?? total);
-            const statusColor = SC[d.status] ?? "#5A7A50";
+            const statusColor = SC[d.status] ?? "#5A7A60";
             const dt       = new Date(d.created_at);
             const dateStr  = dt.toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" });
             const timeStr  = dt.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", hour12: true });
             const refNo    = (d.id as string).slice(0, 8).toUpperCase();
 
             return (
-              <div key={d.id} style={{ padding: "14px 20px", borderTop: "1px solid #2C4820", background: i % 2 === 0 ? "#1A2614" : "#162212", display: "grid", gridTemplateColumns: COLS, gap: "12px", alignItems: "center", minWidth: "900px" }}>
+              <div key={d.id} style={{ padding: "14px 20px", borderTop: "1px solid #DDE8DD", background: i % 2 === 0 ? "#FFFFFF" : "#EDF7ED", display: "grid", gridTemplateColumns: COLS, gap: "12px", alignItems: "center", minWidth: "900px" }}>
 
                 {/* DONOR */}
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#243520", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#F2F7F2", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                     {d.profiles?.avatar_url
                       ? <img src={d.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       : <span style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A" }}>{(d.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
@@ -134,11 +134,11 @@ export default function AdminDonationsPage() {
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
-                      <span style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6", whiteSpace: "nowrap" }}>
+                      <span style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", whiteSpace: "nowrap" }}>
                         {d.profiles?.display_name ?? "Member"}
                       </span>
                       {d.is_anonymous && (
-                        <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A50", background: "#2C4820", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>ANON</span>
+                        <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A60", background: "#DDE8DD", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>ANON</span>
                       )}
                       {tier && (
                         <span style={{ fontFamily: R, fontSize: "9px", color: tier.color, background: tier.color + "18", border: `1px solid ${tier.color}40`, borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>
@@ -147,10 +147,10 @@ export default function AdminDonationsPage() {
                       )}
                     </div>
                     {d.profiles?.email && (
-                      <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.profiles.email}</div>
+                      <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.profiles.email}</div>
                     )}
                     {d.message && (
-                      <div style={{ fontFamily: B, fontSize: "10px", color: "#8AAA78", fontStyle: "italic", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>"{d.message}"</div>
+                      <div style={{ fontFamily: B, fontSize: "10px", color: "#4A7C59", fontStyle: "italic", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>"{d.message}"</div>
                     )}
                   </div>
                 </div>
@@ -158,9 +158,9 @@ export default function AdminDonationsPage() {
                 {/* DONATED (intended) */}
                 <div>
                   {intended != null ? (
-                    <span style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6" }}>₱{fmt(intended)}</span>
+                    <span style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D" }}>₱{fmt(intended)}</span>
                   ) : (
-                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>—</span>
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>—</span>
                   )}
                 </div>
 
@@ -169,7 +169,7 @@ export default function AdminDonationsPage() {
                   {fee != null ? (
                     <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee)}</span>
                   ) : (
-                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>—</span>
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>—</span>
                   )}
                 </div>
 
@@ -183,15 +183,15 @@ export default function AdminDonationsPage() {
 
                 {/* DATE & TIME */}
                 <div>
-                  <div style={{ fontFamily: B, fontSize: "11px", color: "#8AAA78" }}>{dateStr}</div>
-                  <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>{timeStr}</div>
+                  <div style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59" }}>{dateStr}</div>
+                  <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60" }}>{timeStr}</div>
                 </div>
 
                 {/* REF / PAYMONGO */}
                 <div>
-                  <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#F0EAD6", letterSpacing: "1px" }}>#{refNo}</div>
+                  <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#1B3A2D", letterSpacing: "1px" }}>#{refNo}</div>
                   {d.paymongo_ref && (
-                    <div style={{ fontFamily: "monospace", fontSize: "9px", color: "#5A7A50", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    <div style={{ fontFamily: "monospace", fontSize: "9px", color: "#5A7A60", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       {d.paymongo_ref}
                     </div>
                   )}

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
-const PC: any = { paid: "#3CCE2A", pending: "#F5C82A", failed: "#F04060", free: "#8EE440", cancelled: "#5A7A50" };
+const PC: any = { paid: "#3CCE2A", pending: "#F5C82A", failed: "#F04060", free: "#8EE440", cancelled: "#5A7A60" };
 const OC: any = { processing: "#F07228", shipped: "#8EE440", delivered: "#3CCE2A", pending: "#F5C82A", cancelled: "#F04060" };
 
 export default function AdminOrdersPage() {
@@ -45,10 +45,10 @@ export default function AdminOrdersPage() {
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "4px" }}>
-          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px" }}>ORDERS</h1>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px" }}>ORDERS</h1>
           <button onClick={() => router.push("/admin/orders/create")} style={{ fontFamily: R, fontSize: "11px", background: "#F07228", color: "#080F06", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>+ ADD ORDER</button>
         </div>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
           {orders.length} orders · <span style={{ color: "#F07228" }}>₱{totalRevenue.toLocaleString()} revenue</span>
         </p>
       </div>
@@ -56,14 +56,14 @@ export default function AdminOrdersPage() {
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
         {[
-          { label: "TOTAL ORDERS", value: orders.length, color: "#F0EAD6" },
+          { label: "TOTAL ORDERS", value: orders.length, color: "#1B3A2D" },
           { label: "REVENUE", value: `₱${totalRevenue.toLocaleString()}`, color: "#F07228" },
           { label: "PENDING PAYMENT", value: pendingCount, color: "#F5C82A" },
           { label: "TO PROCESS", value: processingCount, color: "#3CCE2A" },
         ].map(s => (
-          <div key={s.label} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", padding: "14px 18px" }}>
+          <div key={s.label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "14px 18px" }}>
             <div style={{ fontFamily: R, fontSize: "1.4rem", color: s.color }}>{s.value}</div>
-            <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", letterSpacing: "1px" }}>{s.label}</div>
+            <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", letterSpacing: "1px" }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -71,7 +71,7 @@ export default function AdminOrdersPage() {
       {/* Filters */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
         {FILTERS.map(f => (
-          <button key={f.key} onClick={() => setFilter(f.key)} style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${filter === f.key ? "#F07228" : "#2C4820"}`, background: filter === f.key ? "#F07228" : "transparent", color: filter === f.key ? "#080F06" : "#5A7A50", cursor: "pointer" }}>
+          <button key={f.key} onClick={() => setFilter(f.key)} style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${filter === f.key ? "#F07228" : "#DDE8DD"}`, background: filter === f.key ? "#F07228" : "transparent", color: filter === f.key ? "#080F06" : "#5A7A60", cursor: "pointer" }}>
             {f.label}
           </button>
         ))}
@@ -85,32 +85,32 @@ export default function AdminOrdersPage() {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           {filtered.map((o: any) => (
-            <div key={o.id} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "14px 20px", display: "flex", gap: "16px", alignItems: "center" }}>
+            <div key={o.id} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "14px 20px", display: "flex", gap: "16px", alignItems: "center" }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: R, fontSize: "12px", color: "#F0EAD6", letterSpacing: "1px", marginBottom: "4px" }}>
-                  #{o.id.slice(0, 8).toUpperCase()} · <span style={{ color: "#8AAA78" }}>{o.profiles?.display_name ?? "Member"}</span>
+                <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "1px", marginBottom: "4px" }}>
+                  #{o.id.slice(0, 8).toUpperCase()} · <span style={{ color: "#4A7C59" }}>{o.profiles?.display_name ?? "Member"}</span>
                 </div>
-                <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>
+                <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>
                   {new Date(o.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}
                   {o.shipping_address?.city && ` · ${o.shipping_address.city}`}
                 </div>
               </div>
               <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
                 <span style={{ fontFamily: R, fontSize: "13px", color: "#F07228" }}>₱{Number(o.total).toLocaleString()}</span>
-                <span style={{ fontFamily: R, fontSize: "10px", color: PC[o.payment_status] ?? "#5A7A50", background: (PC[o.payment_status] ?? "#5A7A50") + "20", border: `1px solid ${(PC[o.payment_status] ?? "#5A7A50")}40`, borderRadius: "20px", padding: "2px 10px", letterSpacing: "1px" }}>
+                <span style={{ fontFamily: R, fontSize: "10px", color: PC[o.payment_status] ?? "#5A7A60", background: (PC[o.payment_status] ?? "#5A7A60") + "20", border: `1px solid ${(PC[o.payment_status] ?? "#5A7A60")}40`, borderRadius: "20px", padding: "2px 10px", letterSpacing: "1px" }}>
                   {o.payment_status.toUpperCase()}
                 </span>
-                <span style={{ fontFamily: R, fontSize: "10px", color: OC[o.order_status] ?? "#5A7A50", background: (OC[o.order_status] ?? "#5A7A50") + "20", border: `1px solid ${(OC[o.order_status] ?? "#5A7A50")}40`, borderRadius: "20px", padding: "2px 10px", letterSpacing: "1px" }}>
+                <span style={{ fontFamily: R, fontSize: "10px", color: OC[o.order_status] ?? "#5A7A60", background: (OC[o.order_status] ?? "#5A7A60") + "20", border: `1px solid ${(OC[o.order_status] ?? "#5A7A60")}40`, borderRadius: "20px", padding: "2px 10px", letterSpacing: "1px" }}>
                   {(o.order_status ?? "pending").toUpperCase()}
                 </span>
-                <Link href={`/admin/orders/${o.id}`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#8AAA78", border: "1px solid #2C4820", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
+                <Link href={`/admin/orders/${o.id}`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
                   VIEW →
                 </Link>
               </div>
             </div>
           ))}
           {!filtered.length && (
-            <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A50" }}>
+            <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A60" }}>
               NO ORDERS {filter !== "all" ? `WITH STATUS "${filter.toUpperCase()}"` : "YET"}
             </div>
           )}

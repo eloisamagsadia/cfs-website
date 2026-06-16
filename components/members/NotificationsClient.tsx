@@ -116,18 +116,18 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
     <div style={{display:"flex",flexDirection:"column",gap:"20px"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:"12px"}}>
         <div>
-          <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#F0EAD6",letterSpacing:"3px",marginBottom:"4px"}}>NOTIFICATIONS</h1>
-          <p style={{fontFamily:B,fontSize:"13px",color:"#8AAA78"}}>
+          <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#1B3A2D",letterSpacing:"3px",marginBottom:"4px"}}>NOTIFICATIONS</h1>
+          <p style={{fontFamily:B,fontSize:"13px",color:"#4A7C59"}}>
             {unreadCount>0?<span style={{color:"#F04060"}}>{unreadCount} unread</span>:"All caught up!"}
             {" · "}{notifications.length} total
           </p>
         </div>
         <div style={{display:"flex",gap:"8px",flexWrap:"wrap",alignItems:"center"}}>
-          <button onClick={toggleSound} style={{display:"flex",alignItems:"center",gap:"5px",fontFamily:R,fontSize:"11px",letterSpacing:"1px",background:soundOn?"#1A3D14":"transparent",color:soundOn?"#3CCE2A":"#5A7A50",border:`1.5px solid ${soundOn?"#3CCE2A":"#2C4820"}`,borderRadius:"20px",padding:"6px 12px",cursor:"pointer"}}>
+          <button onClick={toggleSound} style={{display:"flex",alignItems:"center",gap:"5px",fontFamily:R,fontSize:"11px",letterSpacing:"1px",background:soundOn?"#E8F0E4":"transparent",color:soundOn?"#3CCE2A":"#5A7A60",border:`1.5px solid ${soundOn?"#3CCE2A":"#DDE8DD"}`,borderRadius:"20px",padding:"6px 12px",cursor:"pointer"}}>
             <span style={{fontSize:"13px"}}>{soundOn?"🔔":"🔕"}</span>{soundOn?"SOUND ON":"SOUND OFF"}
           </button>
-          {unreadCount>0&&<button onClick={markAllRead} disabled={markingAll} style={{fontFamily:R,fontSize:"11px",color:"#3CCE2A",background:"transparent",border:"1.5px solid #2C4820",borderRadius:"20px",padding:"6px 14px",cursor:"pointer",letterSpacing:"1px"}}>{markingAll?"...":"MARK ALL READ ✓"}</button>}
-          {notifications.some(n=>n.is_read)&&<button onClick={clearRead} style={{fontFamily:R,fontSize:"11px",color:"#5A7A50",background:"transparent",border:"1.5px solid #2C4820",borderRadius:"20px",padding:"6px 14px",cursor:"pointer",letterSpacing:"1px"}}>CLEAR READ</button>}
+          {unreadCount>0&&<button onClick={markAllRead} disabled={markingAll} style={{fontFamily:R,fontSize:"11px",color:"#3CCE2A",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"20px",padding:"6px 14px",cursor:"pointer",letterSpacing:"1px"}}>{markingAll?"...":"MARK ALL READ ✓"}</button>}
+          {notifications.some(n=>n.is_read)&&<button onClick={clearRead} style={{fontFamily:R,fontSize:"11px",color:"#5A7A60",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"20px",padding:"6px 14px",cursor:"pointer",letterSpacing:"1px"}}>CLEAR READ</button>}
         </div>
       </div>
       <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
@@ -135,17 +135,17 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
           const count=f==="ALL"?notifications.filter(n=>!n.is_read).length:notifications.filter(n=>!n.is_read&&TC[n.type]?.label===f).length;
           const isActive=filter===f;
           return(
-            <button key={f} onClick={()=>setFilter(f)} style={{fontFamily:R,fontSize:"10px",letterSpacing:"1px",background:isActive?"#1A3D14":"transparent",border:`1.5px solid ${isActive?"#3CCE2A":"#2C4820"}`,color:isActive?"#3CCE2A":"#5A7A50",borderRadius:"20px",padding:"5px 12px",cursor:"pointer",display:"flex",alignItems:"center",gap:"4px"}}>
+            <button key={f} onClick={()=>setFilter(f)} style={{fontFamily:R,fontSize:"10px",letterSpacing:"1px",background:isActive?"#E8F0E4":"transparent",border:`1.5px solid ${isActive?"#3CCE2A":"#DDE8DD"}`,color:isActive?"#3CCE2A":"#5A7A60",borderRadius:"20px",padding:"5px 12px",cursor:"pointer",display:"flex",alignItems:"center",gap:"4px"}}>
               {f.toUpperCase()}
-              {count>0&&<span style={{background:"#F04060",color:"#F0EAD6",borderRadius:"20px",padding:"0 5px",fontSize:"9px",fontFamily:R,lineHeight:"16px",display:"inline-block"}}>{count}</span>}
+              {count>0&&<span style={{background:"#F04060",color:"#1B3A2D",borderRadius:"20px",padding:"0 5px",fontSize:"9px",fontFamily:R,lineHeight:"16px",display:"inline-block"}}>{count}</span>}
             </button>
           );
         })}
       </div>
       {filtered.length===0?(
-        <div style={{background:"#1A2614",border:"2px solid #2C4820",borderRadius:"12px",padding:"56px 24px",textAlign:"center"}}>
+        <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",padding:"56px 24px",textAlign:"center"}}>
           <div style={{fontSize:"48px",marginBottom:"14px"}}>🔔</div>
-          <div style={{fontFamily:R,fontSize:"14px",color:"#5A7A50",letterSpacing:"2px",marginBottom:"8px"}}>NO NOTIFICATIONS</div>
+          <div style={{fontFamily:R,fontSize:"14px",color:"#5A7A60",letterSpacing:"2px",marginBottom:"8px"}}>NO NOTIFICATIONS</div>
           <div style={{fontFamily:B,fontSize:"13px",color:"#3A5030"}}>{filter==="ALL"?"You're all caught up!":` No ${filter.toLowerCase()} notifications`}</div>
         </div>
       ):(
@@ -156,25 +156,25 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
             return(
               <div key={group}>
                 <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"10px"}}>
-                  <span style={{fontFamily:R,fontSize:"11px",color:"#5A7A50",letterSpacing:"2px"}}>{group}</span>
-                  {gu>0&&<span style={{background:"#F04060",color:"#F0EAD6",borderRadius:"20px",padding:"1px 8px",fontSize:"10px",fontFamily:R}}>{gu} unread</span>}
-                  <div style={{flex:1,height:"1px",background:"#2C4820"}}/>
+                  <span style={{fontFamily:R,fontSize:"11px",color:"#5A7A60",letterSpacing:"2px"}}>{group}</span>
+                  {gu>0&&<span style={{background:"#F04060",color:"#1B3A2D",borderRadius:"20px",padding:"1px 8px",fontSize:"10px",fontFamily:R}}>{gu} unread</span>}
+                  <div style={{flex:1,height:"1px",background:"#DDE8DD"}}/>
                 </div>
                 <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
                   {gn.map((notif:any)=>{
-                    const cfg=TC[notif.type]??{color:"#5A7A50",label:"General"};
+                    const cfg=TC[notif.type]??{color:"#5A7A60",label:"General"};
                     const icon=ICONS[notif.type]??ICONS.default;
                     return(
-                      <div key={notif.id} style={{background:notif.is_read?"#1A2614":"#1E3018",border:`2px solid ${notif.is_read?"#2C4820":cfg.color+"60"}`,borderRadius:"10px",padding:"12px 16px",display:"flex",gap:"12px",alignItems:"flex-start",opacity:notif.is_read?0.75:1,transition:"all 0.2s"}}>
+                      <div key={notif.id} style={{background:notif.is_read?"#FFFFFF":"#1E3018",border:`2px solid ${notif.is_read?"#DDE8DD":cfg.color+"60"}`,borderRadius:"10px",padding:"12px 16px",display:"flex",gap:"12px",alignItems:"flex-start",opacity:notif.is_read?0.75:1,transition:"all 0.2s"}}>
                         <div style={{width:"36px",height:"36px",borderRadius:"8px",background:cfg.color+"20",border:`1.5px solid ${cfg.color}40`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:cfg.color}}>{icon}</div>
                         <div style={{flex:1,minWidth:0}}>
                           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"8px",marginBottom:"3px"}}>
-                            <span style={{fontFamily:R,fontSize:"12px",color:notif.is_read?"#5A7A50":cfg.color,letterSpacing:"1px"}}>{notif.title}</span>
-                            <span style={{fontFamily:B,fontSize:"11px",color:"#5A7A50",flexShrink:0}}>{timeAgo(notif.created_at)}</span>
+                            <span style={{fontFamily:R,fontSize:"12px",color:notif.is_read?"#5A7A60":cfg.color,letterSpacing:"1px"}}>{notif.title}</span>
+                            <span style={{fontFamily:B,fontSize:"11px",color:"#5A7A60",flexShrink:0}}>{timeAgo(notif.created_at)}</span>
                           </div>
-                          <div style={{fontFamily:B,fontSize:"13px",color:notif.is_read?"#5A7A50":"#C8C0A8",lineHeight:1.6}}>{notif.message}</div>
+                          <div style={{fontFamily:B,fontSize:"13px",color:notif.is_read?"#5A7A60":"#5A7A60",lineHeight:1.6}}>{notif.message}</div>
                           {notif.link&&<button onClick={()=>handleView(notif)} style={{fontFamily:R,fontSize:"10px",color:cfg.color,background:"transparent",border:"none",cursor:"pointer",letterSpacing:"1.5px",padding:"0",marginTop:"6px"}}>VIEW →</button>}
-                          {!notif.is_read&&!notif.link&&<button onClick={()=>markRead(notif.id)} style={{fontFamily:B,fontSize:"11px",color:"#5A7A50",background:"transparent",border:"none",cursor:"pointer",padding:"0",marginTop:"4px"}}>mark as read</button>}
+                          {!notif.is_read&&!notif.link&&<button onClick={()=>markRead(notif.id)} style={{fontFamily:B,fontSize:"11px",color:"#5A7A60",background:"transparent",border:"none",cursor:"pointer",padding:"0",marginTop:"4px"}}>mark as read</button>}
                         </div>
                         <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"8px",flexShrink:0}}>
                           {!notif.is_read&&<div style={{width:"7px",height:"7px",borderRadius:"50%",background:cfg.color}}/>}

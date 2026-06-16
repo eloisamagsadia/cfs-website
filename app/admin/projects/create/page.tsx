@@ -28,22 +28,22 @@ export default function AdminProjectCreatePage() {
     finally { setSaving(false); }
   };
 
-  const inputStyle = { width: "100%", background: "#0F1A0C", border: "2px solid #2C4820", borderRadius: "8px", padding: "10px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
-  const labelStyle = { fontFamily: B, fontSize: "12px", color: "#8AAA78", letterSpacing: "1px", marginBottom: "6px", display: "block" };
+  const inputStyle = { width: "100%", background: "#0F1A0C", border: "2px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
+  const labelStyle = { fontFamily: B, fontSize: "12px", color: "#4A7C59", letterSpacing: "1px", marginBottom: "6px", display: "block" };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "720px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>ADD PROJECT</h1>
-          <p style={{ fontFamily: B, fontSize: "13px", color: "#5A7A50" }}>Create a new CFS fan project</p>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>ADD PROJECT</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>Create a new CFS fan project</p>
         </div>
-        <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
+        <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
       </div>
 
       {error && <div style={{ background: "#2C1010", border: "2px solid #F04060", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#F04060" }}>{error}</div>}
 
-      <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
+      <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
         <div><label style={labelStyle}>PROJECT TITLE *</label><input style={inputStyle} placeholder="e.g. Colet Birthday Project 2026" value={form.title} onChange={e => set("title", e.target.value)} /></div>
         <div><label style={labelStyle}>DESCRIPTION</label><textarea style={{ ...inputStyle, minHeight: "80px", resize: "vertical" }} placeholder="What is this project about?" value={form.description} onChange={e => set("description", e.target.value)} /></div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
@@ -60,7 +60,7 @@ export default function AdminProjectCreatePage() {
           <div>
             <label style={labelStyle}>PROGRESS ({form.progress_percent}%)</label>
             <input type="range" min="0" max="100" value={form.progress_percent} onChange={e => set("progress_percent", e.target.value)} style={{ width: "100%", accentColor: "#3CCE2A" }} />
-            <div style={{ display: "flex", justifyContent: "space-between", fontFamily: B, fontSize: "11px", color: "#5A7A50", marginTop: "4px" }}><span>0%</span><span style={{ color: "#3CCE2A" }}>{form.progress_percent}%</span><span>100%</span></div>
+            <div style={{ display: "flex", justifyContent: "space-between", fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "4px" }}><span>0%</span><span style={{ color: "#3CCE2A" }}>{form.progress_percent}%</span><span>100%</span></div>
           </div>
         )}
       </div>
@@ -68,9 +68,9 @@ export default function AdminProjectCreatePage() {
       <div style={{ display: "flex", gap: "12px" }}>
         <button onClick={handleSubmit} disabled={saving} style={{ position: "relative", display: "inline-block", cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1 }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#F0EAD6", padding: "10px 28px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>{saving ? "SAVING..." : "CREATE PROJECT"}</span>
+          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#F07228", color: "#1B3A2D", padding: "10px 28px", border: "2px solid #080F06", borderRadius: "6px", letterSpacing: "1.5px" }}>{saving ? "SAVING..." : "CREATE PROJECT"}</span>
         </button>
-        <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "none", border: "2px solid #2C4820", borderRadius: "6px", color: "#5A7A50", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
+        <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "none", border: "2px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
       </div>
     </div>
   );

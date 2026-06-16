@@ -138,7 +138,7 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
           <path d="M8 16C8 17.1 8.9 18 10 18C11.1 18 12 17.1 12 16" stroke={count > 0 ? "#1B3A2D" : "#7A8E7A"} strokeWidth="1.5" fill="none" strokeLinecap="round"/>
         </svg>
         {count > 0 && (
-          <span style={{ position: "absolute", top: "0px", right: "0px", background: "#F04060", border: "1.5px solid #fff", borderRadius: "20px", minWidth: "16px", height: "16px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", color: "#F0EAD6", padding: "0 3px" }}>
+          <span style={{ position: "absolute", top: "0px", right: "0px", background: "#F04060", border: "1.5px solid #fff", borderRadius: "20px", minWidth: "16px", height: "16px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", color: "#1B3A2D", padding: "0 3px" }}>
             {count > 99 ? "99+" : count}
           </span>
         )}
@@ -197,7 +197,7 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#7A8E7A" strokeWidth="2" strokeLinecap="round"><polyline points={collapsedGroups.has(group) ? "6 9 12 15 18 9" : "18 15 12 9 6 15"}/></svg>
                   </div>
                   {!collapsedGroups.has(group) && groups[group].map(notif => {
-                    const cfg = TC[notif.type] ?? { color: "#5A7A50" };
+                    const cfg = TC[notif.type] ?? { color: "#5A7A60" };
                     const icon = ICONS[notif.type] ?? ICONS.default;
                     return (
                       <div key={notif.id} style={{ position: "relative", overflow: "hidden" }}>

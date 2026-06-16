@@ -7,14 +7,14 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const TYPE_CONFIG: Record<string, { icon: string; color: string; bg: string }> = {
-  event_reminder:    { icon: "🎫", color: "#3CCE2A", bg: "#1A3D14" },
+  event_reminder:    { icon: "🎫", color: "#3CCE2A", bg: "#E8F0E4" },
   order_update:      { icon: "🛍",  color: "#F07228", bg: "#3D1A0A" },
   community_reply:   { icon: "💬", color: "#F5C82A", bg: "#3D3000" },
   community_mention: { icon: "📢", color: "#F5C82A", bg: "#3D3000" },
   badge_earned:      { icon: "⭐", color: "#8EE440", bg: "#1E3010" },
-  new_follower:      { icon: "👤", color: "#3CCE2A", bg: "#1A3D14" },
+  new_follower:      { icon: "👤", color: "#3CCE2A", bg: "#E8F0E4" },
   donation_ack:      { icon: "♥",  color: "#F04060", bg: "#3D0A18" },
-  new_report:        { icon: "📋", color: "#3CCE2A", bg: "#1A3D14" },
+  new_report:        { icon: "📋", color: "#3CCE2A", bg: "#E8F0E4" },
   announcement:      { icon: "📣", color: "#F07228", bg: "#3D1A0A" },
 };
 
@@ -108,11 +108,11 @@ export default function ToastNotifications() {
         gap: "8px", pointerEvents: "none",
       }}>
         {toasts.map((toast) => {
-          const cfg = TYPE_CONFIG[toast.type] ?? { icon: "🔔", color: "#8AAA78", bg: "#1A2614" };
+          const cfg = TYPE_CONFIG[toast.type] ?? { icon: "🔔", color: "#4A7C59", bg: "#FFFFFF" };
           return (
             <div key={toast.id} style={{
               width: "320px",
-              background: "#0F1A0B",
+              background: "#F7FAF5",
               border: `2px solid ${cfg.color}`,
               borderRadius: "12px",
               overflow: "hidden",
@@ -145,7 +145,7 @@ export default function ToastNotifications() {
                     {toast.title}
                   </div>
                   <div style={{
-                    fontFamily: B, fontSize: "12px", color: "#8AAA78",
+                    fontFamily: B, fontSize: "12px", color: "#4A7C59",
                     lineHeight: 1.5, marginBottom: toast.link ? "6px" : 0,
                     overflow: "hidden", display: "-webkit-box",
                     WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const,
@@ -172,7 +172,7 @@ export default function ToastNotifications() {
                   onClick={() => dismiss(toast.id)}
                   style={{
                     background: "transparent", border: "none",
-                    color: "#5A7A50", cursor: "pointer",
+                    color: "#5A7A60", cursor: "pointer",
                     fontSize: "14px", padding: "0", flexShrink: 0,
                     lineHeight: 1,
                   }}
@@ -182,7 +182,7 @@ export default function ToastNotifications() {
               </div>
 
               {/* Auto-dismiss progress bar */}
-              <div style={{ height: "2px", background: "#2C4820", position: "relative", overflow: "hidden" }}>
+              <div style={{ height: "2px", background: "#DDE8DD", position: "relative", overflow: "hidden" }}>
                 <div style={{
                   position: "absolute", inset: 0, background: cfg.color,
                   transformOrigin: "left",

@@ -38,11 +38,11 @@ export default function MemberDirectory({ members, currentUserId, followingIds: 
     <div style={{ display:"flex", flexDirection:"column", gap:"20px" }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", flexWrap:"wrap", gap:"12px" }}>
         <div>
-          <h1 style={{ fontFamily:R, fontSize:"1.6rem", color:"#F0EAD6", letterSpacing:"3px", marginBottom:"4px" }}>MEMBER DIRECTORY</h1>
-          <p style={{ fontFamily:B, fontSize:"13px", color:"#8AAA78" }}>{filtered.length} members</p>
+          <h1 style={{ fontFamily:R, fontSize:"1.6rem", color:"#1B3A2D", letterSpacing:"3px", marginBottom:"4px" }}>MEMBER DIRECTORY</h1>
+          <p style={{ fontFamily:B, fontSize:"13px", color:"#4A7C59" }}>{filtered.length} members</p>
         </div>
-        <Link href="/members/community" style={{ fontFamily:R, fontSize:"11px", color:"#5A7A50", textDecoration:"none", letterSpacing:"1px", display:"flex", alignItems:"center", gap:"6px" }}>
-          <svg width="6" height="10" viewBox="0 0 6 10"><path d="M5 1L1 5L5 9" stroke="#5A7A50" strokeWidth="1.5" fill="none" strokeLinecap="round"/></svg>
+        <Link href="/members/community" style={{ fontFamily:R, fontSize:"11px", color:"#5A7A60", textDecoration:"none", letterSpacing:"1px", display:"flex", alignItems:"center", gap:"6px" }}>
+          <svg width="6" height="10" viewBox="0 0 6 10"><path d="M5 1L1 5L5 9" stroke="#5A7A60" strokeWidth="1.5" fill="none" strokeLinecap="round"/></svg>
           BACK TO FEED
         </Link>
       </div>
@@ -51,7 +51,7 @@ export default function MemberDirectory({ members, currentUserId, followingIds: 
       <input
         value={search} onChange={e => setSearch(e.target.value)}
         placeholder="Search members..."
-        style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"8px", padding:"10px 16px", color:"#F0EAD6", fontFamily:B, fontSize:"14px", outline:"none", width:"100%", boxSizing:"border-box" }}
+        style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"8px", padding:"10px 16px", color:"#1B3A2D", fontFamily:B, fontSize:"14px", outline:"none", width:"100%", boxSizing:"border-box" }}
       />
 
       {/* Members grid */}
@@ -60,23 +60,23 @@ export default function MemberDirectory({ members, currentUserId, followingIds: 
           const isMe = member.id === currentUserId;
           const isFollowing = following.has(member.id);
           return (
-            <div key={member.id} style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"16px", textAlign:"center" }} className="card-hover">
+            <div key={member.id} style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"16px", textAlign:"center" }} className="card-hover">
               {/* Avatar */}
-              <div style={{ width:"56px", height:"56px", borderRadius:"50%", background:"#1A3D14", border:"2px solid #3CCE2A", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", margin:"0 auto 10px" }}>
+              <div style={{ width:"56px", height:"56px", borderRadius:"50%", background:"#E8F0E4", border:"2px solid #3CCE2A", display:"flex", alignItems:"center", justifyContent:"center", overflow:"hidden", margin:"0 auto 10px" }}>
                 {member.avatar_url
                   ? <img src={member.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
                   : <span style={{ fontFamily:R, fontSize:"22px", color:"#3CCE2A" }}>{(member.display_name ?? "M")[0].toUpperCase()}</span>
                 }
               </div>
-              <div style={{ fontFamily:R, fontSize:"13px", color:"#F0EAD6", letterSpacing:"1px", marginBottom:"4px" }}>
+              <div style={{ fontFamily:R, fontSize:"13px", color:"#1B3A2D", letterSpacing:"1px", marginBottom:"4px" }}>
 <Link href={`/members/community/members/${member.id}`} style={{ textDecoration:"none", color:"inherit" }}>{member.display_name ?? "Member"}</Link>
               </div>
               {member.bio && (
-                <div style={{ fontFamily:B, fontSize:"11px", color:"#5A7A50", lineHeight:1.5, marginBottom:"10px", overflow:"hidden", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" as const }}>
+                <div style={{ fontFamily:B, fontSize:"11px", color:"#5A7A60", lineHeight:1.5, marginBottom:"10px", overflow:"hidden", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" as const }}>
                   {member.bio}
                 </div>
               )}
-              <div style={{ fontFamily:R, fontSize:"10px", color:"#5A7A50", letterSpacing:"1px", marginBottom:"10px" }}>
+              <div style={{ fontFamily:R, fontSize:"10px", color:"#5A7A60", letterSpacing:"1px", marginBottom:"10px" }}>
                 SINCE {new Date(member.created_at).toLocaleDateString("en-PH",{month:"short",year:"numeric"})}
               </div>
               {!isMe && (
@@ -95,7 +95,7 @@ export default function MemberDirectory({ members, currentUserId, followingIds: 
                 </button>
               )}
               {isMe && (
-                <span style={{ fontFamily:R, fontSize:"10px", color:"#5A7A50", letterSpacing:"1px" }}>YOU</span>
+                <span style={{ fontFamily:R, fontSize:"10px", color:"#5A7A60", letterSpacing:"1px" }}>YOU</span>
               )}
             </div>
           );

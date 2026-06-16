@@ -58,9 +58,9 @@ export default async function ProductDetailPage({ params }: { params: { category
 
         {/* Breadcrumb */}
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px", flexWrap: "wrap" }}>
-          <Link href="/shop" style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", textDecoration: "none", letterSpacing: "1px" }}>SHOP</Link>
+          <Link href="/shop" style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", textDecoration: "none", letterSpacing: "1px" }}>SHOP</Link>
           <span style={{ color: "#3A5030" }}>/</span>
-          <Link href={`/shop/${params.category}`} style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", textDecoration: "none", letterSpacing: "1px" }}>
+          <Link href={`/shop/${params.category}`} style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", textDecoration: "none", letterSpacing: "1px" }}>
             {(product.product_categories as any)?.name?.toUpperCase() ?? params.category.toUpperCase()}
           </Link>
           <span style={{ color: "#3A5030" }}>/</span>

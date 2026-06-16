@@ -81,7 +81,7 @@ export default async function EventsPage() {
         {display.length === 0 && (
           <div style={{ textAlign: "center", padding: "80px 0" }}>
             <div style={{ fontFamily: R, fontSize: "14px", color: "#3A5A30", letterSpacing: "2px" }}>NO EVENTS YET</div>
-            <p style={{ fontFamily: B, fontSize: "13px", color: "#DDE8DD", marginTop: "8px" }}>Check back soon — something exciting is coming!</p>
+            <p style={{ fontFamily: B, fontSize: "13px", color: "#9AAA98", marginTop: "8px" }}>Check back soon — something exciting is coming!</p>
           </div>
         )}
 

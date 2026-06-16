@@ -73,7 +73,7 @@ export default function RolesPage() {
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F5C82A", letterSpacing: "3px", marginBottom: "4px" }}>ROLE MANAGEMENT</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Manage member roles across the platform</p>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Manage member roles across the platform</p>
       </div>
 
       {error && (
@@ -82,48 +82,48 @@ export default function RolesPage() {
         </div>
       )}
       {success && (
-        <div style={{ background: "#0A2614", border: "1.5px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#3CCE2A" }}>
+        <div style={{ background: "#E8F0E4", border: "1.5px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#3CCE2A" }}>
           {success}
         </div>
       )}
 
       <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name or email..."
-        style={{ background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "10px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }} />
+        style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
 
-      <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
-        <div style={{ background: "#243520", padding: "10px 20px", display: "grid", gridTemplateColumns: "2fr 1fr 1fr auto", gap: "12px" }}>
+      <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
+        <div style={{ background: "#F2F7F2", padding: "10px 20px", display: "grid", gridTemplateColumns: "2fr 1fr 1fr auto", gap: "12px" }}>
           {["MEMBER", "CURRENT ROLE", "CHANGE ROLE", ""].map(h => (
-            <span key={h} style={{ fontFamily: R, fontSize: "10px", color: "#5A7A50", letterSpacing: "1.5px" }}>{h}</span>
+            <span key={h} style={{ fontFamily: R, fontSize: "10px", color: "#5A7A60", letterSpacing: "1.5px" }}>{h}</span>
           ))}
         </div>
 
         {loading ? (
-          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A50" }}>Loading...</div>
+          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>Loading...</div>
         ) : filtered.length === 0 ? (
-          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A50" }}>No members found</div>
+          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>No members found</div>
         ) : filtered.map((m, i) => (
-          <div key={m.id} style={{ padding: "12px 20px", borderTop: "1px solid #2C4820", background: i % 2 === 0 ? "#1A2614" : "#162212", display: "grid", gridTemplateColumns: "2fr 1fr 1fr auto", gap: "12px", alignItems: "center" }}>
+          <div key={m.id} style={{ padding: "12px 20px", borderTop: "1px solid #DDE8DD", background: i % 2 === 0 ? "#FFFFFF" : "#EDF7ED", display: "grid", gridTemplateColumns: "2fr 1fr 1fr auto", gap: "12px", alignItems: "center" }}>
             {/* Member info */}
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#243520", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#F2F7F2", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {m.avatar_url
                   ? <img src={m.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   : <span style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A" }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>}
               </div>
               <div>
-                <div style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>{m.display_name ?? "Member"}</div>
-                <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>{m.email ?? m.id.slice(0, 20) + "..."}</div>
+                <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{m.display_name ?? "Member"}</div>
+                <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60" }}>{m.email ?? m.id.slice(0, 20) + "..."}</div>
               </div>
             </div>
 
             {/* Current role badge */}
-            <span style={{ fontFamily: R, fontSize: "10px", color: ROLE_COLORS[m.role] ?? "#5A7A50", background: (ROLE_COLORS[m.role] ?? "#5A7A50") + "20", borderRadius: "4px", padding: "2px 8px", letterSpacing: "1px", width: "fit-content" }}>
+            <span style={{ fontFamily: R, fontSize: "10px", color: ROLE_COLORS[m.role] ?? "#5A7A60", background: (ROLE_COLORS[m.role] ?? "#5A7A60") + "20", borderRadius: "4px", padding: "2px 8px", letterSpacing: "1px", width: "fit-content" }}>
               {(m.role ?? "member").toUpperCase()}
             </span>
 
             {/* Role dropdown */}
             <select value={m.role ?? "member"} onChange={e => updateRole(m.id, e.target.value)} disabled={updating === m.id}
-              style={{ background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "6px 10px", color: "#F0EAD6", fontFamily: B, fontSize: "12px", cursor: "pointer", outline: "none", opacity: updating === m.id ? 0.5 : 1 }}>
+              style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "6px 10px", color: "#1B3A2D", fontFamily: B, fontSize: "12px", cursor: "pointer", outline: "none", opacity: updating === m.id ? 0.5 : 1 }}>
               {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
             </select>
 
@@ -135,7 +135,7 @@ export default function RolesPage() {
                   {deleting === m.id ? "..." : "YES"}
                 </button>
                 <button onClick={() => setConfirmDelete(null)}
-                  style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", background: "transparent", border: "1px solid #2C4820", borderRadius: "5px", padding: "4px 10px", cursor: "pointer" }}>
+                  style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", background: "transparent", border: "1px solid #DDE8DD", borderRadius: "5px", padding: "4px 10px", cursor: "pointer" }}>
                   NO
                 </button>
               </div>

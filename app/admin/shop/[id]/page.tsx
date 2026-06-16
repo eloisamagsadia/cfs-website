@@ -32,18 +32,18 @@ export default function AdminEditProductPage() {
     await fetch(`/api/admin/products?id=${params.id}`,{method:"DELETE"});
     router.push("/admin/shop");
   }
-  const inp={width:"100%",background:"#243520",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"10px 14px",color:"#F0EAD6",fontFamily:B,fontSize:"14px",outline:"none",boxSizing:"border-box" as const};
-  const lbl={fontFamily:B,fontSize:"11px",color:"#5A7A50",letterSpacing:"1px",textTransform:"uppercase" as const,display:"block",marginBottom:"6px"};
+  const inp={width:"100%",background:"#F2F7F2",border:"1.5px solid #DDE8DD",borderRadius:"6px",padding:"10px 14px",color:"#1B3A2D",fontFamily:B,fontSize:"14px",outline:"none",boxSizing:"border-box" as const};
+  const lbl={fontFamily:B,fontSize:"11px",color:"#5A7A60",letterSpacing:"1px",textTransform:"uppercase" as const,display:"block",marginBottom:"6px"};
   return(
     <div style={{display:"flex",flexDirection:"column",gap:"20px",maxWidth:"640px"}}>
       <div style={{display:"flex",justifyContent:"space-between"}}>
-        <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#F0EAD6",letterSpacing:"3px"}}>EDIT PRODUCT</h1>
-        <button onClick={()=>router.back()} style={{fontFamily:R,fontSize:"11px",color:"#5A7A50",background:"transparent",border:"none",cursor:"pointer"}}>Back</button>
+        <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#1B3A2D",letterSpacing:"3px"}}>EDIT PRODUCT</h1>
+        <button onClick={()=>router.back()} style={{fontFamily:R,fontSize:"11px",color:"#5A7A60",background:"transparent",border:"none",cursor:"pointer"}}>Back</button>
       </div>
       {error&&<div style={{background:"#3D0A18",border:"1.5px solid #F04060",borderRadius:"8px",padding:"12px",fontFamily:B,fontSize:"13px",color:"#F04060"}}>{error}</div>}
-      {success&&<div style={{background:"#1A3D14",border:"1.5px solid #3CCE2A",borderRadius:"8px",padding:"12px",fontFamily:R,fontSize:"13px",color:"#3CCE2A"}}>{success}</div>}
+      {success&&<div style={{background:"#E8F0E4",border:"1.5px solid #3CCE2A",borderRadius:"8px",padding:"12px",fontFamily:R,fontSize:"13px",color:"#3CCE2A"}}>{success}</div>}
       {!loading&&(
-        <div style={{background:"#1A2614",border:"2px solid #2C4820",borderRadius:"12px",padding:"24px",display:"flex",flexDirection:"column",gap:"14px"}}>
+        <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",padding:"24px",display:"flex",flexDirection:"column",gap:"14px"}}>
           <div><label style={lbl}>Name *</label><input style={inp} value={form.name} onChange={e=>upd("name",e.target.value)}/></div>
           <div><label style={lbl}>Description</label><textarea style={{...inp,resize:"vertical",minHeight:"80px"}} value={form.description} onChange={e=>upd("description",e.target.value)}/></div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
@@ -58,14 +58,14 @@ export default function AdminEditProductPage() {
                 {form.images.length>1&&<button onClick={()=>upd("images",form.images.filter((_,j)=>j!==i))} style={{background:"#3D0A18",border:"1.5px solid #F04060",borderRadius:"6px",color:"#F04060",padding:"8px 10px",cursor:"pointer"}}>X</button>}
               </div>
             ))}
-            <button onClick={()=>upd("images",[...form.images,""])} style={{fontFamily:R,fontSize:"11px",color:"#3CCE2A",background:"transparent",border:"1.5px solid #2C4820",borderRadius:"6px",padding:"6px 12px",cursor:"pointer"}}>+ ADD IMAGE</button>
+            <button onClick={()=>upd("images",[...form.images,""])} style={{fontFamily:R,fontSize:"11px",color:"#3CCE2A",background:"transparent",border:"1.5px solid #DDE8DD",borderRadius:"6px",padding:"6px 12px",cursor:"pointer"}}>+ ADD IMAGE</button>
           </div>
           <label style={{display:"flex",alignItems:"center",gap:"10px",cursor:"pointer"}}>
             <input type="checkbox" checked={form.is_active} onChange={e=>upd("is_active",e.target.checked)} style={{width:"18px",height:"18px",accentColor:"#3CCE2A"}}/>
-            <span style={{fontFamily:R,fontSize:"12px",color:"#8AAA78"}}>ACTIVE IN SHOP</span>
+            <span style={{fontFamily:R,fontSize:"12px",color:"#4A7C59"}}>ACTIVE IN SHOP</span>
           </label>
-          <div style={{display:"flex",gap:"10px",paddingTop:"10px",borderTop:"1px solid #2C4820"}}>
-            <button onClick={handleSave} disabled={saving} style={{flex:1,fontFamily:R,fontSize:"12px",background:saving?"#243520":"#3CCE2A",color:saving?"#5A7A50":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px",cursor:"pointer",letterSpacing:"1px"}}>{saving?"SAVING...":"SAVE"}</button>
+          <div style={{display:"flex",gap:"10px",paddingTop:"10px",borderTop:"1px solid #DDE8DD"}}>
+            <button onClick={handleSave} disabled={saving} style={{flex:1,fontFamily:R,fontSize:"12px",background:saving?"#F2F7F2":"#3CCE2A",color:saving?"#5A7A60":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px",cursor:"pointer",letterSpacing:"1px"}}>{saving?"SAVING...":"SAVE"}</button>
             <button onClick={handleDelete} style={{fontFamily:R,fontSize:"11px",background:"transparent",border:"1.5px solid #F04060",borderRadius:"6px",color:"#F04060",padding:"10px 14px",cursor:"pointer"}}>DELETE</button>
           </div>
         </div>

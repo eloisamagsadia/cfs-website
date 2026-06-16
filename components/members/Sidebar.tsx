@@ -57,11 +57,11 @@ function NavItem({ label, href, icon, exact, badge, unread }: { label: string; h
 
   return (
     <Link href={href} style={{ textDecoration: "none", display: "block" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "8px", position: "relative", background: isActive ? "linear-gradient(90deg, #1A3D14, #162212)" : "transparent", transition: "background 0.15s" }}>
-        {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#3CCE2A", borderRadius: "0 3px 3px 0" }} />}
-        <span style={{ color: isActive ? "#3CCE2A" : "#4A6A42", transition: "color 0.15s" }}>{icon}</span>
-        <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#D0E8C8" : "#4A6A42", letterSpacing: "0.3px", transition: "color 0.15s", flex: 1 }}>{label}</span>
-        {badge && unread && unread > 0 ? <span style={{ background: "#F04060", color: "#F0EAD6", borderRadius: "20px", minWidth: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", padding: "0 4px", marginLeft: "auto" }}>{unread}</span> : null}
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "8px", position: "relative", background: isActive ? "#E8F0E4" : "transparent", transition: "background 0.15s" }}>
+        {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#2CB520", borderRadius: "0 3px 3px 0" }} />}
+        <span style={{ color: isActive ? "#2CB520" : "#5A7A60", transition: "color 0.15s" }}>{icon}</span>
+        <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#1B3A2D" : "#5A7A60", letterSpacing: "0.3px", transition: "color 0.15s", flex: 1 }}>{label}</span>
+        {badge && unread && unread > 0 ? <span style={{ background: "#F04060", color: "#FFFFFF", borderRadius: "20px", minWidth: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", padding: "0 4px", marginLeft: "auto" }}>{unread}</span> : null}
       </div>
     </Link>
   );
@@ -101,7 +101,7 @@ export default function MembersSidebar({ isAdmin = false, role = "member" }: { i
 
         {sections.map(section => (
           <div key={section.label}>
-            <div style={{ fontFamily: R, fontSize: "9px", color: "#2C4820", letterSpacing: "2px", padding: "0 12px", marginBottom: "6px" }}>{section.label}</div>
+            <div style={{ fontFamily: R, fontSize: "9px", color: "#9AAA98", letterSpacing: "2px", padding: "0 12px", marginBottom: "6px" }}>{section.label}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
               {section.items.map(item => <NavItem key={item.href} {...item} unread={item.badge ? unreadMessages : 0} />)}
             </div>
@@ -111,16 +111,16 @@ export default function MembersSidebar({ isAdmin = false, role = "member" }: { i
         {/* Exclusive — sponsors only */}
         {canSeeExclusive && (
           <div>
-            <div style={{ fontFamily: R, fontSize: "9px", color: "#2C4820", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>SPONSORS</div>
+            <div style={{ fontFamily: R, fontSize: "9px", color: "#9AAA98", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>SPONSORS</div>
             <NavItem label="Exclusive" href="/members/exclusive" icon={icons.exclusive} />
           </div>
         )}
 
         {/* Bottom actions */}
-        <div style={{ borderTop: "1px solid #1E3318", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "1px" }}>
+        <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "1px" }}>
           {isAdmin && (
             <Link href="/admin" style={{ textDecoration: "none" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", background: "#1A0E08", border: "1px solid #F07228" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", background: "#FFF0E8", border: "1px solid #F07228" }}>
                 <span style={{ color: "#F07228" }}>{icons.admin}</span>
                 <span style={{ fontFamily: B, fontSize: "13px", color: "#F07228" }}>Admin Panel</span>
               </div>
@@ -128,8 +128,8 @@ export default function MembersSidebar({ isAdmin = false, role = "member" }: { i
           )}
           <button onClick={handleSignOut}
             style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", background: "none", border: "none", cursor: "pointer", width: "100%" }}>
-            <span style={{ color: "#3A5230" }}>{icons.signout}</span>
-            <span style={{ fontFamily: B, fontSize: "13px", color: "#3A5230" }}>Sign Out</span>
+            <span style={{ color: "#5A7A60" }}>{icons.signout}</span>
+            <span style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>Sign Out</span>
           </button>
         </div>
       </nav>

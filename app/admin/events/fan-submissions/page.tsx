@@ -40,15 +40,15 @@ export default function AdminFanSubmissionsPage() {
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>FAN SUBMISSIONS</h1>
-          <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>{submissions.length} {filter} submissions</p>
+          <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>FAN SUBMISSIONS</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>{submissions.length} {filter} submissions</p>
         </div>
       </div>
 
       {/* Filter tabs */}
       <div style={{ display: "flex", gap: "8px" }}>
         {["pending", "approved", "rejected", "all"].map(f => (
-          <button key={f} onClick={() => setFilter(f)} style={{ fontFamily: B, fontSize: "11px", background: filter === f ? "#2C1A0A" : "#1A2614", color: filter === f ? "#F07228" : "#5A7A50", border: `1.5px solid ${filter === f ? "#F07228" : "#2C4820"}`, borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px", textTransform: "uppercase" as const }}>
+          <button key={f} onClick={() => setFilter(f)} style={{ fontFamily: B, fontSize: "11px", background: filter === f ? "#2C1A0A" : "#FFFFFF", color: filter === f ? "#F07228" : "#5A7A60", border: `1.5px solid ${filter === f ? "#F07228" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px", textTransform: "uppercase" as const }}>
             {f}
           </button>
         ))}
@@ -59,30 +59,30 @@ export default function AdminFanSubmissionsPage() {
       <SkeletonPage />
     </div>
       ) : submissions.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "48px", fontFamily: R, color: "#5A7A50", letterSpacing: "1px" }}>NO {filter.toUpperCase()} SUBMISSIONS</div>
+        <div style={{ textAlign: "center", padding: "48px", fontFamily: R, color: "#5A7A60", letterSpacing: "1px" }}>NO {filter.toUpperCase()} SUBMISSIONS</div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "12px" }}>
           {submissions.map((s: any) => (
-            <div key={s.id} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
+            <div key={s.id} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
               {/* Thumbnail */}
-              <div style={{ height: "150px", background: "#243520", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+              <div style={{ height: "150px", background: "#F2F7F2", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
                 {s.thumbnail_url
                   ? <img src={s.thumbnail_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   : <span style={{ fontSize: "48px" }}>{ICONS[s.platform] ?? "🔗"}</span>
                 }
-                <div style={{ position: "absolute", top: "8px", left: "8px", background: "rgba(0,0,0,0.7)", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: "#8AAA78" }}>
+                <div style={{ position: "absolute", top: "8px", left: "8px", background: "rgba(0,0,0,0.7)", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: "#4A7C59" }}>
                   {ICONS[s.platform]} {s.platform}
                 </div>
-                <div style={{ position: "absolute", top: "8px", right: "8px", background: s.status === "approved" ? "#1A3D14" : s.status === "rejected" ? "#3D0A18" : "#2C1A0A", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: s.status === "approved" ? "#3CCE2A" : s.status === "rejected" ? "#F04060" : "#F07228" }}>
+                <div style={{ position: "absolute", top: "8px", right: "8px", background: s.status === "approved" ? "#E8F0E4" : s.status === "rejected" ? "#3D0A18" : "#2C1A0A", borderRadius: "4px", padding: "2px 8px", fontSize: "11px", color: s.status === "approved" ? "#3CCE2A" : s.status === "rejected" ? "#F04060" : "#F07228" }}>
                   {s.status}
                 </div>
               </div>
 
               {/* Info */}
               <div style={{ padding: "12px 14px" }}>
-                {s.caption && <p style={{ fontFamily: B, fontSize: "12px", color: "#F0EAD6", marginBottom: "6px" }}>{s.caption}</p>}
+                {s.caption && <p style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", marginBottom: "6px" }}>{s.caption}</p>}
                 <a href={s.url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "11px", color: "#3CCE2A", wordBreak: "break-all" as const }}>{s.url}</a>
-                <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", marginTop: "6px" }}>
+                <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "6px" }}>
                   {new Date(s.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}
                 </p>
               </div>
@@ -99,7 +99,7 @@ export default function AdminFanSubmissionsPage() {
                     ✕ Reject
                   </button>
                 )}
-                <button onClick={() => remove(s.id)} style={{ fontFamily: B, fontSize: "11px", background: "transparent", color: "#5A7A50", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "7px 10px", cursor: "pointer" }}>
+                <button onClick={() => remove(s.id)} style={{ fontFamily: B, fontSize: "11px", background: "transparent", color: "#5A7A60", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "7px 10px", cursor: "pointer" }}>
                   🗑
                 </button>
               </div>

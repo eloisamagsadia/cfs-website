@@ -26,7 +26,7 @@ export default async function CodesPage() {
   }));
 
   const getStatus = (code:any) => {
-    if (!code.is_active) return { label:"INACTIVE", color:"#5A7A50" };
+    if (!code.is_active) return { label:"INACTIVE", color:"#5A7A60" };
     if (code.expires_at && new Date(code.expires_at) < new Date()) return { label:"EXPIRED", color:"#F04060" };
     if (code.max_uses && code.used_count >= code.max_uses) return { label:"USED UP", color:"#F04060" };
     return { label:"ACTIVE", color:"#3CCE2A" };
@@ -35,22 +35,22 @@ export default async function CodesPage() {
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:"20px" }}>
       <div>
-        <h1 style={{ fontFamily:R, fontSize:"1.6rem", color:"#F0EAD6", letterSpacing:"3px", marginBottom:"4px" }}>MY CODES</h1>
-        <p style={{ fontFamily:B, fontSize:"13px", color:"#8AAA78" }}>Promo codes assigned to your account</p>
+        <h1 style={{ fontFamily:R, fontSize:"1.6rem", color:"#1B3A2D", letterSpacing:"3px", marginBottom:"4px" }}>MY CODES</h1>
+        <p style={{ fontFamily:B, fontSize:"13px", color:"#4A7C59" }}>Promo codes assigned to your account</p>
       </div>
 
       {codes.length === 0 ? (
-        <div style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"48px 24px", textAlign:"center" }}>
+        <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"48px 24px", textAlign:"center" }}>
           <div style={{ fontSize:"40px", marginBottom:"12px" }}>🎟</div>
-          <div style={{ fontFamily:R, fontSize:"14px", color:"#5A7A50", letterSpacing:"2px" }}>NO CODES YET</div>
-          <div style={{ fontFamily:B, fontSize:"13px", color:"#5A7A50", marginTop:"8px" }}>Promo codes will appear here when assigned by the admin.</div>
+          <div style={{ fontFamily:R, fontSize:"14px", color:"#5A7A60", letterSpacing:"2px" }}>NO CODES YET</div>
+          <div style={{ fontFamily:B, fontSize:"13px", color:"#5A7A60", marginTop:"8px" }}>Promo codes will appear here when assigned by the admin.</div>
         </div>
       ) : (
         <div style={{ display:"flex", flexDirection:"column", gap:"10px" }}>
           {codes.map((code:any) => {
             const status = getStatus(code);
             return (
-              <div key={code.id} style={{ background:"#1A2614", border:`2px solid ${status.color === "#3CCE2A" ? "#2C4820" : "#2C2020"}`, borderRadius:"12px", padding:"20px 22px" }}>
+              <div key={code.id} style={{ background:"#FFFFFF", border:`2px solid ${status.color === "#3CCE2A" ? "#DDE8DD" : "#2C2020"}`, borderRadius:"12px", padding:"20px 22px" }}>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"12px" }}>
                   {/* Code display */}
                   <div>
@@ -68,7 +68,7 @@ export default async function CodesPage() {
                   {status.label === "ACTIVE" && (
                     <button
                       onClick={() => navigator.clipboard?.writeText(code.code)}
-                      style={{ fontFamily:R, fontSize:"11px", background:"#1A3D14", border:"1.5px solid #2C4820", borderRadius:"6px", color:"#3CCE2A", padding:"8px 16px", cursor:"pointer", letterSpacing:"1px" }}
+                      style={{ fontFamily:R, fontSize:"11px", background:"#E8F0E4", border:"1.5px solid #DDE8DD", borderRadius:"6px", color:"#3CCE2A", padding:"8px 16px", cursor:"pointer", letterSpacing:"1px" }}
                     >
                       COPY
                     </button>
@@ -76,16 +76,16 @@ export default async function CodesPage() {
                 </div>
                 <div style={{ display:"flex", gap:"16px", flexWrap:"wrap" }}>
                   {code.expires_at && (
-                    <span style={{ fontFamily:B, fontSize:"12px", color:"#5A7A50" }}>
+                    <span style={{ fontFamily:B, fontSize:"12px", color:"#5A7A60" }}>
                       Expires: {new Date(code.expires_at).toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"})}
                     </span>
                   )}
                   {code.max_uses && (
-                    <span style={{ fontFamily:B, fontSize:"12px", color:"#5A7A50" }}>
+                    <span style={{ fontFamily:B, fontSize:"12px", color:"#5A7A60" }}>
                       Uses: {code.used_count}/{code.max_uses}
                     </span>
                   )}
-                  <span style={{ fontFamily:B, fontSize:"12px", color:"#5A7A50" }}>Use at Shop checkout</span>
+                  <span style={{ fontFamily:B, fontSize:"12px", color:"#5A7A60" }}>Use at Shop checkout</span>
                 </div>
               </div>
             );

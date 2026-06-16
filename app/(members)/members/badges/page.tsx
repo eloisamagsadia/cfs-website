@@ -26,16 +26,16 @@ export default async function BadgesPage() {
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:"24px" }}>
       <div>
-        <h1 style={{ fontFamily:R, fontSize:"1.6rem", color:"#F0EAD6", letterSpacing:"3px", marginBottom:"4px" }}>BADGES</h1>
-        <p style={{ fontFamily:B, fontSize:"13px", color:"#8AAA78" }}>{earnedIds.size} of {allBadges?.length ?? 0} badges earned</p>
+        <h1 style={{ fontFamily:R, fontSize:"1.6rem", color:"#1B3A2D", letterSpacing:"3px", marginBottom:"4px" }}>BADGES</h1>
+        <p style={{ fontFamily:B, fontSize:"13px", color:"#4A7C59" }}>{earnedIds.size} of {allBadges?.length ?? 0} badges earned</p>
       </div>
 
-      <div style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"20px" }}>
+      <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"20px" }}>
         <div style={{ display:"flex", justifyContent:"space-between", marginBottom:"8px" }}>
           <span style={{ fontFamily:R, fontSize:"12px", color:"#3CCE2A", letterSpacing:"2px" }}>COLLECTION PROGRESS</span>
           <span style={{ fontFamily:R, fontSize:"12px", color:"#F5C82A" }}>{earnedIds.size}/{allBadges?.length ?? 0}</span>
         </div>
-        <div style={{ background:"#243520", border:"1.5px solid #2C4820", borderRadius:"20px", height:"12px", overflow:"hidden" }}>
+        <div style={{ background:"#F2F7F2", border:"1.5px solid #DDE8DD", borderRadius:"20px", height:"12px", overflow:"hidden" }}>
           <div style={{ height:"100%", width:`${((earnedIds.size / (allBadges?.length || 1)) * 100).toFixed(0)}%`, background:"#3CCE2A", borderRadius:"20px", transition:"width 0.5s ease" }}/>
         </div>
       </div>
@@ -54,8 +54,8 @@ export default async function BadgesPage() {
                   <div style={{ position:"relative", background:`${color}20`, border:`2px solid ${color}`, borderRadius:"12px", padding:"18px 14px", textAlign:"center", zIndex:1 }}>
                     <div style={{ fontSize:"32px", marginBottom:"8px" }}>{icon}</div>
                     <div style={{ fontFamily:R, fontSize:"12px", color, letterSpacing:"1.5px", marginBottom:"4px" }}>{badge.name}</div>
-                    <div style={{ fontFamily:B, fontSize:"11px", color:"#8AAA78", lineHeight:1.5, marginBottom:"8px" }}>{badge.description}</div>
-                    <div style={{ fontFamily:B, fontSize:"10px", color:"#5A7A50" }}>
+                    <div style={{ fontFamily:B, fontSize:"11px", color:"#4A7C59", lineHeight:1.5, marginBottom:"8px" }}>{badge.description}</div>
+                    <div style={{ fontFamily:B, fontSize:"10px", color:"#5A7A60" }}>
                       {new Date(earnedData?.earned_at).toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"})}
                     </div>
                   </div>
@@ -67,14 +67,14 @@ export default async function BadgesPage() {
       )}
 
       <div>
-        <h2 style={{ fontFamily:R, fontSize:"13px", color:"#5A7A50", letterSpacing:"2px", marginBottom:"12px" }}>LOCKED 🔒</h2>
+        <h2 style={{ fontFamily:R, fontSize:"13px", color:"#5A7A60", letterSpacing:"2px", marginBottom:"12px" }}>LOCKED 🔒</h2>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:"10px" }}>
           {(allBadges ?? []).filter((b:any) => !earnedIds.has(b.id)).map((badge:any) => {
             const icon = BADGE_ICONS[badge.name] ?? "⭐";
             return (
-              <div key={badge.id} style={{ background:"#1A2614", border:"2px solid #2C4820", borderRadius:"12px", padding:"18px 14px", textAlign:"center", opacity:0.6 }}>
+              <div key={badge.id} style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"18px 14px", textAlign:"center", opacity:0.6 }}>
                 <div style={{ fontSize:"32px", marginBottom:"8px", filter:"grayscale(1)" }}>{icon}</div>
-                <div style={{ fontFamily:R, fontSize:"12px", color:"#5A7A50", letterSpacing:"1.5px", marginBottom:"4px" }}>{badge.name}</div>
+                <div style={{ fontFamily:R, fontSize:"12px", color:"#5A7A60", letterSpacing:"1.5px", marginBottom:"4px" }}>{badge.name}</div>
                 <div style={{ fontFamily:B, fontSize:"11px", color:"#3A5030", lineHeight:1.5, marginBottom:"8px" }}>{badge.description}</div>
                 {badge.threshold_value && (
                   <div style={{ fontFamily:R, fontSize:"10px", color:"#3A5030", letterSpacing:"1px" }}>

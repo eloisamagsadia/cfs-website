@@ -9,7 +9,7 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const STATUS_COLORS: Record<string, string> = {
   active: "#3CCE2A",
-  used: "#5A7A50",
+  used: "#5A7A60",
   cancelled: "#F04060",
   pending_payment: "#F5C82A",
 };
@@ -49,9 +49,9 @@ export default function EventTicketsPage() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <Link href={`/admin/events/${event_id}/tiers`} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", textDecoration: "none" }}>← Tiers</Link>
-          <h1 style={{ fontFamily: R, fontSize: "1.4rem", color: "#F0EAD6", letterSpacing: "3px", margin: "4px 0" }}>TICKETS</h1>
-          <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78", margin: 0 }}>{tickets.length} total registrations</p>
+          <Link href={`/admin/events/${event_id}/tiers`} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", textDecoration: "none" }}>← Tiers</Link>
+          <h1 style={{ fontFamily: R, fontSize: "1.4rem", color: "#1B3A2D", letterSpacing: "3px", margin: "4px 0" }}>TICKETS</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", margin: 0 }}>{tickets.length} total registrations</p>
         </div>
         <Link href="/admin/check-in"
           style={{ fontFamily: R, fontSize: "11px", background: "#3CCE2A", color: "#080F06", textDecoration: "none", borderRadius: "6px", padding: "8px 16px", letterSpacing: "1px" }}>
@@ -63,13 +63,13 @@ export default function EventTicketsPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
         {[
           { label: "REGISTERED", value: counts.active, color: "#3CCE2A" },
-          { label: "CHECKED IN", value: counts.used, color: "#5A7A50" },
+          { label: "CHECKED IN", value: counts.used, color: "#5A7A60" },
           { label: "PENDING", value: counts.pending_payment, color: "#F5C82A" },
           { label: "CANCELLED", value: counts.cancelled, color: "#F04060" },
         ].map(({ label, value, color }) => (
-          <div key={label} style={{ background: "#1A2614", border: `2px solid ${color}30`, borderRadius: "10px", padding: "14px 16px", textAlign: "center" }}>
+          <div key={label} style={{ background: "#FFFFFF", border: `2px solid ${color}30`, borderRadius: "10px", padding: "14px 16px", textAlign: "center" }}>
             <div style={{ fontFamily: R, fontSize: "1.6rem", color }}>{value}</div>
-            <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", letterSpacing: "1px" }}>{label}</div>
+            <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", letterSpacing: "1px" }}>{label}</div>
           </div>
         ))}
       </div>
@@ -78,7 +78,7 @@ export default function EventTicketsPage() {
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
         {["all", "active", "used", "pending_payment", "cancelled"].map(s => (
           <button key={s} onClick={() => setFilter(s)}
-            style={{ fontFamily: R, fontSize: "11px", background: filter === s ? "#1A3D14" : "transparent", border: `1.5px solid ${filter === s ? "#3CCE2A" : "#2C4820"}`, color: filter === s ? "#3CCE2A" : "#5A7A50", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: filter === s ? "#E8F0E4" : "transparent", border: `1.5px solid ${filter === s ? "#3CCE2A" : "#DDE8DD"}`, color: filter === s ? "#3CCE2A" : "#5A7A60", borderRadius: "20px", padding: "5px 14px", cursor: "pointer", letterSpacing: "1px" }}>
             {s.replace("_", " ").toUpperCase()} ({counts[s as keyof typeof counts]})
           </button>
         ))}
@@ -90,17 +90,17 @@ export default function EventTicketsPage() {
       <SkeletonPage />
     </div>
       ) : filtered.length === 0 ? (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A50", letterSpacing: "2px" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A60", letterSpacing: "2px" }}>
           NO TICKETS
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           {filtered.map(ticket => {
-            const color = STATUS_COLORS[ticket.status] ?? "#5A7A50";
+            const color = STATUS_COLORS[ticket.status] ?? "#5A7A60";
             return (
-              <div key={ticket.id} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "14px 18px", display: "flex", gap: "14px", alignItems: "center" }}>
+              <div key={ticket.id} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "14px 18px", display: "flex", gap: "14px", alignItems: "center" }}>
                 {/* Avatar */}
-                <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#1A3D14", border: "1.5px solid #2C4820", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#E8F0E4", border: "1.5px solid #DDE8DD", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {ticket.profiles?.avatar_url
                     ? <img src={ticket.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     : <span style={{ fontFamily: R, fontSize: "14px", color: "#3CCE2A" }}>{(ticket.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
@@ -108,17 +108,17 @@ export default function EventTicketsPage() {
                 </div>
                 {/* Info */}
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", letterSpacing: "0.5px", marginBottom: "3px" }}>
+                  <div style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "0.5px", marginBottom: "3px" }}>
                     {ticket.profiles?.display_name ?? "Member"}
                   </div>
                   <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
-                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{ticket.ticket_number}</span>
-                    <span style={{ fontFamily: R, fontSize: "10px", color: ticket.event_tiers?.color ?? "#5A7A50", background: (ticket.event_tiers?.color ?? "#5A7A50") + "20", borderRadius: "20px", padding: "1px 8px" }}>
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{ticket.ticket_number}</span>
+                    <span style={{ fontFamily: R, fontSize: "10px", color: ticket.event_tiers?.color ?? "#5A7A60", background: (ticket.event_tiers?.color ?? "#5A7A60") + "20", borderRadius: "20px", padding: "1px 8px" }}>
                       {ticket.event_tiers?.name ?? "—"}
                     </span>
-                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{timeAgo(ticket.created_at)}</span>
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(ticket.created_at)}</span>
                     {ticket.checked_in_at && (
-                      <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>✓ {timeAgo(ticket.checked_in_at)}</span>
+                      <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>✓ {timeAgo(ticket.checked_in_at)}</span>
                     )}
                   </div>
                 </div>

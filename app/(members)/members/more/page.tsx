@@ -71,21 +71,21 @@ export default function MembersMorePage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>MORE</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Everything else</p>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>MORE</h1>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Everything else</p>
       </div>
 
       {sections.map(section => (
         <div key={section.label}>
-          <div style={{ fontFamily: R, fontSize: "10px", color: "#2C4820", letterSpacing: "2px", marginBottom: "10px" }}>{section.label}</div>
+          <div style={{ fontFamily: R, fontSize: "10px", color: "#9AAA98", letterSpacing: "2px", marginBottom: "10px" }}>{section.label}</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
             {section.items.map(item => (
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
-                <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px", position: "relative" }}>
+                <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px", position: "relative" }}>
                   <span style={{ color: "#3CCE2A", flexShrink: 0 }}>{item.icon}</span>
-                  <span style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6", flex: 1 }}>{item.label}</span>
+                  <span style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", flex: 1 }}>{item.label}</span>
                   {item.label === "Messages" && unreadMessages > 0 && (
-                    <span style={{ background: "#F04060", color: "#F0EAD6", borderRadius: "20px", minWidth: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", padding: "0 4px" }}>{unreadMessages}</span>
+                    <span style={{ background: "#F04060", color: "#1B3A2D", borderRadius: "20px", minWidth: "18px", height: "18px", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: "9px", padding: "0 4px" }}>{unreadMessages}</span>
                   )}
                 </div>
               </Link>
@@ -96,9 +96,9 @@ export default function MembersMorePage() {
 
       {/* Sign out */}
       <div>
-        <div style={{ fontFamily: R, fontSize: "10px", color: "#2C4820", letterSpacing: "2px", marginBottom: "10px" }}>SESSION</div>
+        <div style={{ fontFamily: R, fontSize: "10px", color: "#9AAA98", letterSpacing: "2px", marginBottom: "10px" }}>SESSION</div>
         <button onClick={handleSignOut}
-          style={{ width: "100%", background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
+          style={{ width: "100%", background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}>
           <span style={{ color: "#F04060", flexShrink: 0 }}>{icons.signout}</span>
           <span style={{ fontFamily: B, fontSize: "13px", color: "#F04060" }}>Sign Out</span>
         </button>

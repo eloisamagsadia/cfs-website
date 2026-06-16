@@ -38,15 +38,15 @@ export default function DangerPage() {
     <div style={{ display: "flex", flexDirection: "column", gap: "20px", maxWidth: "600px" }}>
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F04060", letterSpacing: "3px", marginBottom: "4px" }}>☠️ DANGER ZONE</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>Irreversible actions — proceed with caution</p>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Irreversible actions — proceed with caution</p>
       </div>
 
       <div style={{ background: "#1A0808", border: "2px solid #F04060", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
         {actions.map(({ label, desc, action, color, loading: l }) => (
-          <div key={label} style={{ background: "#1A2614", border: "1px solid #2C4820", borderRadius: "10px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div key={label} style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "10px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
-              <div style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6", marginBottom: "3px" }}>{label}</div>
-              <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{desc}</div>
+              <div style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", marginBottom: "3px" }}>{label}</div>
+              <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{desc}</div>
             </div>
             <button onClick={action} disabled={l} style={{ fontFamily: R, fontSize: "10px", background: "transparent", border: `1.5px solid ${color}`, color, borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1px", opacity: l ? 0.5 : 1 }}>
               {l ? "..." : "RUN"}

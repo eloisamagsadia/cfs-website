@@ -22,7 +22,7 @@ export default function EventTiersPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [template, setTemplate] = useState<any>({ bg_color: "#0F1A0B", accent_color: "#3CCE2A", bg_image_url: "", logo_url: "", custom_message: "" });
+  const [template, setTemplate] = useState<any>({ bg_color: "#F7FAF5", accent_color: "#3CCE2A", bg_image_url: "", logo_url: "", custom_message: "" });
   const [savingTemplate, setSavingTemplate] = useState(false);
   const [templateSaved, setTemplateSaved] = useState(false);
 
@@ -99,9 +99,9 @@ export default function EventTiersPage() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <Link href="/admin/events" style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", textDecoration: "none" }}>← Events</Link>
-          <h1 style={{ fontFamily: R, fontSize: "1.4rem", color: "#F0EAD6", letterSpacing: "3px", margin: "4px 0" }}>TIERS</h1>
-          {event && <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78", margin: 0 }}>{event.title}</p>}
+          <Link href="/admin/events" style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", textDecoration: "none" }}>← Events</Link>
+          <h1 style={{ fontFamily: R, fontSize: "1.4rem", color: "#1B3A2D", letterSpacing: "3px", margin: "4px 0" }}>TIERS</h1>
+          {event && <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", margin: 0 }}>{event.title}</p>}
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
           <Link href={`/admin/events/${event_id}/tickets`}
@@ -117,31 +117,31 @@ export default function EventTiersPage() {
 
       {/* Form */}
       {showForm && (
-        <div style={{ background: "#1A2614", border: "2px solid #3CCE2A", borderRadius: "12px", padding: "20px" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #3CCE2A", borderRadius: "12px", padding: "20px" }}>
           <div style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A", letterSpacing: "2px", marginBottom: "16px" }}>
             {editingId ? "EDIT TIER" : "NEW TIER"}
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>TIER NAME *</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>TIER NAME *</label>
               <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
                 placeholder="e.g. General, VIP, VVIP"
-                style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+                style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
             </div>
             <div>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>PRICE (₱)</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>PRICE (₱)</label>
               <input type="number" value={form.price} onChange={e => setForm(p => ({ ...p, price: Number(e.target.value) }))}
                 placeholder="0 = Free"
-                style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+                style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
             </div>
             <div>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>CAPACITY (leave blank = unlimited)</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>CAPACITY (leave blank = unlimited)</label>
               <input type="number" value={form.capacity} onChange={e => setForm(p => ({ ...p, capacity: e.target.value }))}
                 placeholder="e.g. 100"
-                style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+                style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
             </div>
             <div>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "8px" }}>COLOR</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "8px" }}>COLOR</label>
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                 {TIER_COLORS.map(c => (
                   <button key={c} onClick={() => setForm(p => ({ ...p, color: c }))}
@@ -150,17 +150,17 @@ export default function EventTiersPage() {
               </div>
             </div>
             <div style={{ gridColumn: "1 / -1" }}>
-              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>PERKS (one per line)</label>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>PERKS (one per line)</label>
               <textarea value={form.perks} onChange={e => setForm(p => ({ ...p, perks: e.target.value }))}
                 placeholder={"Priority entry\nMeet & greet\nExclusive merch"}
                 rows={3}
-                style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", resize: "vertical", boxSizing: "border-box" }} />
+                style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "vertical", boxSizing: "border-box" }} />
             </div>
           </div>
           {error && <p style={{ fontFamily: B, fontSize: "12px", color: "#F04060", margin: "8px 0 0" }}>{error}</p>}
           <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
             <button onClick={() => { setShowForm(false); setEditingId(null); setForm(DEFAULT_FORM); setError(""); }}
-              style={{ fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #2C4820", borderRadius: "6px", color: "#5A7A50", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+              style={{ fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>
               CANCEL
             </button>
             <button onClick={handleSave} disabled={saving}
@@ -177,24 +177,24 @@ export default function EventTiersPage() {
       <SkeletonPage />
     </div>
       ) : tiers.length === 0 ? (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "48px", textAlign: "center" }}>
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center" }}>
           <div style={{ fontSize: "32px", marginBottom: "12px" }}>🎟️</div>
-          <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A50", letterSpacing: "2px" }}>NO TIERS YET</div>
-          <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A50", marginTop: "6px" }}>Add tiers to define ticket types for this event.</div>
+          <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px" }}>NO TIERS YET</div>
+          <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", marginTop: "6px" }}>Add tiers to define ticket types for this event.</div>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {tiers.map(tier => (
-            <div key={tier.id} style={{ background: "#1A2614", border: `2px solid ${tier.color}40`, borderRadius: "12px", padding: "16px 20px", display: "flex", gap: "16px", alignItems: "flex-start" }}>
+            <div key={tier.id} style={{ background: "#FFFFFF", border: `2px solid ${tier.color}40`, borderRadius: "12px", padding: "16px 20px", display: "flex", gap: "16px", alignItems: "flex-start" }}>
               <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: tier.color, flexShrink: 0, marginTop: "4px" }} />
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
-                  <span style={{ fontFamily: R, fontSize: "14px", color: "#F0EAD6", letterSpacing: "1px" }}>{tier.name}</span>
+                  <span style={{ fontFamily: R, fontSize: "14px", color: "#1B3A2D", letterSpacing: "1px" }}>{tier.name}</span>
                   <span style={{ fontFamily: R, fontSize: "12px", color: tier.price > 0 ? "#F07228" : "#3CCE2A" }}>
                     {tier.price > 0 ? `₱${Number(tier.price).toLocaleString()}` : "FREE"}
                   </span>
                   {tier.capacity && (
-                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>
                       {tier.slots_remaining ?? tier.capacity}/{tier.capacity} slots
                     </span>
                   )}
@@ -212,7 +212,7 @@ export default function EventTiersPage() {
               </div>
               <div style={{ display: "flex", gap: "8px" }}>
                 <button onClick={() => startEdit(tier)}
-                  style={{ fontFamily: B, fontSize: "11px", background: "none", border: "1px solid #2C4820", borderRadius: "6px", color: "#8AAA78", padding: "5px 10px", cursor: "pointer" }}>
+                  style={{ fontFamily: B, fontSize: "11px", background: "none", border: "1px solid #DDE8DD", borderRadius: "6px", color: "#4A7C59", padding: "5px 10px", cursor: "pointer" }}>
                   ✏ EDIT
                 </button>
                 <button onClick={() => handleDelete(tier.id)}
@@ -225,50 +225,50 @@ export default function EventTiersPage() {
         </div>
       )}
       {/* Ticket Template */}
-      <div className="tiers-template-card" style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "20px" }}>
+      <div className="tiers-template-card" style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px" }}>
         <div style={{ fontFamily: R, fontSize: "13px", color: "#F07228", letterSpacing: "2px", marginBottom: "16px" }}>🎨 TICKET TEMPLATE</div>
         <div className="ticket-template-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
           <div>
-            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>BACKGROUND COLOR</label>
+            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>BACKGROUND COLOR</label>
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               <input type="color" value={template.bg_color} onChange={e => setTemplate((p: any) => ({ ...p, bg_color: e.target.value }))}
-                style={{ width: "40px", height: "36px", borderRadius: "6px", border: "1.5px solid #2C4820", cursor: "pointer", background: "none" }} />
+                style={{ width: "40px", height: "36px", borderRadius: "6px", border: "1.5px solid #DDE8DD", cursor: "pointer", background: "none" }} />
               <input value={template.bg_color} onChange={e => setTemplate((p: any) => ({ ...p, bg_color: e.target.value }))}
-                style={{ flex: 1, background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }} />
+                style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
             </div>
           </div>
           <div>
-            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>ACCENT COLOR</label>
+            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>ACCENT COLOR</label>
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               <input type="color" value={template.accent_color} onChange={e => setTemplate((p: any) => ({ ...p, accent_color: e.target.value }))}
-                style={{ width: "40px", height: "36px", borderRadius: "6px", border: "1.5px solid #2C4820", cursor: "pointer", background: "none" }} />
+                style={{ width: "40px", height: "36px", borderRadius: "6px", border: "1.5px solid #DDE8DD", cursor: "pointer", background: "none" }} />
               <input value={template.accent_color} onChange={e => setTemplate((p: any) => ({ ...p, accent_color: e.target.value }))}
-                style={{ flex: 1, background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none" }} />
+                style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
             </div>
           </div>
           <div>
-            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>BACKGROUND IMAGE URL</label>
+            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>BACKGROUND IMAGE URL</label>
             <input value={template.bg_image_url ?? ""} onChange={e => setTemplate((p: any) => ({ ...p, bg_image_url: e.target.value }))}
               placeholder="https://... (optional)"
-              style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+              style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
           </div>
           <div>
-            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>LOGO URL</label>
+            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>LOGO URL</label>
             <input value={template.logo_url ?? ""} onChange={e => setTemplate((p: any) => ({ ...p, logo_url: e.target.value }))}
               placeholder="https://... (optional)"
-              style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+              style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
           </div>
           <div style={{ gridColumn: "1 / -1" }}>
-            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", display: "block", marginBottom: "4px" }}>CUSTOM MESSAGE (shown on ticket)</label>
+            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>CUSTOM MESSAGE (shown on ticket)</label>
             <input value={template.custom_message ?? ""} onChange={e => setTemplate((p: any) => ({ ...p, custom_message: e.target.value }))}
               placeholder="e.g. See you there! 💚"
-              style={{ width: "100%", background: "#243520", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 12px", color: "#F0EAD6", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+              style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
           </div>
         </div>
 
         {/* Live preview */}
         <div style={{ marginTop: "16px" }}>
-          <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px", marginBottom: "8px" }}>PREVIEW</div>
+          <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px", marginBottom: "8px" }}>PREVIEW</div>
           <div style={{ background: template.bg_color, border: `2px solid ${template.accent_color}`, borderRadius: "12px", padding: "16px", maxWidth: "320px", position: "relative", overflow: "hidden" }}>
             {template.bg_image_url && (
               <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${template.bg_image_url})`, backgroundSize: "cover", backgroundPosition: "center", opacity: 0.2 }} />
@@ -277,19 +277,19 @@ export default function EventTiersPage() {
               <div style={{ height: "4px", background: template.accent_color, borderRadius: "2px", marginBottom: "10px" }} />
               {template.logo_url && <img src={template.logo_url} alt="logo" style={{ height: "24px", marginBottom: "8px", objectFit: "contain" }} />}
               <div style={{ fontFamily: R, fontSize: "10px", color: template.accent_color, letterSpacing: "2px", marginBottom: "4px" }}>+ CFS BINI COLET FAN CLUB</div>
-              <div style={{ fontFamily: B, fontSize: "14px", color: "#F0EAD6", marginBottom: "8px" }}>{event?.title ?? "Event Name"}</div>
+              <div style={{ fontFamily: B, fontSize: "14px", color: "#1B3A2D", marginBottom: "8px" }}>{event?.title ?? "Event Name"}</div>
               <div style={{ display: "flex", gap: "12px" }}>
                 <div>
-                  <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A50" }}>TIER</div>
+                  <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A60" }}>TIER</div>
                   <div style={{ fontFamily: R, fontSize: "11px", color: template.accent_color }}>VVIP</div>
                 </div>
                 <div>
-                  <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A50" }}>TICKET NO.</div>
-                  <div style={{ fontFamily: R, fontSize: "11px", color: "#F0EAD6" }}>CFS-1000</div>
+                  <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A60" }}>TICKET NO.</div>
+                  <div style={{ fontFamily: R, fontSize: "11px", color: "#1B3A2D" }}>CFS-1000</div>
                 </div>
               </div>
               {template.custom_message && (
-                <div style={{ fontFamily: B, fontSize: "10px", color: "#8AAA78", marginTop: "8px", fontStyle: "italic" }}>{template.custom_message}</div>
+                <div style={{ fontFamily: B, fontSize: "10px", color: "#4A7C59", marginTop: "8px", fontStyle: "italic" }}>{template.custom_message}</div>
               )}
             </div>
           </div>

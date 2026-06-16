@@ -50,16 +50,16 @@ export default function FileUpload({ folder, accept = "image/*", label = "IMAGE"
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-      <label style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78", letterSpacing: "1px" }}>{label}</label>
+      <label style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", letterSpacing: "1px" }}>{label}</label>
 
       {preview ? (
         <div style={{ position: "relative", display: "inline-block" }}>
           {isPdf ? (
-            <div style={{ background: "#1A3D14", border: "2px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ background: "#E8F0E4", border: "2px solid #3CCE2A", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "10px" }}>
               <span style={{ fontSize: "24px" }}>📄</span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontFamily: R, fontSize: "11px", color: "#3CCE2A", letterSpacing: "1px" }}>PDF UPLOADED</div>
-                <a href={preview} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "11px", color: "#8AAA78", wordBreak: "break-all" }}>View PDF →</a>
+                <a href={preview} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59", wordBreak: "break-all" }}>View PDF →</a>
               </div>
               <button onClick={handleRemove} style={{ background: "#2C1010", border: "1px solid #F04060", borderRadius: "4px", color: "#F04060", padding: "4px 8px", cursor: "pointer", fontFamily: B, fontSize: "11px" }}>✕ Remove</button>
             </div>
@@ -75,14 +75,14 @@ export default function FileUpload({ folder, accept = "image/*", label = "IMAGE"
           onDrop={handleDrop}
           onDragOver={e => e.preventDefault()}
           onClick={() => inputRef.current?.click()}
-          style={{ border: "2px dashed #2C4820", borderRadius: "8px", padding: "24px", textAlign: "center", cursor: uploading ? "not-allowed" : "pointer", background: "#0F1A0C", transition: "border-color 0.2s" }}
+          style={{ border: "2px dashed #DDE8DD", borderRadius: "8px", padding: "24px", textAlign: "center", cursor: uploading ? "not-allowed" : "pointer", background: "#0F1A0C", transition: "border-color 0.2s" }}
         >
           {uploading ? (
             <div style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", letterSpacing: "2px" }}>UPLOADING...</div>
           ) : (
             <>
               <div style={{ fontSize: "28px", marginBottom: "6px" }}>{isPdf ? "📄" : "🖼"}</div>
-              <div style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px", marginBottom: "4px" }}>
+              <div style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px", marginBottom: "4px" }}>
                 CLICK OR DRAG TO UPLOAD
               </div>
               <div style={{ fontFamily: B, fontSize: "10px", color: "#3A5A30" }}>
