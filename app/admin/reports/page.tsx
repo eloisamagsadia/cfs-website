@@ -47,6 +47,9 @@ export default async function AdminReportsPage() {
                   VIEW PDF
                 </a>
               )}
+              <Link href={`/admin/reports/${r.id}/receipts`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#5A7A50", border: "1px solid #2C4820", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
+                📎 RECEIPTS
+              </Link>
               <Link href={`/admin/reports/${r.id}/edit`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#8AAA78", border: "1px solid #2C4820", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
                 ✏ EDIT
               </Link>

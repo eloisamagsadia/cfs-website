@@ -51,6 +51,12 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
   const supabase = createAdminClient();
   const { data: reportRaw } = await supabase.from("transparency_reports").select("*").eq("id", params.id).eq("is_published", true).single();
   if (!reportRaw) notFound();
+
+  const { data: receiptsRaw } = await supabase
+    .from("report_receipts")
+    .select("project_name, item_description, file_url, file_name")
+    .eq("report_id", params.id);
+  const receipts = (receiptsRaw ?? []) as { project_name: string; item_description: string; file_url: string; file_name: string }[];
   const report = reportRaw as any;
 
   const raw = report.fund_breakdown ?? null;
@@ -230,13 +236,28 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
                         <span style={{ fontFamily:SG, fontSize:"9px", fontWeight:700, color:C.muted, letterSpacing:"1.5px" }}>NOTES</span>
                         <span style={{ fontFamily:SG, fontSize:"9px", fontWeight:700, color:C.muted, letterSpacing:"1.5px", textAlign:"right" }}>AMOUNT</span>
                       </div>
-                      {proj.items.map((item, ii) => (
-                        <div key={ii} style={{ display:"grid", gridTemplateColumns:"2fr 1.5fr auto", gap:"12px", alignItems:"start", padding:"8px 16px", borderBottom: ii < proj.items.length - 1 ? `1px solid ${C.mist}` : "none" }}>
-                          <span style={{ fontFamily:B, fontSize:"12px", color:C.forest }}>{item.description}</span>
-                          <span style={{ fontFamily:B, fontSize:"11px", color:C.muted }}>{item.notes || "—"}</span>
-                          <span style={{ fontFamily:SG, fontSize:"12px", fontWeight:600, color:"#F04060", textAlign:"right", whiteSpace:"nowrap" }}>₱{Number(item.amount).toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
-                        </div>
-                      ))}
+                      {proj.items.map((item, ii) => {
+                        const itemReceipts = receipts.filter(r => r.project_name === proj.project && r.item_description === item.description);
+                        return (
+                          <div key={ii} style={{ display:"grid", gridTemplateColumns:"2fr 1.5fr auto", gap:"12px", alignItems:"start", padding:"8px 16px", borderBottom: ii < proj.items.length - 1 ? `1px solid ${C.mist}` : "none" }}>
+                            <div>
+                              <span style={{ fontFamily:B, fontSize:"12px", color:C.forest }}>{item.description}</span>
+                              {itemReceipts.length > 0 && (
+                                <div style={{ display:"flex", flexWrap:"wrap", gap:"4px", marginTop:"4px" }}>
+                                  {itemReceipts.map((r, ri) => (
+                                    <a key={ri} href={r.file_url} target="_blank" rel="noopener noreferrer"
+                                      style={{ fontFamily:B, fontSize:"10px", color:C.sage, background:C.mist, border:`1px solid ${C.border}`, borderRadius:"4px", padding:"2px 7px", textDecoration:"none", display:"inline-flex", alignItems:"center", gap:"3px" }}>
+                                      📎 {itemReceipts.length > 1 ? `Receipt ${ri + 1}` : "Receipt"}
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            <span style={{ fontFamily:B, fontSize:"11px", color:C.muted }}>{item.notes || "—"}</span>
+                            <span style={{ fontFamily:SG, fontSize:"12px", fontWeight:600, color:"#F04060", textAlign:"right", whiteSpace:"nowrap" }}>₱{Number(item.amount).toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 );
