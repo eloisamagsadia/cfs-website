@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { amount, description, type, reference_id, metadata, success_url, failed_url } = await req.json();
+  const { amount, donation_amount, description, type, reference_id, metadata, success_url, failed_url } = await req.json();
 
   if (!amount || !type) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
       .insert({
         user_id: userId,
         amount: Number(amount),
+        donation_amount: donation_amount ? Number(donation_amount) : null,
         message: metadata?.message ?? null,
         is_anonymous: metadata?.anonymous ?? false,
         status: "pending",

@@ -17,6 +17,21 @@ const SC: Record<string, string> = {
   failed:    "#F04060",
 };
 
+const TIERS = [
+  { name: "Supermoon",    min: 8000,  max: Infinity, color: "#F5C82A" },
+  { name: "Blue Moon",    min: 5000,  max: 7999,     color: "#8EE440" },
+  { name: "Harvest Moon", min: 3000,  max: 4999,     color: "#F07228" },
+  { name: "Blood Moon",   min: 1500,  max: 2999,     color: "#F04060" },
+];
+
+function getTier(amount: number) {
+  return TIERS.find(t => amount >= t.min && amount <= t.max) ?? null;
+}
+
+function fmt(n: number) {
+  return n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 export default async function MyDonationsPage() {
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
@@ -29,16 +44,15 @@ export default async function MyDonationsPage() {
     .order("created_at", { ascending: false });
 
   const display = donations ?? [];
-  const totalGiven = display
-    .filter(d => d.status === "completed")
-    .reduce((s, d) => s + Number(d.amount), 0);
+  const completed = display.filter(d => d.status === "completed");
+  const totalGiven = completed.reduce((s, d) => s + Number(d.amount), 0);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F0EAD6", letterSpacing: "3px", marginBottom: "4px" }}>MY DONATIONS</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#8AAA78" }}>
-          {display.filter(d => d.status === "completed").length} donation{display.length !== 1 ? "s" : ""} · <span style={{ color: "#3CCE2A" }}>₱{totalGiven.toLocaleString()} contributed</span>
+          {completed.length} donation{completed.length !== 1 ? "s" : ""} · <span style={{ color: "#3CCE2A" }}>₱{totalGiven.toLocaleString()} contributed</span>
         </p>
       </div>
 
@@ -59,29 +73,94 @@ export default async function MyDonationsPage() {
           <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", textDecoration: "none", border: "1.5px solid #2C4820", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>DONATE NOW →</a>
         </div>
       ) : (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
-          <div style={{ background: "#243520", padding: "10px 20px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 2fr", gap: "12px" }}>
-            {["AMOUNT", "STATUS", "DATE", "MESSAGE"].map(h => (
-              <span key={h} style={{ fontFamily: R, fontSize: "10px", color: "#5A7A50", letterSpacing: "1.5px" }}>{h}</span>
-            ))}
-          </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          {display.map(d => {
+            const total      = Number(d.amount);
+            const intended   = d.donation_amount ? Number(d.donation_amount) : null;
+            const fee        = intended != null ? total - intended : null;
+            const refNo      = (d.id as string).slice(0, 8).toUpperCase();
+            const tier       = intended != null ? getTier(intended) : getTier(total);
+            const statusColor = SC[d.status] ?? "#5A7A50";
+            const dt         = new Date(d.created_at);
+            const dateStr    = dt.toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" });
+            const timeStr    = dt.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", hour12: true });
 
-          {display.map((d, i) => (
-            <div key={d.id} style={{ padding: "14px 20px", borderTop: "1px solid #2C4820", background: i % 2 === 0 ? "#1A2614" : "#162212", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 2fr", gap: "12px", alignItems: "center" }}>
-              <span style={{ fontFamily: R, fontSize: "15px", color: "#3CCE2A" }}>
-                ₱{Number(d.amount).toLocaleString()}
-              </span>
-              <span style={{ fontFamily: R, fontSize: "10px", color: SC[d.status] ?? "#5A7A50", background: (SC[d.status] ?? "#5A7A50") + "20", borderRadius: "20px", padding: "3px 10px", letterSpacing: "1px", width: "fit-content" }}>
-                {(d.status ?? "pending").toUpperCase()}
-              </span>
-              <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>
-                {new Date(d.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}
-              </span>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78", fontStyle: d.message ? "italic" : "normal" }}>
-                {d.message ? `"${d.message}"` : <span style={{ color: "#3A5230" }}>—</span>}
-              </span>
-            </div>
-          ))}
+            return (
+              <div key={d.id} style={{ background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
+                {/* Header row */}
+                <div style={{ background: "#243520", padding: "10px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                    <span style={{ fontFamily: R, fontSize: "10px", color: "#5A7A50", letterSpacing: "1.5px" }}>REF #</span>
+                    <span style={{ fontFamily: "monospace", fontSize: "12px", color: "#F0EAD6", letterSpacing: "2px", fontWeight: 700 }}>{refNo}</span>
+                    {d.is_anonymous && (
+                      <span style={{ fontFamily: R, fontSize: "9px", color: "#8AAA78", background: "#2C4820", borderRadius: "10px", padding: "2px 8px", letterSpacing: "1px" }}>ANON</span>
+                    )}
+                    {tier && (
+                      <span style={{ fontFamily: R, fontSize: "9px", color: tier.color, background: tier.color + "18", border: `1px solid ${tier.color}40`, borderRadius: "10px", padding: "2px 8px", letterSpacing: "1px" }}>
+                        {tier.name.toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>{dateStr} · {timeStr}</span>
+                    <span style={{ fontFamily: R, fontSize: "10px", color: statusColor, background: statusColor + "20", borderRadius: "20px", padding: "3px 10px", letterSpacing: "1px" }}>
+                      {(d.status ?? "pending").toUpperCase()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Body */}
+                <div style={{ padding: "16px 18px", display: "grid", gridTemplateColumns: "1fr auto", gap: "16px", alignItems: "start" }}>
+                  {/* Left: breakdown */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    {intended != null ? (
+                      <>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Donation amount</span>
+                          <span style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6" }}>₱{fmt(intended)}</span>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Processing fee <span style={{ fontSize: "10px" }}>(2.45% + ₱15)</span></span>
+                          <span style={{ fontFamily: R, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee!)}</span>
+                        </div>
+                        <div style={{ borderTop: "1px solid #2C4820", paddingTop: "8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <span style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px" }}>TOTAL CHARGED</span>
+                          <span style={{ fontFamily: S, fontSize: "1.3rem", color: "#3CCE2A" }}>₱{fmt(total)}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontFamily: R, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px" }}>AMOUNT PAID</span>
+                        <span style={{ fontFamily: S, fontSize: "1.3rem", color: "#3CCE2A" }}>₱{fmt(total)}</span>
+                      </div>
+                    )}
+                    {d.message && (
+                      <div style={{ marginTop: "4px", background: "#0F1A0B", border: "1px solid #2C4820", borderRadius: "8px", padding: "8px 12px" }}>
+                        <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", letterSpacing: "1px" }}>MESSAGE · </span>
+                        <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78", fontStyle: "italic" }}>"{d.message}"</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right: payment info */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "6px", alignItems: "flex-end", minWidth: "120px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "3px" }}>
+                      <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A50", letterSpacing: "1.5px" }}>PAYMENT METHOD</span>
+                      <span style={{ fontFamily: B, fontSize: "11px", color: "#8AAA78" }}>QR PH / Online</span>
+                    </div>
+                    {d.paymongo_ref && (
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "3px" }}>
+                        <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A50", letterSpacing: "1.5px" }}>PAYMONGO REF</span>
+                        <span style={{ fontFamily: "monospace", fontSize: "10px", color: "#5A7A50" }}>
+                          {(d.paymongo_ref as string).slice(-12)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 

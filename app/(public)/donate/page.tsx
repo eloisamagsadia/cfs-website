@@ -56,6 +56,7 @@ export default function DonatePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount: Math.round(totalCharged),
+          donation_amount: final,
           description: "Donation to CFS (Colet Fan Society)",
           type: "donation",
           metadata: { message: msg || null, anonymous: anon },
