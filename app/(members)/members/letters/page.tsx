@@ -146,81 +146,140 @@ export default function LettersPage() {
         </div>
       )}
 
-      {/* FREEDOM WALL tab */}
+      {/* FREEDOM WALL tab — scrapbook bulletin board */}
       {tab === "wall" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {/* Wall intro + write button */}
-          <div style={{ background: "linear-gradient(135deg, #E8F4EC, #F2F7F2)", border: "1.5px solid #DDE8DD", borderRadius: "14px", padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
-            <div>
-              <div style={{ fontFamily: S, fontSize: "1.1rem", color: "#1B3A2D", marginBottom: "4px" }}>Write a letter to Colet</div>
-              <div style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Share your heart — Colet sees every word 💚</div>
-            </div>
-            <button onClick={() => setShowForm(p => !p)}
-              style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "8px", padding: "9px 18px", cursor: "pointer", letterSpacing: "1px", flexShrink: 0 }}>
-              {showForm ? "CANCEL" : "✍️ WRITE LETTER"}
-            </button>
-          </div>
 
-          {/* Write form */}
-          {showForm && (
-            <div style={{ background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "14px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
-              <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "1.5px" }}>YOUR LETTER</div>
-              {formError && <div style={{ background: "#FFE8EC", border: "1px solid #CC3344", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{formError}</div>}
+          {/* Write form — styled as a blank note */}
+          {showForm ? (
+            <div style={{
+              background: "#FDFBF0", border: "1.5px solid #D8C878",
+              borderRadius: "4px", padding: "20px",
+              boxShadow: "3px 5px 16px rgba(0,0,0,0.12)",
+              position: "relative", display: "flex", flexDirection: "column", gap: "12px",
+            }}>
+              {/* Tape */}
+              <div style={{ position: "absolute", top: "-8px", left: "50%", transform: "translateX(-50%)", width: "56px", height: "14px", background: "#F5ECA0", borderRadius: "2px", opacity: 0.9, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }} />
+              <div style={{ fontFamily: S, fontSize: "1rem", color: "#6A5A20", fontStyle: "italic", marginTop: "4px" }}>Dear Colet,</div>
+              {formError && <div style={{ background: "#FFE8EC", border: "1px solid #CC3344", borderRadius: "6px", padding: "8px 12px", fontFamily: B, fontSize: "12px", color: "#CC3344" }}>{formError}</div>}
               <input value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
-                placeholder="Subject / Title (e.g. Thank you for existing 🌿)"
-                style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
+                placeholder="Subject (e.g. Thank you for existing 🌿)"
+                style={{ background: "transparent", border: "none", borderBottom: "1.5px solid #D8C878", padding: "6px 0", color: "#2A2010", fontFamily: S, fontSize: "1rem", outline: "none", fontStyle: "italic" }} />
               <div style={{ position: "relative" }}>
                 <textarea value={form.content} onChange={e => setForm(p => ({ ...p, content: e.target.value }))}
-                  placeholder="Dear Colet, ..."
-                  rows={6}
-                  style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "vertical", boxSizing: "border-box", lineHeight: 1.7 }} />
-                <span style={{ position: "absolute", bottom: "10px", right: "14px", fontFamily: B, fontSize: "11px", color: form.content.length > 1800 ? "#CC3344" : "#5A7A60" }}>{form.content.length}/2000</span>
+                  placeholder="Write from the heart..."
+                  rows={7}
+                  style={{ width: "100%", background: "transparent", border: "none", padding: "0", color: "#3A3020", fontFamily: B, fontSize: "13px", outline: "none", resize: "none", boxSizing: "border-box", lineHeight: 2, backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, #E8D8A080 31px, #E8D8A080 32px)" }} />
+                <span style={{ fontFamily: B, fontSize: "10px", color: form.content.length > 1800 ? "#CC3344" : "#8A7840" }}>{form.content.length}/2000</span>
               </div>
-              <button onClick={submitLetter} disabled={submitting || !form.title.trim() || !form.content.trim()}
-                style={{ fontFamily: R, fontSize: "12px", background: submitting || !form.title.trim() || !form.content.trim() ? "#F2F7F2" : "#1A8040", color: submitting || !form.title.trim() || !form.content.trim() ? "#5A7A60" : "#FFFFFF", border: "none", borderRadius: "8px", padding: "12px", cursor: "pointer", letterSpacing: "1.5px" }}>
-                {submitting ? "SENDING..." : "SEND LETTER 💌"}
-              </button>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <button onClick={() => setShowForm(false)}
+                  style={{ fontFamily: R, fontSize: "11px", background: "transparent", border: "1.5px solid #D8C878", borderRadius: "6px", color: "#8A7840", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
+                <button onClick={submitLetter} disabled={submitting || !form.title.trim() || !form.content.trim()}
+                  style={{ fontFamily: R, fontSize: "11px", background: submitting || !form.title.trim() || !form.content.trim() ? "#E8D8A0" : "#1A8040", color: submitting || !form.title.trim() || !form.content.trim() ? "#8A7840" : "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 20px", cursor: "pointer", letterSpacing: "1px", flex: 1 }}>
+                  {submitting ? "SENDING..." : "📮 SEND LETTER"}
+                </button>
+              </div>
             </div>
+          ) : (
+            <button onClick={() => setShowForm(true)} style={{
+              background: "#FDFBF0", border: "1.5px dashed #C8A868",
+              borderRadius: "4px", padding: "16px 20px",
+              boxShadow: "2px 3px 10px rgba(0,0,0,0.08)",
+              cursor: "pointer", textAlign: "center", width: "100%",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
+            }}>
+              <span style={{ fontSize: "20px" }}>✍️</span>
+              <div>
+                <div style={{ fontFamily: S, fontSize: "14px", color: "#6A5A30", fontStyle: "italic", marginBottom: "2px" }}>Write a letter to Colet</div>
+                <div style={{ fontFamily: B, fontSize: "11px", color: "#8A7850" }}>Share your heart — she sees every word 💚</div>
+              </div>
+            </button>
           )}
 
-          {/* Letters list */}
+          {/* Corkboard */}
           {wallLoading ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {[1,2,3].map(i => <div key={i} className="skeleton" style={{ height: "100px", borderRadius: "12px" }} />)}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "20px", padding: "20px" }}>
+              {[1,2,3,4].map(i => <div key={i} className="skeleton" style={{ height: "180px", borderRadius: "4px" }} />)}
             </div>
           ) : wall.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "48px 0" }}>
-              <div style={{ fontSize: "32px", marginBottom: "12px" }}>💌</div>
-              <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "2px" }}>BE THE FIRST TO WRITE</div>
+            <div style={{
+              background: "linear-gradient(145deg, #C4924A, #B8844A)",
+              borderRadius: "12px", padding: "48px 24px", textAlign: "center",
+              backgroundImage: "radial-gradient(ellipse at 2px 2px, rgba(0,0,0,0.07) 1.5px, transparent 0)", backgroundSize: "14px 14px",
+              boxShadow: "inset 0 2px 8px rgba(0,0,0,0.2)",
+            }}>
+              <div style={{ fontSize: "36px", marginBottom: "12px" }}>💌</div>
+              <div style={{ fontFamily: R, fontSize: "13px", color: "rgba(255,255,255,0.9)", letterSpacing: "2px", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>BE THE FIRST TO WRITE</div>
             </div>
-          ) : wall.map((letter) => {
-            const isOwn = letter.user_id === user?.id;
-            return (
-              <div key={letter.id} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "14px", padding: "18px 20px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "#E8F0E4", border: "2px solid #DDE8DD", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      {letter.profiles?.avatar_url
-                        ? <img src={letter.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                        : <span style={{ fontFamily: R, fontSize: "13px", color: "#1A8040" }}>{(letter.profiles?.display_name ?? "M")[0].toUpperCase()}</span>}
+          ) : (
+            <div style={{
+              background: "linear-gradient(145deg, #C4924A 0%, #B8844A 50%, #C89A58 100%)",
+              borderRadius: "12px", padding: "28px 20px 20px",
+              backgroundImage: "radial-gradient(ellipse at 2px 2px, rgba(0,0,0,0.07) 1.5px, transparent 0)", backgroundSize: "14px 14px",
+              boxShadow: "inset 0 2px 8px rgba(0,0,0,0.2), 0 4px 20px rgba(0,0,0,0.1)",
+              position: "relative",
+            }}>
+              {/* Cork texture */}
+              <div style={{ position: "absolute", inset: 0, borderRadius: "12px", backgroundImage: "radial-gradient(circle at 3px 3px, rgba(255,255,255,0.06) 1px, transparent 0)", backgroundSize: "20px 20px", pointerEvents: "none" }} />
+              <div style={{ position: "relative", columns: "2 220px", columnGap: "20px" }}>
+                {wall.map((letter, i) => {
+                  const NOTE_COLORS = [
+                    { bg: "#FDFBF0", border: "#E8D88A", tape: "#F5ECA0" },
+                    { bg: "#F0F7F0", border: "#B8D8B8", tape: "#C8E8C8" },
+                    { bg: "#FDF5F0", border: "#E8C8B0", tape: "#F5D8C0" },
+                    { bg: "#F0F4FB", border: "#B8C8E8", tape: "#C8D8F5" },
+                    { bg: "#FBF0F5", border: "#E8B8C8", tape: "#F5C8D8" },
+                    { bg: "#F5FBF0", border: "#C8E8A8", tape: "#D8F0B8" },
+                  ];
+                  const ROTS = [-3, 2, -1.5, 2.5, -2, 1, -2.5, 3];
+                  const note = NOTE_COLORS[i % NOTE_COLORS.length];
+                  const rot = ROTS[i % ROTS.length];
+                  const isOwn = letter.user_id === user?.id;
+                  return (
+                    <div key={letter.id} style={{ breakInside: "avoid", marginBottom: "20px", display: "inline-block", width: "100%" }}>
+                      <div style={{
+                        background: note.bg, border: `1.5px solid ${note.border}`,
+                        borderRadius: "3px", padding: "14px 14px 16px",
+                        transform: `rotate(${rot}deg)`,
+                        boxShadow: "3px 5px 14px rgba(0,0,0,0.2)",
+                        position: "relative",
+                        transition: "transform 0.2s, box-shadow 0.2s",
+                      }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "rotate(0deg) scale(1.02)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "6px 10px 24px rgba(0,0,0,0.28)"; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = `rotate(${rot}deg)`; (e.currentTarget as HTMLDivElement).style.boxShadow = "3px 5px 14px rgba(0,0,0,0.2)"; }}>
+                        {/* Tape */}
+                        <div style={{ position: "absolute", top: "-8px", left: "50%", transform: "translateX(-50%)", width: "44px", height: "14px", background: note.tape, borderRadius: "2px", opacity: 0.88, boxShadow: "0 1px 4px rgba(0,0,0,0.12)" }} />
+                        {/* Delete */}
+                        {isOwn && (
+                          <button onClick={() => deleteLetter(letter.id)} disabled={deletingId === letter.id}
+                            style={{ position: "absolute", top: "6px", right: "6px", background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "10px", color: "#CC3344", opacity: deletingId === letter.id ? 0.4 : 0.6, padding: "2px 4px" }}>
+                            ✕
+                          </button>
+                        )}
+                        {/* Author */}
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px" }}>
+                          <div style={{ width: "22px", height: "22px", borderRadius: "50%", background: "#DDE8DD", overflow: "hidden", flexShrink: 0, border: "1px solid rgba(0,0,0,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            {letter.profiles?.avatar_url
+                              ? <img src={letter.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                              : <span style={{ fontFamily: R, fontSize: "9px", color: "#4A7C59" }}>{(letter.profiles?.display_name ?? "M")[0].toUpperCase()}</span>}
+                          </div>
+                          <div>
+                            <div style={{ fontFamily: R, fontSize: "10px", color: "#4A3A20", letterSpacing: "0.3px" }}>{letter.profiles?.display_name ?? "Member"}</div>
+                            <div style={{ fontFamily: B, fontSize: "9px", color: "#8A7850" }}>{formatDate(letter.created_at)}</div>
+                          </div>
+                        </div>
+                        {/* Title */}
+                        <div style={{ fontFamily: S, fontSize: "13px", color: "#2A2010", lineHeight: 1.4, marginBottom: "8px", fontStyle: "italic", borderBottom: `1px solid ${note.border}`, paddingBottom: "6px" }}>{letter.title}</div>
+                        {/* Content */}
+                        <div style={{ fontFamily: B, fontSize: "11px", color: "#4A3A28", lineHeight: 1.9, whiteSpace: "pre-wrap" }}>{letter.content}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "0.5px" }}>{letter.profiles?.display_name ?? "Member"}</div>
-                      <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{formatDate(letter.created_at)}</div>
-                    </div>
-                  </div>
-                  {isOwn && (
-                    <button onClick={() => deleteLetter(letter.id)} disabled={deletingId === letter.id}
-                      style={{ background: "none", border: "none", cursor: "pointer", fontFamily: B, fontSize: "11px", color: "#CC3344", opacity: deletingId === letter.id ? 0.5 : 1, padding: "4px" }}>
-                      {deletingId === letter.id ? "..." : "Delete"}
-                    </button>
-                  )}
-                </div>
-                <div style={{ fontFamily: S, fontSize: "1rem", color: "#1B3A2D", marginBottom: "8px" }}>{letter.title}</div>
-                <div style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", lineHeight: 1.8, whiteSpace: "pre-wrap" }}>{letter.content}</div>
+                  );
+                })}
               </div>
-            );
-          })}
+            </div>
+          )}
         </div>
       )}
     </div>
