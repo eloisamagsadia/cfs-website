@@ -186,7 +186,7 @@ export default function ProfilePage() {
         </label>
       </div>
 
-      {error && <div style={{ background: "#3D0A18", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
+      {error && <div style={{ background: "#FFE8EC", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
       {success && <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "12px 16px", fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "1px" }}>✦ PROFILE SAVED!</div>}
 
       <div style={{ display: "flex", gap: "10px" }}>

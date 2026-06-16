@@ -168,7 +168,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
 
   if (isFull && !hasTiers) {
     return (
-      <div style={{ background: "#3D0A18", border: "2px solid #CC3344", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
+      <div style={{ background: "#FFE8EC", border: "2px solid #CC3344", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
         <div style={{ fontFamily: R, fontSize: "14px", color: "#CC3344", letterSpacing: "1.5px" }}>EVENT IS FULL</div>
       </div>
     );
@@ -238,7 +238,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
       )}
 
       {error && (
-        <div style={{ background: "#3D0A18", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>
+        <div style={{ background: "#FFE8EC", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>
           {error}
         </div>
       )}

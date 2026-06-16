@@ -77,7 +77,7 @@ export default function RolesPage() {
       </div>
 
       {error && (
-        <div style={{ background: "#3D0A18", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>
+        <div style={{ background: "#FFE8EC", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>
           {error}
         </div>
       )}
@@ -131,7 +131,7 @@ export default function RolesPage() {
             {confirmDelete === m.id ? (
               <div style={{ display: "flex", gap: "6px" }}>
                 <button onClick={() => deleteUser(m.id)} disabled={deleting === m.id}
-                  style={{ fontFamily: B, fontSize: "11px", color: "#CC3344", background: "#3D0A18", border: "1px solid #CC3344", borderRadius: "5px", padding: "4px 10px", cursor: "pointer" }}>
+                  style={{ fontFamily: B, fontSize: "11px", color: "#CC3344", background: "#FFE8EC", border: "1px solid #CC3344", borderRadius: "5px", padding: "4px 10px", cursor: "pointer" }}>
                   {deleting === m.id ? "..." : "YES"}
                 </button>
                 <button onClick={() => setConfirmDelete(null)}
@@ -141,7 +141,7 @@ export default function RolesPage() {
               </div>
             ) : (
               <button onClick={() => setConfirmDelete(m.id)}
-                style={{ fontFamily: B, fontSize: "11px", color: "#CC3344", background: "transparent", border: "1px solid #3D1A22", borderRadius: "5px", padding: "4px 10px", cursor: "pointer", whiteSpace: "nowrap" }}>
+                style={{ fontFamily: B, fontSize: "11px", color: "#CC3344", background: "transparent", border: "1px solid #CC3344", borderRadius: "5px", padding: "4px 10px", cursor: "pointer", whiteSpace: "nowrap" }}>
                 Delete
               </button>
             )}

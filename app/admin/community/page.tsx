@@ -87,7 +87,7 @@ export default function AdminCommunityPage() {
                     <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "4px", flexWrap: "wrap" }}>
                       <span style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "1px" }}>{p.profiles?.display_name ?? "Member"}</span>
                       {p.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#156530", background: "#E8F4EC", border: "1px solid #1A804040", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>📌 PINNED</span>}
-                      {p.is_hidden && <span style={{ fontFamily: R, fontSize: "9px", color: "#CC3344", background: "#3D0A18", border: "1px solid #CC334440", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>🚫 HIDDEN</span>}
+                      {p.is_hidden && <span style={{ fontFamily: R, fontSize: "9px", color: "#CC3344", background: "#FFE8EC", border: "1px solid #CC334440", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>🚫 HIDDEN</span>}
                       <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60" }}>{new Date(p.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric" })}</span>
                     </div>
                     {p.content && <p style={{ fontFamily: B, fontSize: "13px", color: p.is_hidden ? "#5A4040" : "#5A7A60", margin: "0 0 6px" }}>{p.content.slice(0, 120)}{p.content.length > 120 ? "..." : ""}</p>}
