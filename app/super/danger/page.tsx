@@ -41,7 +41,7 @@ export default function DangerPage() {
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Irreversible actions — proceed with caution</p>
       </div>
 
-      <div style={{ background: "#1A0808", border: "2px solid #CC3344", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
+      <div style={{ background: "#FFF5F6", border: "2px solid #CC3344", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
         {actions.map(({ label, desc, action, color, loading: l }) => (
           <div key={label} style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "10px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>

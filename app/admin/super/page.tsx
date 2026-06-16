@@ -386,7 +386,7 @@ export default function SuperAdminPage() {
       {/* ── DANGER ZONE ── */}
       {activeTab === "danger" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          <div style={{ background: "#1A0808", border: "2px solid #CC3344", borderRadius: "12px", padding: "20px" }}>
+          <div style={{ background: "#FFF5F6", border: "2px solid #CC3344", borderRadius: "12px", padding: "20px" }}>
             <div style={{ fontFamily: R, fontSize: "13px", color: "#CC3344", letterSpacing: "2px", marginBottom: "16px" }}>☠️ DANGER ZONE</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {[
