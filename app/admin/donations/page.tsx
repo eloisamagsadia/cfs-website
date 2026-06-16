@@ -92,22 +92,25 @@ export default function AdminDonationsPage() {
 
           {filtered.map((d, i) => (
             <div key={d.id} style={{ padding: "14px 20px", borderTop: "1px solid #2C4820", background: i % 2 === 0 ? "#1A2614" : "#162212", display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "12px", alignItems: "center" }}>
-              {/* Donor */}
+              {/* Donor — always show to admin, flag anonymous */}
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#243520", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  {d.is_anonymous ? (
-                    <span style={{ fontFamily: R, fontSize: "13px", color: "#5A7A50" }}>?</span>
-                  ) : d.profiles?.avatar_url ? (
+                  {d.profiles?.avatar_url ? (
                     <img src={d.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
                     <span style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A" }}>{(d.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
                   )}
                 </div>
                 <div>
-                  <div style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>
-                    {d.is_anonymous ? "Anonymous" : (d.profiles?.display_name ?? "Member")}
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>
+                      {d.profiles?.display_name ?? "Member"}
+                    </span>
+                    {d.is_anonymous && (
+                      <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A50", background: "#2C4820", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>ANON</span>
+                    )}
                   </div>
-                  {!d.is_anonymous && d.profiles?.email && (
+                  {d.profiles?.email && (
                     <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>{d.profiles.email}</div>
                   )}
                   {d.message && (
