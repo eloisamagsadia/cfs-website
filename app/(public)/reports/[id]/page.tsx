@@ -199,6 +199,48 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
           </div>
         )}
 
+        {/* Detailed expense breakdown by project */}
+        {isStructured && Array.isArray(raw.outflow_detailed) && raw.outflow_detailed.length > 0 && (
+          <div style={{ background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"16px", overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,0.04)" }}>
+            <div style={{ background:C.forest, padding:"16px 24px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+              <div style={{ fontFamily:SG, fontSize:"10px", fontWeight:700, color:"rgba(255,255,255,0.7)", letterSpacing:"3px" }}>EXPENSE BREAKDOWN BY PROJECT</div>
+              <span style={{ fontFamily:SG, fontSize:"11px", fontWeight:600, color:"#F04060" }}>₱{totalOutflow.toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
+            </div>
+            <div style={{ padding:"16px 24px", display:"flex", flexDirection:"column", gap:"16px" }}>
+              {(raw.outflow_detailed as { project: string; items: { description: string; amount: number; notes?: string }[] }[]).map((proj, pi) => {
+                const projTotal = proj.items.reduce((s, i) => s + Number(i.amount), 0);
+                const pct = totalOutflow > 0 ? Math.round((projTotal / totalOutflow) * 100) : 0;
+                const color = colors[pi % colors.length];
+                return (
+                  <div key={pi} style={{ border:`1px solid ${C.border}`, borderRadius:"12px", overflow:"hidden" }}>
+                    <div style={{ background:C.cream, padding:"12px 16px", display:"flex", justifyContent:"space-between", alignItems:"center", borderBottom:`1px solid ${C.border}` }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+                        <div style={{ width:"8px", height:"8px", borderRadius:"50%", background:color, flexShrink:0 }} />
+                        <span style={{ fontFamily:SG, fontSize:"12px", fontWeight:700, color:C.forest }}>{proj.project}</span>
+                      </div>
+                      <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
+                        <span style={{ fontFamily:B, fontSize:"11px", color:C.muted }}>{pct}%</span>
+                        <span style={{ fontFamily:SG, fontSize:"12px", fontWeight:700, color }}> ₱{projTotal.toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
+                      </div>
+                    </div>
+                    <div style={{ padding:"8px 0" }}>
+                      {proj.items.map((item, ii) => (
+                        <div key={ii} style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", padding:"6px 16px", borderBottom: ii < proj.items.length - 1 ? `1px solid ${C.mist}` : "none", gap:"12px" }}>
+                          <div style={{ flex:1 }}>
+                            <span style={{ fontFamily:B, fontSize:"12px", color:C.forest }}>{item.description}</span>
+                            {item.notes && <span style={{ fontFamily:B, fontSize:"11px", color:C.muted, display:"block", marginTop:"1px" }}>{item.notes}</span>}
+                          </div>
+                          <span style={{ fontFamily:SG, fontSize:"12px", fontWeight:600, color:"#F04060", flexShrink:0 }}>₱{Number(item.amount).toLocaleString("en-PH", { minimumFractionDigits:2 })}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Content body */}
         {report.content && (
           <div style={{ background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"16px", overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,0.04)" }}>
