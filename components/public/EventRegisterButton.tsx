@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation";
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
+const PAYMONGO_RATE  = 0.0245;
+const PAYMONGO_FIXED = 15;
+function calcFee(base: number) { return (base * PAYMONGO_RATE) + PAYMONGO_FIXED; }
+function fmt(n: number) { return n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
 interface EventRegisterButtonProps {
   event: any;
   isLoggedIn: boolean;
@@ -49,11 +54,12 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
           });
           const ticketData = await ticketRes.json();
           if (!ticketRes.ok) throw new Error(ticketData.error);
+          const legacyTotal = Math.round(event.price + calcFee(event.price));
           const payRes = await fetch("/api/paymongo/create-link", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              amount: event.price,
+              amount: legacyTotal,
               description: `${event.title} — Ticket`,
               type: "ticket",
               reference_id: ticketData.ticket.id,
@@ -101,11 +107,12 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         });
         const ticketData = await ticketRes.json();
         if (!ticketRes.ok) throw new Error(ticketData.error);
+        const tierTotal = Math.round(tier.price + calcFee(tier.price));
         const payRes = await fetch("/api/paymongo/create-link", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            amount: tier.price,
+            amount: tierTotal,
             description: `${event.title} — ${tier.name}`,
             type: "ticket",
             reference_id: ticketData.ticket.id,
@@ -236,13 +243,43 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         </div>
       )}
 
-      {!isNotOpenYet && !isEarlyAccessOnly && (<button onClick={handleRegister} disabled={loading}
-        style={{ position: "relative", display: "block", width: "100%", background: "transparent", border: "none", padding: 0, cursor: loading ? "not-allowed" : "pointer" }}>
-        <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "8px" }} />
-        <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "15px", background: loading ? "#E8F5E9" : (selectedTier?.price > 0 || (!hasTiers && event.price > 0)) ? "#F07228" : "#3CCE2A", color: loading ? "#4A7C59" : "#080F06", padding: "14px", border: "2px solid #080F06", borderRadius: "8px", textAlign: "center", letterSpacing: "2px" }}>
-          {loading ? "LOADING..." : !isLoggedIn ? "LOGIN TO REGISTER" : (selectedTier?.price > 0 || (!hasTiers && event.price > 0)) ? `PAY ₱${Number(selectedTier?.price ?? event.price).toLocaleString()} →` : "RSVP FREE ✦"}
-        </span>
-      </button>)}
+      {/* Fee breakdown for paid tiers */}
+      {!isNotOpenYet && !isEarlyAccessOnly && (() => {
+        const basePrice = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
+        if (!basePrice) return null;
+        const fee   = calcFee(basePrice);
+        const total = basePrice + fee;
+        return (
+          <div style={{ background: "#0F1A0B", border: "1px solid #2C4820", borderRadius: "10px", padding: "12px 14px", display: "flex", flexDirection: "column", gap: "6px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Ticket price</span>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#F0EAD6" }}>₱{fmt(basePrice)}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#8AAA78" }}>Processing fee <span style={{ fontSize: "10px" }}>(2.45% + ₱15)</span></span>
+              <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee)}</span>
+            </div>
+            <div style={{ borderTop: "1px solid #2C4820", paddingTop: "6px", display: "flex", justifyContent: "space-between" }}>
+              <span style={{ fontFamily: R, fontSize: "12px", color: "#F0EAD6", letterSpacing: "1px" }}>TOTAL</span>
+              <span style={{ fontFamily: R, fontSize: "13px", color: "#F07228" }}>₱{fmt(total)}</span>
+            </div>
+          </div>
+        );
+      })()}
+
+      {!isNotOpenYet && !isEarlyAccessOnly && (() => {
+        const basePrice = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
+        const total = basePrice ? Math.round(basePrice + calcFee(basePrice)) : 0;
+        return (
+          <button onClick={handleRegister} disabled={loading}
+            style={{ position: "relative", display: "block", width: "100%", background: "transparent", border: "none", padding: 0, cursor: loading ? "not-allowed" : "pointer" }}>
+            <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "8px" }} />
+            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "15px", background: loading ? "#E8F5E9" : basePrice ? "#F07228" : "#3CCE2A", color: loading ? "#4A7C59" : "#080F06", padding: "14px", border: "2px solid #080F06", borderRadius: "8px", textAlign: "center", letterSpacing: "2px" }}>
+              {loading ? "LOADING..." : !isLoggedIn ? "LOGIN TO REGISTER" : basePrice ? `PAY ₱${fmt(total)} →` : "RSVP FREE ✦"}
+            </span>
+          </button>
+        );
+      })()}
       {!isLoggedIn && (
         <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50", textAlign: "center" }}>Login required to register</p>
       )}

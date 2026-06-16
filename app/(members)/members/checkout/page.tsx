@@ -147,12 +147,12 @@ export default function CheckoutPage() {
             </div>
             <div style={{ display:"flex", justifyContent:"space-between" }}>
               <span style={{ fontFamily:B, fontSize:"12px", color:"#8AAA78" }}>Shipping</span>
-              <span style={{ fontFamily:B, fontSize:"12px", color:"#F0EAD6" }}>{loadingShipping ? "..." : `P${shippingFee.toLocaleString()}`}</span>
+              <span style={{ fontFamily:B, fontSize:"12px", color:"#F0EAD6" }}>{loadingShipping ? "..." : `₱${shippingFee.toLocaleString()}`}</span>
             </div>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div>
                 <span style={{ fontFamily:B, fontSize:"12px", color:"#8AAA78" }}>Processing fee </span>
-                <span style={{ fontFamily:B, fontSize:"10px", color:"#3A5A30" }}>(2.45%+P15)</span>
+                <span style={{ fontFamily:B, fontSize:"10px", color:"#3A5A30" }}>(2.45% + ₱15)</span>
               </div>
               <span style={{ fontFamily:B, fontSize:"12px", color:"#F04060" }}>+P{fmt(paymongoFee)}</span>
             </div>
