@@ -6,7 +6,7 @@ export const metadata: Metadata = { title:{ default:"Admin", template:"%s | CFS 
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display:"flex", flexDirection:"column", minHeight:"100vh", background:"#0A120A" }}>
+    <div style={{ display:"flex", flexDirection:"column", minHeight:"100vh", background:"#F7FAF5" }}>
       <Navbar/>
       <div style={{ flex:1, maxWidth:"1280px", margin:"0 auto", width:"100%", padding:"32px 24px 90px", display:"flex", gap:"28px" }}>
         <div className="desktop-sidebar"><AdminSidebar/></div>

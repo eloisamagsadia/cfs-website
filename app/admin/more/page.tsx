@@ -76,7 +76,7 @@ export default function AdminMorePage() {
 
       {sections.map(section => (
         <div key={section.label}>
-          <div style={{ fontFamily: R, fontSize: "10px", color: "#5A3A28", letterSpacing: "2px", marginBottom: "10px" }}>{section.label}</div>
+          <div style={{ fontFamily: R, fontSize: "10px", color: "#8A6A58", letterSpacing: "2px", marginBottom: "10px" }}>{section.label}</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
             {section.items.map(item => (
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>

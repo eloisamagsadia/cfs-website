@@ -79,7 +79,7 @@ export default function ModLogPage() {
                 <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>
                   {action.target_type}: {action.target_id?.slice(0, 8)}...
                 </span>
-                <span style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30" }}>{timeAgo(action.created_at)}</span>
+                <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(action.created_at)}</span>
               </div>
             );
           })}

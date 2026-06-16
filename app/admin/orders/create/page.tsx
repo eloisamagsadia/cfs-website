@@ -105,14 +105,14 @@ export default function CreateOrderPage() {
               <div style={{ background: "#F7FAF5", border: "1.5px solid #DDE8DD", borderRadius: "8px", maxHeight: "200px", overflowY: "auto" }}>
                 {filteredMembers.slice(0, 8).map(m => (
                   <div key={m.id} onClick={() => { setSelectedMember(m); setMemberSearch(""); }}
-                    style={{ padding: "10px 14px", cursor: "pointer", fontFamily: B, fontSize: "13px", color: "#1B3A2D", borderBottom: "1px solid #1E3318" }}
+                    style={{ padding: "10px 14px", cursor: "pointer", fontFamily: B, fontSize: "13px", color: "#1B3A2D", borderBottom: "1px solid #DDE8DD" }}
                     onMouseEnter={e => (e.currentTarget.style.background = "#E8F0E4")}
                     onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                   >
                     {m.display_name ?? "—"}
                   </div>
                 ))}
-                {filteredMembers.length === 0 && <div style={{ padding: "12px 14px", fontFamily: B, fontSize: "12px", color: "#3A5A30" }}>No members found</div>}
+                {filteredMembers.length === 0 && <div style={{ padding: "12px 14px", fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>No members found</div>}
               </div>
             )}
           </>

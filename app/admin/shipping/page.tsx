@@ -77,7 +77,7 @@ export default function AdminShippingPage() {
                     ))}
                   </div>
                   {regionRates.map(r => (
-                    <div key={r.id} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "10px 16px", borderBottom: "1px solid #1E3018", alignItems: "center" }}>
+                    <div key={r.id} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "10px 16px", borderBottom: "1px solid #DDE8DD", alignItems: "center" }}>
                       <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>{r.weight_from}kg</span>
                       <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>{r.weight_to}kg</span>
                       {editingId === r.id ? (

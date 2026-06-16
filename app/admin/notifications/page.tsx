@@ -118,8 +118,8 @@ export default function AdminNotificationsPage() {
         {[
           { label: "TOTAL SENT",   value: loadingStats ? "..." : (stats?.total ?? 0),       color: "#1B3A2D", bg: "#FFFFFF" },
           { label: "TOTAL READ",   value: loadingStats ? "..." : (stats?.read ?? 0),        color: "#3CCE2A", bg: "#E8F0E4" },
-          { label: "UNREAD",       value: loadingStats ? "..." : (stats?.unread ?? 0),      color: "#F5C82A", bg: "#3D3000" },
-          { label: "READ RATE",    value: loadingStats ? "..." : `${stats?.readRate ?? 0}%`, color: "#F07228", bg: "#3D1A0A" },
+          { label: "UNREAD",       value: loadingStats ? "..." : (stats?.unread ?? 0),      color: "#F5C82A", bg: "#FFFBE8" },
+          { label: "READ RATE",    value: loadingStats ? "..." : `${stats?.readRate ?? 0}%`, color: "#F07228", bg: "#FFF0E8" },
         ].map(({ label, value, color, bg }) => (
           <div key={label} style={{ position: "relative", padding: "4px 4px 6px 0" }}>
             <div style={{ position: "absolute", bottom: 0, right: 0, width: "calc(100% - 4px)", height: "calc(100% - 4px)", borderRadius: "10px", background: "#080F06" }}/>
@@ -168,7 +168,7 @@ export default function AdminNotificationsPage() {
             ].map(({ v, label }) => (
               <button key={v} onClick={() => setTarget(v as any)} style={{
                 fontFamily: R, fontSize: "11px", letterSpacing: "1px",
-                background: target === v ? "#3D1A0A" : "transparent",
+                background: target === v ? "#FFF0E8" : "transparent",
                 color: target === v ? "#F07228" : "#5A7A60",
                 border: `1.5px solid ${target === v ? "#F07228" : "#DDE8DD"}`,
                 borderRadius: "6px", padding: "8px 14px", cursor: "pointer", flex: 1,

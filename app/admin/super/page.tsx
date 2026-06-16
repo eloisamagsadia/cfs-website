@@ -150,7 +150,7 @@ export default function SuperAdminPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #3D3000, #1A2614)", border: "2px solid #F5C82A40", borderRadius: "16px", padding: "24px" }}>
+      <div style={{ background: "linear-gradient(135deg, #FFFBE8, #FFF7D4)", border: "2px solid #F5C82A40", borderRadius: "16px", padding: "24px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "6px" }}>
           <span style={{ fontSize: "24px" }}>⚡</span>
           <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#F5C82A", letterSpacing: "3px", margin: 0 }}>SUPER ADMIN</h1>
@@ -162,7 +162,7 @@ export default function SuperAdminPage() {
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
         {TABS.map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id as any)}
-            style={{ fontFamily: R, fontSize: "11px", background: activeTab === tab.id ? "#3D3000" : "transparent", border: `1.5px solid ${activeTab === tab.id ? "#F5C82A" : "#DDE8DD"}`, color: activeTab === tab.id ? "#F5C82A" : "#5A7A60", borderRadius: "8px", padding: "7px 16px", cursor: "pointer", letterSpacing: "1px" }}>
+            style={{ fontFamily: R, fontSize: "11px", background: activeTab === tab.id ? "#FFFBE8" : "transparent", border: `1.5px solid ${activeTab === tab.id ? "#F5C82A" : "#DDE8DD"}`, color: activeTab === tab.id ? "#F5C82A" : "#5A7A60", borderRadius: "8px", padding: "7px 16px", cursor: "pointer", letterSpacing: "1px" }}>
             {tab.label}
           </button>
         ))}
@@ -224,7 +224,7 @@ export default function SuperAdminPage() {
 
           {/* Announcement */}
           {settings?.announcement_active && (
-            <div style={{ background: "#3D2000", border: `2px solid ${settings.announcement_color}`, borderRadius: "12px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ background: "#FFF0D8", border: `2px solid ${settings.announcement_color}`, borderRadius: "12px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>📣 {settings.announcement_text}</div>
               <button onClick={() => saveSetting("announcement_active", false)}
                 style={{ background: "none", border: "none", color: "#5A7A60", cursor: "pointer", fontSize: "16px" }}>✕</button>
@@ -358,7 +358,7 @@ export default function SuperAdminPage() {
             ))}
           </div>
           {logs.length === 0 ? (
-            <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#3A5A30" }}>No audit logs yet.</div>
+            <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>No audit logs yet.</div>
           ) : logs.map((log: any, i: number) => {
             const color = ACTION_COLORS[log.action] ?? ACTION_COLORS.default;
             return (
@@ -376,7 +376,7 @@ export default function SuperAdminPage() {
                   {log.action.replace(/_/g, " ").toUpperCase()}
                 </span>
                 <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{log.target_type ?? "—"}</span>
-                <span style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30" }}>{timeAgo(log.created_at)}</span>
+                <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(log.created_at)}</span>
               </div>
             );
           })}

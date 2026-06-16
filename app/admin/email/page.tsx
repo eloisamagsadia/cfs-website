@@ -163,7 +163,7 @@ export default function AdminEmailPage() {
                 </div>
               );
             })}
-            {filtered.length === 0 && <div style={{ padding: "20px", textAlign: "center", fontFamily: B, fontSize: "12px", color: "#3A5A30" }}>No members found</div>}
+            {filtered.length === 0 && <div style={{ padding: "20px", textAlign: "center", fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>No members found</div>}
           </div>
 
           {selected.length > 0 && (

@@ -156,7 +156,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
         </div>
 
         {filtered.length === 0 && (
-          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#3A5A30" }}>No members found.</div>
+          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>No members found.</div>
         )}
 
         {filtered.map((m: any, i: number) => {
@@ -167,7 +167,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
             <div key={m.id}
               onClick={() => setSelectedMember(m)}
               style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", padding: "12px 20px", borderTop: "1px solid #DDE8DD", background: m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#FFFFFF" : "#EDF7ED", alignItems: "center", cursor: "pointer" }}
-              onMouseEnter={e => (e.currentTarget.style.background = "#1F3018")}
+              onMouseEnter={e => (e.currentTarget.style.background = "#F2F7F2")}
               onMouseLeave={e => (e.currentTarget.style.background = m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#FFFFFF" : "#EDF7ED")}
             >
               {/* Member */}
@@ -226,7 +226,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
       {/* Cards — mobile only */}
       <div className="members-cards-mobile" style={{ flexDirection: "column", gap: "8px" }}>
         {filtered.length === 0 && (
-          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#3A5A30" }}>No members found.</div>
+          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>No members found.</div>
         )}
         {filtered.map((m: any) => {
           const isLoading = loadingId === m.id;

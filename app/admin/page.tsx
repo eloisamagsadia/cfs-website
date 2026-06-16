@@ -33,10 +33,10 @@ export default async function AdminDashboard() {
   const totalRevenue = (revenue ?? []).reduce((s:number,o:any)=>s+Number(o.total),0);
 
   const stats = [
-    { label:"TOTAL MEMBERS",   value: members ?? 0,                       color:"#3CCE2A", bg:"#E8F0E4", href:"/admin/members" },
-    { label:"PAID ORDERS",     value: orders ?? 0,                        color:"#F07228", bg:"#3D1A0A", href:"/admin/orders" },
-    { label:"UPCOMING EVENTS", value: events ?? 0,                        color:"#F5C82A", bg:"#3D3000", href:"/admin/events" },
-    { label:"TOTAL REVENUE",   value:`₱${totalRevenue.toLocaleString()}`, color:"#8EE440", bg:"#1E3010", href:"/admin/orders" },
+    { label:"TOTAL MEMBERS",   value: members ?? 0,                       color:"#2CB520", bg:"#E8F0E4", href:"/admin/members" },
+    { label:"PAID ORDERS",     value: orders ?? 0,                        color:"#F07228", bg:"#FFF0E8", href:"/admin/orders" },
+    { label:"UPCOMING EVENTS", value: events ?? 0,                        color:"#C8960A", bg:"#FFFBE8", href:"/admin/events" },
+    { label:"TOTAL REVENUE",   value:`₱${totalRevenue.toLocaleString()}`, color:"#2CB520", bg:"#F2F7F2", href:"/admin/orders" },
   ];
 
   const quickActions = [

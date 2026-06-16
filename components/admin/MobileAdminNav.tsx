@@ -37,13 +37,13 @@ export default function MobileAdminNav() {
   const pathname = usePathname();
 
   return (
-    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: "#0A0500", backdropFilter: "blur(12px)", borderTop: "1px solid #2A1008", padding: "8px 0 calc(8px + env(safe-area-inset-bottom))", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: "rgba(255,247,242,0.96)", backdropFilter: "blur(12px)", borderTop: "1px solid #F0C8A8", padding: "8px 0 calc(8px + env(safe-area-inset-bottom))", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
       {tabs.map(({ label, href, icon, exact }) => {
         const isActive = exact ? pathname === href : pathname.startsWith(href);
         return (
-          <Link key={href} href={href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", padding: "4px 12px", borderRadius: "10px", background: isActive ? "#2A0E00" : "transparent", transition: "background 0.15s" }}>
-            <span style={{ color: isActive ? "#F07228" : "#5A3A28" }}>{icon}</span>
-            <span style={{ fontFamily: R, fontSize: "9px", color: isActive ? "#F07228" : "#5A3A28", letterSpacing: "1px" }}>{label.toUpperCase()}</span>
+          <Link key={href} href={href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", padding: "4px 12px", borderRadius: "10px", background: isActive ? "#FFF0E8" : "transparent", transition: "background 0.15s" }}>
+            <span style={{ color: isActive ? "#F07228" : "#8A6A58" }}>{icon}</span>
+            <span style={{ fontFamily: R, fontSize: "9px", color: isActive ? "#F07228" : "#8A6A58", letterSpacing: "1px" }}>{label.toUpperCase()}</span>
           </Link>
         );
       })}

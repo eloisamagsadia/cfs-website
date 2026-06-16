@@ -85,7 +85,7 @@ export default function AdminReportCreatePage() {
           </button>
           <div>
             <div style={{ fontFamily: R, fontSize: "12px", color: form.is_published ? "#3CCE2A" : "#5A7A60", letterSpacing: "1px" }}>{form.is_published ? "PUBLISH IMMEDIATELY" : "SAVE AS DRAFT"}</div>
-            <div style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30", marginTop: "2px" }}>{form.is_published ? "Visible to the public right away" : "Only visible to admins until published"}</div>
+            <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "2px" }}>{form.is_published ? "Visible to the public right away" : "Only visible to admins until published"}</div>
           </div>
         </div>
       </div>

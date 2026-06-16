@@ -201,7 +201,7 @@ export default function AdminMediaPage() {
     actDel: { flex: 1, background: "transparent", border: "1px solid #3A1010", borderRadius: "4px", padding: "4px 0", fontFamily: B, fontSize: "10px", color: "#F04060", cursor: "pointer", textAlign: "center" as const },
     listTable: { width: "100%", borderCollapse: "collapse" as const },
     listTh: { fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px", padding: "8px 12px", textAlign: "left" as const, borderBottom: "1px solid #DDE8DD" },
-    listTd: { fontFamily: B, fontSize: "12px", color: "#1B3A2D", padding: "8px 12px", borderBottom: "1px solid #1A2614", verticalAlign: "middle" as const },
+    listTd: { fontFamily: B, fontSize: "12px", color: "#1B3A2D", padding: "8px 12px", borderBottom: "1px solid #DDE8DD", verticalAlign: "middle" as const },
     empty: { textAlign: "center" as const, padding: "48px", fontFamily: R, color: "#5A7A60", fontSize: "13px", letterSpacing: "1px" },
     toast: { position: "fixed" as const, bottom: "24px", right: "24px", background: "#FFFFFF", border: "1px solid #3CCE2A", borderRadius: "8px", padding: "10px 18px", fontFamily: B, fontSize: "12px", color: "#3CCE2A", zIndex: 9999 },
     lightboxOverlay: { position: "fixed" as const, top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.85)", zIndex: 9998, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" as const, gap: "16px", padding: "24px" },    lightboxImg: { maxWidth: "80vw", maxHeight: "70vh", borderRadius: "8px", objectFit: "contain" as const },

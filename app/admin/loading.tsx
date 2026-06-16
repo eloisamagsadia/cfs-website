@@ -1,5 +1,5 @@
 function Sk({ w="100%", h="14px", r="6px" }: { w?:string; h?:string; r?:string }) {
-  return <div style={{ width:w, height:h, borderRadius:r, background:"linear-gradient(90deg,#1A2614 25%,#1E2A18 50%,#1A2614 75%)", backgroundSize:"200% 100%", animation:"shimmer 1.5s infinite" }}/>;
+  return <div style={{ width:w, height:h, borderRadius:r, background:"linear-gradient(90deg,#E4EDE4 25%,#DDE8DD 50%,#E4EDE4 75%)", backgroundSize:"200% 100%", animation:"shimmer 1.5s infinite" }}/>;
 }
 export default function AdminLoading() {
   return (

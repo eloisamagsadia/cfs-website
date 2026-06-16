@@ -86,7 +86,7 @@ export default function AdminCommunityPage() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "4px", flexWrap: "wrap" }}>
                       <span style={{ fontFamily: R, fontSize: "12px", color: "#3CCE2A", letterSpacing: "1px" }}>{p.profiles?.display_name ?? "Member"}</span>
-                      {p.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F5C82A", background: "#3D3000", border: "1px solid #F5C82A40", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>📌 PINNED</span>}
+                      {p.is_pinned && <span style={{ fontFamily: R, fontSize: "9px", color: "#F5C82A", background: "#FFFBE8", border: "1px solid #F5C82A40", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>📌 PINNED</span>}
                       {p.is_hidden && <span style={{ fontFamily: R, fontSize: "9px", color: "#F04060", background: "#3D0A18", border: "1px solid #F0406040", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>🚫 HIDDEN</span>}
                       <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60" }}>{new Date(p.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric" })}</span>
                     </div>
@@ -94,12 +94,12 @@ export default function AdminCommunityPage() {
                     {!p.content && p.images?.length > 0 && <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: "0 0 6px" }}>📷 {p.images.length} image{p.images.length > 1 ? "s" : ""}</p>}
                     {!p.content && p.video_url && <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: "0 0 6px" }}>🎥 Video post</p>}
                     <div style={{ display: "flex", gap: "10px" }}>
-                      <span style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30" }}>💬 {p.community_comments?.length ?? 0}</span>
-                      <span style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30" }}>❤ {p.community_reactions?.length ?? 0}</span>
+                      <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>💬 {p.community_comments?.length ?? 0}</span>
+                      <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>❤ {p.community_reactions?.length ?? 0}</span>
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: "6px", flexShrink: 0, alignItems: "center" }}>
-                    <button onClick={(e) => { e.stopPropagation(); togglePin(p); }} disabled={actionLoading === p.id + "-pin"} title={p.is_pinned ? "Unpin" : "Pin"} style={{ background: p.is_pinned ? "#3D3000" : "#FFFFFF", border: `1px solid ${p.is_pinned ? "#F5C82A" : "#DDE8DD"}`, borderRadius: "6px", color: p.is_pinned ? "#F5C82A" : "#5A7A60", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px" }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
+                    <button onClick={(e) => { e.stopPropagation(); togglePin(p); }} disabled={actionLoading === p.id + "-pin"} title={p.is_pinned ? "Unpin" : "Pin"} style={{ background: p.is_pinned ? "#FFFBE8" : "#FFFFFF", border: `1px solid ${p.is_pinned ? "#F5C82A" : "#DDE8DD"}`, borderRadius: "6px", color: p.is_pinned ? "#F5C82A" : "#5A7A60", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px" }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></button>
                     <button onClick={(e) => { e.stopPropagation(); toggleHide(p); }} disabled={actionLoading === p.id + "-hide"} title={p.is_hidden ? "Unhide" : "Hide"} style={{ background: p.is_hidden ? "#3D0A18" : "#FFFFFF", border: `1px solid ${p.is_hidden ? "#F04060" : "#DDE8DD"}`, borderRadius: "6px", color: p.is_hidden ? "#F04060" : "#5A7A60", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px" }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></button>
                     <button onClick={(e) => { e.stopPropagation(); deletePost(p.id); }} disabled={actionLoading === p.id + "-delete"} title="Delete permanently" style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "6px", color: "#F04060", padding: "5px 8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px" }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
                     <span style={{ color: "#5A7A60", fontSize: "11px", marginLeft: "2px" }}>{expanded === p.id ? "▲" : "▼"}</span>
@@ -134,7 +134,7 @@ export default function AdminCommunityPage() {
                     <div style={{ display: "flex", gap: "20px", paddingTop: "4px", borderTop: "1px solid #1C2E14" }}>
                       <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>💬 {p.community_comments?.length ?? 0} comments</span>
                       <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>❤ {p.community_reactions?.length ?? 0} reactions</span>
-                      <span style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30" }}>ID: {p.id.slice(0, 8)}...</span>
+                      <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>ID: {p.id.slice(0, 8)}...</span>
                     </div>
                   </div>
                 )}

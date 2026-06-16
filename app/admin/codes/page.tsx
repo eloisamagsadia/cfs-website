@@ -53,7 +53,7 @@ export default function AdminCodesPage() {
   });
   const inp={background:"#F2F7F2",border:"1.5px solid #DDE8DD",borderRadius:"6px",padding:"10px 12px",color:"#1B3A2D",fontFamily:B,fontSize:"13px",outline:"none",width:"100%",boxSizing:"border-box" as const};
   const SC={ACTIVE:"#3CCE2A",INACTIVE:"#5A7A60",EXPIRED:"#F04060","USED UP":"#F07228"};
-  const SB={ACTIVE:"#E8F0E4",INACTIVE:"#F2F7F2",EXPIRED:"#3D0A18","USED UP":"#3D1A0A"};
+  const SB={ACTIVE:"#E8F0E4",INACTIVE:"#F2F7F2",EXPIRED:"#3D0A18","USED UP":"#FFF0E8"};
   return(
     <div style={{display:"flex",flexDirection:"column",gap:"20px"}}>
       <div>
@@ -65,7 +65,7 @@ export default function AdminCodesPage() {
         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"14px"}}>
           <div style={{display:"flex",gap:"10px"}}>
             <input value={form.code} onChange={e=>setForm(p=>({...p,code:e.target.value.toUpperCase()}))} placeholder="CODE (e.g. CFS2026)" style={{...inp,flex:1,letterSpacing:"2px",fontFamily:R}}/>
-            <button onClick={generateCode} style={{background:"#3D3000",border:"2px solid #F5C82A",borderRadius:"6px",color:"#F5C82A",padding:"10px 20px",cursor:"pointer",fontFamily:R,fontSize:"12px",letterSpacing:"1.5px",whiteSpace:"nowrap",flexShrink:0}}>✦ GENERATE</button>
+            <button onClick={generateCode} style={{background:"#FFFBE8",border:"2px solid #F5C82A",borderRadius:"6px",color:"#F5C82A",padding:"10px 20px",cursor:"pointer",fontFamily:R,fontSize:"12px",letterSpacing:"1.5px",whiteSpace:"nowrap",flexShrink:0}}>✦ GENERATE</button>
           </div>
           <div className="codes-form-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"10px"}}>
             <select value={form.discount_type} onChange={e=>setForm(p=>({...p,discount_type:e.target.value}))} style={inp}>
@@ -89,7 +89,7 @@ export default function AdminCodesPage() {
                 </button>
               );
             })}
-            {products.length===0&&<span style={{fontFamily:B,fontSize:"12px",color:"#3A5A30"}}>No products found</span>}
+            {products.length===0&&<span style={{fontFamily:B,fontSize:"12px",color:"#5A7A60"}}>No products found</span>}
           </div>
         </div>
         <button onClick={saveCode} disabled={saving||!form.code} style={{fontFamily:R,fontSize:"12px",background:saving||!form.code?"#F2F7F2":"#F5C82A",color:saving||!form.code?"#5A7A60":"#080F06",border:"2px solid #080F06",borderRadius:"6px",padding:"10px 24px",cursor:"pointer",letterSpacing:"1.5px"}}>
@@ -123,7 +123,7 @@ export default function AdminCodesPage() {
               <div style={{fontFamily:B,fontSize:"12px",color:"#4A7C59"}}>{c.expires_at?new Date(c.expires_at).toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"}):"Never"}</div>
               <div><span style={{fontFamily:R,fontSize:"10px",color:SC[status],background:SB[status],border:`1.5px solid ${SC[status]}40`,borderRadius:"20px",padding:"2px 10px",letterSpacing:"1px"}}>{status}</span></div>
               <div style={{display:"flex",gap:"6px"}}>
-                <button onClick={()=>toggleActive(c.id,c.is_active)} style={{background:"#3D3000",border:"1.5px solid #F5C82A",borderRadius:"6px",color:"#F5C82A",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>{c.is_active?"⏸":"▶"}</button>
+                <button onClick={()=>toggleActive(c.id,c.is_active)} style={{background:"#FFFBE8",border:"1.5px solid #F5C82A",borderRadius:"6px",color:"#F5C82A",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>{c.is_active?"⏸":"▶"}</button>
                 <button onClick={()=>deleteCode(c.id)} style={{background:"#3D0A18",border:"1.5px solid #F04060",borderRadius:"6px",color:"#F04060",width:"32px",height:"32px",cursor:"pointer",fontSize:"13px"}}>🗑</button>
               </div>
             </div>

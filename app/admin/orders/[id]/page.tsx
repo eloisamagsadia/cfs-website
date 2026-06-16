@@ -108,7 +108,7 @@ export default function AdminOrderDetailPage() {
             </div>
           </div>
           {order.paymongo_ref && (
-            <div style={{ marginTop: "10px", fontFamily: B, fontSize: "11px", color: "#3A5A30" }}>
+            <div style={{ marginTop: "10px", fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>
               PayMongo: {order.paymongo_ref}
             </div>
           )}

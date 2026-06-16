@@ -235,7 +235,7 @@ export default function AdminExclusivePage() {
                   </div>
                 )}
                 {/* Status badge */}
-                <div style={{ position: "absolute", top: "8px", right: "8px", background: item.is_published ? "#E8F0E4" : "#3D3000", border: `1px solid ${item.is_published ? "#3CCE2A" : "#F5C82A"}`, borderRadius: "20px", padding: "2px 8px" }}>
+                <div style={{ position: "absolute", top: "8px", right: "8px", background: item.is_published ? "#E8F0E4" : "#FFFBE8", border: `1px solid ${item.is_published ? "#3CCE2A" : "#F5C82A"}`, borderRadius: "20px", padding: "2px 8px" }}>
                   <span style={{ fontFamily: R, fontSize: "9px", color: item.is_published ? "#3CCE2A" : "#F5C82A", letterSpacing: "1px" }}>
                     {item.is_published ? "PUBLISHED" : "DRAFT"}
                   </span>

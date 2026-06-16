@@ -136,7 +136,7 @@ export default function AdminSupportPage() {
               <div key={t.id}>
                 {/* Row */}
                 <div onClick={() => setExpanded(expanded === t.id ? null : t.id)}
-                  className="support-table-row" className="support-table-row" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 140px 32px", gap: "12px", padding: "12px 16px", borderBottom: "1px solid #1E3018", cursor: "pointer", background: expanded === t.id ? "#1F3018" : "transparent", alignItems: "center" }}
+                  className="support-table-row" className="support-table-row" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 140px 32px", gap: "12px", padding: "12px 16px", borderBottom: "1px solid #DDE8DD", cursor: "pointer", background: expanded === t.id ? "#F2F7F2" : "transparent", alignItems: "center" }}
                   onMouseEnter={e => { if (expanded !== t.id) (e.currentTarget as HTMLDivElement).style.background = "#F2F7F2"; }}
                   onMouseLeave={e => { if (expanded !== t.id) (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}>
                   <div>
