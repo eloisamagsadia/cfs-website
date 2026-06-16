@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyWebhookSignature } from "@/lib/paymongo";
 import { sendDonationReceipt } from "@/lib/email";
+import { clerkClient } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
@@ -64,13 +65,17 @@ export async function POST(req: NextRequest) {
 
       if (donation?.user_id) {
         const { data: profile } = await supabase
-          .from("profiles")
-          .select("email")
-          .eq("id", donation.user_id)
-          .single();
-        if (profile?.email) {
+          .from("profiles").select("email").eq("id", donation.user_id).single();
+        let email = profile?.email as string | null;
+        if (!email) {
+          try {
+            const clerkUser = await clerkClient.users.getUser(donation.user_id);
+            email = clerkUser.emailAddresses[0]?.emailAddress ?? null;
+          } catch {}
+        }
+        if (email) {
           sendDonationReceipt({
-            to: profile.email,
+            to: email,
             amount: Number(donation.amount),
             message: donation.message ?? undefined,
             donationId: reference,

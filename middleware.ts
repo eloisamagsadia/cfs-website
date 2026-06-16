@@ -9,6 +9,7 @@ export default authMiddleware({
     "/api/webhooks(.*)",
     "/api/paymongo/webhook",
     "/payment(.*)",
+    "/api/payment/status",
     "/shop(.*)",
     "/events(.*)",
     "/projects(.*)",

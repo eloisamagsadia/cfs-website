@@ -71,5 +71,5 @@ export async function POST(req: NextRequest) {
     metadata: metadata ?? null,
   });
 
-  return NextResponse.json({ checkout_url: link.checkoutUrl, payment_link_id: link.id });
+  return NextResponse.json({ checkout_url: link.checkoutUrl, payment_link_id: link.id, reference_id: ref });
 }

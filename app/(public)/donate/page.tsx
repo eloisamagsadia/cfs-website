@@ -59,12 +59,13 @@ export default function DonatePage() {
           description: "Donation to CFS (Colet Fan Society)",
           type: "donation",
           metadata: { message: msg || null, anonymous: anon },
-          success_url: `${window.location.origin}/payment/success?type=donation`,
         }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed to create payment link");
-      window.location.href = data.checkout_url;
+      // Store checkout URL so the processing page can open PayMongo in a new tab
+      sessionStorage.setItem("cfs_pending_checkout", JSON.stringify({ url: data.checkout_url, ref: data.reference_id }));
+      router.push(`/payment/processing?type=donation&ref=${data.reference_id}`);
     } catch (e: any) {
       setError(e.message ?? "Something went wrong. Please try again.");
       setLoading(false);
