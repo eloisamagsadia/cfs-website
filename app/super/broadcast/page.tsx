@@ -49,7 +49,7 @@ export default function BroadcastPage() {
             style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "vertical", boxSizing: "border-box" as const }} />
         </div>
         <button onClick={send} disabled={sending || !form.title.trim() || !form.message.trim()}
-          style={{ fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", opacity: (sending || !form.title.trim() || !form.message.trim()) ? 0.5 : 1 }}>
+          style={{ fontFamily: R, fontSize: "12px", background: "#3CCE2A", color: "#F7FAF5", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", opacity: (sending || !form.title.trim() || !form.message.trim()) ? 0.5 : 1 }}>
           {sending ? "SENDING..." : "📣 SEND TO ALL MEMBERS"}
         </button>
       </div>

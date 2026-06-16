@@ -45,36 +45,36 @@ export default async function SuperCommandCenter() {
   ];
 
   const quickActions = [
-    { label: "MANAGE ROLES", href: "/super/roles", color: "#B47FE3", bg: "#2A1A3D" },
+    { label: "MANAGE ROLES", href: "/super/roles", color: "#B47FE3", bg: "#F0EAFF" },
     { label: "BROADCAST", href: "/super/broadcast", color: "#3CCE2A", bg: "#E8F0E4" },
-    { label: "SITE SETTINGS", href: "/super/settings", color: "#F07228", bg: "#3D1A0A" },
-    { label: "AUDIT LOG", href: "/super/audit", color: "#F5C82A", bg: "#3D3000" },
+    { label: "SITE SETTINGS", href: "/super/settings", color: "#F07228", bg: "#FFF0E8" },
+    { label: "AUDIT LOG", href: "/super/audit", color: "#F5C82A", bg: "#FFFBE8" },
   ];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #3D3000, #1A2614)", border: "2px solid #F5C82A40", borderRadius: "16px", padding: "28px" }}>
+      <div style={{ background: "linear-gradient(135deg, #FFFBE8, #FFF7D4)", border: "2px solid #F5C82A40", borderRadius: "16px", padding: "28px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
           <span style={{ fontSize: "28px" }}>⚡</span>
-          <h1 style={{ fontFamily: R, fontSize: "1.8rem", color: "#F5C82A", letterSpacing: "4px", margin: 0 }}>COMMAND CENTER</h1>
+          <h1 style={{ fontFamily: R, fontSize: "1.8rem", color: "#C8960A", letterSpacing: "4px", margin: 0 }}>COMMAND CENTER</h1>
         </div>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59", margin: 0 }}>Full platform control — with great power comes great responsibility.</p>
 
         {/* Site status */}
         <div style={{ display: "flex", gap: "12px", marginTop: "16px", flexWrap: "wrap" }}>
-          <div style={{ background: settings?.maintenance_mode ? "#3D0A14" : "#E8F0E4", border: `1px solid ${settings?.maintenance_mode ? "#F04060" : "#3CCE2A"}40`, borderRadius: "8px", padding: "8px 16px" }}>
+          <div style={{ background: settings?.maintenance_mode ? "#FFE8EC" : "#E8F0E4", border: `1px solid ${settings?.maintenance_mode ? "#F04060" : "#3CCE2A"}40`, borderRadius: "8px", padding: "8px 16px" }}>
             <span style={{ fontFamily: R, fontSize: "11px", color: settings?.maintenance_mode ? "#F04060" : "#3CCE2A", letterSpacing: "1px" }}>
               {settings?.maintenance_mode ? "🔴 MAINTENANCE MODE" : "🟢 SITE LIVE"}
             </span>
           </div>
           {settings?.announcement_active && (
-            <div style={{ background: "#3D2000", border: "1px solid #F07228", borderRadius: "8px", padding: "8px 16px" }}>
+            <div style={{ background: "#FFF0D8", border: "1px solid #F07228", borderRadius: "8px", padding: "8px 16px" }}>
               <span style={{ fontFamily: B, fontSize: "11px", color: "#F07228" }}>📣 Announcement active</span>
             </div>
           )}
           {sponsorPerks && (
-            <div style={{ background: "#2A1A3D", border: "1px solid #B47FE340", borderRadius: "8px", padding: "8px 16px" }}>
+            <div style={{ background: "#F0EAFF", border: "1px solid #B47FE340", borderRadius: "8px", padding: "8px 16px" }}>
               <span style={{ fontFamily: B, fontSize: "11px", color: "#B47FE3" }}>✦ {sponsors ?? 0}/{sponsorPerks.max_sponsors} sponsor slots</span>
             </div>
           )}

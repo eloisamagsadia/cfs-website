@@ -48,10 +48,10 @@ function NavItem({ label, href, icon, exact }: { label: string; href: string; ic
 
   return (
     <Link href={href} style={{ textDecoration: "none", display: "block" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", position: "relative", background: isActive ? "linear-gradient(90deg, #2A2000, #1A1500)" : "transparent", transition: "background 0.15s" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", position: "relative", background: isActive ? "#FFFBE8" : "transparent", transition: "background 0.15s" }}>
         {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#F5C82A", borderRadius: "0 3px 3px 0" }} />}
-        <span style={{ color: isActive ? "#F5C82A" : "#4A3A18", transition: "color 0.15s" }}>{icon}</span>
-        <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#F0DFA0" : "#4A3A18", letterSpacing: "0.3px" }}>{label}</span>
+        <span style={{ color: isActive ? "#F5C82A" : "#8A7A48", transition: "color 0.15s" }}>{icon}</span>
+        <span style={{ fontFamily: B, fontSize: "13px", color: isActive ? "#7A5A10" : "#8A7A48", letterSpacing: "0.3px" }}>{label}</span>
       </div>
     </Link>
   );
@@ -61,35 +61,35 @@ export default function SuperSidebar() {
   return (
     <aside style={{ width: "210px", flexShrink: 0 }}>
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px", background: "linear-gradient(135deg, #2A2000, #1A1500)", border: "1px solid #F5C82A20", borderRadius: "10px", marginBottom: "20px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px", background: "linear-gradient(135deg, #FFFBE8, #FFF7D4)", border: "1px solid #F5C82A20", borderRadius: "10px", marginBottom: "20px" }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5C82A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         <div>
-          <div style={{ fontFamily: R, fontSize: "11px", color: "#F5C82A", letterSpacing: "2px" }}>SUPER ADMIN</div>
-          <div style={{ fontFamily: B, fontSize: "9px", color: "#4A3A18", marginTop: "1px" }}>Command Center</div>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#C8960A", letterSpacing: "2px" }}>SUPER ADMIN</div>
+          <div style={{ fontFamily: B, fontSize: "9px", color: "#8A7A48", marginTop: "1px" }}>Command Center</div>
         </div>
       </div>
 
       <nav style={{ position: "sticky", top: "80px", display: "flex", flexDirection: "column", gap: "20px" }}>
         {sections.map(section => (
           <div key={section.label}>
-            <div style={{ fontFamily: R, fontSize: "9px", color: "#3A2A08", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>{section.label}</div>
+            <div style={{ fontFamily: R, fontSize: "9px", color: "#9AA870", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>{section.label}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
               {section.items.map(item => <NavItem key={item.href} {...item} />)}
             </div>
           </div>
         ))}
 
-        <div style={{ borderTop: "1px solid #1E1800", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "1px" }}>
+        <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "1px" }}>
           <Link href="/admin" style={{ textDecoration: "none" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", background: "#1A0800", border: "1px solid #F0722830" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", background: "#FFF0E8", border: "1px solid #F0722830" }}>
               <span style={{ color: "#F07228" }}>{icons.admin}</span>
               <span style={{ fontFamily: B, fontSize: "13px", color: "#F07228" }}>Admin Panel</span>
             </div>
           </Link>
           <Link href="/members" style={{ textDecoration: "none" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px" }}>
-              <span style={{ color: "#3A2A08" }}>{icons.member}</span>
-              <span style={{ fontFamily: B, fontSize: "13px", color: "#3A2A08" }}>Member Area</span>
+              <span style={{ color: "#9AA870" }}>{icons.member}</span>
+              <span style={{ fontFamily: B, fontSize: "13px", color: "#9AA870" }}>Member Area</span>
             </div>
           </Link>
         </div>

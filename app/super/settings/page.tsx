@@ -107,13 +107,13 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
           <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>Color:</label>
           <input type="color" value={settings.announcement_color ?? "#F07228"} onChange={e => setSettings((p: any) => ({ ...p, announcement_color: e.target.value }))}
             style={{ width: "36px", height: "32px", borderRadius: "6px", border: "1.5px solid #DDE8DD", cursor: "pointer" }} />
-          <button onClick={toggleAnnouncement} style={{ fontFamily: R, fontSize: "11px", background: settings.announcement_active ? "#F04060" : "#3CCE2A", color: "#080F06", border: "none", borderRadius: "6px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1px" }}>
+          <button onClick={toggleAnnouncement} style={{ fontFamily: R, fontSize: "11px", background: settings.announcement_active ? "#F04060" : "#3CCE2A", color: "#F7FAF5", border: "none", borderRadius: "6px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1px" }}>
             {settings.announcement_active ? "HIDE" : "SHOW"}
           </button>
         </div>
       </div>
 
-      <button onClick={save} disabled={saving} style={{ fontFamily: R, fontSize: "12px", background: "#F5C82A", color: "#080F06", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
+      <button onClick={save} disabled={saving} style={{ fontFamily: R, fontSize: "12px", background: "#F5C82A", color: "#F7FAF5", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
         {saving ? "SAVING..." : "SAVE ALL SETTINGS"}
       </button>
     </div>

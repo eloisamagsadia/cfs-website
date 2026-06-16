@@ -11,7 +11,7 @@ export default async function SuperLayout({ children }: { children: React.ReactN
   if (!userId || role !== "super_admin") redirect("/members");
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#080F06" }}>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#F7FAF5" }}>
       <Navbar />
       {/* Gold accent bar */}
       <div style={{ height: "3px", background: "linear-gradient(90deg, #F5C82A, #F07228, #F5C82A)" }} />

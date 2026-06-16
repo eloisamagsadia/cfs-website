@@ -37,13 +37,13 @@ export default function MobileSuperNav() {
   const pathname = usePathname();
 
   return (
-    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: "#080600", borderTop: "1px solid #2A2000", padding: "8px 0 calc(8px + env(safe-area-inset-bottom))", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: "rgba(255,252,240,0.96)", borderTop: "1px solid #F0DFA0", padding: "8px 0 calc(8px + env(safe-area-inset-bottom))", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
       {tabs.map(({ label, href, icon, exact }) => {
         const isActive = exact ? pathname === href : pathname.startsWith(href);
         return (
-          <Link key={href} href={href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", padding: "4px 10px", borderRadius: "10px", background: isActive ? "#2A2000" : "transparent", transition: "background 0.15s" }}>
-            <span style={{ color: isActive ? "#F5C82A" : "#4A3A18" }}>{icon}</span>
-            <span style={{ fontFamily: R, fontSize: "9px", color: isActive ? "#F5C82A" : "#4A3A18", letterSpacing: "1px" }}>{label.toUpperCase()}</span>
+          <Link key={href} href={href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", padding: "4px 10px", borderRadius: "10px", background: isActive ? "#FFFBE8" : "transparent", transition: "background 0.15s" }}>
+            <span style={{ color: isActive ? "#C8960A" : "#8A7A48" }}>{icon}</span>
+            <span style={{ fontFamily: R, fontSize: "9px", color: isActive ? "#C8960A" : "#8A7A48", letterSpacing: "1px" }}>{label.toUpperCase()}</span>
           </Link>
         );
       })}

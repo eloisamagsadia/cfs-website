@@ -8,11 +8,11 @@ const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const ROLE_BADGES: Record<string, { label: string; color: string; bg: string }> = {
-  super_admin: { label: "⚡ SUPER ADMIN", color: "#F5C82A", bg: "#3D3000" },
-  admin:       { label: "ADMIN",          color: "#F07228", bg: "#3D1A0A" },
-  moderator:   { label: "MOD",            color: "#69C9D0", bg: "#0A2A2A" },
-  sponsor:     { label: "✦ SPONSOR",      color: "#B47FE3", bg: "#2A1A3D" },
-  member:      { label: "MEMBER",         color: "#3CCE2A", bg: "#E8F0E4" },
+  super_admin: { label: "⚡ SUPER ADMIN", color: "#C8960A", bg: "#FFFBE8" },
+  admin:       { label: "ADMIN",          color: "#F07228", bg: "#FFF0E8" },
+  moderator:   { label: "MOD",            color: "#0A8A90", bg: "#E8FAFA" },
+  sponsor:     { label: "✦ SPONSOR",      color: "#7A4FBB", bg: "#F0EAFF" },
+  member:      { label: "MEMBER",         color: "#2CB520", bg: "#E8F0E4" },
 };
 
 const icons = {
@@ -80,7 +80,7 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
       </button>
 
       {open && (
-        <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, background: "#111A0F", border: "1.5px solid #DDE8DD", borderRadius: "14px", padding: "6px", zIndex: 100, minWidth: "210px", boxShadow: "0 12px 40px rgba(0,0,0,0.7)" }}>
+        <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "14px", padding: "6px", zIndex: 100, minWidth: "210px", boxShadow: "0 12px 40px rgba(0,0,0,0.1)" }}>
 
           {/* Profile header */}
           <div style={{ padding: "10px 12px 12px", borderBottom: "1px solid #DDE8DD", marginBottom: "4px", display: "flex", alignItems: "center", gap: "10px" }}>
@@ -99,9 +99,9 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
           {/* Menu items */}
           {menuItems.map(({ label, href, icon }) => (
             <Link key={href} href={href} onClick={() => setOpen(false)}
-              style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", textDecoration: "none", color: "#B0C4A8" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#FFFFFF"; e.currentTarget.style.color = "#1B3A2D"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "#B0C4A8"; }}>
+              style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", textDecoration: "none", color: "#5A7A60" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "#F2F7F2"; e.currentTarget.style.color = "#1B3A2D"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "#5A7A60"; }}>
               <span style={{ opacity: 0.7 }}>{icon}</span>
               <span style={{ fontFamily: B, fontSize: "13px" }}>{label}</span>
             </Link>
@@ -112,7 +112,7 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
           {isAdmin && (
             <Link href="/admin" onClick={() => setOpen(false)}
               style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", textDecoration: "none", color: "#F07228" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#3D1A0A"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = "#FFF0E8"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "none"; }}>
               <span>{icons.admin}</span>
               <span style={{ fontFamily: B, fontSize: "13px" }}>Admin Panel</span>
@@ -122,7 +122,7 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
           {isSuperAdmin && (
             <Link href="/super" onClick={() => setOpen(false)}
               style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", textDecoration: "none", color: "#F5C82A" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#3D3000"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = "#FFFBE8"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "none"; }}>
               <span>{icons.super}</span>
               <span style={{ fontFamily: B, fontSize: "13px" }}>Super Admin</span>
@@ -133,7 +133,7 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
 
           <button onClick={handleSignOut}
             style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", background: "none", border: "none", cursor: "pointer", color: "#F04060", textAlign: "left" }}
-            onMouseEnter={e => { e.currentTarget.style.background = "#3D0A14"; }}
+            onMouseEnter={e => { e.currentTarget.style.background = "#FFE8EC"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "none"; }}>
             <span>{icons.signout}</span>
             <span style={{ fontFamily: B, fontSize: "13px" }}>Sign Out</span>

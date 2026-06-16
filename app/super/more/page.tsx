@@ -31,7 +31,7 @@ export default function SuperMorePage() {
 
       {sections.map(section => (
         <div key={section.label}>
-          <div style={{ fontFamily: R, fontSize: "10px", color: "#4A3A18", letterSpacing: "2px", marginBottom: "10px" }}>{section.label}</div>
+          <div style={{ fontFamily: R, fontSize: "10px", color: "#8A7A48", letterSpacing: "2px", marginBottom: "10px" }}>{section.label}</div>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {section.items.map(item => (
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
