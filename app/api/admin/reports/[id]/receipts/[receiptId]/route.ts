@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { deleteFromR2 } from "@/lib/r2";
 
 function isAdmin(role?: string) {
   return ["admin", "super_admin"].includes(role ?? "");
@@ -24,11 +25,7 @@ export async function DELETE(
     .single();
 
   if (receipt?.file_url) {
-    const url = new URL(receipt.file_url);
-    const storagePath = url.pathname.split("/object/public/report-receipts/")[1];
-    if (storagePath) {
-      await supabase.storage.from("report-receipts").remove([decodeURIComponent(storagePath)]);
-    }
+    await deleteFromR2(receipt.file_url).catch(() => {});
   }
 
   const { error } = await supabase

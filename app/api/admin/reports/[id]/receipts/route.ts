@@ -1,9 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import sharp from "sharp";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { r2, R2_BUCKET, R2_PUBLIC_URL } from "@/lib/r2";
 
 function isAdmin(role?: string) {
   return ["admin", "super_admin"].includes(role ?? "");
+}
+
+function slugify(s: string) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+}
+
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic"];
+
+async function optimizeImage(buffer: Buffer, mimeType: string) {
+  if (!ALLOWED_IMAGE_TYPES.includes(mimeType)) return { buffer, ext: "bin", contentType: mimeType };
+  const optimized = await sharp(buffer)
+    .resize(1600, 1600, { fit: "inside", withoutEnlargement: true })
+    .webp({ quality: 85 })
+    .toBuffer();
+  return { buffer: optimized, ext: "webp", contentType: "image/webp" };
 }
 
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
@@ -35,20 +53,37 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (!file || !projectName || !itemDescription)
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
+  const isPdf = file.type === "application/pdf";
+  const rawBuffer = Buffer.from(await file.arrayBuffer());
+
+  let uploadBuffer: Buffer;
+  let contentType: string;
+  let ext: string;
+
+  if (isPdf) {
+    uploadBuffer = rawBuffer;
+    contentType = "application/pdf";
+    ext = "pdf";
+  } else {
+    const optimized = await optimizeImage(rawBuffer, file.type);
+    uploadBuffer = optimized.buffer;
+    contentType = optimized.contentType;
+    ext = optimized.ext;
+  }
+
+  const nameSlug = slugify(projectName);
+  const key = `reports/receipts/${params.id}/${nameSlug}-${Date.now()}.${ext}`;
+
+  await r2.send(new PutObjectCommand({
+    Bucket: R2_BUCKET,
+    Key: key,
+    Body: uploadBuffer,
+    ContentType: contentType,
+  }));
+
+  const publicUrl = `${R2_PUBLIC_URL}/${key}`;
+
   const supabase = createAdminClient();
-
-  const ext = file.name.split(".").pop() ?? "bin";
-  const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40);
-  const path = `${params.id}/${slug(projectName)}/${slug(itemDescription)}-${Date.now()}.${ext}`;
-
-  const { error: storageErr } = await supabase.storage
-    .from("report-receipts")
-    .upload(path, file, { contentType: file.type, upsert: false });
-
-  if (storageErr) return NextResponse.json({ error: storageErr.message }, { status: 500 });
-
-  const { data: { publicUrl } } = supabase.storage.from("report-receipts").getPublicUrl(path);
-
   const { data: receipt, error: dbErr } = await supabase
     .from("report_receipts")
     .insert({
@@ -56,7 +91,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       project_name: projectName,
       item_description: itemDescription,
       file_url: publicUrl,
-      file_name: file.name,
+      file_name: projectName,
     })
     .select()
     .single();
