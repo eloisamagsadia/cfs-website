@@ -10,6 +10,24 @@ const SC: Record<string, string> = {
   failed:    "#F04060",
 };
 
+const TIERS = [
+  { name: "Supermoon",    min: 8000,  color: "#F5C82A" },
+  { name: "Blue Moon",    min: 5000,  color: "#8EE440" },
+  { name: "Harvest Moon", min: 3000,  color: "#F07228" },
+  { name: "Blood Moon",   min: 1500,  color: "#F04060" },
+];
+
+function getTier(amount: number) {
+  return TIERS.find(t => amount >= t.min) ?? null;
+}
+
+function fmt(n: number) {
+  return n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+const COLS = "2fr 1fr 0.8fr 1fr 1fr 1.2fr 1.5fr";
+const HEADERS = ["DONOR", "DONATED", "FEE", "TOTAL PAID", "STATUS", "DATE & TIME", "REF / PAYMONGO"];
+
 export default function AdminDonationsPage() {
   const [donations, setDonations] = useState<any[]>([]);
   const [loading, setLoading]     = useState(true);
@@ -23,11 +41,10 @@ export default function AdminDonationsPage() {
     });
   }, []);
 
-  const totalCollected = donations
-    .filter(d => d.status === "completed")
-    .reduce((s, d) => s + Number(d.amount), 0);
+  const totalCollected = donations.filter(d => d.status === "completed").reduce((s, d) => s + Number(d.amount), 0);
   const pendingCount   = donations.filter(d => d.status === "pending").length;
   const completedCount = donations.filter(d => d.status === "completed").length;
+  const failedCount    = donations.filter(d => d.status === "failed").length;
 
   const filtered = donations.filter(d => {
     const matchFilter = filter === "all" || d.status === filter;
@@ -35,7 +52,9 @@ export default function AdminDonationsPage() {
     const matchSearch = !q ||
       d.profiles?.display_name?.toLowerCase().includes(q) ||
       d.profiles?.email?.toLowerCase().includes(q) ||
-      d.message?.toLowerCase().includes(q);
+      d.message?.toLowerCase().includes(q) ||
+      d.id?.toLowerCase().includes(q) ||
+      d.paymongo_ref?.toLowerCase().includes(q);
     return matchFilter && matchSearch;
   });
 
@@ -49,11 +68,12 @@ export default function AdminDonationsPage() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
         {[
-          { label: "TOTAL DONATIONS", value: donations.length,                               color: "#F0EAD6" },
-          { label: "COLLECTED",       value: `₱${totalCollected.toLocaleString()}`,          color: "#3CCE2A" },
-          { label: "PENDING",         value: pendingCount,                                    color: "#F5C82A" },
+          { label: "TOTAL DONATIONS", value: donations.length,                      color: "#F0EAD6" },
+          { label: "COLLECTED",       value: `₱${totalCollected.toLocaleString()}`, color: "#3CCE2A" },
+          { label: "PENDING",         value: pendingCount,                           color: "#F5C82A" },
+          { label: "FAILED",          value: failedCount,                            color: "#F04060" },
         ].map(s => (
           <div key={s.label} style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "10px", padding: "14px 18px" }}>
             <div style={{ fontFamily: R, fontSize: "1.4rem", color: s.color }}>{s.value}</div>
@@ -70,11 +90,11 @@ export default function AdminDonationsPage() {
             {f.toUpperCase()}
           </button>
         ))}
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search donor or message..."
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search donor, message, ref..."
           style={{ marginLeft: "auto", background: "#1A2614", border: "1.5px solid #2C4820", borderRadius: "8px", padding: "7px 14px", color: "#F0EAD6", fontFamily: B, fontSize: "12px", outline: "none", minWidth: "220px" }} />
       </div>
 
-      {/* List */}
+      {/* Table */}
       {loading ? (
         <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: B, color: "#5A7A50" }}>Loading...</div>
       ) : filtered.length === 0 ? (
@@ -82,59 +102,104 @@ export default function AdminDonationsPage() {
           NO DONATIONS {filter !== "all" ? `WITH STATUS "${filter.toUpperCase()}"` : "YET"}
         </div>
       ) : (
-        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "hidden" }}>
+        <div style={{ background: "#1A2614", border: "2px solid #2C4820", borderRadius: "12px", overflow: "auto" }}>
           {/* Header */}
-          <div style={{ background: "#243520", padding: "10px 20px", display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "12px" }}>
-            {["DONOR", "AMOUNT", "STATUS", "DATE"].map(h => (
+          <div style={{ background: "#243520", padding: "10px 20px", display: "grid", gridTemplateColumns: COLS, gap: "12px", minWidth: "900px" }}>
+            {HEADERS.map(h => (
               <span key={h} style={{ fontFamily: R, fontSize: "10px", color: "#5A7A50", letterSpacing: "1.5px" }}>{h}</span>
             ))}
           </div>
 
-          {filtered.map((d, i) => (
-            <div key={d.id} style={{ padding: "14px 20px", borderTop: "1px solid #2C4820", background: i % 2 === 0 ? "#1A2614" : "#162212", display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "12px", alignItems: "center" }}>
-              {/* Donor — always show to admin, flag anonymous */}
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#243520", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  {d.profiles?.avatar_url ? (
-                    <img src={d.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  ) : (
-                    <span style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A" }}>{(d.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
-                  )}
-                </div>
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6" }}>
-                      {d.profiles?.display_name ?? "Member"}
-                    </span>
-                    {d.is_anonymous && (
-                      <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A50", background: "#2C4820", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>ANON</span>
+          {filtered.map((d, i) => {
+            const total    = Number(d.amount);
+            const intended = d.donation_amount ? Number(d.donation_amount) : null;
+            const fee      = intended != null ? total - intended : null;
+            const tier     = getTier(intended ?? total);
+            const statusColor = SC[d.status] ?? "#5A7A50";
+            const dt       = new Date(d.created_at);
+            const dateStr  = dt.toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" });
+            const timeStr  = dt.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", hour12: true });
+            const refNo    = (d.id as string).slice(0, 8).toUpperCase();
+
+            return (
+              <div key={d.id} style={{ padding: "14px 20px", borderTop: "1px solid #2C4820", background: i % 2 === 0 ? "#1A2614" : "#162212", display: "grid", gridTemplateColumns: COLS, gap: "12px", alignItems: "center", minWidth: "900px" }}>
+
+                {/* DONOR */}
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#243520", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    {d.profiles?.avatar_url
+                      ? <img src={d.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      : <span style={{ fontFamily: R, fontSize: "13px", color: "#3CCE2A" }}>{(d.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
+                    }
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+                      <span style={{ fontFamily: B, fontSize: "13px", color: "#F0EAD6", whiteSpace: "nowrap" }}>
+                        {d.profiles?.display_name ?? "Member"}
+                      </span>
+                      {d.is_anonymous && (
+                        <span style={{ fontFamily: R, fontSize: "9px", color: "#5A7A50", background: "#2C4820", borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>ANON</span>
+                      )}
+                      {tier && (
+                        <span style={{ fontFamily: R, fontSize: "9px", color: tier.color, background: tier.color + "18", border: `1px solid ${tier.color}40`, borderRadius: "4px", padding: "1px 6px", letterSpacing: "1px" }}>
+                          {tier.name.toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+                    {d.profiles?.email && (
+                      <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.profiles.email}</div>
+                    )}
+                    {d.message && (
+                      <div style={{ fontFamily: B, fontSize: "10px", color: "#8AAA78", fontStyle: "italic", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>"{d.message}"</div>
                     )}
                   </div>
-                  {d.profiles?.email && (
-                    <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>{d.profiles.email}</div>
-                  )}
-                  {d.message && (
-                    <div style={{ fontFamily: B, fontSize: "11px", color: "#8AAA78", fontStyle: "italic", marginTop: "2px" }}>"{d.message}"</div>
+                </div>
+
+                {/* DONATED (intended) */}
+                <div>
+                  {intended != null ? (
+                    <span style={{ fontFamily: R, fontSize: "13px", color: "#F0EAD6" }}>₱{fmt(intended)}</span>
+                  ) : (
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>—</span>
                   )}
                 </div>
+
+                {/* FEE */}
+                <div>
+                  {fee != null ? (
+                    <span style={{ fontFamily: B, fontSize: "12px", color: "#F04060" }}>+₱{fmt(fee)}</span>
+                  ) : (
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>—</span>
+                  )}
+                </div>
+
+                {/* TOTAL PAID */}
+                <span style={{ fontFamily: R, fontSize: "14px", color: "#3CCE2A" }}>₱{fmt(total)}</span>
+
+                {/* STATUS */}
+                <span style={{ fontFamily: R, fontSize: "10px", color: statusColor, background: statusColor + "20", borderRadius: "20px", padding: "3px 10px", letterSpacing: "1px", width: "fit-content" }}>
+                  {(d.status ?? "pending").toUpperCase()}
+                </span>
+
+                {/* DATE & TIME */}
+                <div>
+                  <div style={{ fontFamily: B, fontSize: "11px", color: "#8AAA78" }}>{dateStr}</div>
+                  <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A50" }}>{timeStr}</div>
+                </div>
+
+                {/* REF / PAYMONGO */}
+                <div>
+                  <div style={{ fontFamily: "monospace", fontSize: "11px", color: "#F0EAD6", letterSpacing: "1px" }}>#{refNo}</div>
+                  {d.paymongo_ref && (
+                    <div style={{ fontFamily: "monospace", fontSize: "9px", color: "#5A7A50", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {d.paymongo_ref}
+                    </div>
+                  )}
+                </div>
+
               </div>
-
-              {/* Amount */}
-              <span style={{ fontFamily: R, fontSize: "14px", color: "#3CCE2A" }}>
-                ₱{Number(d.amount).toLocaleString()}
-              </span>
-
-              {/* Status */}
-              <span style={{ fontFamily: R, fontSize: "10px", color: SC[d.status] ?? "#5A7A50", background: (SC[d.status] ?? "#5A7A50") + "20", borderRadius: "20px", padding: "3px 10px", letterSpacing: "1px", width: "fit-content" }}>
-                {(d.status ?? "pending").toUpperCase()}
-              </span>
-
-              {/* Date */}
-              <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A50" }}>
-                {new Date(d.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
