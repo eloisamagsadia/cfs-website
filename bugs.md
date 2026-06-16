@@ -14,10 +14,6 @@ bugs
 - there should be a page in my account to see all post repost and media library
 - member count not real time in mobile
 
-other pending stuffs from cfs team
-
-- paymongo access
-- assets (logo, images, text copy/content in each page)
 
 PAYMONGO*
 binicoletfanprojects@gmail.com
@@ -25,3 +21,18 @@ CFSpkc112824@!
 
 - freedom wall (letters for colet)
 - add receipt in full report/ add note for no receipt items.
+
+
+events
+
+- add media for guidelines poster sample
+- terms and conditions before payment done
+- font style and sizing try both 
+- 1:1 product image
+- attached receipt in each project breakdown
+- donation drive (file maintenance) general, fan projects, extras (gift for colet) 
+- donation will be equally devided if a donor choose multiple donation drive
+- donation payment is manual also with label which payment channel used
+- make the site full light theme
+
+letters 

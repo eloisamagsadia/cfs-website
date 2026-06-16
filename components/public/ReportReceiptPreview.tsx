@@ -16,10 +16,18 @@ export default function ReportReceiptPreview({ receipts }: { receipts: Receipt[]
   const close = useCallback(() => setActive(null), []);
 
   useEffect(() => {
-    if (!active) return;
+    if (!active) {
+      document.body.style.overflow = "";
+      return;
+    }
+    document.body.style.overflow = "hidden";
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
   }, [active, close]);
 
   if (!receipts.length) return null;
