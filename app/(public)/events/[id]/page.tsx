@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import EventRegisterButton from "@/components/public/EventRegisterButton";
 import type { Metadata } from "next";
-import { IconCalendar, IconPin, IconUsers, IconTicket, IconSparkle } from "@/components/shared/Icons";
+import { IconCalendar, IconPin, IconUsers, IconTicket, IconSparkle, IconTag, IconClipboard, IconStar, IconCheck } from "@/components/shared/Icons";
+import EventShareRow from "@/components/public/EventShareRow";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -74,6 +75,18 @@ export default async function EventDetailPage({ params }: { params: { id: string
   const dateMonth   = eventDate.toLocaleDateString("en-PH", { month: "short", timeZone: "Asia/Manila" }).toUpperCase();
   const dateDay     = eventDate.toLocaleDateString("en-PH", { day: "numeric", timeZone: "Asia/Manila" });
   const dateTime    = eventDate.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" });
+
+  // Countdown chip: "14 days to go", "2 hours to go", "starting now"
+  const msLeft = eventDate.getTime() - Date.now();
+  const daysLeft = Math.floor(msLeft / (1000 * 60 * 60 * 24));
+  const hoursLeft = Math.floor(msLeft / (1000 * 60 * 60));
+  let countdown: string | null = null;
+  if (!isPast) {
+    if (daysLeft > 1) countdown = `${daysLeft} days to go`;
+    else if (daysLeft === 1) countdown = "Tomorrow";
+    else if (hoursLeft > 1) countdown = `${hoursLeft} hours to go`;
+    else if (hoursLeft >= 0) countdown = "Starting soon";
+  }
 
   return (
     <div style={{ minHeight: "100vh", background: C.paper }}>
@@ -224,47 +237,77 @@ export default async function EventDetailPage({ params }: { params: { id: string
           )}
 
           <div style={{ background: "#ffffff", borderRadius: "18px", padding: "28px 32px", boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 8px 24px rgba(15,42,30,0.05)" }}>
-            <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.sage, letterSpacing: "2.5px", marginBottom: "18px" }}>EVENT DETAILS</div>
-            <div className="evd-details-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px 24px" }}>
-              {[
-                { label: "Date",     value: dateShort },
-                { label: "Time",     value: dateTime },
-                { label: "Location", value: event.location || "TBA" },
-                { label: "Price",    value: event.price > 0 ? `₱${Number(event.price).toLocaleString()}` : "Free" },
-                { label: "Capacity", value: event.capacity ? `${event.capacity} slots` : "Unlimited" },
-                { label: "Registered", value: `${regCount ?? 0}${event.capacity ? ` of ${event.capacity}` : ""}` },
-                ...(event.sponsor_access_at ? [{ label: "Sponsor early access", value: new Date(event.sponsor_access_at).toLocaleString("en-PH", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" }) + " PHT" }] : []),
-                ...(event.member_access_at ? [{ label: "General registration",  value: new Date(event.member_access_at).toLocaleString("en-PH", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" }) + " PHT" }] : []),
-              ].map(({ label, value }) => (
-                <div key={label} style={{ paddingLeft: "12px", borderLeft: `2px solid ${C.mist}` }}>
-                  <div style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: C.muted, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "4px" }}>{label}</div>
-                  <div style={{ fontFamily: B, fontSize: "14px", color: C.deep, fontWeight: 600 }}>{value}</div>
-                </div>
-              ))}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.sage, letterSpacing: "2.5px" }}>EVENT DETAILS</div>
+              {countdown && (
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.green, background: C.mist, borderRadius: "999px", padding: "5px 12px", letterSpacing: "1px" }}>
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: C.green, boxShadow: `0 0 0 4px ${C.mist}` }} />
+                  {countdown.toUpperCase()}
+                </span>
+              )}
+            </div>
+
+            <div className="evd-details-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
+              {(() => {
+                const tiles: { icon: React.ReactNode; label: string; value: string; sub?: string }[] = [
+                  { icon: <IconCalendar size={16} color={C.green} />, label: "Date",      value: dateShort,                                         sub: dateWeekday },
+                  { icon: <IconClipboard size={16} color={C.green} />, label: "Time",     value: dateTime,                                          sub: "Manila time" },
+                  { icon: <IconPin size={16} color={C.green} />,      label: "Location", value: event.location || "TBA" },
+                  { icon: <IconTag size={16} color={C.green} />,      label: "Price",    value: event.price > 0 ? `₱${Number(event.price).toLocaleString()}` : "Free",         sub: event.price > 0 ? "per ticket" : undefined },
+                  { icon: <IconUsers size={16} color={C.green} />,    label: "Capacity", value: event.capacity ? `${event.capacity}` : "Unlimited", sub: event.capacity ? "attendees" : undefined },
+                  { icon: <IconTicket size={16} color={C.green} />,   label: "Registered", value: `${regCount ?? 0}`,                              sub: event.capacity ? `of ${event.capacity}` : undefined },
+                ];
+                if (event.sponsor_access_at) tiles.push({ icon: <IconSparkle size={16} color={C.green} />, label: "Sponsor early access", value: new Date(event.sponsor_access_at).toLocaleString("en-PH", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" }), sub: "PHT" });
+                if (event.member_access_at)  tiles.push({ icon: <IconStar size={16} color={C.green} />,    label: "General registration", value: new Date(event.member_access_at).toLocaleString("en-PH", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" }), sub: "PHT" });
+                return tiles.map(({ icon, label, value, sub }) => (
+                  <div key={label} style={{ background: C.cream, border: `1px solid ${C.hair}`, borderRadius: "12px", padding: "14px 16px", display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "#ffffff", border: `1px solid ${C.hair}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        {icon}
+                      </div>
+                      <div style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: C.muted, letterSpacing: "1.5px", textTransform: "uppercase" }}>{label}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: B, fontSize: "14px", color: C.deep, fontWeight: 600, lineHeight: 1.25 }}>{value}</div>
+                      {sub && <div style={{ fontFamily: B, fontSize: "11px", color: C.muted, marginTop: "2px" }}>{sub}</div>}
+                    </div>
+                  </div>
+                ));
+              })()}
             </div>
           </div>
         </div>
 
         {/* Right column — register card */}
         <div className="evd-register-card" style={{ position: "sticky", top: "88px", display: "flex", flexDirection: "column", gap: "14px" }}>
-          <div style={{ background: "#ffffff", borderRadius: "18px", overflow: "hidden", boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 12px 32px rgba(15,42,30,0.08)" }}>
+          <div style={{ background: "#ffffff", borderRadius: "20px", overflow: "hidden", boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 20px 44px rgba(15,42,30,0.10)" }}>
             {/* Price header */}
-            <div style={{ background: `linear-gradient(135deg, ${C.forest} 0%, ${C.deep} 100%)`, padding: "22px 24px 20px", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(400px 200px at 100% 0%, rgba(74,203,110,0.18), transparent 60%)" }} />
+            <div style={{ background: `linear-gradient(135deg, ${C.forest} 0%, ${C.deep} 100%)`, padding: "24px 26px 22px", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(500px 260px at 100% 0%, rgba(74,203,110,0.22), transparent 60%)" }} />
+              {/* decorative sparkle grid */}
+              <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)", backgroundSize: "14px 14px", opacity: 0.4 }} />
+
               <div style={{ position: "relative" }}>
-                <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.55)", letterSpacing: "2.5px", marginBottom: "6px" }}>
-                  {event.price > 0 ? "TICKET PRICE" : "REGISTRATION"}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
+                  <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.6)", letterSpacing: "2.5px" }}>
+                    {event.price > 0 ? "TICKET PRICE" : "REGISTRATION"}
+                  </div>
+                  {countdown && (
+                    <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#4ACB6E", background: "rgba(74,203,110,0.16)", border: "1px solid rgba(74,203,110,0.3)", borderRadius: "999px", padding: "3px 9px", letterSpacing: "1px" }}>
+                      {countdown.toUpperCase()}
+                    </span>
+                  )}
                 </div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-                  <div style={{ fontFamily: S, fontSize: "2.2rem", color: "#ffffff", lineHeight: 1 }}>
+                  <div style={{ fontFamily: S, fontSize: "2.4rem", color: "#ffffff", lineHeight: 1, letterSpacing: "-1px" }}>
                     {event.price > 0 ? `₱${Number(event.price).toLocaleString()}` : "Free"}
                   </div>
-                  {event.price > 0 && <div style={{ fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.55)" }}>per person</div>}
+                  {event.price > 0 && <div style={{ fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.6)" }}>per person</div>}
                 </div>
               </div>
             </div>
 
-            {/* Availability + button */}
+            {/* Availability + perks + button */}
             <div style={{ padding: "22px 24px" }}>
               {event.capacity && (
                 <div style={{ marginBottom: "18px" }}>
@@ -274,11 +317,28 @@ export default async function EventDetailPage({ params }: { params: { id: string
                     </span>
                     <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: isFull ? "#CC3344" : C.green }}>{regCount ?? 0}/{event.capacity}</span>
                   </div>
-                  <div style={{ background: C.mist, borderRadius: "999px", height: "6px", overflow: "hidden" }}>
-                    <div style={{ height: "100%", width: `${pct}%`, background: isFull ? "#CC3344" : "linear-gradient(90deg, #1A8040, #4ACB6E)", borderRadius: "999px", transition: "width 0.5s" }} />
+                  <div style={{ background: C.mist, borderRadius: "999px", height: "8px", overflow: "hidden", position: "relative" }}>
+                    <div style={{ height: "100%", width: `${pct}%`, background: isFull ? "#CC3344" : "linear-gradient(90deg, #1A8040, #4ACB6E)", borderRadius: "999px", transition: "width 0.5s", boxShadow: isFull ? "none" : "0 0 12px rgba(74,203,110,0.5)" }} />
                   </div>
                 </div>
               )}
+
+              {/* Perks */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "18px", padding: "14px 16px", background: C.cream, borderRadius: "12px", border: `1px solid ${C.hair}` }}>
+                {[
+                  event.price > 0 ? "Instant e-ticket after payment" : "Instant e-ticket confirmation",
+                  "QR-code check-in at the venue",
+                  event.is_members_only ? "Members-only exclusive access" : "Open to all fans",
+                ].map(p => (
+                  <div key={p} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <div style={{ width: "16px", height: "16px", borderRadius: "50%", background: C.green, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <IconCheck size={10} color="#ffffff" />
+                    </div>
+                    <span style={{ fontFamily: B, fontSize: "12px", color: C.deep, fontWeight: 500 }}>{p}</span>
+                  </div>
+                ))}
+              </div>
+
               {!isPast && event.status !== "cancelled" ? (
                 <EventRegisterButton event={event} isLoggedIn={!!user} isRegistered={isRegistered} isFull={isFull} tiers={tiers ?? []} existingTicketId={existingTicketId} isSponsor={isSponsor} />
               ) : (
@@ -300,18 +360,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
           {/* Share card */}
           <div style={{ background: "#ffffff", borderRadius: "18px", padding: "18px 22px", boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 8px 24px rgba(15,42,30,0.05)" }}>
             <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.sage, letterSpacing: "2.5px", marginBottom: "12px" }}>SHARE THIS EVENT</div>
-            <div style={{ display: "flex", gap: "8px" }}>
-              {[
-                { label: "Twitter", href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(event.title)}` },
-                { label: "Facebook", href: `https://www.facebook.com/sharer/sharer.php?u=` },
-                { label: "Copy Link", href: "#" },
-              ].map(s => (
-                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                  style={{ flex: 1, textAlign: "center", fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.deep, background: C.cream, border: `1px solid ${C.hair}`, borderRadius: "8px", padding: "8px 6px", cursor: "pointer", textDecoration: "none", letterSpacing: "1px" }}>
-                  {s.label.toUpperCase()}
-                </a>
-              ))}
-            </div>
+            <EventShareRow title={event.title} />
           </div>
         </div>
       </div>
