@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { IconX, IconCheck, IconWarning } from "@/components/shared/Icons";
+import StatBar from "@/components/shared/StatBar";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -117,22 +118,16 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
       </div>
 
       {/* Stats */}
-      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-        {[
-          { label: "TOTAL", value: counts.total, color: "#1B3A2D" },
-          { label: "SUPER ADMIN", value: counts.super_admin, color: ROLE_COLORS.super_admin },
-          { label: "ADMIN", value: counts.admin, color: ROLE_COLORS.admin },
-          { label: "MOD", value: counts.moderator, color: ROLE_COLORS.moderator },
-          { label: "SPONSOR", value: counts.sponsor, color: ROLE_COLORS.sponsor },
-          { label: "MEMBER", value: counts.member, color: ROLE_COLORS.member },
-          { label: "BANNED", value: counts.banned, color: "#CC3344" },
-        ].map(s => (
-          <div key={s.label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", textAlign: "center" }}>
-            <div style={{ fontFamily: R, fontSize: "1.2rem", color: s.color }}>{s.value}</div>
-            <div style={{ fontFamily: B, fontSize: "9px", color: "#5A7A60", letterSpacing: "1.5px" }}>{s.label}</div>
-          </div>
-        ))}
-      </div>
+      <StatBar items={[
+        { label: "TOTAL",       value: counts.total,       color: "#1B3A2D",              active: filter === "all",         onClick: () => setFilter("all") },
+        { label: "SUPER ADMIN", value: counts.super_admin, color: ROLE_COLORS.super_admin, active: filter === "super_admin", onClick: () => setFilter("super_admin") },
+        { label: "ADMIN",       value: counts.admin,       color: ROLE_COLORS.admin,       active: filter === "admin",       onClick: () => setFilter("admin") },
+        { label: "MOD",         value: counts.moderator,   color: ROLE_COLORS.moderator,   active: filter === "moderator",   onClick: () => setFilter("moderator") },
+        { label: "SPONSOR",     value: counts.sponsor,     color: ROLE_COLORS.sponsor,     active: filter === "sponsor",     onClick: () => setFilter("sponsor") },
+        { label: "MEMBER",      value: counts.member,      color: ROLE_COLORS.member,      active: filter === "member",      onClick: () => setFilter("member") },
+        { label: "BANNED",      value: counts.banned,      color: "#CC3344",               active: filter === "banned",      onClick: () => setFilter("banned") },
+      ]} />
+
 
       {/* Search + filter */}
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>

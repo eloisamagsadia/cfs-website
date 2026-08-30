@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { IconSparkle, IconCheck, IconTrash } from "@/components/shared/Icons";
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
+const SG="var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 const FILTERS=["ALL","ACTIVE","INACTIVE","EXPIRED","USED UP"];
 export default function AdminCodesPage() {
   const [codes,setCodes]=useState<any[]>([]);
@@ -54,7 +55,7 @@ export default function AdminCodesPage() {
   });
   const inp={background:"#F2F7F2",border:"1.5px solid #DDE8DD",borderRadius:"6px",padding:"10px 12px",color:"#1B3A2D",fontFamily:B,fontSize:"13px",outline:"none",width:"100%",boxSizing:"border-box" as const};
   const SC={ACTIVE:"#1A8040",INACTIVE:"#5A7A60",EXPIRED:"#CC3344","USED UP":"#1A8040"};
-  const SB={ACTIVE:"#E8F0E4",INACTIVE:"#F2F7F2",EXPIRED:"#3D0A18","USED UP":"#E8F4EC"};
+  const SB={ACTIVE:"#E8F0E4",INACTIVE:"#F2F7F2",EXPIRED:"#FFE8EC","USED UP":"#E8F4EC"};
   return(
     <div style={{display:"flex",flexDirection:"column",gap:"20px"}}>
       <div>
@@ -93,15 +94,23 @@ export default function AdminCodesPage() {
             {products.length===0&&<span style={{fontFamily:B,fontSize:"12px",color:"#5A7A60"}}>No products found</span>}
           </div>
         </div>
-        <button onClick={saveCode} disabled={saving||!form.code} style={{fontFamily:R,fontSize:"12px",background:saving||!form.code?"#F2F7F2":"#156530",color:saving||!form.code?"#5A7A60":"#080F06",border:"2px solid #1B3A2D",borderRadius:"6px",padding:"10px 24px",cursor:"pointer",letterSpacing:"1.5px"}}>
-          {saving ? "SAVING..." : <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>SAVE CODE <IconSparkle size={12} color="#FFFFFF" /></span>}
+        <button type="button" onClick={saveCode} disabled={saving||!form.code}
+          style={{fontFamily:SG,fontSize:"12px",fontWeight:700,background:saving||!form.code?"#F2F7F2":"#1A8040",color:saving||!form.code?"#5A7A60":"#ffffff",border:`1.5px solid ${saving||!form.code?"#DDE8DD":"#1A8040"}`,borderRadius:"10px",padding:"11px 24px",cursor:saving||!form.code?"not-allowed":"pointer",letterSpacing:"1.5px",boxShadow:saving||!form.code?"none":"0 2px 8px rgba(26,128,64,0.25)",outline:"none",display:"inline-flex",alignItems:"center",gap:"8px"}}>
+          {saving ? "SAVING..." : <><IconSparkle size={12} color="#ffffff" /> SAVE CODE</>}
         </button>
       </div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"10px"}}>
         <div style={{display:"flex",gap:"6px",flexWrap:"wrap"}}>
-          {FILTERS.map(f=>(
-            <button key={f} onClick={()=>setFilter(f)} style={{fontFamily:R,fontSize:"11px",letterSpacing:"1px",background:filter===f?"#E8F0E4":"transparent",border:`1.5px solid ${filter===f?"#1A8040":"#DDE8DD"}`,color:filter===f?"#1A8040":"#5A7A60",borderRadius:"20px",padding:"5px 14px",cursor:"pointer"}}>{f}</button>
-          ))}
+          {FILTERS.map(f=>{
+            const active=filter===f;
+            const accent=f==="EXPIRED"?"#CC3344":f==="INACTIVE"?"#5A7A60":"#1A8040";
+            return(
+              <button key={f} type="button" onClick={()=>setFilter(f)}
+                style={{fontFamily:SG,fontSize:"10px",fontWeight:700,letterSpacing:"1.2px",background:active?accent:"#F2F7F2",border:`1.5px solid ${active?accent:"transparent"}`,color:active?"#ffffff":"#1B3A2D",borderRadius:"10px",padding:"8px 14px",cursor:"pointer",outline:"none",transition:"background 0.15s",boxShadow:active?`0 2px 8px ${accent}30`:"none"}}>
+                {f}
+              </button>
+            );
+          })}
         </div>
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search code..." style={{...inp,width:"220px"}}/>
       </div>

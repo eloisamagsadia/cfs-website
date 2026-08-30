@@ -2,6 +2,7 @@
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useState, useEffect, useMemo } from "react";
 import { IconPin, IconMessage, IconHeart, IconPhoto, IconVideo, IconX } from "@/components/shared/Icons";
+import StatBar from "@/components/shared/StatBar";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -89,18 +90,12 @@ export default function AdminCommunityPage() {
       </div>
 
       {/* Stats row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
-        {[
-          { label: "TOTAL POSTS", value: totalPosts, color: "#1A8040" },
-          { label: "PINNED", value: pinnedPosts, color: "#156530" },
-          { label: "HIDDEN", value: hiddenPosts, color: "#CC3344" },
-        ].map(s => (
-          <div key={s.label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "14px 18px" }}>
-            <div style={{ fontFamily: R, fontSize: "1.4rem", color: s.color }}>{s.value}</div>
-            <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", letterSpacing: "1px" }}>{s.label}</div>
-          </div>
-        ))}
-      </div>
+      <StatBar items={[
+        { label: "TOTAL POSTS", value: totalPosts,  color: "#1A8040", active: filter === "all",    onClick: () => setFilter("all") },
+        { label: "PINNED",      value: pinnedPosts, color: "#156530", active: filter === "pinned", onClick: () => setFilter("pinned") },
+        { label: "HIDDEN",      value: hiddenPosts, color: "#CC3344", active: filter === "hidden", onClick: () => setFilter("hidden") },
+      ]} />
+
 
       {/* Posts list */}
       <div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AdminActionButton from "@/components/shared/AdminActionButton";
+import StatBar from "@/components/shared/StatBar";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -62,19 +63,13 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
-        {[
-          { label: "TOTAL ORDERS", value: orders.length, color: "#1B3A2D" },
-          { label: "REVENUE", value: `₱${totalRevenue.toLocaleString()}`, color: "#1A8040" },
-          { label: "PENDING PAYMENT", value: pendingCount, color: "#156530" },
-          { label: "TO PROCESS", value: processingCount, color: "#1A8040" },
-        ].map(s => (
-          <div key={s.label} style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "10px", padding: "14px 18px" }}>
-            <div style={{ fontFamily: R, fontSize: "1.4rem", color: s.color }}>{s.value}</div>
-            <div style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", letterSpacing: "1px" }}>{s.label}</div>
-          </div>
-        ))}
-      </div>
+      <StatBar items={[
+        { label: "TOTAL ORDERS",    value: orders.length,                          color: "#1B3A2D", active: filter === "all",        onClick: () => setFilter("all") },
+        { label: "REVENUE",         value: `₱${totalRevenue.toLocaleString()}`,    color: "#1A8040" },
+        { label: "PENDING PAYMENT", value: pendingCount,                           color: "#156530", active: filter === "unpaid",     onClick: () => setFilter("unpaid") },
+        { label: "TO PROCESS",      value: processingCount,                        color: "#1A8040", active: filter === "processing", onClick: () => setFilter("processing") },
+      ]} />
+
 
       {/* Filters */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
