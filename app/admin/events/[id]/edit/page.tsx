@@ -122,7 +122,7 @@ export default function AdminEventEditPage() {
           <label style={labelStyle}>STATUS</label>
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {STATUS_OPTIONS.map(s => (
-              <button key={s} onClick={() => set("status", s)} style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${STATUS_COLORS[s]}`, background: form.status === s ? STATUS_COLORS[s] : "transparent", color: form.status === s ? "#080F06" : STATUS_COLORS[s], cursor: "pointer" }}>
+              <button key={s} type="button" onClick={() => set("status", s)} style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `1.5px solid ${STATUS_COLORS[s]}`, background: form.status === s ? STATUS_COLORS[s] : "transparent", color: form.status === s ? "#ffffff" : STATUS_COLORS[s], cursor: "pointer", outline: "none" }}>
                 {s.toUpperCase()}
               </button>
             ))}
