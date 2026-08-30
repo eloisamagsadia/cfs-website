@@ -2,12 +2,14 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { IconEdit } from "@/components/shared/Icons";
+import AdminActionButton from "@/components/shared/AdminActionButton";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata: Metadata = { title: "Manage Projects" };
-const R = "var(--font-righteous,'Righteous',sans-serif)";
-const B = "var(--font-barlow,'Barlow',sans-serif)";
+const R  = "var(--font-righteous,'Righteous',sans-serif)";
+const B  = "var(--font-barlow,'Barlow',sans-serif)";
+const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 const SC: any = { ongoing: "#1A8040", completed: "#5A7A60" };
 
 export default async function AdminProjectsPage() {
@@ -22,8 +24,11 @@ export default async function AdminProjectsPage() {
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>{projects?.length ?? 0} total projects</p>
         </div>
         <Link href="/admin/projects/create" style={{ textDecoration: "none", position: "relative", display: "inline-block" }}>
-          <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "8px 18px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1.5px" }}>+ ADD PROJECT</span>
+          <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "10px" }} />
+          <span style={{ position: "relative", display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "12px", fontWeight: 700, background: "#1A8040", color: "#ffffff", padding: "11px 22px", border: "1.5px solid #1B3A2D", borderRadius: "10px", letterSpacing: "1.5px" }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+            ADD PROJECT
+          </span>
         </Link>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -49,9 +54,7 @@ export default async function AdminProjectsPage() {
                   {p.description && <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>{p.description.slice(0, 60)}{p.description.length > 60 ? "..." : ""}</span>}
                 </div>
               </div>
-              <Link href={`/admin/projects/${p.id}/edit`} style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px", flexShrink: 0 }}>
-                <IconEdit size={11} color="#4A7C59" /> EDIT
-              </Link>
+              <AdminActionButton href={`/admin/projects/${p.id}/edit`} variant="primary" icon={<IconEdit size={12} color="#ffffff" />}>EDIT</AdminActionButton>
             </div>
           );
         })}

@@ -1,13 +1,15 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
-import { IconEdit, IconClipboard } from "@/components/shared/Icons";
+import { IconEdit, IconClipboard, IconFile } from "@/components/shared/Icons";
+import AdminActionButton from "@/components/shared/AdminActionButton";
 import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata: Metadata = { title: "Transparency Reports" };
-const R = "var(--font-righteous,'Righteous',sans-serif)";
-const B = "var(--font-barlow,'Barlow',sans-serif)";
+const R  = "var(--font-righteous,'Righteous',sans-serif)";
+const B  = "var(--font-barlow,'Barlow',sans-serif)";
+const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
 export default async function AdminReportsPage() {
   const supabase = createAdminClient();
@@ -24,8 +26,11 @@ export default async function AdminReportsPage() {
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>{reports?.length ?? 0} reports · {reports?.filter(r => r.is_published).length ?? 0} published</p>
         </div>
         <Link href="/admin/reports/create" style={{ textDecoration: "none", position: "relative", display: "inline-block" }}>
-          <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#FFFFFF", padding: "8px 18px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1.5px" }}>+ UPLOAD REPORT</span>
+          <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "10px" }} />
+          <span style={{ position: "relative", display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "12px", fontWeight: 700, background: "#1A8040", color: "#ffffff", padding: "11px 22px", border: "1.5px solid #1B3A2D", borderRadius: "10px", letterSpacing: "1.5px" }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+            UPLOAD REPORT
+          </span>
         </Link>
       </div>
 
@@ -42,18 +47,14 @@ export default async function AdminReportsPage() {
                 {r.summary && <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{r.summary.slice(0, 50)}{r.summary.length > 50 ? "..." : ""}</span>}
               </div>
             </div>
-            <div style={{ display: "flex", gap: "8px", alignItems: "center", flexShrink: 0 }}>
+            <div style={{ display: "flex", gap: "6px", alignItems: "center", flexShrink: 0 }}>
               {r.pdf_url && (
-                <a href={r.pdf_url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", border: "1.5px solid #DDE8DD", borderRadius: "4px", padding: "5px 12px", textDecoration: "none", letterSpacing: "1px" }}>
-                  VIEW PDF
+                <a href={r.pdf_url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#E8F0E4", border: "1.5px solid transparent", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
+                  <IconFile size={12} color="#1B3A2D" /> VIEW PDF
                 </a>
               )}
-              <Link href={`/admin/reports/${r.id}/receipts`} style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px", fontFamily: B, fontSize: "11px", color: "#5A7A60", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
-                <IconClipboard size={11} color="#5A7A60" /> RECEIPTS
-              </Link>
-              <Link href={`/admin/reports/${r.id}/edit`} style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "5px", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
-                <IconEdit size={11} color="#4A7C59" /> EDIT
-              </Link>
+              <AdminActionButton href={`/admin/reports/${r.id}/receipts`} variant="secondary" icon={<IconClipboard size={12} color="#1B3A2D" />}>RECEIPTS</AdminActionButton>
+              <AdminActionButton href={`/admin/reports/${r.id}/edit`} variant="primary" icon={<IconEdit size={12} color="#ffffff" />}>EDIT</AdminActionButton>
             </div>
           </div>
         ))}

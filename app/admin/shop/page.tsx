@@ -2,11 +2,13 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { IconEdit, IconShoppingBag } from "@/components/shared/Icons";
+import AdminActionButton from "@/components/shared/AdminActionButton";
 export const metadata: Metadata = { title: "Manage Shop" };
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-const R = "var(--font-righteous,'Righteous',sans-serif)";
-const B = "var(--font-barlow,'Barlow',sans-serif)";
+const R  = "var(--font-righteous,'Righteous',sans-serif)";
+const B  = "var(--font-barlow,'Barlow',sans-serif)";
+const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
 export default async function AdminShopPage() {
   const supabase = createAdminClient();
@@ -23,8 +25,11 @@ export default async function AdminShopPage() {
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>{products?.length ?? 0} products</p>
         </div>
         <Link href="/admin/shop/create" style={{ textDecoration: "none", position: "relative", display: "inline-block" }}>
-          <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#1B3A2D", borderRadius: "6px" }} />
-          <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: "#1A8040", color: "#1B3A2D", padding: "8px 18px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1.5px" }}>+ ADD PRODUCT</span>
+          <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "10px" }} />
+          <span style={{ position: "relative", display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "12px", fontWeight: 700, background: "#1A8040", color: "#ffffff", padding: "11px 22px", border: "1.5px solid #1B3A2D", borderRadius: "10px", letterSpacing: "1.5px" }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+            ADD PRODUCT
+          </span>
         </Link>
       </div>
 
@@ -55,10 +60,8 @@ export default async function AdminShopPage() {
               )}
             </div>
             {/* Edit button */}
-            <div style={{ padding: "0 14px 14px" }}>
-              <Link href={`/admin/shop/${p.id}/edit`} style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px", letterSpacing: "1px" }}>
-                <IconEdit size={11} color="#4A7C59" /> EDIT
-              </Link>
+            <div style={{ padding: "0 14px 14px", display: "flex" }}>
+              <AdminActionButton href={`/admin/shop/${p.id}/edit`} variant="primary" icon={<IconEdit size={12} color="#ffffff" />}>EDIT</AdminActionButton>
             </div>
           </div>
         ))}

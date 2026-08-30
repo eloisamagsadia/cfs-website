@@ -3,9 +3,11 @@ import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AdminActionButton from "@/components/shared/AdminActionButton";
 
-const R = "var(--font-righteous,'Righteous',sans-serif)";
-const B = "var(--font-barlow,'Barlow',sans-serif)";
+const R  = "var(--font-righteous,'Righteous',sans-serif)";
+const B  = "var(--font-barlow,'Barlow',sans-serif)";
+const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 const PC: any = { paid: "#1A8040", pending: "#156530", failed: "#CC3344", free: "#1A8040", cancelled: "#5A7A60" };
 const OC: any = { processing: "#1A8040", shipped: "#1A8040", delivered: "#1A8040", pending: "#156530", cancelled: "#CC3344" };
 
@@ -46,7 +48,13 @@ export default function AdminOrdersPage() {
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "4px" }}>
           <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px" }}>ORDERS</h1>
-          <button onClick={() => router.push("/admin/orders/create")} style={{ fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: "pointer", letterSpacing: "1px" }}>+ ADD ORDER</button>
+          <Link href="/admin/orders/create" style={{ textDecoration: "none", position: "relative", display: "inline-block" }}>
+            <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "10px" }} />
+            <span style={{ position: "relative", display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "12px", fontWeight: 700, background: "#1A8040", color: "#ffffff", padding: "11px 22px", border: "1.5px solid #1B3A2D", borderRadius: "10px", letterSpacing: "1.5px" }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+              ADD ORDER
+            </span>
+          </Link>
         </div>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
           {orders.length} orders · <span style={{ color: "#1A8040" }}>₱{totalRevenue.toLocaleString()} revenue</span>
@@ -71,7 +79,7 @@ export default function AdminOrdersPage() {
       {/* Filters */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
         {FILTERS.map(f => (
-          <button key={f.key} onClick={() => setFilter(f.key)} style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `2px solid ${filter === f.key ? "#1A8040" : "#DDE8DD"}`, background: filter === f.key ? "#1A8040" : "transparent", color: filter === f.key ? "#080F06" : "#5A7A60", cursor: "pointer" }}>
+          <button key={f.key} type="button" onClick={() => setFilter(f.key)} style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `1.5px solid ${filter === f.key ? "#1A8040" : "#DDE8DD"}`, background: filter === f.key ? "#1A8040" : "transparent", color: filter === f.key ? "#ffffff" : "#5A7A60", cursor: "pointer", outline: "none" }}>
             {f.label}
           </button>
         ))}
@@ -103,9 +111,7 @@ export default function AdminOrdersPage() {
                 <span style={{ fontFamily: R, fontSize: "10px", color: OC[o.order_status] ?? "#5A7A60", background: (OC[o.order_status] ?? "#5A7A60") + "20", border: `1px solid ${(OC[o.order_status] ?? "#5A7A60")}40`, borderRadius: "20px", padding: "2px 10px", letterSpacing: "1px" }}>
                   {(o.order_status ?? "pending").toUpperCase()}
                 </span>
-                <Link href={`/admin/orders/${o.id}`} style={{ textDecoration: "none", fontFamily: B, fontSize: "11px", color: "#4A7C59", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "6px 12px", letterSpacing: "1px" }}>
-                  VIEW →
-                </Link>
+                <AdminActionButton href={`/admin/orders/${o.id}`} variant="primary">VIEW →</AdminActionButton>
               </div>
             </div>
           ))}
