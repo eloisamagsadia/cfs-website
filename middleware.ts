@@ -21,6 +21,17 @@ export default authMiddleware({
   async afterAuth(auth, req) {
     const { userId, sessionClaims } = auth;
     const pathname = req.nextUrl.pathname;
+    const role = (sessionClaims?.metadata as { role?: string })?.role;
+    const isPrivileged = role === "admin" || role === "super_admin";
+
+    // Soft launch: only the events page is public. Other public sections are
+    // hidden until they're ready. Admins/super_admins can still preview.
+    const gatedPrefixes = ["/donate", "/shop", "/reports", "/projects"];
+    if (!isPrivileged && gatedPrefixes.some(p => pathname === p || pathname.startsWith(`${p}/`))) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
 
     if (userId && (pathname === "/" || pathname === "/sign-in" || pathname === "/sign-up" || pathname === "/login" || pathname === "/register")) {
       const url = req.nextUrl.clone();
