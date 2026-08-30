@@ -55,9 +55,9 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
 
   const { data: receiptsRaw } = await supabase
     .from("report_receipts")
-    .select("project_name, item_description, file_url, file_name")
+    .select("project_name, item_description, file_url, file_name, note, is_note_only")
     .eq("report_id", params.id);
-  const receipts = (receiptsRaw ?? []) as { project_name: string; item_description: string; file_url: string; file_name: string }[];
+  const receipts = (receiptsRaw ?? []) as { project_name: string; item_description: string; file_url?: string; file_name?: string; note?: string; is_note_only?: boolean }[];
   const report = reportRaw as any;
 
   const raw = report.fund_breakdown ?? null;

@@ -4,11 +4,12 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { PAYMENT_METHOD_RATES, PAYMENT_METHOD_LABELS, calculateFee, type PaymentMethod } from "@/lib/paymongo";
+
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
 const SHIPPING_REGIONS = ["Metro Manila", "Luzon", "Visayas", "Mindanao"];
-const PAYMONGO_RATE = 0.025; // GCash rate — most common PH payment method
-const PAYMONGO_FIXED = 0;    // No fixed fee for e-wallets
+const PAYMENT_METHODS: PaymentMethod[] = ["gcash", "maya", "grab_pay", "card"];
 
 export default function CheckoutPage() {
   const { user, isLoaded } = useUser();
@@ -19,6 +20,8 @@ export default function CheckoutPage() {
   const [shippingFee, setShippingFee] = useState(0);
   const [loadingShipping, setLoadingShipping] = useState(false);
   const [form, setForm] = useState({ full_name:"", phone:"", street:"", barangay:"", city:"", province:"", region:"Metro Manila", zip_code:"" });
+  const [method, setMethod] = useState<PaymentMethod>("gcash");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -52,13 +55,16 @@ export default function CheckoutPage() {
 
   const subtotal = items.reduce((s: number, i: any) => s + (i.products?.price ?? 0) * i.quantity, 0);
   const beforeFee = subtotal + shippingFee;
-  const paymongoFee = (beforeFee * PAYMONGO_RATE) + PAYMONGO_FIXED;
+  const paymongoFee = calculateFee(beforeFee, method);
   const total = beforeFee + paymongoFee;
   const fmt = (n: number) => n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   async function handleCheckout() {
     if (!form.full_name || !form.phone || !form.street || !form.city || !form.province) {
       setError("Please fill in all required fields."); return;
+    }
+    if (!termsAccepted) {
+      setError("Please accept the Terms & Conditions to continue."); return;
     }
     setSubmitting(true); setError("");
     try {
@@ -80,6 +86,7 @@ export default function CheckoutPage() {
           reference_id: orderId,
           amount: Math.round(total),
           description: "CFS Shop Order",
+          metadata: { payment_method: method },
         }),
       });
       const { checkout_url, error: payError } = await payRes.json();
@@ -149,10 +156,27 @@ export default function CheckoutPage() {
               <span style={{ fontFamily:B, fontSize:"12px", color:"#4A7C59" }}>Shipping</span>
               <span style={{ fontFamily:B, fontSize:"12px", color:"#1B3A2D" }}>{loadingShipping ? "..." : `₱${shippingFee.toLocaleString()}`}</span>
             </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
+              <span style={{ fontFamily:B, fontSize:"11px", color:"#5A7A60", letterSpacing:"1px", textTransform:"uppercase" }}>Payment method</span>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:"6px" }}>
+                {PAYMENT_METHODS.map(m => {
+                  const { rate, fixed } = PAYMENT_METHOD_RATES[m];
+                  const feeText = `${(rate * 100).toFixed(rate * 100 % 1 === 0 ? 0 : 1)}%${fixed ? ` +₱${fixed}` : ""}`;
+                  const selected = method === m;
+                  return (
+                    <button key={m} onClick={() => setMethod(m)} type="button"
+                      style={{ fontFamily:B, fontSize:"11px", fontWeight:600, background: selected ? "#1A8040" : "#F2F7F2", color: selected ? "#FFFFFF" : "#1B3A2D", border:`1.5px solid ${selected ? "#1A8040" : "#DDE8DD"}`, borderRadius:"6px", padding:"6px 8px", cursor:"pointer", display:"flex", flexDirection:"column", gap:"2px", alignItems:"center" }}>
+                      <span>{PAYMENT_METHOD_LABELS[m]}</span>
+                      <span style={{ fontSize:"9px", color: selected ? "rgba(255,255,255,0.85)" : "#5A7A60" }}>{feeText}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div>
                 <span style={{ fontFamily:B, fontSize:"12px", color:"#4A7C59" }}>Processing fee </span>
-                <span style={{ fontFamily:B, fontSize:"10px", color:"#3A5A30" }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span>
+                <span style={{ fontFamily:B, fontSize:"10px", color:"#3A5A30" }}>({PAYMENT_METHOD_LABELS[method]})</span>
               </div>
               <span style={{ fontFamily:B, fontSize:"12px", color:"#CC3344" }}>+P{fmt(paymongoFee)}</span>
             </div>
@@ -161,7 +185,14 @@ export default function CheckoutPage() {
               <span style={{ fontFamily:R, fontSize:"15px", color:"#1A8040" }}>P{fmt(total)}</span>
             </div>
           </div>
-          <button onClick={handleCheckout} disabled={submitting} style={{ position:"relative", display:"block", width:"100%", background:"transparent", border:"none", cursor: submitting ? "not-allowed" : "pointer", padding:0, opacity: submitting ? 0.6 : 1 }}>
+          <label style={{ display:"flex", alignItems:"flex-start", gap:"8px", cursor:"pointer", marginBottom:"10px" }}>
+            <input type="checkbox" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)}
+              style={{ width:"16px", height:"16px", accentColor:"#1A8040", marginTop:"2px", flexShrink:0 }} />
+            <span style={{ fontFamily:B, fontSize:"11px", color:"#5A7A60", lineHeight:1.5 }}>
+              I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color:"#1A8040", textDecoration:"underline" }}>Terms &amp; Conditions</a> and understand orders are non-refundable once shipped.
+            </span>
+          </label>
+          <button onClick={handleCheckout} disabled={submitting || !termsAccepted} style={{ position:"relative", display:"block", width:"100%", background:"transparent", border:"none", cursor: submitting || !termsAccepted ? "not-allowed" : "pointer", padding:0, opacity: submitting || !termsAccepted ? 0.6 : 1 }}>
             <span style={{ position:"absolute", top:"3px", left:"3px", width:"100%", height:"100%", background:"#080F06", borderRadius:"6px", display:"block" }}/>
             <span style={{ position:"relative", display:"block", background:"#1A8040", border:"2px solid #1B3A2D", borderRadius:"6px", padding:"12px", textAlign:"center" }}>
               <span style={{ fontFamily:R, fontSize:"13px", color:"#1B3A2D", letterSpacing:"2px" }}>PAY P{fmt(total)}</span>

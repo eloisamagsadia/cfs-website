@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import ReactionBar from "./ReactionBar";
+import VideoEmbed from "./VideoEmbed";
 import { createClient } from "@/lib/supabase/client";
 import { IconX, IconPin, IconVideo, IconPhoto } from "@/components/shared/Icons";
 
@@ -210,7 +211,6 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
   const [submitting, setSubmitting] = useState(false);
   const [commentReactions, setCommentReactions] = useState<Record<string,string>>({});
   const [lightboxImg, setLightboxImg] = useState<string|null>(null);
-  const [embedFailed, setEmbedFailed] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [viewCount, setViewCount] = useState<number>(post.view_count??0);
   const [showMenu, setShowMenu] = useState(false);
@@ -337,30 +337,15 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
           {isLong&&<button onClick={()=>setExpanded(e=>!e)} style={{ background:"none", border:"none", cursor:"pointer", fontFamily:B, fontSize:"12px", color:"#5A7A60", padding:"2px 0 0" }}>{expanded?"see less":"see more"}</button>}
         </div>
 
-        {/* Images */}
-        {post.video_embed_url && (
-          <div style={{ marginBottom: "16px", borderRadius: "10px", overflow: "hidden", border: "1.5px solid #DDE8DD", position: "relative" }}>
-            <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 2, background: PLATFORM_COLORS[post.video_platform] ?? "#5A7A60", borderRadius: "6px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#fff", fontWeight: 700 }}>
-              {PLATFORM_LABELS[post.video_platform] ?? "Video"}
-            </div>
-            {(post.video_platform === "tiktok" || post.video_platform === "instagram") && embedFailed ? (
-              <a href={post.video_url ?? post.video_embed_url} target="_blank" rel="noopener noreferrer"
-                style={{ display: "flex", alignItems: "center", gap: "10px", padding: "16px", background: "#F2F7F2", textDecoration: "none" }}>
-                {post.video_platform === "tiktok" ? <IconVideo size={32} color="#4A7C59" /> : <IconPhoto size={32} color="#4A7C59" />}
-                <div>
-                  <p style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", margin: 0 }}>{post.video_platform === "tiktok" ? "TikTok" : "Instagram"} Video</p>
-                  <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", margin: "2px 0 0" }}>Click to open on {post.video_platform === "tiktok" ? "TikTok" : "Instagram"}</p>
-                </div>
-              </a>
-            ) : (
-              <iframe
-                src={post.video_embed_url}
-                style={{ width: "100%", height: "360px", border: "none", display: "block" }}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                onError={() => setEmbedFailed(true)}
-              />
-            )}
+        {/* Video */}
+        {(post.video_embed_url || post.video_url) && (
+          <div style={{ marginBottom: "16px", padding: "0 18px" }}>
+            <VideoEmbed
+              videoUrl={post.video_url}
+              videoEmbedUrl={post.video_embed_url}
+              videoPlatform={post.video_platform}
+              height={post.video_platform === "youtube" || post.video_platform === "gdrive" || post.video_platform === "drive" ? 360 : 560}
+            />
           </div>
         )}
         {post.images?.length>0&&(

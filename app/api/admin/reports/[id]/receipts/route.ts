@@ -45,6 +45,30 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (!userId || !isAdmin((sessionClaims?.metadata as any)?.role))
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const reqContentType = req.headers.get("content-type") ?? "";
+
+  // JSON body → note-only entry (no file)
+  if (reqContentType.includes("application/json")) {
+    const { project_name, item_description, note } = await req.json();
+    if (!project_name || !item_description || !note?.trim())
+      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+
+    const supabase = createAdminClient();
+    const { data: receipt, error: dbErr } = await supabase
+      .from("report_receipts")
+      .insert({
+        report_id: params.id,
+        project_name,
+        item_description,
+        note: note.trim(),
+        is_note_only: true,
+      } as any)
+      .select()
+      .single();
+    if (dbErr) return NextResponse.json({ error: dbErr.message }, { status: 500 });
+    return NextResponse.json({ receipt });
+  }
+
   const form = await req.formData();
   const file = form.get("file") as File | null;
   const projectName = form.get("project_name") as string | null;

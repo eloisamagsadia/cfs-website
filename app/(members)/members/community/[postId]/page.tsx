@@ -16,7 +16,14 @@ export default async function PostDetailPage({ params }: { params: { postId: str
 
   const [{ data: post }, { data: comments }, { data: profile }] = await Promise.all([
     (((supabase.from("community_posts") as any) as any) as any)
-      .select("*, profiles:user_id(id,display_name,avatar_url), community_reactions(id,user_id,reaction_type), community_comments(id), view_count")
+      .select(`
+        id, user_id, content, images, video_url, video_embed_url, video_platform,
+        category_id, is_pinned, is_hidden, created_at, updated_at, view_count,
+        profiles:user_id(id, display_name, avatar_url, role),
+        community_reactions(id, user_id, reaction_type),
+        community_comments(id),
+        community_reposts(user_id)
+      `)
       .eq("id", params.postId).single(),
     (((supabase.from("community_comments") as any) as any) as any)
       .select("*, profiles:user_id(id,display_name,avatar_url)")

@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { PAYMENT_METHOD_RATES, PAYMENT_METHOD_LABELS, calculateFee, type PaymentMethod } from "@/lib/paymongo";
 
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -27,8 +28,15 @@ const TIERS = [
   { name: "Supermoon",    range: "₱8,000+",           color: "#156530", desc: "Special perks included" },
 ];
 
-const PAYMONGO_RATE  = 0.025; // GCash rate — most common PH payment method
-const PAYMONGO_FIXED = 0;     // No fixed fee for e-wallets (GCash/Maya/QR PH)
+const PAYMENT_METHODS: PaymentMethod[] = ["gcash", "maya", "grab_pay", "card", "manual"];
+
+interface Drive {
+  id: string;
+  slug: string;
+  name: string;
+  category: string;
+  description?: string | null;
+}
 
 export default function DonatePage() {
   const { isSignedIn } = useUser();
@@ -37,18 +45,42 @@ export default function DonatePage() {
   const [custom, setCustom] = useState("");
   const [anon,   setAnon]   = useState(false);
   const [msg,    setMsg]    = useState("");
+  const [method, setMethod] = useState<PaymentMethod>("gcash");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error,   setError]  = useState("");
+  const [drives, setDrives] = useState<Drive[]>([]);
+  const [selectedDrives, setSelectedDrives] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    fetch("/api/donation-drives")
+      .then(r => r.json())
+      .then(d => setDrives(d.drives ?? []))
+      .catch(() => {});
+  }, []);
 
   const final         = custom ? Number(custom) : amount;
-  const paymongoFee   = (final * PAYMONGO_RATE) + PAYMONGO_FIXED;
+  const isManual      = method === "manual";
+  const paymongoFee   = isManual ? 0 : calculateFee(final, method);
   const totalCharged  = final + paymongoFee;
   const cfsReceives   = final;
   const fmt = (n: number) => n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+  const driveIds = useMemo(() => Array.from(selectedDrives), [selectedDrives]);
+  const splitEach = driveIds.length > 1 ? final / driveIds.length : final;
+
+  function toggleDrive(id: string) {
+    setSelectedDrives(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
   async function handleDonate() {
     if (!isSignedIn) { router.push(`/sign-in?redirect_url=/donate`); return; }
     if (final < 20) { setError("Minimum donation is ₱20."); return; }
+    if (!termsAccepted) { setError("Please accept the Terms & Conditions to continue."); return; }
     setLoading(true); setError("");
     try {
       const res = await fetch("/api/paymongo/create-link", {
@@ -59,12 +91,21 @@ export default function DonatePage() {
           donation_amount: final,
           description: "Donation to CFS (Colet Fan Society)",
           type: "donation",
-          metadata: { message: msg || null, anonymous: anon },
+          metadata: {
+            message: msg || null,
+            anonymous: anon,
+            payment_method: method,
+            drive_ids: driveIds,
+            is_manual: isManual,
+          },
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Failed to create payment link");
-      // Store checkout URL so the processing page can open PayMongo in a new tab
+      if (!res.ok) throw new Error(data.error ?? "Failed to create donation");
+      if (isManual) {
+        router.push(`/payment/manual?type=donation&ref=${data.reference_id}`);
+        return;
+      }
       sessionStorage.setItem("cfs_pending_checkout", JSON.stringify({ url: data.checkout_url, ref: data.reference_id }));
       router.push(`/payment/processing?type=donation&ref=${data.reference_id}`);
     } catch (e: any) {
@@ -153,6 +194,40 @@ export default function DonatePage() {
           </div>
         </div>
 
+        {/* ── DONATION DRIVES ── */}
+        {drives.length > 0 && (
+          <div style={{ background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"16px", overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,0.04)" }}>
+            <div style={{ background:C.forest, padding:"16px 24px" }}>
+              <div style={{ fontFamily:SG, fontSize:"10px", fontWeight:700, color:"rgba(255,255,255,0.7)", letterSpacing:"3px" }}>DIRECT MY DONATION</div>
+            </div>
+            <div style={{ padding:"20px 24px", display:"flex", flexDirection:"column", gap:"10px" }}>
+              <p style={{ fontFamily:B, fontSize:"12px", color:C.muted, margin:0 }}>
+                Optional — pick one or more drives. Leave empty to go to the General Fund. When multiple are picked, your donation is split equally.
+              </p>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))", gap:"8px" }}>
+                {drives.map(d => {
+                  const selected = selectedDrives.has(d.id);
+                  return (
+                    <label key={d.id} style={{ display:"flex", alignItems:"flex-start", gap:"10px", padding:"12px 14px", background: selected ? C.mist : C.cream, border:`1.5px solid ${selected ? C.green : C.border}`, borderRadius:"10px", cursor:"pointer" }}>
+                      <input type="checkbox" checked={selected} onChange={() => toggleDrive(d.id)}
+                        style={{ width:"16px", height:"16px", accentColor:C.green, marginTop:"2px", flexShrink:0 }} />
+                      <div>
+                        <div style={{ fontFamily:SG, fontSize:"12px", fontWeight:700, color: selected ? C.green : C.forest }}>{d.name}</div>
+                        {d.description && <div style={{ fontFamily:B, fontSize:"11px", color:C.muted, marginTop:"2px" }}>{d.description}</div>}
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+              {selectedDrives.size > 1 && (
+                <div style={{ fontFamily:B, fontSize:"11px", color:C.green, background:C.mist, border:`1px solid ${C.green}40`, borderRadius:"8px", padding:"8px 12px" }}>
+                  ₱{fmt(final)} will be split equally: ₱{fmt(splitEach)} per drive.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* ── MESSAGE + ANON ── */}
         <div style={{ background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"16px", overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,0.04)" }}>
           <div style={{ background:C.forest, padding:"16px 24px" }}>
@@ -171,6 +246,29 @@ export default function DonatePage() {
           </div>
         </div>
 
+        {/* ── PAYMENT METHOD ── */}
+        <div style={{ background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"16px", overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,0.04)" }}>
+          <div style={{ background:C.forest, padding:"16px 24px" }}>
+            <div style={{ fontFamily:SG, fontSize:"10px", fontWeight:700, color:"rgba(255,255,255,0.7)", letterSpacing:"3px" }}>PAYMENT METHOD</div>
+          </div>
+          <div style={{ padding:"20px 24px" }}>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(120px,1fr))", gap:"10px" }}>
+              {PAYMENT_METHODS.map(m => {
+                const { rate, fixed } = PAYMENT_METHOD_RATES[m];
+                const feeText = `${(rate * 100).toFixed(rate * 100 % 1 === 0 ? 0 : 1)}%${fixed ? ` +₱${fixed}` : ""}`;
+                const selected = method === m;
+                return (
+                  <button key={m} onClick={() => setMethod(m)}
+                    style={{ fontFamily:SG, fontSize:"13px", fontWeight:700, background: selected ? C.forest : C.cream, color: selected ? "#ffffff" : C.forest, border:`1.5px solid ${selected ? C.forest : C.border}`, borderRadius:"10px", padding:"12px", cursor:"pointer", transition:"all 0.15s", display:"flex", flexDirection:"column", gap:"4px", alignItems:"center" }}>
+                    <span>{PAYMENT_METHOD_LABELS[m]}</span>
+                    <span style={{ fontFamily:B, fontSize:"10px", color: selected ? "rgba(255,255,255,0.8)" : C.muted, letterSpacing:"0.5px" }}>{feeText}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
         {/* ── FEE BREAKDOWN ── */}
         <div style={{ background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"16px", overflow:"hidden", boxShadow:"0 2px 12px rgba(0,0,0,0.04)" }}>
           <div style={{ background:C.forest, padding:"16px 24px" }}>
@@ -184,9 +282,11 @@ export default function DonatePage() {
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div>
                 <span style={{ fontFamily:B, fontSize:"13px", color:C.muted }}>Processing fee </span>
-                <span style={{ fontFamily:B, fontSize:"11px", color:C.muted }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span>
+                <span style={{ fontFamily:B, fontSize:"11px", color:C.muted }}>({PAYMENT_METHOD_LABELS[method]})</span>
               </div>
-              <span style={{ fontFamily:SG, fontSize:"13px", fontWeight:600, color:"#CC3344" }}>+₱{fmt(paymongoFee)}</span>
+              <span style={{ fontFamily:SG, fontSize:"13px", fontWeight:600, color: isManual ? C.sage : "#CC3344" }}>
+                {isManual ? "₱0.00" : `+₱${fmt(paymongoFee)}`}
+              </span>
             </div>
             <div style={{ borderTop:`1px solid ${C.border}`, paddingTop:"12px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
               <div>
@@ -200,6 +300,15 @@ export default function DonatePage() {
 
         {/* ── DONATE BUTTON ── */}
         <div>
+          {isSignedIn && (
+            <label style={{ display:"flex", alignItems:"flex-start", gap:"10px", cursor:"pointer", marginBottom:"12px", padding:"12px 16px", background:"#ffffff", border:`1px solid ${C.border}`, borderRadius:"10px" }}>
+              <input type="checkbox" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)}
+                style={{ width:"18px", height:"18px", accentColor:C.sage, marginTop:"2px", flexShrink:0 }} />
+              <span style={{ fontFamily:B, fontSize:"12px", color:C.muted, lineHeight:1.6 }}>
+                I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color:C.green, textDecoration:"underline" }}>Terms &amp; Conditions</a> and understand donations are non-refundable and used for CFS fan projects, events, and charity drives per our transparency reports.
+              </span>
+            </label>
+          )}
           {error && (
             <div style={{ background:"#FFF0F3", border:"1px solid #CC3344", borderRadius:"10px", padding:"12px 16px", fontFamily:B, fontSize:"13px", color:"#CC3344", marginBottom:"12px" }}>
               {error}
@@ -207,14 +316,22 @@ export default function DonatePage() {
           )}
           <button
             onClick={handleDonate}
-            disabled={loading || final < 20}
-            style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", fontFamily:SG, fontSize:"16px", fontWeight:700, background: loading ? "#4A7C59" : final < 20 ? "#DDE8DD" : C.forest, color: final < 20 ? C.muted : "#ffffff", border:"none", padding:"16px", borderRadius:"12px", letterSpacing:"1.5px", cursor: loading || final < 20 ? "not-allowed" : "pointer", transition:"background 0.15s" }}
+            disabled={loading || final < 20 || (isSignedIn && !termsAccepted)}
+            style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", fontFamily:SG, fontSize:"16px", fontWeight:700, background: loading ? "#4A7C59" : final < 20 || (isSignedIn && !termsAccepted) ? "#DDE8DD" : C.forest, color: final < 20 || (isSignedIn && !termsAccepted) ? C.muted : "#ffffff", border:"none", padding:"16px", borderRadius:"12px", letterSpacing:"1.5px", cursor: loading || final < 20 || (isSignedIn && !termsAccepted) ? "not-allowed" : "pointer", transition:"background 0.15s" }}
           >
             {!loading && <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>}
-            {loading ? "REDIRECTING TO CHECKOUT..." : isSignedIn ? `DONATE ₱${fmt(totalCharged)}` : "LOGIN TO DONATE"}
+            {loading
+              ? (isManual ? "SUBMITTING..." : "REDIRECTING TO CHECKOUT...")
+              : !isSignedIn ? "LOGIN TO DONATE"
+              : isManual ? `SUBMIT DONATION · ₱${fmt(final)}`
+              : `DONATE ₱${fmt(totalCharged)}`}
           </button>
           <p style={{ fontFamily:B, fontSize:"11px", color:C.muted, textAlign:"center", marginTop:"12px", lineHeight:1.6 }}>
-            {isSignedIn ? "You will be redirected to PayMongo's secure checkout." : "Login required to donate."}{" "}Processing fee goes directly to the payment gateway, not to CFS.
+            {!isSignedIn
+              ? "Login required to donate."
+              : isManual
+                ? "You'll get manual bank / GCash instructions on the next screen. Your donation is marked pending until we confirm it."
+                : "You will be redirected to PayMongo's secure checkout. Processing fee goes directly to the payment gateway, not to CFS."}
           </p>
         </div>
       </div>

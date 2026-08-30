@@ -23,15 +23,26 @@ export default function MemberDirectory({ members, currentUserId, followingIds: 
   async function toggleFollow(userId: string) {
     if (loading) return;
     setLoading(userId);
-    const isFollowing = following.has(userId);
-    const method = isFollowing ? "DELETE" : "POST";
-    await fetch(`/api/community/follow/${userId}`, { method });
+    const wasFollowing = following.has(userId);
+    const method = wasFollowing ? "DELETE" : "POST";
     setFollowing(prev => {
       const next = new Set(prev);
-      isFollowing ? next.delete(userId) : next.add(userId);
+      wasFollowing ? next.delete(userId) : next.add(userId);
       return next;
     });
-    setLoading(null);
+    try {
+      const res = await fetch(`/api/community/follow/${userId}`, { method });
+      if (!res.ok) throw new Error(`Follow ${method} failed: ${res.status}`);
+    } catch (err) {
+      setFollowing(prev => {
+        const next = new Set(prev);
+        wasFollowing ? next.add(userId) : next.delete(userId);
+        return next;
+      });
+      console.error(err);
+    } finally {
+      setLoading(null);
+    }
   }
 
   return (

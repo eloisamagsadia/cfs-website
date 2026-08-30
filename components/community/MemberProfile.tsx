@@ -36,11 +36,20 @@ export default function MemberProfile({
   async function toggleFollow() {
     if (loading) return;
     setLoading(true);
-    const method = isFollowing ? "DELETE" : "POST";
-    await fetch(`/api/community/follow/${profile.id}`, { method });
-    setIsFollowing(!isFollowing);
-    setFollowersCount(prev => isFollowing ? prev - 1 : prev + 1);
-    setLoading(false);
+    const wasFollowing = isFollowing;
+    const method = wasFollowing ? "DELETE" : "POST";
+    setIsFollowing(!wasFollowing);
+    setFollowersCount(prev => wasFollowing ? prev - 1 : prev + 1);
+    try {
+      const res = await fetch(`/api/community/follow/${profile.id}`, { method });
+      if (!res.ok) throw new Error(`Follow ${method} failed: ${res.status}`);
+    } catch (err) {
+      setIsFollowing(wasFollowing);
+      setFollowersCount(prev => wasFollowing ? prev + 1 : prev - 1);
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

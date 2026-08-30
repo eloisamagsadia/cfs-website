@@ -24,32 +24,8 @@ const C = {
   green:  "#1A8040",
 };
 
-function CategoryIcon({ name, color }: { name: string; color: string }) {
-  const n = name.toLowerCase();
-  const s = { stroke: color, strokeWidth: "1.8", strokeLinecap: "round" as const, strokeLinejoin: "round" as const, fill: "none" };
-  if (n.includes("apparel") || n.includes("shirt") || n.includes("cloth"))
-    return <svg width="28" height="28" viewBox="0 0 24 24" {...{}}><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 001 .74H6v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V10h2.15a1 1 0 001-.74l.58-3.57a2 2 0 00-1.35-2.23z" {...s}/></svg>;
-  if (n.includes("accessori") || n.includes("jewelr") || n.includes("pin"))
-    return <svg width="28" height="28" viewBox="0 0 24 24" {...{}}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" {...s}/></svg>;
-  if (n.includes("photocard") || n.includes("photo") || n.includes("card"))
-    return <svg width="28" height="28" viewBox="0 0 24 24" {...{}}><rect x="3" y="3" width="18" height="18" rx="2" {...s}/><circle cx="8.5" cy="8.5" r="1.5" {...s}/><path d="M21 15l-5-5L5 21" {...s}/></svg>;
-  if (n.includes("bundle") || n.includes("set") || n.includes("pack"))
-    return <svg width="28" height="28" viewBox="0 0 24 24" {...{}}><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" {...s}/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" {...s}/></svg>;
-  if (n.includes("sticker") || n.includes("print"))
-    return <svg width="28" height="28" viewBox="0 0 24 24" {...{}}><path d="M12 2a10 10 0 00-9.95 9H12v9.95A10 10 0 0012 2z" {...s}/><path d="M2.05 11H12v9.95" {...s}/></svg>;
-  if (n.includes("keychain") || n.includes("charm"))
-    return <svg width="28" height="28" viewBox="0 0 24 24" {...{}}><circle cx="12" cy="8" r="4" {...s}/><path d="M12 12v10M8 18h8" {...s}/></svg>;
-  // default — shopping bag
-  return <svg width="28" height="28" viewBox="0 0 24 24" {...{}}><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18" {...s}/><path d="M16 10a4 4 0 01-8 0" {...s}/></svg>;
-}
-const CAT_COLORS = ["#1A8040","#1A8040","#156530","#CC3344","#1A8040","#1A8040","#1A8040","#156530"];
-
 export default async function ShopPage() {
   const supabase = createAdminClient();
-  const { data: cats } = await supabase
-    .from("product_categories")
-    .select("*")
-    .order("name", { ascending: true });
 
   const { data: products } = await supabase
     .from("products")
@@ -57,14 +33,11 @@ export default async function ShopPage() {
     .eq("is_active", true)
     .order("created_at", { ascending: false });
 
-  const display = cats ?? [];
-
   return (
     <div style={{ minHeight: "100vh", background: "#FAFDF9" }}>
       <style>{`
         .cat-card { transition: border-color 0.2s, transform 0.2s; }
         .cat-card:hover { border-color: #1A8040 !important; transform: translateY(-3px); }
-        .cat-card:hover .cat-cta { background: #1A8040 !important; color: #080F06 !important; }
       `}</style>
       {/* ── HERO ── */}
       <section style={{ display:"grid", gridTemplateColumns:"1fr 1fr", minHeight:"420px", overflow:"hidden", maxWidth:"1400px", margin:"0 auto", width:"100%" }}>
@@ -82,43 +55,10 @@ export default async function ShopPage() {
         </div>
       </section>
 
-      {/* ── CATEGORIES ── */}
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "48px 24px" }}>
 
-        <div style={{display:"none"}}>
-        {display.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "60px 0" }}>
-<p style={{ fontFamily: B, fontSize: "14px", color: "#3A5A30" }}>Shop coming soon — stay tuned!</p>
-          </div>
-        ) : (
-          <div className="stagger" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: "16px" }}>
-            {display.map((cat: any, i: number) => {
-              const accent = CAT_COLORS[i % CAT_COLORS.length];
-              return (
-                <Link key={cat.id} href={`/shop/${cat.slug}`} style={{ textDecoration: "none" }}>
-                  <div className="cat-card" style={{ background: "#ffffff", border: "2px solid #DDE8DD", borderRadius: "14px", padding: "32px 24px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
-                    {/* Icon circle */}
-                    <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "#FAFDF9", border: `2px solid ${accent}60`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <CategoryIcon name={cat.name} color={accent} />
-                    </div>
-                    <h3 style={{ fontFamily: R, fontSize: "16px", color: "#1B3A2D", letterSpacing: "1.5px", margin: 0 }}>{cat.name}</h3>
-                    {cat.description && (
-                      <p style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", lineHeight: 1.6, margin: 0 }}>{cat.description}</p>
-                    )}
-                    {/* CTA */}
-                    <div className="cat-cta" style={{ marginTop: "8px", background: "#E8F0E4", border: `1.5px solid ${accent}`, borderRadius: "6px", padding: "8px 20px", fontFamily: R, fontSize: "11px", color: accent, letterSpacing: "1.5px", transition: "background 0.2s, color 0.2s" }}>
-                      SHOP NOW →
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
-
-        {/* All Products */}
-        </div>
-        <div style={{ marginTop: "48px" }}>
+        {/* ── ALL PRODUCTS ── */}
+        <div>
           <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "28px" }}>
             <span style={{ fontFamily: R, fontSize: "12px", color: "#4A7C59", letterSpacing: "2px" }}>ALL PRODUCTS</span>
             <div style={{ flex: 1, height: "1px", background: "#DDE8DD" }} />

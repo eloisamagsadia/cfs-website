@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid file type" }, { status: 400 });
   }
 
-  const allowedFolders = ["gallery", "community"];
+  const allowedFolders = ["avatars", "products", "events", "reports", "projects", "badges", "gallery", "community", "support", "messages"];
   if (!folder || !allowedFolders.includes(folder)) {
     return NextResponse.json({ error: "Invalid folder" }, { status: 400 });
   }

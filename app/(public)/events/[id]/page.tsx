@@ -63,8 +63,15 @@ export default async function EventDetailPage({ params }: { params: { id: string
 
   return (
     <div style={{ minHeight: "100vh", background: C.paper }}>
+      <style>{`
+        @media (max-width: 900px) {
+          .event-detail-grid { grid-template-columns: 1fr !important; padding: 24px !important; }
+          .event-register-card { position: static !important; }
+          .event-hero { padding: 32px 24px !important; }
+        }
+      `}</style>
       {/* Hero */}
-      <div style={{ background: C.cream, borderBottom: `1px solid ${C.border}`, padding: "48px 64px", position: "relative", overflow: "hidden", minHeight: "320px", display: "flex", alignItems: "center" }}>
+      <div className="event-hero" style={{ background: C.cream, borderBottom: `1px solid ${C.border}`, padding: "48px 64px", position: "relative", overflow: "hidden", minHeight: "320px", display: "flex", alignItems: "center" }}>
         {event.banner_url && (
           <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${event.banner_url})`, backgroundSize: "cover", backgroundPosition: "center", opacity: 0.2 }} />
         )}
@@ -123,6 +130,24 @@ export default async function EventDetailPage({ params }: { params: { id: string
               </div>
               <div style={{ padding: "24px" }}>
                 <p style={{ fontFamily: S, fontStyle: "italic", fontSize: "15px", color: C.muted, lineHeight: 1.9, margin: 0 }}>{event.description}</p>
+              </div>
+            </div>
+          )}
+
+          {(event.guidelines_url || event.guidelines_text) && (
+            <div style={{ background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: "16px", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
+              <div style={{ background: C.forest, padding: "16px 24px" }}>
+                <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "3px" }}>GUIDELINES</div>
+              </div>
+              <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
+                {event.guidelines_url && (
+                  <a href={event.guidelines_url} target="_blank" rel="noopener noreferrer" style={{ display: "block", borderRadius: "10px", overflow: "hidden", border: `1px solid ${C.border}` }}>
+                    <img src={event.guidelines_url} alt="Event guidelines" style={{ width: "100%", maxHeight: "520px", objectFit: "contain", display: "block", background: C.cream }} />
+                  </a>
+                )}
+                {event.guidelines_text && (
+                  <p style={{ fontFamily: B, fontSize: "14px", color: C.forest, lineHeight: 1.9, margin: 0, whiteSpace: "pre-wrap" }}>{event.guidelines_text}</p>
+                )}
               </div>
             </div>
           )}

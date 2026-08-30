@@ -2,6 +2,7 @@
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState } from "react";
 import { IconUsers, IconSparkle, IconShield, IconWrench, IconMessage, IconTicket, IconStar, IconChart, IconMegaphone, IconX, IconLightning, IconSkull, IconCheck, IconWarning, IconClipboard } from "@/components/shared/Icons";
+import { createClient } from "@/lib/supabase/client";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -51,6 +52,36 @@ export default function SuperAdminPage() {
       setStats(statsData.stats);
       setLoading(false);
     });
+  }, []);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const bump = (delta: -1 | 0 | 1, oldRole?: string, newRole?: string) => {
+      setStats((s: any) => {
+        if (!s) return s;
+        const next = { ...s, total_members: Math.max(0, (s.total_members ?? 0) + delta) };
+        for (const key of ["sponsor", "admin", "moderator"] as const) {
+          const field = key === "moderator" ? "moderators" : `${key}s`;
+          if (oldRole === key) next[field] = Math.max(0, (s[field] ?? 0) - 1);
+          if (newRole === key) next[field] = (s[field] ?? 0) + 1;
+        }
+        return next;
+      });
+    };
+    const channel = supabase
+      .channel("admin-super-stats")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "profiles" },
+        (p) => bump(1, undefined, (p.new as any)?.role))
+      .on("postgres_changes", { event: "DELETE", schema: "public", table: "profiles" },
+        (p) => bump(-1, (p.old as any)?.role, undefined))
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "profiles" },
+        (p) => {
+          const oldRole = (p.old as any)?.role;
+          const newRole = (p.new as any)?.role;
+          if (oldRole !== newRole) bump(0, oldRole, newRole);
+        })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   async function saveSetting(key: string, value: any) {

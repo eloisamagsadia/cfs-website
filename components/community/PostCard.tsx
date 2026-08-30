@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import ReactionBar from "./ReactionBar";
+import VideoEmbed from "./VideoEmbed";
 import { createClient } from "@/lib/supabase/client";
 import { IconShield, IconLightning, IconWrench, IconStar, IconPin, IconX, IconTrash, IconVideo, IconPhoto } from "@/components/shared/Icons";
 
@@ -84,31 +85,6 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
   const [isReposted, setIsReposted] = useState((post.community_reposts ?? []).some((r: any) => r.user_id === currentUserId));
   const [repostCount, setRepostCount] = useState((post.community_reposts ?? []).length);
   const [showRepostMenu, setShowRepostMenu] = useState(false);
-  const [embedFailed, setEmbedFailed] = useState(false);
-  const [thumbUrl, setThumbUrl] = useState<string | null>(null);
-  const [thumbTitle, setThumbTitle] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!post.video_url) return;
-    if (post.video_platform === "tiktok") {
-      fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(post.video_url)}`)
-        .then(r => r.json())
-        .then(d => {
-          if (d.thumbnail_url) setThumbUrl(d.thumbnail_url);
-          if (d.title) setThumbTitle(d.title);
-        })
-        .catch(() => {});
-    }
-    if (post.video_platform === "instagram") {
-      fetch(`https://graph.facebook.com/v18.0/instagram_oembed?url=${encodeURIComponent(post.video_url)}&maxwidth=320`)
-        .then(r => r.json())
-        .then(d => {
-          if (d.thumbnail_url) setThumbUrl(d.thumbnail_url);
-          if (d.title) setThumbTitle(d.title);
-        })
-        .catch(() => {});
-    }
-  }, [post.video_url, post.video_platform]);
   const [commentReactions, setCommentReactions] = useState<Record<string, string>>({});
   const [showCommentReactions, setShowCommentReactions] = useState<string | null>(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -308,69 +284,14 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
 
 
       {/* ── VIDEO EMBED ── */}
-      {post.video_embed_url && (
-        <div style={{ margin: "0 16px 10px", borderRadius: "10px", overflow: "hidden", border: "1.5px solid #DDE8DD", position: "relative" }}>
-          <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 2, background: PLATFORM_COLORS[post.video_platform] ?? "#5A7A60", borderRadius: "6px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#fff", fontWeight: 700 }}>
-            {PLATFORM_LABELS[post.video_platform] ?? "Video"}
-          </div>
-          {(post.video_platform === "tiktok" || post.video_platform === "instagram") ? (
-            <div style={{ background: "#F7FAF5", position: "relative" }}>
-              {!embedFailed ? (
-                post.video_platform === "tiktok" ? (
-                  /* TikTok — fixed height, crop white sides + bottom */
-                  <div style={{ position: "relative", width: "100%", height: "560px", overflow: "hidden", background: "#000" }}>
-                    <iframe
-                      src={post.video_embed_url}
-                      style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "420px", height: "560px", border: "none", maxWidth: "none" }}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      onError={() => setEmbedFailed(true)}
-                    />
-                  </div>
-                ) : (
-                  /* Instagram — standard embed */
-                  <div style={{ position: "relative", width: "100%", height: "520px", overflow: "hidden", background: "#000" }}>
-                    <iframe
-                      src={post.video_embed_url}
-                      style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "400px", height: "520px", border: "none", maxWidth: "none" }}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      onError={() => setEmbedFailed(true)}
-                    />
-                  </div>
-                )
-              ) : (
-                /* Fallback link card */
-                <a href={post.video_url ?? post.video_embed_url} target="_blank" rel="noopener noreferrer"
-                  style={{ display: "flex", alignItems: "center", gap: "14px", padding: "16px", background: "#FFFFFF", textDecoration: "none" }}>
-                  <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "#F2F7F2", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    {post.video_platform === "tiktok" ? <IconVideo size={24} color="#4A7C59" /> : <IconPhoto size={24} color="#4A7C59" />}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontFamily: R, fontSize: "12px", color: PLATFORM_COLORS[post.video_platform], margin: 0, letterSpacing: "1px" }}>
-                      {PLATFORM_LABELS[post.video_platform].toUpperCase()} VIDEO
-                    </p>
-                    <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", margin: "4px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {post.video_url ?? post.video_embed_url}
-                    </p>
-                    <p style={{ fontFamily: B, fontSize: "11px", color: "#1A8040", margin: "4px 0 0" }}>Tap to open ↗</p>
-                  </div>
-                </a>
-              )}
-              {/* Platform badge */}
-              <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 3, background: PLATFORM_COLORS[post.video_platform], borderRadius: "6px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#fff", fontWeight: 700 }}>
-                {PLATFORM_LABELS[post.video_platform]}
-              </div>
-            </div>
-          ) : (
-            <iframe
-              src={post.video_embed_url}
-              style={{ width: "100%", height: "280px", border: "none", display: "block" }}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              onError={() => setEmbedFailed(true)}
-            />
-          )}
+      {(post.video_embed_url || post.video_url) && (
+        <div style={{ margin: "0 16px 10px" }}>
+          <VideoEmbed
+            videoUrl={post.video_url}
+            videoEmbedUrl={post.video_embed_url}
+            videoPlatform={post.video_platform}
+            height={post.video_platform === "youtube" || post.video_platform === "gdrive" || post.video_platform === "drive" ? 280 : 560}
+          />
         </div>
       )}
 

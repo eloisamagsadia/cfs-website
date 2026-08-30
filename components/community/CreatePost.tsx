@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { IconX, IconMusic, IconPhoto, IconCamera, IconVideo, IconWarning } from "@/components/shared/Icons";
+import VideoEmbed from "./VideoEmbed";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -262,30 +263,13 @@ export default function CreatePost({ categories, currentUser, onPostCreated, ima
 
               {/* Video embed preview */}
               {videoEmbed && (
-                <div style={{ marginTop: "10px", borderRadius: "10px", overflow: "hidden", border: "1.5px solid #DDE8DD", position: "relative" }}>
-                  {/* Platform badge */}
-                  <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 2, background: PLATFORM_COLORS[videoEmbed.platform], borderRadius: "6px", padding: "2px 8px", fontFamily: B, fontSize: "10px", color: "#fff", fontWeight: 700 }}>
-                    {PLATFORM_LABELS[videoEmbed.platform]}
-                  </div>
-                  {videoEmbed.platform === "tiktok" && tiktokFailed ? (
-                    /* TikTok fallback — link card */
-                    <a href={videoEmbed.url} target="_blank" rel="noopener noreferrer"
-                      style={{ display: "flex", alignItems: "center", gap: "10px", padding: "14px", background: "#F2F7F2", textDecoration: "none" }}>
-                      <IconMusic size={28} color="#4A7C59" />
-                      <div>
-                        <p style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", margin: 0 }}>TikTok Video</p>
-                        <p style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", margin: "2px 0 0" }}>Click to open on TikTok</p>
-                      </div>
-                    </a>
-                  ) : (
-                    <iframe
-                      src={videoEmbed.embedUrl}
-                      style={{ width: "100%", height: "280px", border: "none", display: "block" }}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      onError={() => { if (videoEmbed.platform === "tiktok") setTiktokFailed(true); }}
-                    />
-                  )}
+                <div style={{ marginTop: "10px" }}>
+                  <VideoEmbed
+                    videoUrl={videoEmbed.url}
+                    videoEmbedUrl={videoEmbed.embedUrl}
+                    videoPlatform={videoEmbed.platform}
+                    height={videoEmbed.platform === "youtube" || videoEmbed.platform === "drive" ? 280 : 480}
+                  />
                 </div>
               )}
             </div>

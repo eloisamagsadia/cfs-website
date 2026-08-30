@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { IconWarning } from "@/components/shared/Icons";
+import LiveMemberCount from "@/components/shared/LiveMemberCount";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -34,10 +35,10 @@ export default async function AdminDashboard() {
   const totalRevenue = (revenue ?? []).reduce((s:number,o:any)=>s+Number(o.total),0);
 
   const stats = [
-    { label:"TOTAL MEMBERS",   value: members ?? 0,                       color:"#1A8040", bg:"#E8F4EC", href:"/admin/members" },
-    { label:"PAID ORDERS",     value: orders ?? 0,                        color:"#1A8040", bg:"#E8F4EC", href:"/admin/orders" },
-    { label:"UPCOMING EVENTS", value: events ?? 0,                        color:"#1A8040", bg:"#E8F4EC", href:"/admin/events" },
-    { label:"TOTAL REVENUE",   value:`₱${totalRevenue.toLocaleString()}`, color:"#1A8040", bg:"#E8F4EC", href:"/admin/orders" },
+    { label:"TOTAL MEMBERS",   value: <LiveMemberCount initial={members ?? 0} />, color:"#1A8040", bg:"#E8F4EC", href:"/admin/members" },
+    { label:"PAID ORDERS",     value: orders ?? 0,                                color:"#1A8040", bg:"#E8F4EC", href:"/admin/orders" },
+    { label:"UPCOMING EVENTS", value: events ?? 0,                                color:"#1A8040", bg:"#E8F4EC", href:"/admin/events" },
+    { label:"TOTAL REVENUE",   value:`₱${totalRevenue.toLocaleString()}`,         color:"#1A8040", bg:"#E8F4EC", href:"/admin/orders" },
   ];
 
   const quickActions = [

@@ -2,13 +2,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { IconTicket, IconCheck } from "@/components/shared/Icons";
+import { PAYMENT_METHOD_RATES, PAYMENT_METHOD_LABELS, calculateFee, type PaymentMethod } from "@/lib/paymongo";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-const PAYMONGO_RATE  = 0.025; // GCash rate — most common PH payment method
-const PAYMONGO_FIXED = 0;     // No fixed fee for e-wallets
-function calcFee(base: number) { return (base * PAYMONGO_RATE) + PAYMONGO_FIXED; }
+const PAYMENT_METHODS: PaymentMethod[] = ["gcash", "maya", "grab_pay", "card"];
 function fmt(n: number) { return n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 
 interface EventRegisterButtonProps {
@@ -27,7 +26,10 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
   const [ticketId, setTicketId] = useState<string | null>(existingTicketId);
   const [error, setError] = useState("");
   const [selectedTier, setSelectedTier] = useState<any>(tiers[0] ?? null);
+  const [method, setMethod] = useState<PaymentMethod>("gcash");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const router = useRouter();
+  const calcFee = (base: number) => calculateFee(base, method);
 
   const hasTiers = tiers.length > 0;
 
@@ -42,6 +44,11 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
     if (!isLoggedIn) { router.push(`/sign-in?redirect=/events/${event.id}`); return; }
 
     const tier = selectedTier;
+    const requiresPayment = (!hasTiers && event.price > 0) || (tier && tier.price > 0);
+    if (requiresPayment && !termsAccepted) {
+      setError("Please accept the Terms & Conditions to continue.");
+      return;
+    }
 
     if (!hasTiers) {
       if (event.price > 0) {
@@ -65,6 +72,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
               type: "ticket",
               reference_id: ticketData.ticket.id,
               success_url: `${window.location.origin}/payment/success?type=ticket&ref=${ticketData.ticket.id}`,
+              metadata: { payment_method: method },
             }),
           });
           const payData = await payRes.json();
@@ -118,6 +126,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
             type: "ticket",
             reference_id: ticketData.ticket.id,
             success_url: `${window.location.origin}/payment/success?type=ticket&ref=${ticketData.ticket.id}`,
+            metadata: { payment_method: method },
           }),
         });
         const payData = await payRes.json();
@@ -251,19 +260,45 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         const fee   = calcFee(basePrice);
         const total = basePrice + fee;
         return (
-          <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "10px", padding: "12px 14px", display: "flex", flexDirection: "column", gap: "6px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Ticket price</span>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>₱{fmt(basePrice)}</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div>
+              <div style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "6px" }}>PAYMENT METHOD</div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "6px" }}>
+                {PAYMENT_METHODS.map(m => {
+                  const { rate, fixed } = PAYMENT_METHOD_RATES[m];
+                  const feeText = `${(rate * 100).toFixed(rate * 100 % 1 === 0 ? 0 : 1)}%${fixed ? ` +₱${fixed}` : ""}`;
+                  const selected = method === m;
+                  return (
+                    <button key={m} onClick={() => setMethod(m)} type="button"
+                      style={{ fontFamily: B, fontSize: "11px", fontWeight: 600, background: selected ? "#1A8040" : "#F7FAF5", color: selected ? "#FFFFFF" : "#1B3A2D", border: `1.5px solid ${selected ? "#1A8040" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 8px", cursor: "pointer", display: "flex", flexDirection: "column", gap: "2px", alignItems: "center" }}>
+                      <span>{PAYMENT_METHOD_LABELS[m]}</span>
+                      <span style={{ fontSize: "9px", color: selected ? "rgba(255,255,255,0.85)" : "#5A7A60" }}>{feeText}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Processing fee <span style={{ fontSize: "10px" }}>(est. · GCash 2.5% · Maya 2% · Card 3.5%+₱15)</span></span>
-              <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>+₱{fmt(fee)}</span>
+            <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "10px", padding: "12px 14px", display: "flex", flexDirection: "column", gap: "6px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Ticket price</span>
+                <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>₱{fmt(basePrice)}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Processing fee <span style={{ fontSize: "10px" }}>({PAYMENT_METHOD_LABELS[method]})</span></span>
+                <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>+₱{fmt(fee)}</span>
+              </div>
+              <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "6px", display: "flex", justifyContent: "space-between" }}>
+                <span style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "1px" }}>TOTAL</span>
+                <span style={{ fontFamily: R, fontSize: "13px", color: "#1A8040" }}>₱{fmt(total)}</span>
+              </div>
             </div>
-            <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "6px", display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "1px" }}>TOTAL</span>
-              <span style={{ fontFamily: R, fontSize: "13px", color: "#1A8040" }}>₱{fmt(total)}</span>
-            </div>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", cursor: "pointer" }}>
+              <input type="checkbox" checked={termsAccepted} onChange={e => setTermsAccepted(e.target.checked)}
+                style={{ width: "16px", height: "16px", accentColor: "#1A8040", marginTop: "2px", flexShrink: 0 }} />
+              <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", lineHeight: 1.5 }}>
+                I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#1A8040", textDecoration: "underline" }}>Terms &amp; Conditions</a> and understand tickets are non-refundable except where required by law.
+              </span>
+            </label>
           </div>
         );
       })()}
@@ -271,11 +306,13 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
       {!isNotOpenYet && !isEarlyAccessOnly && (() => {
         const basePrice = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
         const total = basePrice ? Math.round(basePrice + calcFee(basePrice)) : 0;
+        const paidAndUnaccepted = basePrice > 0 && !termsAccepted;
+        const disabled = loading || paidAndUnaccepted;
         return (
-          <button onClick={handleRegister} disabled={loading}
-            style={{ position: "relative", display: "block", width: "100%", background: "transparent", border: "none", padding: 0, cursor: loading ? "not-allowed" : "pointer" }}>
+          <button onClick={handleRegister} disabled={disabled}
+            style={{ position: "relative", display: "block", width: "100%", background: "transparent", border: "none", padding: 0, cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.6 : 1 }}>
             <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "8px" }} />
-            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "15px", background: loading ? "#E8F5E9" : basePrice ? "#1A8040" : "#1A8040", color: loading ? "#4A7C59" : "#080F06", padding: "14px", border: "2px solid #1B3A2D", borderRadius: "8px", textAlign: "center", letterSpacing: "2px" }}>
+            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "15px", background: loading ? "#E8F5E9" : "#1A8040", color: loading ? "#4A7C59" : "#080F06", padding: "14px", border: "2px solid #1B3A2D", borderRadius: "8px", textAlign: "center", letterSpacing: "2px" }}>
               {loading ? "LOADING..." : !isLoggedIn ? "LOGIN TO REGISTER" : basePrice ? `PAY ₱${fmt(total)} →` : "RSVP FREE ✦"}
             </span>
           </button>

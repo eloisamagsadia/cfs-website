@@ -8,9 +8,15 @@ import { IconSparkle } from "@/components/shared/Icons";
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
+const FONT_OPTIONS: { value: "serif" | "sans" | "display"; label: string }[] = [
+  { value: "serif", label: "Serif (DM Serif Display)" },
+  { value: "sans",  label: "Sans (Barlow)" },
+  { value: "display", label: "Display (Righteous)" },
+];
+
 export default function CreateEventPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ title: "", description: "", date: "", location: "", map_url: "", price: "0", capacity: "", is_members_only: false, banner_url: "", status: "upcoming", sponsor_access_at: "", member_access_at: "" });
+  const [form, setForm] = useState({ title: "", description: "", date: "", location: "", map_url: "", price: "0", capacity: "", is_members_only: false, banner_url: "", status: "upcoming", sponsor_access_at: "", member_access_at: "", guidelines_url: "", guidelines_text: "", heading_font: "serif", body_font: "sans" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const upd = (k: string, v: any) => setForm(p => ({ ...p, [k]: v }));
@@ -70,6 +76,41 @@ export default function CreateEventPage() {
           onUploaded={url => upd("banner_url", url)}
           onRemove={() => upd("banner_url", "")}
         />
+
+        {/* Guidelines */}
+        <div style={{ background: "#F7FAF5", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "2px" }}>GUIDELINES (OPTIONAL)</div>
+          <FileUpload
+            folder="events"
+            label="GUIDELINES POSTER"
+            currentUrl={form.guidelines_url}
+            onUploaded={url => upd("guidelines_url", url)}
+            onRemove={() => upd("guidelines_url", "")}
+          />
+          <div>
+            <label style={labelStyle}>Guidelines Text</label>
+            <textarea style={{ ...inputStyle, resize: "vertical", minHeight: "90px" }} value={form.guidelines_text} onChange={e => upd("guidelines_text", e.target.value)} placeholder={"Rules, dress code, what to bring, etc.\nOne rule per line works well."} />
+          </div>
+        </div>
+
+        {/* Typography */}
+        <div style={{ background: "#F7FAF5", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "2px" }}>TYPOGRAPHY (OPTIONAL)</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div>
+              <label style={labelStyle}>Heading Font</label>
+              <select style={inputStyle} value={form.heading_font} onChange={e => upd("heading_font", e.target.value)}>
+                {FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={labelStyle}>Body Font</label>
+              <select style={inputStyle} value={form.body_font} onChange={e => upd("body_font", e.target.value)}>
+                {FONT_OPTIONS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+              </select>
+            </div>
+          </div>
+        </div>
 
         {/* Status */}
         <div>

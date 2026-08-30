@@ -8,7 +8,7 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 type Item = { description: string; amount: number; notes?: string };
 type Project = { project: string; items: Item[] };
-type Receipt = { id: string; project_name: string; item_description: string; file_url: string; file_name: string };
+type Receipt = { id: string; project_name: string; item_description: string; file_url?: string; file_name?: string; note?: string; is_note_only?: boolean };
 
 export default function ReportReceiptsPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,6 +16,8 @@ export default function ReportReceiptsPage() {
   const [receipts, setReceipts] = useState<Receipt[]>([]);
   const [uploading, setUploading] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
+  const [savingNote, setSavingNote] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pendingUpload = useRef<{ projectName: string; itemDescription: string } | null>(null);
 
@@ -62,6 +64,24 @@ export default function ReportReceiptsPage() {
     await fetch(`/api/admin/reports/${id}/receipts/${receiptId}`, { method: "DELETE" });
     setReceipts(prev => prev.filter(r => r.id !== receiptId));
     setDeleting(null);
+  }
+
+  async function handleSaveNote(projectName: string, itemDescription: string) {
+    const key = `${projectName}|${itemDescription}`;
+    const note = noteDrafts[key]?.trim();
+    if (!note) return;
+    setSavingNote(key);
+    const res = await fetch(`/api/admin/reports/${id}/receipts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ project_name: projectName, item_description: itemDescription, note }),
+    });
+    const data = await res.json();
+    if (data.receipt) {
+      setReceipts(prev => [...prev, data.receipt]);
+      setNoteDrafts(prev => ({ ...prev, [key]: "" }));
+    }
+    setSavingNote(null);
   }
 
   const projects: Project[] = report?.fund_breakdown?.outflow_detailed ?? [];
@@ -111,21 +131,42 @@ export default function ReportReceiptsPage() {
                       ₱{Number(item.amount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
                     </div>
 
-                    {/* Uploaded receipts */}
+                    {/* Uploaded receipts / notes */}
                     {itemReceipts.length > 0 && (
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "10px" }}>
                         {itemReceipts.map(r => (
-                          <div key={r.id} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 10px" }}>
-                            <a href={r.file_url} target="_blank" rel="noopener noreferrer"
-                              style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59", textDecoration: "none" }}>
-                              <IconLink size={11} color="#4A7C59" style={{ flexShrink: 0 }} /> {r.file_name}
-                            </a>
+                          <div key={r.id} style={{ display: "flex", alignItems: "center", gap: "6px", background: r.is_note_only ? "#FFF8E1" : "#F7FAF5", border: `1px solid ${r.is_note_only ? "#E8C979" : "#DDE8DD"}`, borderRadius: "6px", padding: "5px 10px", maxWidth: "100%" }}>
+                            {r.is_note_only ? (
+                              <span style={{ fontFamily: B, fontSize: "11px", color: "#8A6D1A" }}>NO RECEIPT · {r.note}</span>
+                            ) : (
+                              <a href={r.file_url} target="_blank" rel="noopener noreferrer"
+                                style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59", textDecoration: "none" }}>
+                                <IconLink size={11} color="#4A7C59" style={{ flexShrink: 0 }} /> {r.file_name}
+                              </a>
+                            )}
                             <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id}
                               style={{ background: "none", border: "none", cursor: "pointer", color: "#CC3344", fontSize: "12px", padding: "0 2px", opacity: deleting === r.id ? 0.5 : 1 }}>
                               ×
                             </button>
                           </div>
                         ))}
+                      </div>
+                    )}
+
+                    {/* Note input for items without a receipt */}
+                    {itemReceipts.length === 0 && (
+                      <div style={{ marginTop: "10px", display: "flex", gap: "6px" }}>
+                        <input
+                          type="text"
+                          value={noteDrafts[key] ?? ""}
+                          onChange={e => setNoteDrafts(prev => ({ ...prev, [key]: e.target.value }))}
+                          placeholder="Optional: note for missing receipt (e.g. vendor did not issue one)"
+                          style={{ flex: 1, fontFamily: B, fontSize: "11px", background: "#F7FAF5", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "6px 10px", color: "#1B3A2D", outline: "none" }} />
+                        <button onClick={() => handleSaveNote(proj.project, item.description)}
+                          disabled={savingNote === key || !noteDrafts[key]?.trim()}
+                          style={{ fontFamily: R, fontSize: "10px", letterSpacing: "1px", padding: "6px 12px", borderRadius: "6px", border: "1.5px solid #DDE8DD", background: savingNote === key ? "#F2F7F2" : "transparent", color: "#4A7C59", cursor: savingNote === key || !noteDrafts[key]?.trim() ? "not-allowed" : "pointer" }}>
+                          {savingNote === key ? "..." : "SAVE NOTE"}
+                        </button>
                       </div>
                     )}
                   </div>

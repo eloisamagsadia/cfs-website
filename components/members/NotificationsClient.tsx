@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { IconBell, IconX } from "@/components/shared/Icons";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
 const ICONS:Record<string,React.ReactNode>={
@@ -72,19 +73,39 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
   const router=useRouter();
   useEffect(()=>{setSoundOn(localStorage.getItem("cfs_notif_sound")==="true");},[]);
   useEffect(()=>{
-    async function poll() {
-      try {
-        const res = await fetch("/api/notifications");
-        const d = await res.json();
-        const fresh = d.notifications ?? [];
-        setNotifications(prev => {
-          if (fresh.length > prev.length && localStorage.getItem("cfs_notif_sound") === "true") playSound();
-          return fresh;
-        });
-      } catch {}
-    }
-    const interval = setInterval(poll, 10000);
-    return () => clearInterval(interval);
+    const supabase = createClient();
+    const channel = supabase
+      .channel(`notifications:${userId}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` },
+        (payload) => {
+          const notif = payload.new as any;
+          setNotifications(prev => {
+            if (prev.some(n => n.id === notif.id)) return prev;
+            if (localStorage.getItem("cfs_notif_sound") === "true") playSound();
+            return [notif, ...prev];
+          });
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` },
+        (payload) => {
+          const notif = payload.new as any;
+          setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, ...notif } : n));
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` },
+        (payload) => {
+          const old = payload.old as any;
+          setNotifications(prev => prev.filter(n => n.id !== old.id));
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
   },[userId]);
   function toggleSound(){const n=!soundOn;setSoundOn(n);localStorage.setItem("cfs_notif_sound",String(n));if(n)playSound();}
   async function markRead(id:string){

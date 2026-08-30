@@ -22,6 +22,7 @@ export default function AdminEventEditPage() {
   const [form, setForm] = useState({
     title: "", description: "", date: "", location: "", map_url: "",
     capacity: "", price: "0", is_members_only: false, banner_url: "", status: "upcoming", sponsor_access_at: "", member_access_at: "",
+    guidelines_url: "", guidelines_text: "", heading_font: "serif", body_font: "sans",
   });
 
   const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
@@ -40,6 +41,8 @@ export default function AdminEventEditPage() {
           capacity: ev.capacity ? String(ev.capacity) : "",
           price: String(ev.price ?? 0), is_members_only: ev.is_members_only ?? false,
           banner_url: ev.banner_url ?? "", status: ev.status ?? "upcoming", sponsor_access_at: ev.sponsor_access_at ? toPHTInputString(ev.sponsor_access_at) : "", member_access_at: ev.member_access_at ? toPHTInputString(ev.member_access_at) : "",
+          guidelines_url: ev.guidelines_url ?? "", guidelines_text: ev.guidelines_text ?? "",
+          heading_font: ev.heading_font ?? "serif", body_font: ev.body_font ?? "sans",
         });
         setLoading(false);
       })
@@ -132,6 +135,30 @@ export default function AdminEventEditPage() {
           <span style={{ fontFamily: B, fontSize: "13px", color: form.is_members_only ? "#1A8040" : "#5A7A60" }}>
             {form.is_members_only ? "Members only" : "Open to everyone"}
           </span>
+        </div>
+
+        {/* Guidelines */}
+        <div><label style={labelStyle}>GUIDELINES POSTER URL</label><input style={inputStyle} value={form.guidelines_url} onChange={e => set("guidelines_url", e.target.value)} placeholder="https://... (image URL)" /></div>
+        <div><label style={labelStyle}>GUIDELINES TEXT</label><textarea style={{ ...inputStyle, minHeight: "90px", resize: "vertical" }} value={form.guidelines_text} onChange={e => set("guidelines_text", e.target.value)} placeholder="Rules, dress code, what to bring..." /></div>
+
+        {/* Typography */}
+        <div className="edit-event-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+          <div>
+            <label style={labelStyle}>HEADING FONT</label>
+            <select style={inputStyle} value={form.heading_font} onChange={e => set("heading_font", e.target.value)}>
+              <option value="serif">Serif (DM Serif Display)</option>
+              <option value="sans">Sans (Barlow)</option>
+              <option value="display">Display (Righteous)</option>
+            </select>
+          </div>
+          <div>
+            <label style={labelStyle}>BODY FONT</label>
+            <select style={inputStyle} value={form.body_font} onChange={e => set("body_font", e.target.value)}>
+              <option value="serif">Serif (DM Serif Display)</option>
+              <option value="sans">Sans (Barlow)</option>
+              <option value="display">Display (Righteous)</option>
+            </select>
+          </div>
         </div>
       </div>
 

@@ -6,14 +6,18 @@ import { IconLink } from "@/components/shared/Icons";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
-type Receipt = { file_url: string; file_name: string };
+type Receipt = { file_url?: string; file_name?: string; note?: string; is_note_only?: boolean };
 
 function isPdf(r: Receipt) {
-  return r.file_name.toLowerCase().endsWith(".pdf") || r.file_url.toLowerCase().includes(".pdf");
+  const name = r.file_name?.toLowerCase() ?? "";
+  const url = r.file_url?.toLowerCase() ?? "";
+  return name.endsWith(".pdf") || url.includes(".pdf");
 }
 
 export default function ReportReceiptPreview({ receipts }: { receipts: Receipt[] }) {
   const [active, setActive] = useState<Receipt | null>(null);
+  const fileReceipts = receipts.filter(r => !r.is_note_only && r.file_url);
+  const noteReceipts = receipts.filter(r => r.is_note_only && r.note);
 
   const close = useCallback(() => setActive(null), []);
 
@@ -36,16 +40,28 @@ export default function ReportReceiptPreview({ receipts }: { receipts: Receipt[]
   return (
     <>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginTop: "4px" }}>
-        {receipts.map((r, i) => (
-          <button key={i} onClick={() => setActive(r)}
+        {fileReceipts.map((r, i) => (
+          <button key={`f-${i}`} onClick={() => setActive(r)}
             style={{
               fontFamily: B, fontSize: "10px", color: "#4A7C59",
               background: "#E8F0E4", border: "1px solid #DDE8DD",
               borderRadius: "4px", padding: "2px 7px",
               cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "3px",
             }}>
-            <IconLink size={10} color="#4A7C59" /> {receipts.length > 1 ? `Receipt ${i + 1}` : "Receipt"}
+            <IconLink size={10} color="#4A7C59" /> {fileReceipts.length > 1 ? `Receipt ${i + 1}` : "Receipt"}
           </button>
+        ))}
+        {noteReceipts.map((r, i) => (
+          <span key={`n-${i}`}
+            style={{
+              fontFamily: B, fontSize: "10px", color: "#8A6D1A",
+              background: "#FFF8E1", border: "1px solid #E8C979",
+              borderRadius: "4px", padding: "2px 7px",
+              display: "inline-flex", alignItems: "center", gap: "3px",
+            }}
+            title={r.note}>
+            No receipt · {r.note}
+          </span>
         ))}
       </div>
 

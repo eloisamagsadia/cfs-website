@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import { IconUsers, IconSparkle, IconShield, IconWrench, IconMessage, IconTicket, IconStar, IconLightning, IconMegaphone } from "@/components/shared/Icons";
+import LiveMemberCount from "@/components/shared/LiveMemberCount";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -35,10 +36,10 @@ export default async function SuperCommandCenter() {
   const { data: sponsorPerks } = await (db as any).from("sponsor_perks").select("*").single();
 
   const stats = [
-    { label: "TOTAL MEMBERS",    value: total_members ?? 0,    color: "#1B3A2D", icon: <IconUsers size={18} color="#1B3A2D" />,    href: "/super/roles" },
-    { label: "SPONSORS",         value: sponsors ?? 0,         color: "#1A8040", icon: <IconSparkle size={18} color="#1A8040" />,  href: "/super/roles" },
-    { label: "ADMINS",           value: admins ?? 0,           color: "#1A8040", icon: <IconShield size={18} color="#1A8040" />,   href: "/super/roles" },
-    { label: "MODERATORS",       value: moderators ?? 0,       color: "#5A7A60", icon: <IconWrench size={18} color="#5A7A60" />,   href: "/super/roles" },
+    { label: "TOTAL MEMBERS",    value: <LiveMemberCount initial={total_members ?? 0} />,               color: "#1B3A2D", icon: <IconUsers size={18} color="#1B3A2D" />,    href: "/super/roles" },
+    { label: "SPONSORS",         value: <LiveMemberCount initial={sponsors ?? 0} role="sponsor" />,     color: "#1A8040", icon: <IconSparkle size={18} color="#1A8040" />,  href: "/super/roles" },
+    { label: "ADMINS",           value: <LiveMemberCount initial={admins ?? 0} role="admin" />,         color: "#1A8040", icon: <IconShield size={18} color="#1A8040" />,   href: "/super/roles" },
+    { label: "MODERATORS",       value: <LiveMemberCount initial={moderators ?? 0} role="moderator" />, color: "#5A7A60", icon: <IconWrench size={18} color="#5A7A60" />,   href: "/super/roles" },
     { label: "TOTAL POSTS",      value: total_posts ?? 0,      color: "#1A8040", icon: <IconMessage size={18} color="#1A8040" />,  href: "/admin/community" },
     { label: "TOTAL TICKETS",    value: total_tickets ?? 0,    color: "#156530", icon: <IconTicket size={18} color="#156530" />,   href: "/admin/events" },
     { label: "TOTAL EVENTS",     value: total_events ?? 0,     color: "#1A8040", icon: <IconStar size={18} color="#1A8040" />,     href: "/admin/events" },

@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { IconBell } from "@/components/shared/Icons";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 const R = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -65,29 +66,53 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
   }, []);
 
   useEffect(() => {
-    async function fetchCount() {
+    const supabase = createClient();
+    function chime() {
       try {
-        const res = await fetch("/api/notifications/count");
-        const d = await res.json();
-        const newCount = d.count ?? 0;
-        if (newCount > count) {
-          try {
-            const ctx = new AudioContext();
-            const o = ctx.createOscillator();
-            const g = ctx.createGain();
-            o.connect(g); g.connect(ctx.destination);
-            o.frequency.value = 520;
-            g.gain.setValueAtTime(0.3, ctx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-            o.start(ctx.currentTime); o.stop(ctx.currentTime + 0.4);
-          } catch {}
-        }
-        setCount(newCount);
+        const ctx = new AudioContext();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = 520;
+        g.gain.setValueAtTime(0.3, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        o.start(ctx.currentTime); o.stop(ctx.currentTime + 0.4);
       } catch {}
     }
-    const interval = setInterval(fetchCount, 10000);
-    return () => clearInterval(interval);
-  }, [userId, count]);
+    const channel = supabase
+      .channel(`notification-bell:${userId}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` },
+        (payload) => {
+          const notif = payload.new as any;
+          if (notif.is_read) return;
+          chime();
+          setCount(c => c + 1);
+          setNotifications(prev => prev.some(n => n.id === notif.id) ? prev : [notif, ...prev]);
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` },
+        (payload) => {
+          const oldRow = payload.old as any;
+          const newRow = payload.new as any;
+          if (!oldRow?.is_read && newRow?.is_read) setCount(c => Math.max(0, c - 1));
+          setNotifications(prev => prev.map(n => n.id === newRow.id ? { ...n, ...newRow } : n));
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "notifications", filter: `user_id=eq.${userId}` },
+        (payload) => {
+          const old = payload.old as any;
+          setNotifications(prev => prev.filter(n => n.id !== old.id));
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [userId]);
 
   function toggleGroup(group: string) {
     setCollapsedGroups(prev => {

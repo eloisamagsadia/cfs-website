@@ -47,22 +47,37 @@ export async function PATCH(req: NextRequest) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const role = (sessionClaims?.metadata as any)?.role;
   const isAdmin = ["admin", "super_admin"].includes(role ?? "");
-  if (!isAdmin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, status, priority, admin_notes } = await req.json();
+  const { id, status, priority, admin_notes, member_reply, member_replied_at } = await req.json();
   if (!id) return NextResponse.json({ error: "Ticket ID required" }, { status: 400 });
 
-  const payload: Record<string, any> = { updated_at: new Date().toISOString() };
-  if (status) payload.status = status;
-  if (priority) payload.priority = priority;
-  if (admin_notes !== undefined) payload.admin_notes = admin_notes;
+  const supabase = db() as any;
+  const { data: existing, error: fetchErr } = await supabase
+    .from("support_tickets").select("*").eq("id", id).single();
+  if (fetchErr || !existing) return NextResponse.json({ error: "Ticket not found" }, { status: 404 });
 
-  const { data, error } = await (db() as any).from("support_tickets").update(payload).eq("id", id).select().single();
+  const isOwner = existing.user_id === userId;
+  if (!isAdmin && !isOwner) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const payload: Record<string, any> = { updated_at: new Date().toISOString() };
+
+  if (isAdmin) {
+    if (status) payload.status = status;
+    if (priority) payload.priority = priority;
+    if (admin_notes !== undefined) payload.admin_notes = admin_notes;
+  }
+
+  if (isOwner && member_reply !== undefined) {
+    payload.member_reply = member_reply;
+    payload.member_replied_at = member_replied_at ?? new Date().toISOString();
+    if (existing.status === "resolved") payload.status = "in_progress";
+  }
+
+  const { data, error } = await supabase.from("support_tickets").update(payload).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Notify member if admin replied
-  if (admin_notes && data?.user_id) {
-    await (db() as any).from("notifications").insert({
+  if (isAdmin && admin_notes && data?.user_id) {
+    await supabase.from("notifications").insert({
       user_id: data.user_id,
       type: "support_reply",
       title: "Support Reply",
@@ -70,6 +85,23 @@ export async function PATCH(req: NextRequest) {
       link: "/members/support/tickets",
       is_read: false,
     });
+  }
+
+  if (isOwner && member_reply) {
+    const { data: admins } = await supabase
+      .from("profiles").select("id").in("role", ["admin", "super_admin"]);
+    if (admins?.length) {
+      await supabase.from("notifications").insert(
+        admins.map((a: any) => ({
+          user_id: a.id,
+          type: "support_reply",
+          title: "Member replied to ticket",
+          message: `New reply on "${data.subject}"`,
+          link: "/admin/support",
+          is_read: false,
+        }))
+      );
+    }
   }
 
   return NextResponse.json({ ticket: data });

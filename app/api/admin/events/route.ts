@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await req.json();
-  const { title, description, date, location, map_url, capacity, price, is_members_only, banner_url, status, category_id, sponsor_access_at, member_access_at } = body;
+  const { title, description, date, location, map_url, capacity, price, is_members_only, banner_url, status, category_id, sponsor_access_at, member_access_at, guidelines_url, guidelines_text, heading_font, body_font } = body;
   if (!title?.trim()) return NextResponse.json({ error: "Title is required" }, { status: 400 });
   if (!date) return NextResponse.json({ error: "Date is required" }, { status: 400 });
   const admin = createAdminClient();
@@ -33,6 +33,10 @@ export async function POST(req: NextRequest) {
     capacity: capacity ? Number(capacity) : null, price: Number(price ?? 0),
     is_members_only: !!is_members_only, banner_url: banner_url?.trim() || null,
     status: status || "upcoming", category_id: category_id || null, sponsor_access_at: sponsor_access_at || null, member_access_at: member_access_at || null,
+    guidelines_url: guidelines_url?.trim() || null,
+    guidelines_text: guidelines_text?.trim() || null,
+    heading_font: heading_font || "serif",
+    body_font: body_font || "sans",
   }).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ event: data }, { status: 201 });
@@ -57,6 +61,10 @@ export async function PATCH(req: NextRequest) {
   if (updates.status !== undefined) payload.status = updates.status;
   if (updates.sponsor_access_at !== undefined) payload.sponsor_access_at = updates.sponsor_access_at || null;
   if (updates.member_access_at !== undefined) payload.member_access_at = updates.member_access_at || null;
+  if (updates.guidelines_url !== undefined) payload.guidelines_url = updates.guidelines_url?.trim() || null;
+  if (updates.guidelines_text !== undefined) payload.guidelines_text = updates.guidelines_text?.trim() || null;
+  if (updates.heading_font !== undefined) payload.heading_font = updates.heading_font || "serif";
+  if (updates.body_font !== undefined) payload.body_font = updates.body_font || "sans";
   const admin = createAdminClient();
   const { data, error } = await (admin.from("events") as any).update(payload).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

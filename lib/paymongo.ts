@@ -127,6 +127,30 @@ export const formatPHP = (amount: number) =>
     currency: "PHP",
   }).format(amount);
 
-/** Calculate PayMongo fee for a given amount */
-export const calculateFee = (amountPesos: number) =>
-  amountPesos * 0.0245 + 15;
+// ─── PAYMENT METHOD FEE TABLE ─────────────────────────────────────────────────
+// Rates match PayMongo's published pricing (as of 2026-06).
+// Keep in sync with the fee breakdown shown on /donate and /members/checkout.
+
+export type PaymentMethod = "gcash" | "maya" | "grab_pay" | "card" | "manual";
+
+export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
+  gcash: "GCash",
+  maya: "Maya",
+  grab_pay: "GrabPay",
+  card: "Card",
+  manual: "Manual (Bank Transfer)",
+};
+
+export const PAYMENT_METHOD_RATES: Record<PaymentMethod, { rate: number; fixed: number }> = {
+  gcash:    { rate: 0.025,  fixed: 0 },
+  maya:     { rate: 0.020,  fixed: 0 },
+  grab_pay: { rate: 0.025,  fixed: 0 },
+  card:     { rate: 0.035,  fixed: 15 },
+  manual:   { rate: 0,      fixed: 0 },
+};
+
+/** Calculate PayMongo fee for a given amount and payment method (defaults to card, the highest fee). */
+export const calculateFee = (amountPesos: number, method: PaymentMethod = "card") => {
+  const { rate, fixed } = PAYMENT_METHOD_RATES[method] ?? PAYMENT_METHOD_RATES.card;
+  return amountPesos * rate + fixed;
+};
