@@ -2,6 +2,7 @@
 import type { ReactNode } from "react";
 
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
+const B  = "var(--font-barlow,'Barlow',sans-serif)";
 
 export interface StatItem {
   label: string;
@@ -14,24 +15,13 @@ export interface StatItem {
 
 interface Props {
   items: StatItem[];
-  /** min width per stat cell (default 130px) */
-  minCell?: number;
 }
 
 const DEFAULT_ACCENT = "#1A8040";
 
-export default function StatBar({ items, minCell = 130 }: Props) {
+export default function StatBar({ items }: Props) {
   return (
-    <div
-      style={{
-        background: "#ffffff",
-        borderRadius: "14px",
-        display: "flex",
-        flexWrap: "wrap",
-        overflow: "hidden",
-        boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 6px 18px rgba(15,42,30,0.06)",
-      }}
-    >
+    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
       {items.map((item, i) => {
         const color = item.color ?? DEFAULT_ACCENT;
         const clickable = !!item.onClick;
@@ -43,29 +33,25 @@ export default function StatBar({ items, minCell = 130 }: Props) {
             onClick={item.onClick}
             disabled={!clickable}
             style={{
-              flex: `1 1 ${minCell}px`,
-              minWidth: `${minCell}px`,
-              display: "flex",
-              alignItems: "stretch",
-              padding: 0,
-              background: active ? `${color}12` : "transparent",
-              border: "none",
-              borderLeft: i > 0 ? "1px solid #F0F5F0" : "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "10px 16px",
+              background: active ? color : `${color}12`,
+              border: `1.5px solid ${active ? color : `${color}30`}`,
+              borderRadius: "999px",
               cursor: clickable ? "pointer" : "default",
               outline: "none",
-              textAlign: "left" as const,
-              transition: "background 0.15s",
+              transition: "background 0.15s, border-color 0.15s, transform 0.1s",
+              boxShadow: active ? `0 2px 10px ${color}40` : "none",
             }}
-            onMouseEnter={clickable && !active ? (e) => { e.currentTarget.style.background = "#F7FAF5"; } : undefined}
-            onMouseLeave={clickable && !active ? (e) => { e.currentTarget.style.background = "transparent"; } : undefined}
+            onMouseEnter={clickable && !active ? (e) => { e.currentTarget.style.background = `${color}22`; e.currentTarget.style.borderColor = `${color}55`; } : undefined}
+            onMouseLeave={clickable && !active ? (e) => { e.currentTarget.style.background = `${color}12`; e.currentTarget.style.borderColor = `${color}30`; } : undefined}
           >
-            {/* Accent bar */}
-            <span style={{ width: "3px", background: color, flexShrink: 0, opacity: active ? 1 : 0.7 }} />
-            {/* Content */}
-            <span style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
-              <span style={{ fontFamily: SG, fontSize: "22px", fontWeight: 700, color, letterSpacing: "-0.3px", lineHeight: 1 }}>{item.value}</span>
-              <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#7A8E7A", letterSpacing: "1.5px" }}>{item.label}</span>
-              {item.hint && <span style={{ fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "10px", color: "#9AAA98", marginTop: "2px" }}>{item.hint}</span>}
+            <span style={{ fontFamily: SG, fontSize: "18px", fontWeight: 700, color: active ? "#ffffff" : color, letterSpacing: "-0.3px", lineHeight: 1 }}>{item.value}</span>
+            <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", lineHeight: 1 }}>
+              <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: active ? "rgba(255,255,255,0.9)" : color, letterSpacing: "1.4px", textTransform: "uppercase" }}>{item.label}</span>
+              {item.hint && <span style={{ fontFamily: B, fontSize: "10px", color: active ? "rgba(255,255,255,0.75)" : "#9AAA98", marginTop: "3px" }}>{item.hint}</span>}
             </span>
           </button>
         );
