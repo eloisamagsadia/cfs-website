@@ -1,10 +1,13 @@
 "use client";
 import SkeletonPage from "@/components/shared/SkeletonPage";
-import { useState, useEffect } from "react";
-import { IconPin, IconMessage, IconHeart, IconPhoto, IconVideo } from "@/components/shared/Icons";
+import { useState, useEffect, useMemo } from "react";
+import { IconPin, IconMessage, IconHeart, IconPhoto, IconVideo, IconX } from "@/components/shared/Icons";
 
-const R = "var(--font-righteous,'Righteous',sans-serif)";
-const B = "var(--font-barlow,'Barlow',sans-serif)";
+const R  = "var(--font-righteous,'Righteous',sans-serif)";
+const B  = "var(--font-barlow,'Barlow',sans-serif)";
+const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
+
+type FilterKey = "all" | "pinned" | "hidden" | "images" | "video" | "commented";
 
 export default function AdminCommunityPage() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -12,6 +15,8 @@ export default function AdminCommunityPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<FilterKey>("all");
 
   useEffect(() => { loadData(); }, []);
 
@@ -51,6 +56,31 @@ export default function AdminCommunityPage() {
   const hiddenPosts = posts.filter(p => p.is_hidden).length;
   const pinnedPosts = posts.filter(p => p.is_pinned).length;
 
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return posts.filter((p: any) => {
+      if (filter === "pinned"    && !p.is_pinned) return false;
+      if (filter === "hidden"    && !p.is_hidden) return false;
+      if (filter === "images"    && !(p.images?.length > 0)) return false;
+      if (filter === "video"     && !p.video_url) return false;
+      if (filter === "commented" && !(p.community_comments?.length > 0)) return false;
+      if (!q) return true;
+      const author = (p.profiles?.display_name ?? "").toLowerCase();
+      const content = (p.content ?? "").toLowerCase();
+      const id = (p.id ?? "").toLowerCase();
+      return author.includes(q) || content.includes(q) || id.includes(q);
+    });
+  }, [posts, search, filter]);
+
+  const FILTERS: { key: FilterKey; label: string; count: number }[] = [
+    { key: "all",       label: "ALL",       count: posts.length },
+    { key: "pinned",    label: "PINNED",    count: pinnedPosts },
+    { key: "hidden",    label: "HIDDEN",    count: hiddenPosts },
+    { key: "images",    label: "WITH IMAGES",  count: posts.filter(p => p.images?.length > 0).length },
+    { key: "video",     label: "WITH VIDEO",   count: posts.filter(p => p.video_url).length },
+    { key: "commented", label: "COMMENTED",    count: posts.filter(p => p.community_comments?.length > 0).length },
+  ];
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
@@ -74,14 +104,52 @@ export default function AdminCommunityPage() {
 
       {/* Posts list */}
       <div>
-        <h2 style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "2px", marginBottom: "12px" }}>ALL POSTS</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "10px", marginBottom: "12px", flexWrap: "wrap" }}>
+          <h2 style={{ fontFamily: R, fontSize: "13px", color: "#1B3A2D", letterSpacing: "2px", margin: 0 }}>ALL POSTS</h2>
+          <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>{filtered.length} of {posts.length}</span>
+        </div>
+
+        {/* Search + filter */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "16px" }}>
+          <div style={{ position: "relative" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A8E7A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)" }}>
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search posts by author, content, or ID…"
+              style={{ width: "100%", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "11px 40px 11px 40px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+            {search && (
+              <button type="button" onClick={() => setSearch("")}
+                aria-label="Clear search"
+                style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", background: "#F2F7F2", border: "1px solid #DDE8DD", borderRadius: "50%", width: "22px", height: "22px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                <IconX size={10} color="#5A7A60" />
+              </button>
+            )}
+          </div>
+          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+            {FILTERS.map(f => {
+              const active = filter === f.key;
+              const accent = f.key === "hidden" ? "#CC3344" : f.key === "pinned" ? "#156530" : "#1A8040";
+              return (
+                <button key={f.key} type="button" onClick={() => setFilter(f.key)}
+                  style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "1.2px", color: active ? "#ffffff" : "#1B3A2D", background: active ? accent : "#F2F7F2", border: `1.5px solid ${active ? accent : "transparent"}`, borderRadius: "10px", padding: "8px 14px", cursor: "pointer", outline: "none", transition: "background 0.15s, color 0.15s", boxShadow: active ? `0 2px 8px ${accent}30` : "none" }}>
+                  {f.label}
+                  <span style={{ fontSize: "9px", opacity: 0.85, background: active ? "rgba(255,255,255,0.2)" : "rgba(26,128,64,0.12)", borderRadius: "999px", padding: "1px 6px", color: active ? "#ffffff" : "#4A7C59" }}>{f.count}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {loading ? (
-<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
-    </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
+            <SkeletonPage />
+          </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {posts.map((p: any) => (
+            {filtered.map((p: any) => (
               <div key={p.id} style={{ background: p.is_hidden ? "#FFF5F6" : "#FFFFFF", border: `2px solid ${p.is_pinned ? "#156530" : p.is_hidden ? "#CC3344" : "#DDE8DD"}`, borderRadius: "10px", overflow: "hidden" }}>
                 <div onClick={() => setExpanded(expanded === p.id ? null : p.id)} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", padding: "12px 16px", cursor: "pointer" }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -141,7 +209,17 @@ export default function AdminCommunityPage() {
                 )}
               </div>
             ))}
-            {!posts.length && <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A60" }}>NO POSTS YET</div>}
+            {!filtered.length && (
+              <div style={{ background: "#FFFFFF", border: "1.5px dashed #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center" }}>
+                <div style={{ fontFamily: SG, fontSize: "12px", fontWeight: 700, color: "#4A7C59", letterSpacing: "2px", marginBottom: "6px" }}>{posts.length ? "NO POSTS MATCH THIS FILTER" : "NO POSTS YET"}</div>
+                {posts.length > 0 && (
+                  <button type="button" onClick={() => { setSearch(""); setFilter("all"); }}
+                    style={{ marginTop: "8px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: "10px", padding: "9px 16px", cursor: "pointer", letterSpacing: "1.2px", boxShadow: "0 2px 8px rgba(26,128,64,0.25)" }}>
+                    CLEAR FILTERS
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
