@@ -10,10 +10,6 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const navLinks = [
   { label: "EVENTS",   href: "/events" },
-  { label: "SHOP",     href: "/shop" },
-  { label: "PROJECTS", href: "/projects" },
-  { label: "REPORTS",  href: "/reports" },
-  { label: "DONATE",   href: "/donate" },
 ];
 
 const admin = () => createAdminClient(

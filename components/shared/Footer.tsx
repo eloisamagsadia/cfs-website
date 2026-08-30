@@ -27,11 +27,7 @@ const socials = [
 ];
 
 const links = [
-  { label: "Events",    href: "/events" },
-  { label: "Shop",      href: "/shop" },
-  { label: "Projects",  href: "/projects" },
-  { label: "Reports",   href: "/reports" },
-  { label: "Donate",    href: "/donate" },
+  { label: "Events", href: "/events" },
 ];
 
 export default function Footer() {
