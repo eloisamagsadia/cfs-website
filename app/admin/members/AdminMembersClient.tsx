@@ -2,8 +2,9 @@
 import { useState } from "react";
 import { IconX, IconCheck, IconWarning } from "@/components/shared/Icons";
 
-const R = "var(--font-righteous,'Righteous',sans-serif)";
-const B = "var(--font-barlow,'Barlow',sans-serif)";
+const R  = "var(--font-righteous,'Righteous',sans-serif)";
+const B  = "var(--font-barlow,'Barlow',sans-serif)";
+const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
 const ROLES = ["super_admin", "admin", "moderator", "sponsor", "member"];
 
@@ -139,12 +140,16 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
           placeholder="Search by name or ID..."
           style={{ flex: 1, minWidth: "200px", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-          {["all", ...ROLES, "banned"].map(f => (
-            <button key={f} onClick={() => setFilter(f)}
-              style={{ fontFamily: R, fontSize: "10px", background: filter === f ? "#E8F0E4" : "transparent", border: `1.5px solid ${filter === f ? (ROLE_COLORS[f] ?? "#1A8040") : "#DDE8DD"}`, color: filter === f ? (ROLE_COLORS[f] ?? "#1A8040") : "#5A7A60", borderRadius: "6px", padding: "5px 12px", cursor: "pointer", letterSpacing: "1px" }}>
-              {f === "all" ? "ALL" : ROLE_LABELS[f] ?? f.toUpperCase()}
-            </button>
-          ))}
+          {["all", ...ROLES, "banned"].map(f => {
+            const active = filter === f;
+            const accent = f === "banned" ? "#CC3344" : (ROLE_COLORS[f] ?? "#1A8040");
+            return (
+              <button key={f} type="button" onClick={() => setFilter(f)}
+                style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, background: active ? accent : "#F2F7F2", border: `1.5px solid ${active ? accent : "transparent"}`, color: active ? "#ffffff" : "#1B3A2D", borderRadius: "10px", padding: "8px 14px", cursor: "pointer", letterSpacing: "1.2px", outline: "none", transition: "background 0.15s, color 0.15s", boxShadow: active ? `0 2px 8px ${accent}30` : "none" }}>
+                {f === "all" ? "ALL" : ROLE_LABELS[f] ?? f.toUpperCase()}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -167,7 +172,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
           return (
             <div key={m.id}
               onClick={() => setSelectedMember(m)}
-              style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", padding: "12px 20px", borderTop: "1px solid #DDE8DD", background: m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#FFFFFF" : "#EDF7ED", alignItems: "center", cursor: "pointer" }}
+              style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", padding: "12px 20px", borderTop: "1px solid #DDE8DD", background: m.is_banned ? "#FFF5F7" : i % 2 === 0 ? "#FFFFFF" : "#F7FAF5", alignItems: "center", cursor: "pointer" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#F2F7F2")}
               onMouseLeave={e => (e.currentTarget.style.background = m.is_banned ? "#2A0A0A" : i % 2 === 0 ? "#FFFFFF" : "#EDF7ED")}
             >
@@ -236,7 +241,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
           return (
             <div key={m.id}
               onClick={() => setSelectedMember(m)}
-              style={{ background: m.is_banned ? "#2A0A0A" : "#FFFFFF", border: `2px solid ${m.is_banned ? "#CC334440" : "#DDE8DD"}`, borderRadius: "12px", padding: "14px 16px", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}
+              style={{ background: m.is_banned ? "#FFF5F7" : "#FFFFFF", border: `2px solid ${m.is_banned ? "#CC334440" : "#DDE8DD"}`, borderRadius: "12px", padding: "14px 16px", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer" }}
             >
               <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: `2px solid ${roleColor}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
                 {m.avatar_url
