@@ -66,7 +66,7 @@ export default function AdminCodesPage() {
         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"14px"}}>
           <div style={{display:"flex",gap:"10px"}}>
             <input value={form.code} onChange={e=>setForm(p=>({...p,code:e.target.value.toUpperCase()}))} placeholder="CODE (e.g. CFS2026)" style={{...inp,flex:1,letterSpacing:"2px",fontFamily:R}}/>
-            <button onClick={generateCode} style={{background:"#E8F4EC",border:"2px solid #156530",borderRadius:"6px",color:"#156530",padding:"10px 20px",cursor:"pointer",fontFamily:R,fontSize:"12px",letterSpacing:"1.5px",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",gap:"6px"}}><IconSparkle size={12} color="#156530" /> GENERATE</button>
+            <button type="button" onClick={generateCode} style={{background:"#1A8040",border:"1.5px solid #1A8040",borderRadius:"10px",color:"#ffffff",padding:"11px 22px",cursor:"pointer",fontFamily:"var(--font-space-grotesk,'Space Grotesk',sans-serif)",fontSize:"12px",fontWeight:700,letterSpacing:"1.5px",whiteSpace:"nowrap",flexShrink:0,display:"inline-flex",alignItems:"center",gap:"8px",boxShadow:"0 2px 8px rgba(26,128,64,0.25)",outline:"none"}}><IconSparkle size={12} color="#ffffff" /> GENERATE</button>
           </div>
           <div className="codes-form-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"10px"}}>
             <select value={form.discount_type} onChange={e=>setForm(p=>({...p,discount_type:e.target.value}))} style={inp}>

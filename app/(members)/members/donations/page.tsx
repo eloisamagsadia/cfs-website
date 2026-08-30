@@ -71,7 +71,7 @@ export default async function MyDonationsPage() {
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px 24px", textAlign: "center" }}>
           <div style={{ marginBottom: "12px" }}><IconHeart size={40} color="#DDE8DD" /></div>
           <div style={{ fontFamily: R, fontSize: "14px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "16px" }}>NO DONATIONS YET</div>
-          <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 18px", letterSpacing: "1.5px" }}>DONATE NOW →</a>
+          <a href="/donate" style={{ fontFamily: "var(--font-space-grotesk,'Space Grotesk',sans-serif)", fontSize: "12px", fontWeight: 700, color: "#ffffff", background: "#1A8040", textDecoration: "none", border: "1.5px solid #1A8040", borderRadius: "10px", padding: "11px 22px", letterSpacing: "1.5px", boxShadow: "0 2px 8px rgba(26,128,64,0.25)", display: "inline-flex", alignItems: "center", gap: "8px" }}>DONATE NOW →</a>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -166,7 +166,7 @@ export default async function MyDonationsPage() {
       )}
 
       <div style={{ textAlign: "center" }}>
-        <a href="/donate" style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", textDecoration: "none", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 24px", letterSpacing: "1.5px", display: "inline-block" }}>
+        <a href="/donate" style={{ fontFamily: "var(--font-space-grotesk,'Space Grotesk',sans-serif)", fontSize: "12px", fontWeight: 700, color: "#ffffff", background: "#1A8040", textDecoration: "none", border: "1.5px solid #1A8040", borderRadius: "10px", padding: "11px 24px", letterSpacing: "1.5px", boxShadow: "0 2px 8px rgba(26,128,64,0.25)", display: "inline-flex", alignItems: "center", gap: "8px" }}>
           DONATE AGAIN →
         </a>
       </div>

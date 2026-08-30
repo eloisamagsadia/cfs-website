@@ -151,7 +151,7 @@ export default function CreateEventPage() {
           <button onClick={() => router.back()} style={{ fontFamily: R, fontSize: "12px", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "6px", color: "#5A7A60", padding: "10px 20px", cursor: "pointer", letterSpacing: "1px" }}>CANCEL</button>
           <button onClick={handleSave} disabled={saving} style={{ position: "relative", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
             <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#1B3A2D", borderRadius: "6px" }} />
-            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "12px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#FFFFFF", padding: "10px 22px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1.5px", display: "inline-flex", alignItems: "center", gap: "6px" }}>{saving ? "SAVING..." : <><IconSparkle size={12} color="#FFFFFF" /> SAVE EVENT</>}</span>
+            <span style={{ position: "relative", fontFamily: R, fontSize: "12px", background: saving ? "#E8F0E4" : "#1A8040", color: saving ? "#5A7A60" : "#FFFFFF", padding: "10px 22px", border: "2px solid #1B3A2D", borderRadius: "6px", letterSpacing: "1.5px", display: "inline-flex", alignItems: "center", gap: "6px" }}>{saving ? "SAVING..." : <><IconSparkle size={12} color="#FFFFFF" /> SAVE EVENT</>}</span>
           </button>
         </div>
       </div>
