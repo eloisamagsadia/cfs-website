@@ -125,7 +125,7 @@ export default function AdminSupportPage() {
       ) : (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
           {/* Table header */}
-          <div className="support-table-header" className="support-table-header" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 140px 32px", gap: "12px", padding: "10px 16px", borderBottom: "1px solid #DDE8DD", background: "#162010" }}>
+          <div className="support-table-header" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 140px 32px", gap: "12px", padding: "10px 16px", borderBottom: "1px solid #DDE8DD", background: "#F2F7F2" }}>
             {["SUBJECT", "MEMBER", "CATEGORY", "DATE", "STATUS", ""].map(h => (
               <span key={h} style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", letterSpacing: "1.5px" }}>{h}</span>
             ))}
@@ -137,7 +137,7 @@ export default function AdminSupportPage() {
               <div key={t.id}>
                 {/* Row */}
                 <div onClick={() => setExpanded(expanded === t.id ? null : t.id)}
-                  className="support-table-row" className="support-table-row" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 140px 32px", gap: "12px", padding: "12px 16px", borderBottom: "1px solid #DDE8DD", cursor: "pointer", background: expanded === t.id ? "#F2F7F2" : "transparent", alignItems: "center" }}
+                  className="support-table-row" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 140px 32px", gap: "12px", padding: "12px 16px", borderBottom: "1px solid #DDE8DD", cursor: "pointer", background: expanded === t.id ? "#F2F7F2" : "transparent", alignItems: "center" }}
                   onMouseEnter={e => { if (expanded !== t.id) (e.currentTarget as HTMLDivElement).style.background = "#F2F7F2"; }}
                   onMouseLeave={e => { if (expanded !== t.id) (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}>
                   <div>
@@ -159,7 +159,7 @@ export default function AdminSupportPage() {
 
                 {/* Expanded thread */}
                 {expanded === t.id && (
-                  <div style={{ borderBottom: "1px solid #DDE8DD", padding: "20px", background: "#162010", display: "flex", flexDirection: "column", gap: "14px" }}>
+                  <div style={{ borderBottom: "1px solid #DDE8DD", padding: "20px", background: "#F7FAF5", display: "flex", flexDirection: "column", gap: "14px" }}>
                     <div style={{ background: "#F2F7F2", borderRadius: "8px", padding: "12px 14px" }}>
                       <div style={{ fontFamily: R, fontSize: "10px", color: "#5A7A60", letterSpacing: "1px", marginBottom: "6px" }}>
                         {t.profiles?.display_name ?? "MEMBER"} · {timeAgo(t.created_at)}
@@ -180,14 +180,14 @@ export default function AdminSupportPage() {
                     )}
 
                     {t.admin_notes && (
-                      <div style={{ background: "#0F2A0B", border: "1px solid #1A804030", borderRadius: "8px", padding: "12px 14px" }}>
+                      <div style={{ background: "#E8F0E4", border: "1px solid #1A804030", borderRadius: "8px", padding: "12px 14px" }}>
                         <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "1px", marginBottom: "6px" }}>YOUR REPLY</div>
                         <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", lineHeight: 1.6 }}>{t.admin_notes}</div>
                       </div>
                     )}
 
                     {t.member_reply && (
-                      <div style={{ background: "#2A1F0A", border: "1px solid #1A8040", borderRadius: "8px", padding: "12px 14px" }}>
+                      <div style={{ background: "#FFF8E1", border: "1px solid #1A8040", borderRadius: "8px", padding: "12px 14px" }}>
                         <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "1px", marginBottom: "6px" }}>
                           MEMBER REPLY · {timeAgo(t.member_replied_at)}
                         </div>

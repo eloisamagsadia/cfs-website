@@ -200,7 +200,7 @@ export default function EventTiersPage() {
                     </span>
                   )}
                   {!tier.is_active && (
-                    <span style={{ fontFamily: R, fontSize: "10px", color: "#CC3344", background: "#3D0A14", borderRadius: "20px", padding: "1px 8px" }}>INACTIVE</span>
+                    <span style={{ fontFamily: R, fontSize: "10px", color: "#CC3344", background: "#FFE8EC", border: "1px solid #CC334440", borderRadius: "20px", padding: "1px 8px" }}>INACTIVE</span>
                   )}
                 </div>
                 {tier.perks?.length > 0 && (

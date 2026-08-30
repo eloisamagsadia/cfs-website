@@ -182,7 +182,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                 <div>
                   <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#1B3A2D", display: "flex", alignItems: "center", gap: "6px" }}>
                     {m.display_name ?? "—"}
-                    {m.is_banned && <span style={{ fontFamily: R, fontSize: "9px", color: "#CC3344", background: "#3D0A14", borderRadius: "4px", padding: "1px 6px" }}>BANNED</span>}
+                    {m.is_banned && <span style={{ fontFamily: R, fontSize: "9px", color: "#CC3344", background: "#FFE8EC", border: "1px solid #CC334440", borderRadius: "4px", padding: "1px 6px" }}>BANNED</span>}
                   </div>
                 </div>
               </div>
@@ -247,7 +247,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#1B3A2D", display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
                   {m.display_name ?? "—"}
-                  {m.is_banned && <span style={{ fontFamily: R, fontSize: "9px", color: "#CC3344", background: "#3D0A14", borderRadius: "4px", padding: "1px 6px" }}>BANNED</span>}
+                  {m.is_banned && <span style={{ fontFamily: R, fontSize: "9px", color: "#CC3344", background: "#FFE8EC", border: "1px solid #CC334440", borderRadius: "4px", padding: "1px 6px" }}>BANNED</span>}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "4px", flexWrap: "wrap" }}>
                   <span style={{ fontFamily: R, fontSize: "10px", color: roleColor, background: roleColor + "20", borderRadius: "20px", padding: "2px 8px", letterSpacing: "1px" }}>

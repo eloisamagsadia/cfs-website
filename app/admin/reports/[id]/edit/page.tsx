@@ -64,12 +64,14 @@ export default function AdminReportEditPage() {
     } catch (e: any) { setError(e.message); setDeleting(false); setConfirmDelete(false); }
   };
 
-  const inputStyle = { width: "100%", background: "#0F1A0C", border: "2px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
+  const inputStyle = { width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "14px", outline: "none", boxSizing: "border-box" as const };
   const labelStyle = { fontFamily: B, fontSize: "12px", color: "#4A7C59", letterSpacing: "1px", marginBottom: "6px", display: "block" };
 
-<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
+  if (loading) return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
       <SkeletonPage />
     </div>
+  );
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "720px" }}>
@@ -81,7 +83,7 @@ export default function AdminReportEditPage() {
         <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
       </div>
 
-      {error && <div style={{ background: "#2C1010", border: "2px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
+      {error && <div style={{ background: "#FFE8EC", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
 
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
 
@@ -100,7 +102,7 @@ export default function AdminReportEditPage() {
             <label style={labelStyle}>QUARTER *</label>
             <div style={{ display: "flex", gap: "8px" }}>
               {[1, 2, 3, 4].map(q => (
-                <button key={q} onClick={() => set("quarter", String(q))} style={{ flex: 1, fontFamily: R, fontSize: "13px", padding: "10px 0", borderRadius: "8px", border: `2px solid ${form.quarter === String(q) ? "#1A8040" : "#DDE8DD"}`, background: form.quarter === String(q) ? "#E8F0E4" : "#0F1A0C", color: form.quarter === String(q) ? "#1A8040" : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
+                <button key={q} onClick={() => set("quarter", String(q))} style={{ flex: 1, fontFamily: R, fontSize: "13px", padding: "10px 0", borderRadius: "8px", border: `2px solid ${form.quarter === String(q) ? "#1A8040" : "#DDE8DD"}`, background: form.quarter === String(q) ? "#E8F0E4" : "#F2F7F2", color: form.quarter === String(q) ? "#1A8040" : "#5A7A60", cursor: "pointer", letterSpacing: "1px" }}>
                   Q{q}
                 </button>
               ))}
@@ -116,7 +118,7 @@ export default function AdminReportEditPage() {
         </div>
 
         {/* Publish toggle */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", background: form.is_published ? "#E8F0E4" : "#0F1A0C", border: `2px solid ${form.is_published ? "#1A8040" : "#DDE8DD"}`, borderRadius: "8px", padding: "14px 16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", background: form.is_published ? "#E8F0E4" : "#F2F7F2", border: `2px solid ${form.is_published ? "#1A8040" : "#DDE8DD"}`, borderRadius: "8px", padding: "14px 16px" }}>
           <button onClick={() => set("is_published", !form.is_published)} style={{ width: "44px", height: "24px", borderRadius: "12px", border: "none", cursor: "pointer", background: form.is_published ? "#1A8040" : "#DDE8DD", position: "relative", transition: "background 0.2s", flexShrink: 0 }}>
             <span style={{ position: "absolute", top: "3px", left: form.is_published ? "22px" : "3px", width: "18px", height: "18px", borderRadius: "50%", background: "#1B3A2D", transition: "left 0.2s" }} />
           </button>

@@ -444,7 +444,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
         <div onMouseDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()} style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }}>
           <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", padding: "28px 28px 22px", maxWidth: "320px", width: "90%", boxShadow: "0 16px 48px rgba(0,0,0,0.6)" }}>
             {/* Icon */}
-            <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: "#3D0A14", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}>
+            <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: "#FFE8EC", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M10 11v6M14 11v6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M9 6V4h6v2" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/></svg>
             </div>
             <div style={{ fontFamily: R, fontSize: "16px", color: "#1B3A2D", marginBottom: "8px", letterSpacing: "0.5px" }}>Delete post?</div>

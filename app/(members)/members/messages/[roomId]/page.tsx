@@ -368,7 +368,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
             <div key={msg.id}>
               {showDate && (
                 <div style={{ textAlign: "center", margin: "16px 0 10px" }}>
-                  <span style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30", background: "#162010", padding: "3px 12px", borderRadius: "20px" }}>{msgDate}</span>
+                  <span style={{ fontFamily: B, fontSize: "11px", color: "#3A5A30", background: "#F2F7F2", padding: "3px 12px", borderRadius: "20px" }}>{msgDate}</span>
                 </div>
               )}
               <div style={{ display: "flex", flexDirection: isMe ? "row-reverse" : "row", alignItems: "flex-end", gap: isMe ? "0" : "8px", marginBottom: "2px", position: "relative" }}
@@ -384,7 +384,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
                 <div style={{ maxWidth: isMe ? "92%" : "75%", display: "flex", flexDirection: "column", gap: "2px", alignItems: isMe ? "flex-end" : "flex-start" }}>
                   {showAvatar && !isMe && <span style={{ fontFamily: R, fontSize: "10px", color: "#5A7A60", letterSpacing: "0.5px", marginLeft: "4px" }}>{getDisplayName(members.find(m => m.user_id === msg.sender_id) ?? {profiles: msg.profiles})}</span>}
                   {replyMsg && (
-                    <div style={{ background: "#162010", borderLeft: "3px solid #1A8040", borderRadius: "6px", padding: "4px 10px", marginBottom: "2px", maxWidth: "100%" }}>
+                    <div style={{ background: "#F2F7F2", borderLeft: "3px solid #1A8040", borderRadius: "6px", padding: "4px 10px", marginBottom: "2px", maxWidth: "100%" }}>
                       <div style={{ fontFamily: R, fontSize: "9px", color: "#1A8040", marginBottom: "2px" }}>{replyMsg.profiles?.display_name ?? "Member"}</div>
                       <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "240px" }}>{replyMsg.content || "📷 Photo"}</div>
                     </div>
@@ -458,7 +458,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
       )}
 
       {replyTo && (
-        <div style={{ padding: "8px 12px", background: "#162010", borderTop: "1px solid #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ padding: "8px 12px", background: "#F2F7F2", borderTop: "1px solid #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <div style={{ fontFamily: R, fontSize: "10px", color: "#1A8040", letterSpacing: "0.5px", marginBottom: "2px" }}>Replying to {replyTo.profiles?.display_name ?? "Member"}</div>
             <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "400px" }}>{replyTo.content || "📷 Photo"}</div>
