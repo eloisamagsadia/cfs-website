@@ -144,7 +144,7 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
 
         {/* Cashflow summary cards */}
         {isStructured && (
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"16px" }}>
+          <div className="stack-md" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"16px" }}>
             {[
               { label:"Total Inflow",    amount:totalInflow,  color:C.green },
               { label:"Total Outflow",   amount:totalOutflow, color:"#CC3344" },
