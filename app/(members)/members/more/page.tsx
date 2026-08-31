@@ -78,7 +78,7 @@ export default function MembersMorePage() {
       {sections.map(section => (
         <div key={section.label}>
           <div style={{ fontFamily: R, fontSize: "10px", color: "#9AAA98", letterSpacing: "2px", marginBottom: "10px" }}>{section.label}</div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+          <div className="stack-sm" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
             {section.items.map(item => (
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
                 <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px", position: "relative" }}>

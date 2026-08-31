@@ -89,7 +89,7 @@ export default function TicketPage() {
         </div>
 
         {/* Event details */}
-        <div style={{ padding: "16px 24px", borderBottom: "1px dashed #DDE8DD", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+        <div className="stack-sm" style={{ padding: "16px 24px", borderBottom: "1px dashed #DDE8DD", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
           {[
             { label: "DATE", value: event.date ? new Date(event.date).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" }) : "TBA" },
             { label: "LOCATION", value: event.location ?? "TBA" },

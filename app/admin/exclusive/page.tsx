@@ -121,7 +121,7 @@ export default function AdminExclusivePage() {
           <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", marginBottom: "16px" }}>
             {editingId ? "EDIT CONTENT" : "NEW EXCLUSIVE CONTENT"}
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+          <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div style={{ gridColumn: "1 / -1" }}>
               <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>TITLE *</label>
               <input value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}

@@ -62,7 +62,7 @@ export default function AdminShippingPage() {
       <SkeletonPage />
     </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+        <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           {REGIONS.map(region => {
             const color = REGION_COLORS[region];
             const regionRates = byRegion[region] ?? [];

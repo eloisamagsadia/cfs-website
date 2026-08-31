@@ -155,7 +155,7 @@ export default function CreateOrderPage() {
       {/* Pricing */}
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
         <div style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "2px" }}>PRICING</div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+        <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
           <div>
             <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>SHIPPING FEE (₱)</label>
             <input type="number" value={shippingFee} onChange={e => setShippingFee(Number(e.target.value))} style={inp} />

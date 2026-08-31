@@ -57,7 +57,7 @@ export default async function AccountPage() {
           </div>
         </div>
 
-        <div style={{ borderTop:"1px solid #DDE8DD", paddingTop:"16px", display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
+        <div className="stack-md" style={{ borderTop:"1px solid #DDE8DD", paddingTop:"16px", display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
           {[
             { label:"Email", value: email },
             { label:"Member Since", value: new Date(profile?.created_at ?? Date.now()).toLocaleDateString("en-PH",{month:"long",day:"numeric",year:"numeric"}) },

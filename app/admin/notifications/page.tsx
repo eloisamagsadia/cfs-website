@@ -226,7 +226,7 @@ export default function AdminNotificationsPage() {
           </div>
         )}
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px", marginBottom: "14px" }}>
+        <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px", marginBottom: "14px" }}>
           <div style={{ gridColumn: "1/-1" }}>
             <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1px", marginBottom: "6px", textTransform: "uppercase" }}>Title *</div>
             <input value={form.title} onChange={e => upd("title", e.target.value)} placeholder="Notification title..." style={inputStyle} maxLength={100}/>

@@ -60,7 +60,7 @@ export default function AdminShopCreatePage() {
         <div><label style={labelStyle}>PRODUCT NAME *</label><input style={inputStyle} placeholder="e.g. CFS Tote Bag" value={form.name} onChange={e => set("name", e.target.value)} /></div>
         <div><label style={labelStyle}>DESCRIPTION</label><textarea style={{ ...inputStyle, minHeight: "100px", resize: "vertical" }} placeholder="Describe the product..." value={form.description} onChange={e => set("description", e.target.value)} /></div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+        <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div><label style={labelStyle}>PRICE (₱) *</label><input style={inputStyle} type="number" min="0" placeholder="0.00" value={form.price} onChange={e => set("price", e.target.value)} /></div>
           <div><label style={labelStyle}>STOCK</label><input style={inputStyle} type="number" min="0" placeholder="0" value={form.stock} onChange={e => set("stock", e.target.value)} /></div>
         </div>

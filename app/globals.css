@@ -289,6 +289,28 @@
   }
 }
 
+/* ── Responsive helpers used across pages ─────────────────────────────── */
+/* Public 2-column split heros: stack on mobile, art becomes a short banner. */
+@media (max-width: 768px) {
+  .public-hero { grid-template-columns: 1fr !important; min-height: auto !important; }
+  .public-hero-copy { padding: 32px 24px !important; }
+  .public-hero-art { min-height: 220px !important; aspect-ratio: 16/9 !important; }
+}
+
+/* Any grid we opt into for "2-col on desktop, stack on mobile" or "3-col on desktop, stack on mobile" */
+@media (max-width: 768px) {
+  .stack-md { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 600px) {
+  .stack-sm { grid-template-columns: 1fr !important; }
+}
+
+/* Section paddings that shrink on mobile — apply to any section with .responsive-pad */
+@media (max-width: 768px) {
+  .responsive-pad { padding-left: 20px !important; padding-right: 20px !important; }
+  .responsive-pad-lg { padding: 32px 20px !important; }
+}
+
 /* ── Site-wide Animations ── */
 
 /* Page fade-in */

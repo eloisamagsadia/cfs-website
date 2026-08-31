@@ -58,8 +58,8 @@ export default async function ReportsPage() {
       `}</style>
 
       {/* ── HERO ── */}
-      <section style={{ display:"grid", gridTemplateColumns:"1fr 1fr", minHeight:"420px", overflow:"hidden", maxWidth:"1400px", margin:"0 auto", width:"100%" }}>
-        <div style={{ padding:"64px", display:"flex", flexDirection:"column", justifyContent:"center" }}>
+      <section className="public-hero" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", minHeight:"420px", overflow:"hidden", maxWidth:"1400px", margin:"0 auto", width:"100%" }}>
+        <div className="public-hero-copy" style={{ padding:"64px", display:"flex", flexDirection:"column", justifyContent:"center" }}>
           
           <h1 style={{ fontFamily:S, fontSize:"clamp(2.4rem,4vw,3.6rem)", color:C.forest, lineHeight:1.05, marginBottom:"16px" }}>
             Every Peso.<br /><em style={{ fontStyle:"italic", color:C.sage }}>Accounted For.</em>
@@ -79,7 +79,7 @@ export default async function ReportsPage() {
             ))}
           </div>
         </div>
-        <div style={{ background:C.mist, position:"relative", overflow:"hidden" }}>
+        <div className="public-hero-art" style={{ background:C.mist, position:"relative", overflow:"hidden" }}>
           <img src="https://media.coletfs.com/assets/hero/reports/cfs-reports-hero.png" alt="CFS Reports" style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"center", position:"absolute", inset:0 }} />
         </div>
       </section>

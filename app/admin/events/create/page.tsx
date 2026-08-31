@@ -56,12 +56,12 @@ export default function CreateEventPage() {
         <div><label style={labelStyle}>Event Title *</label><input style={inputStyle} value={form.title} onChange={e => upd("title", e.target.value)} placeholder="CFS Fam Meet 2026" /></div>
         <div><label style={labelStyle}>Description</label><textarea style={{ ...inputStyle, resize: "vertical", minHeight: "80px" }} value={form.description} onChange={e => upd("description", e.target.value)} placeholder="Event details..." /></div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+        <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
           <div><label style={labelStyle}>Date & Time *</label><input type="datetime-local" style={inputStyle} value={form.date} onChange={e => upd("date", e.target.value)} /></div>
           <div><label style={labelStyle}>Location</label><input style={inputStyle} value={form.location} onChange={e => upd("location", e.target.value)} placeholder="Quezon City, PH" /></div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+        <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
           <div><label style={labelStyle}>Price (₱)</label><input type="number" style={inputStyle} value={form.price} onChange={e => upd("price", e.target.value)} placeholder="0 for free" /></div>
           <div><label style={labelStyle}>Capacity</label><input type="number" style={inputStyle} value={form.capacity} onChange={e => upd("capacity", e.target.value)} placeholder="Blank = unlimited" /></div>
         </div>
@@ -96,7 +96,7 @@ export default function CreateEventPage() {
         {/* Typography */}
         <div style={{ background: "#F7FAF5", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
           <div style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "2px" }}>TYPOGRAPHY (OPTIONAL)</div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+          <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div>
               <label style={labelStyle}>Heading Font</label>
               <select style={inputStyle} value={form.heading_font} onChange={e => upd("heading_font", e.target.value)}>
@@ -133,7 +133,7 @@ export default function CreateEventPage() {
         {/* Early access */}
         <div style={{ background: "#1A804010", border: "1.5px solid #1A804060", borderRadius: "10px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
           <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "5px" }}><IconSparkle size={11} color="#1A8040" /> SPONSOR EARLY ACCESS (optional)</div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+          <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div>
               <label style={labelStyle}>Early Access Opens</label>
               <input type="datetime-local" style={inputStyle} value={form.sponsor_access_at} onChange={e => upd("sponsor_access_at", e.target.value)} />

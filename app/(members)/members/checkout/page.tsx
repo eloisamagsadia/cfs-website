@@ -115,17 +115,17 @@ export default function CheckoutPage() {
       <div style={{ display:"grid", gridTemplateColumns:"1fr 320px", gap:"20px", alignItems:"start" }} className="cart-layout">
         <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"24px", display:"flex", flexDirection:"column", gap:"16px" }}>
           <div style={{ fontFamily:R, fontSize:"13px", color:"#1B3A2D", letterSpacing:"2px", marginBottom:"4px" }}>SHIPPING ADDRESS</div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px" }}>
+          <div className="stack-md" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px" }}>
             <div><label style={labelStyle}>Full Name *</label><input style={inputStyle} value={form.full_name} onChange={e=>update("full_name",e.target.value)} placeholder="Juan dela Cruz"/></div>
             <div><label style={labelStyle}>Phone *</label><input style={inputStyle} value={form.phone} onChange={e=>update("phone",e.target.value)} placeholder="09XX XXX XXXX"/></div>
           </div>
           <div><label style={labelStyle}>Street Address *</label><input style={inputStyle} value={form.street} onChange={e=>update("street",e.target.value)} placeholder="House/Unit No., Street, Subdivision"/></div>
           <div><label style={labelStyle}>Barangay</label><input style={inputStyle} value={form.barangay} onChange={e=>update("barangay",e.target.value)} placeholder="Barangay"/></div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px" }}>
+          <div className="stack-md" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px" }}>
             <div><label style={labelStyle}>City/Municipality *</label><input style={inputStyle} value={form.city} onChange={e=>update("city",e.target.value)} placeholder="City"/></div>
             <div><label style={labelStyle}>Province *</label><input style={inputStyle} value={form.province} onChange={e=>update("province",e.target.value)} placeholder="Province"/></div>
           </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px" }}>
+          <div className="stack-md" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px" }}>
             <div>
               <label style={labelStyle}>Region</label>
               <select style={inputStyle} value={form.region} onChange={e=>update("region",e.target.value)}>
