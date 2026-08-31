@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyWebhookSignature } from "@/lib/paymongo";
-import { sendDonationReceipt } from "@/lib/email";
+import { sendDonationReceipt, sendEventTicket } from "@/lib/email";
 import { clerkClient } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
@@ -46,9 +46,33 @@ export async function POST(req: NextRequest) {
       .eq("type", type);
 
     if (type === "ticket") {
-      await (supabase.from("event_tickets") as any)
+      const { data: ticket } = await (supabase.from("event_tickets") as any)
         .update({ status: "active", payment_status: "paid" })
-        .eq("id", reference);
+        .eq("id", reference)
+        .select("id, ticket_number, user_id, events:event_id(title, date, location)")
+        .single();
+
+      if (ticket?.user_id && ticket?.events) {
+        const { data: profile } = await supabase
+          .from("profiles").select("email").eq("id", ticket.user_id).single();
+        let email = (profile as any)?.email as string | null;
+        if (!email) {
+          try {
+            const clerkUser = await clerkClient.users.getUser(ticket.user_id);
+            email = clerkUser.emailAddresses[0]?.emailAddress ?? null;
+          } catch {}
+        }
+        if (email) {
+          const ev = ticket.events as any;
+          sendEventTicket({
+            to: email,
+            eventTitle: ev.title,
+            eventDate: ev.date,
+            eventLocation: ev.location ?? "TBA",
+            registrationId: ticket.ticket_number ?? ticket.id,
+          }).catch(() => {});
+        }
+      }
     }
 
     if (type === "donation") {

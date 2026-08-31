@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkAndAwardBadges } from "@/lib/badges";
+import { sendEventTicket } from "@/lib/email";
 
 const db = () => createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -155,6 +156,27 @@ export async function POST(req: NextRequest) {
     message: `Your ${tierName} ticket is ready. Ticket #${ticket.ticket_number}`,
     link: `/members/tickets/${ticket.id}`,
   });
+
+  // Email the ticket — only for free events; paid events are emailed from
+  // the PayMongo webhook after payment succeeds. Non-blocking.
+  if (payment_status === "free") {
+    let email = (profile as any)?.email as string | null;
+    if (!email) {
+      try {
+        const clerkUser = await clerkClient.users.getUser(userId);
+        email = clerkUser.emailAddresses[0]?.emailAddress ?? null;
+      } catch {}
+    }
+    if (email) {
+      sendEventTicket({
+        to: email,
+        eventTitle: event.title,
+        eventDate: event.date,
+        eventLocation: event.location ?? "TBA",
+        registrationId: ticket.ticket_number ?? ticket.id,
+      }).catch(() => {});
+    }
+  }
 
   // Award badges
   await checkAndAwardBadges(userId, "event_count");
