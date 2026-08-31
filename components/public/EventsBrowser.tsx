@@ -173,9 +173,22 @@ export default function EventsBrowser({ events }: { events: any[] }) {
                     )}
 
                     <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap", marginTop: "auto", paddingTop: "10px", borderTop: `1px solid ${C.border}` }}>
-                      <span style={{ fontFamily: S, fontSize: "16px", color: event.price === 0 ? C.sage : C.green }}>
-                        {event.price === 0 ? "Free" : `₱${Number(event.price).toLocaleString()}`}
-                      </span>
+                      {(() => {
+                        const hasTiers = event.tier_min !== null && event.tier_min !== undefined;
+                        const min = hasTiers ? Number(event.tier_min) : Number(event.price ?? 0);
+                        const max = hasTiers ? Number(event.tier_max) : min;
+                        const isFree = min === 0 && (!hasTiers || max === 0);
+                        const label = isFree
+                          ? "Free"
+                          : hasTiers && min !== max
+                            ? `From ₱${min.toLocaleString()}`
+                            : `₱${min.toLocaleString()}`;
+                        return (
+                          <span style={{ fontFamily: S, fontSize: "16px", color: isFree ? C.sage : C.green }}>
+                            {label}
+                          </span>
+                        );
+                      })()}
                       {event.is_members_only && (
                         <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#B78A1F", background: "rgba(183,138,31,0.14)", border: "1px solid rgba(183,138,31,0.35)", borderRadius: "999px", padding: "2px 8px", letterSpacing: "1.4px" }}>
                           MEMBERS ONLY

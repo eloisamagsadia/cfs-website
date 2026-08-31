@@ -40,12 +40,42 @@ export default async function EventsPage() {
       .maybeSingle(),
   ]);
 
-  const events = (allEvents ?? []) as any[];
+  const rawEvents = (allEvents ?? []) as any[];
+  const eventIds = rawEvents.map((e) => e.id);
+  const { data: tiersRows } = eventIds.length
+    ? await (supabase as any)
+        .from("event_tiers")
+        .select("event_id, price")
+        .in("event_id", eventIds)
+        .eq("is_active", true)
+    : { data: [] as any[] };
+  const tierPricesByEvent = new Map<string, number[]>();
+  for (const t of (tiersRows ?? []) as any[]) {
+    const arr = tierPricesByEvent.get(t.event_id) ?? [];
+    arr.push(Number(t.price));
+    tierPricesByEvent.set(t.event_id, arr);
+  }
+  const events = rawEvents.map((e) => {
+    const prices = tierPricesByEvent.get(e.id);
+    return {
+      ...e,
+      tier_min: prices?.length ? Math.min(...prices) : null,
+      tier_max: prices?.length ? Math.max(...prices) : null,
+    };
+  });
   const upcoming  = events.filter(e => e.status === "upcoming").length;
   const ongoing   = events.filter(e => e.status === "ongoing").length;
   const completed = events.filter(e => e.status === "completed").length;
 
-  const next = featured as any;
+  const nextRaw = featured as any;
+  const nextTiers = nextRaw ? tierPricesByEvent.get(nextRaw.id) : undefined;
+  const next = nextRaw
+    ? {
+        ...nextRaw,
+        tier_min: nextTiers?.length ? Math.min(...nextTiers) : null,
+        tier_max: nextTiers?.length ? Math.max(...nextTiers) : null,
+      }
+    : null;
   const nextDate = next ? new Date(next.date) : null;
   const msLeft = nextDate ? nextDate.getTime() - Date.now() : 0;
   const daysLeft = Math.floor(msLeft / (1000 * 60 * 60 * 24));
@@ -156,9 +186,22 @@ export default async function EventsPage() {
                     )}
                   </div>
                   <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontFamily: S, fontSize: "20px", color: next.price > 0 ? "#4ACB6E" : "#ffffff" }}>
-                      {next.price > 0 ? `₱${Number(next.price).toLocaleString()}` : "FREE"}
-                    </span>
+                    {(() => {
+                      const hasTiers = next.tier_min !== null && next.tier_min !== undefined;
+                      const min = hasTiers ? Number(next.tier_min) : Number(next.price ?? 0);
+                      const max = hasTiers ? Number(next.tier_max) : min;
+                      const isFree = min === 0 && (!hasTiers || max === 0);
+                      const label = isFree
+                        ? "FREE"
+                        : hasTiers && min !== max
+                          ? `FROM ₱${min.toLocaleString()}`
+                          : `₱${min.toLocaleString()}`;
+                      return (
+                        <span style={{ fontFamily: S, fontSize: "20px", color: isFree ? "#ffffff" : "#4ACB6E" }}>
+                          {label}
+                        </span>
+                      );
+                    })()}
                     <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#4ACB6E", letterSpacing: "1.5px", display: "inline-flex", alignItems: "center", gap: "6px" }}>
                       <IconTicket size={11} color="#4ACB6E" /> BOOK NOW →
                     </span>

@@ -29,14 +29,35 @@ const C = {
 
 export default async function HomePage() {
   const supabase = createAdminClient();
-  const { data: events } = await (supabase.from("events") as any)
+  const { data: rawEvents } = await (supabase.from("events") as any)
     .select("id, title, date, banner_url, location, price, capacity")
     .eq("status", "upcoming")
     .eq("is_hidden", false)
     .order("date", { ascending: true })
     .limit(6);
 
-  const upcoming = (events ?? []) as any[];
+  const homeEventIds = (rawEvents ?? []).map((e: any) => e.id);
+  const { data: homeTiersRows } = homeEventIds.length
+    ? await (supabase as any)
+        .from("event_tiers")
+        .select("event_id, price")
+        .in("event_id", homeEventIds)
+        .eq("is_active", true)
+    : { data: [] as any[] };
+  const homeTierPrices = new Map<string, number[]>();
+  for (const t of (homeTiersRows ?? []) as any[]) {
+    const arr = homeTierPrices.get(t.event_id) ?? [];
+    arr.push(Number(t.price));
+    homeTierPrices.set(t.event_id, arr);
+  }
+  const upcoming = ((rawEvents ?? []) as any[]).map((e) => {
+    const prices = homeTierPrices.get(e.id);
+    return {
+      ...e,
+      tier_min: prices?.length ? Math.min(...prices) : null,
+      tier_max: prices?.length ? Math.max(...prices) : null,
+    };
+  });
 
   return (
     <div style={{ background: C.paper, minHeight: "100vh" }}>
@@ -127,9 +148,22 @@ export default async function HomePage() {
                       )}
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto", paddingTop: "10px", borderTop: `1px solid ${C.border}` }}>
-                      <span style={{ fontFamily: S, fontSize: "17px", color: ev.price > 0 ? C.green : C.sage }}>
-                        {ev.price > 0 ? `₱${Number(ev.price).toLocaleString()}` : "FREE"}
-                      </span>
+                      {(() => {
+                        const hasTiers = ev.tier_min !== null && ev.tier_min !== undefined;
+                        const min = hasTiers ? Number(ev.tier_min) : Number(ev.price ?? 0);
+                        const max = hasTiers ? Number(ev.tier_max) : min;
+                        const isFree = min === 0 && (!hasTiers || max === 0);
+                        const label = isFree
+                          ? "FREE"
+                          : hasTiers && min !== max
+                            ? `FROM ₱${min.toLocaleString()}`
+                            : `₱${min.toLocaleString()}`;
+                        return (
+                          <span style={{ fontFamily: S, fontSize: "17px", color: isFree ? C.sage : C.green }}>
+                            {label}
+                          </span>
+                        );
+                      })()}
                       <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: C.green, letterSpacing: "1.5px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
                         <IconTicket size={11} color="#1A8040" /> BOOK →
                       </span>
