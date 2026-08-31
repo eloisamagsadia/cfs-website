@@ -2,12 +2,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { IconTicket, IconCheck } from "@/components/shared/Icons";
-import { PAYMENT_METHOD_RATES, PAYMENT_METHOD_LABELS, calculateFee, type PaymentMethod } from "@/lib/paymongo";
+import { calculateFee, type PaymentMethod } from "@/lib/paymongo";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-const PAYMENT_METHODS: PaymentMethod[] = ["gcash", "maya", "grab_pay", "card"];
 function fmt(n: number) { return n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 
 interface EventRegisterButtonProps {
@@ -26,7 +25,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
   const [ticketId, setTicketId] = useState<string | null>(existingTicketId);
   const [error, setError] = useState("");
   const [selectedTier, setSelectedTier] = useState<any>(tiers[0] ?? null);
-  const [method, setMethod] = useState<PaymentMethod>("gcash");
+  const [method] = useState<PaymentMethod>("qrph");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const router = useRouter();
   const calcFee = (base: number) => calculateFee(base, method);
@@ -261,21 +260,13 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         const total = basePrice + fee;
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div>
-              <div style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "6px" }}>PAYMENT METHOD</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "6px" }}>
-                {PAYMENT_METHODS.map(m => {
-                  const { rate, fixed } = PAYMENT_METHOD_RATES[m];
-                  const feeText = `${(rate * 100).toFixed(rate * 100 % 1 === 0 ? 0 : 1)}%${fixed ? ` +₱${fixed}` : ""}`;
-                  const selected = method === m;
-                  return (
-                    <button key={m} onClick={() => setMethod(m)} type="button"
-                      style={{ fontFamily: B, fontSize: "11px", fontWeight: 600, background: selected ? "#1A8040" : "#F7FAF5", color: selected ? "#FFFFFF" : "#1B3A2D", border: `1.5px solid ${selected ? "#1A8040" : "#DDE8DD"}`, borderRadius: "6px", padding: "6px 8px", cursor: "pointer", display: "flex", flexDirection: "column", gap: "2px", alignItems: "center" }}>
-                      <span>{PAYMENT_METHOD_LABELS[m]}</span>
-                      <span style={{ fontSize: "9px", color: selected ? "rgba(255,255,255,0.85)" : "#5A7A60" }}>{feeText}</span>
-                    </button>
-                  );
-                })}
+            <div style={{ background: "#F0F7F0", border: "1.5px solid #B7D8B7", borderRadius: "10px", padding: "12px 14px", display: "flex", gap: "10px", alignItems: "flex-start" }}>
+              <span style={{ display: "inline-flex", flexShrink: 0, width: "28px", height: "28px", borderRadius: "6px", background: "#ffffff", border: "1px solid #DDE8DD", alignItems: "center", justifyContent: "center", fontFamily: B, fontSize: "10px", fontWeight: 700, color: "#1B3A2D", letterSpacing: "0.5px" }}>QR</span>
+              <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
+                <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "1.5px" }}>PAY VIA QR PH</div>
+                <div style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59", lineHeight: 1.5 }}>
+                  You&apos;ll be redirected to PayMongo&apos;s secure checkout. Scan the QR code with <strong>GCash</strong>, <strong>Maya</strong>, or any Philippine bank app to pay.
+                </div>
               </div>
             </div>
             <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "10px", padding: "12px 14px", display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -284,7 +275,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
                 <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>₱{fmt(basePrice)}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Processing fee <span style={{ fontSize: "10px" }}>({PAYMENT_METHOD_LABELS[method]})</span></span>
+                <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Processing fee <span style={{ fontSize: "10px" }}>(QR Ph)</span></span>
                 <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>+₱{fmt(fee)}</span>
               </div>
               <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "6px", display: "flex", justifyContent: "space-between" }}>

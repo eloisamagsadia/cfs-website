@@ -131,9 +131,10 @@ export const formatPHP = (amount: number) =>
 // Rates match PayMongo's published pricing (as of 2026-06).
 // Keep in sync with the fee breakdown shown on /donate and /members/checkout.
 
-export type PaymentMethod = "gcash" | "maya" | "grab_pay" | "card" | "manual";
+export type PaymentMethod = "qrph" | "gcash" | "maya" | "grab_pay" | "card" | "manual";
 
 export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
+  qrph: "QR Ph",
   gcash: "GCash",
   maya: "Maya",
   grab_pay: "GrabPay",
@@ -142,6 +143,7 @@ export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
 };
 
 export const PAYMENT_METHOD_RATES: Record<PaymentMethod, { rate: number; fixed: number }> = {
+  qrph:     { rate: 0.015,  fixed: 0 },
   gcash:    { rate: 0.025,  fixed: 0 },
   maya:     { rate: 0.020,  fixed: 0 },
   grab_pay: { rate: 0.025,  fixed: 0 },
