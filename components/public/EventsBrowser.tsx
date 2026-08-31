@@ -149,12 +149,16 @@ export default function EventsBrowser({ events }: { events: any[] }) {
                         <IconCalendar size={36} color="#B7CDB7" />
                       </div>
                     )}
-                    <div style={{ position: "absolute", top: "10px", left: "10px", background: "rgba(255,255,255,0.95)", borderRadius: "10px", padding: "6px 10px", textAlign: "center", minWidth: "50px", backdropFilter: "blur(6px)" }}>
+                    {/* Fade so date badge + status pill stay readable on busy banners */}
+                    {event.banner_url && (
+                      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(180deg, rgba(15,42,30,0.55) 0%, transparent 40%)" }} />
+                    )}
+                    <div style={{ position: "absolute", top: "10px", left: "10px", background: "rgba(255,255,255,0.96)", borderRadius: "10px", padding: "6px 10px", textAlign: "center", minWidth: "50px", boxShadow: "0 4px 12px rgba(0,0,0,0.25)", zIndex: 2 }}>
                       <div style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: C.sage, letterSpacing: "1.4px" }}>{MONTHS[d.getMonth()]}</div>
                       <div style={{ fontFamily: S, fontSize: "20px", color: C.forest, lineHeight: 1 }}>{d.getDate()}</div>
                     </div>
-                    <div style={{ position: "absolute", top: "10px", right: "10px" }}>
-                      <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: status.color, borderRadius: "999px", padding: "3px 10px", letterSpacing: "1.5px", boxShadow: "0 2px 6px rgba(0,0,0,0.2)" }}>{status.label}</span>
+                    <div style={{ position: "absolute", top: "10px", right: "10px", zIndex: 2 }}>
+                      <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: status.color, borderRadius: "999px", padding: "3px 10px", letterSpacing: "1.5px", boxShadow: "0 4px 12px rgba(0,0,0,0.35)" }}>{status.label}</span>
                     </div>
                   </div>
 

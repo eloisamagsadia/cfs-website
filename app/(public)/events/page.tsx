@@ -113,17 +113,19 @@ export default async function EventsPage() {
                       <IconCalendar size={54} color="rgba(255,255,255,0.25)" />
                     </div>
                   )}
+                  {/* Top-fade + bottom-fade overlays so the pills + info panel stay readable over busy artwork */}
+                  <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(180deg, rgba(15,42,30,0.72) 0%, rgba(15,42,30,0.32) 22%, transparent 45%, transparent 60%, rgba(15,42,30,0.55) 100%)" }} />
                   {/* Overlay chip */}
-                  <div style={{ position: "absolute", top: "16px", left: "16px", display: "flex", gap: "6px" }}>
-                    <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: "#1A8040", borderRadius: "999px", padding: "4px 10px", letterSpacing: "1.5px" }}>NEXT UP</span>
+                  <div style={{ position: "absolute", top: "16px", left: "16px", display: "flex", gap: "6px", zIndex: 2 }}>
+                    <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: "#1A8040", borderRadius: "999px", padding: "5px 12px", letterSpacing: "1.5px", boxShadow: "0 2px 10px rgba(0,0,0,0.35)" }}>NEXT UP</span>
                     {countdown && (
-                      <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#4ACB6E", background: "rgba(74,203,110,0.16)", border: "1px solid rgba(74,203,110,0.35)", borderRadius: "999px", padding: "4px 10px", letterSpacing: "1.5px" }}>
+                      <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: "rgba(15,42,30,0.85)", border: "1px solid rgba(74,203,110,0.55)", borderRadius: "999px", padding: "5px 12px", letterSpacing: "1.5px", backdropFilter: "blur(6px)", boxShadow: "0 2px 10px rgba(0,0,0,0.35)" }}>
                         {countdown}
                       </span>
                     )}
                   </div>
                   {/* Date badge */}
-                  <div style={{ position: "absolute", top: "16px", right: "16px", background: "rgba(255,255,255,0.96)", borderRadius: "12px", padding: "10px 14px", textAlign: "center", minWidth: "62px", boxShadow: "0 8px 20px rgba(0,0,0,0.2)" }}>
+                  <div style={{ position: "absolute", top: "16px", right: "16px", background: "rgba(255,255,255,0.98)", borderRadius: "12px", padding: "10px 14px", textAlign: "center", minWidth: "62px", boxShadow: "0 8px 20px rgba(0,0,0,0.35)", zIndex: 2 }}>
                     <div style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: C.sage, letterSpacing: "1.5px" }}>
                       {nextDate!.toLocaleDateString("en-PH", { month: "short", timeZone: "Asia/Manila" }).toUpperCase()}
                     </div>
