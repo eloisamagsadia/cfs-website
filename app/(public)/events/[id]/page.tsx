@@ -57,6 +57,31 @@ export default async function EventDetailPage({ params }: { params: { id: string
     existingTicketId = reg?.id ?? null;
   }
 
+  // Tier-aware price: when tiers exist they are the source of truth. Fall
+  // back to event.price for events without tiers. Never show the raw
+  // event.price when tiers exist — it drifts from real ticket prices.
+  const activeTiers = ((tiers ?? []) as any[]).filter((t) => t && Number(t.price) >= 0);
+  const tierPrices = activeTiers.map((t) => Number(t.price)).filter((p) => !Number.isNaN(p));
+  const tierMin = tierPrices.length ? Math.min(...tierPrices) : null;
+  const tierMax = tierPrices.length ? Math.max(...tierPrices) : null;
+  const hasTiers = tierMin !== null;
+  const priceIsFree = hasTiers ? tierMin === 0 : !(event.price > 0);
+  const fmt = (n: number) => `₱${Number(n).toLocaleString()}`;
+  const priceHeadline = priceIsFree
+    ? "Free"
+    : hasTiers
+      ? tierMin === tierMax
+        ? fmt(tierMin!)
+        : `${fmt(tierMin!)} – ${fmt(tierMax!)}`
+      : fmt(Number(event.price));
+  const priceHeadlineLabel = priceIsFree
+    ? undefined
+    : hasTiers && tierMin !== tierMax
+      ? "price range"
+      : "per person";
+  const priceTileValue = priceIsFree ? "Free" : hasTiers && tierMin !== tierMax ? `From ${fmt(tierMin!)}` : fmt(hasTiers ? tierMin! : Number(event.price));
+  const priceTileSub = priceIsFree ? undefined : hasTiers && tierMin !== tierMax ? "starting from" : "per ticket";
+
   const isFull = !!(event.capacity && (regCount ?? 0) >= event.capacity);
   const spotsLeft = event.capacity ? event.capacity - (regCount ?? 0) : null;
   const eventDate = new Date(event.date);
@@ -253,7 +278,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
                   { icon: <IconCalendar size={16} color={C.green} />, label: "Date",      value: dateShort,                                         sub: dateWeekday },
                   { icon: <IconClipboard size={16} color={C.green} />, label: "Time",     value: dateTime,                                          sub: "Manila time" },
                   { icon: <IconPin size={16} color={C.green} />,      label: "Location", value: event.location || "TBA" },
-                  { icon: <IconTag size={16} color={C.green} />,      label: "Price",    value: event.price > 0 ? `₱${Number(event.price).toLocaleString()}` : "Free",         sub: event.price > 0 ? "per ticket" : undefined },
+                  { icon: <IconTag size={16} color={C.green} />,      label: "Price",    value: priceTileValue,                                    sub: priceTileSub },
                   { icon: <IconUsers size={16} color={C.green} />,    label: "Capacity", value: event.capacity ? `${event.capacity}` : "Unlimited", sub: event.capacity ? "attendees" : undefined },
                   { icon: <IconTicket size={16} color={C.green} />,   label: "Registered", value: `${regCount ?? 0}`,                              sub: event.capacity ? `of ${event.capacity}` : undefined },
                 ];
@@ -290,7 +315,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
               <div style={{ position: "relative" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
                   <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.6)", letterSpacing: "2.5px" }}>
-                    {event.price > 0 ? "TICKET PRICE" : "REGISTRATION"}
+                    {priceIsFree ? "REGISTRATION" : "TICKET PRICE"}
                   </div>
                   {countdown && (
                     <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#4ACB6E", background: "rgba(74,203,110,0.16)", border: "1px solid rgba(74,203,110,0.3)", borderRadius: "999px", padding: "3px 9px", letterSpacing: "1px" }}>
@@ -298,11 +323,11 @@ export default async function EventDetailPage({ params }: { params: { id: string
                     </span>
                   )}
                 </div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: "8px", flexWrap: "wrap" }}>
                   <div style={{ fontFamily: S, fontSize: "2.4rem", color: "#ffffff", lineHeight: 1, letterSpacing: "-1px" }}>
-                    {event.price > 0 ? `₱${Number(event.price).toLocaleString()}` : "Free"}
+                    {priceHeadline}
                   </div>
-                  {event.price > 0 && <div style={{ fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.6)" }}>per person</div>}
+                  {priceHeadlineLabel && <div style={{ fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.6)" }}>{priceHeadlineLabel}</div>}
                 </div>
               </div>
             </div>
