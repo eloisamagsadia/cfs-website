@@ -271,7 +271,7 @@ export default function SuperAdminPage() {
           <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
             <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "6px" }}><IconWrench size={13} color="#1A8040" /> SITE SETTINGS</div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
               <div>
                 <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>MAX IMAGE POSTS/MONTH</label>
                 <input type="number" value={settings.max_image_posts_per_month}
@@ -296,7 +296,7 @@ export default function SuperAdminPage() {
           {sponsorPerks && (
             <div style={{ background: "#FFFFFF", border: "2px solid #1A804060", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "16px" }}>
               <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "6px" }}><IconSparkle size={13} color="#1A8040" /> SPONSOR SETTINGS</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>MAX SPONSORS</label>
                   <input type="number" value={sponsorPerks.max_sponsors}

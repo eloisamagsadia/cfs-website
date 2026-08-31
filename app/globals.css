@@ -305,6 +305,19 @@
   .stack-sm { grid-template-columns: 1fr !important; }
 }
 
+/* Admin wide tables: keep their grid on desktop, scroll horizontally on mobile
+   so column widths stay legible instead of collapsing. */
+@media (max-width: 768px) {
+  .codes-table-header, .codes-table-row,
+  .support-table-header, .support-table-row {
+    min-width: 720px;
+  }
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 /* Section paddings that shrink on mobile — apply to any section with .responsive-pad */
 @media (max-width: 768px) {
   .responsive-pad { padding-left: 20px !important; padding-right: 20px !important; }

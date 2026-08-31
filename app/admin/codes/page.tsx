@@ -114,7 +114,7 @@ export default function AdminCodesPage() {
         </div>
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search code..." style={{...inp,width:"220px"}}/>
       </div>
-      <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",overflow:"hidden"}}>
+      <div className="table-scroll" style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",overflow:"hidden"}}>
         <div className="codes-table-header" style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 100px",background:"#F2F7F2",borderBottom:"2px solid #DDE8DD",padding:"10px 18px",gap:"0"}}>
           {["CODE","DISCOUNT","USES","EXPIRES","STATUS","ACTIONS"].map(h=>(
             <div key={h} style={{fontFamily:B,fontSize:"11px",color:"#5A7A60",letterSpacing:"1.5px"}}>{h}</div>

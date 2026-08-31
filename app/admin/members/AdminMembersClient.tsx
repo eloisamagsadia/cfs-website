@@ -306,7 +306,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
             </div>
 
             {/* Details grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", background: "#F7FAF5", borderRadius: "10px", padding: "16px" }}>
+            <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", background: "#F7FAF5", borderRadius: "10px", padding: "16px" }}>
               {[
                 { label: "Member ID", value: selectedMember.id.slice(0, 16) + "..." },
                 { label: "Joined", value: new Date(selectedMember.created_at).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" }) },

@@ -104,7 +104,7 @@ export default async function ReportDetailPage({ params }: { params: { id: strin
     <div style={{ minHeight:"100vh", background:C.paper }}>
 
       {/* Header */}
-      <div style={{ background:C.cream, borderBottom:`1px solid ${C.border}`, padding:"48px 64px", position:"relative", overflow:"hidden" }}>
+      <div className="responsive-pad-lg" style={{ background:C.cream, borderBottom:`1px solid ${C.border}`, padding:"48px 64px", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(circle,rgba(44,72,32,0.05) 1.5px,transparent 1.5px)", backgroundSize:"18px 18px" }} />
         <div style={{ position:"relative", zIndex:1, maxWidth:"1400px", margin:"0 auto" }}>
           <Link href="/reports" style={{ fontFamily:B, fontSize:"11px", color:C.sage, textDecoration:"none", display:"inline-flex", alignItems:"center", gap:"6px", marginBottom:"24px" }}>

@@ -48,7 +48,7 @@ export default function AdminReportCreatePage() {
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "20px" }}>
         <div><label style={labelStyle}>REPORT TITLE *</label><input style={inputStyle} placeholder="e.g. Q1 2026 Transparency Report" value={form.title} onChange={e => set("title", e.target.value)} /></div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+        <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
             <label style={labelStyle}>YEAR *</label>
             <select style={inputStyle} value={form.year} onChange={e => set("year", e.target.value)}>

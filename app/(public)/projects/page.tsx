@@ -77,7 +77,7 @@ export default async function ProjectsPage() {
       </section>
 
       {/* ── PROJECTS GRID ── */}
-      <div style={{ maxWidth:"1400px", margin:"0 auto", padding:"48px 64px" }}>
+      <div className="responsive-pad-lg" style={{ maxWidth:"1400px", margin:"0 auto", padding:"48px 64px" }}>
         {display.length === 0 && (
           <div style={{ textAlign:"center", padding:"60px 0", fontFamily:B, fontSize:"14px", color:C.muted }}>No projects yet — check back soon!</div>
         )}

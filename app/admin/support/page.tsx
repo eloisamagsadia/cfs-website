@@ -123,7 +123,7 @@ export default function AdminSupportPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
           <SkeletonPage /></div>
       ) : (
-        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
+        <div className="table-scroll" style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
           {/* Table header */}
           <div className="support-table-header" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 140px 32px", gap: "12px", padding: "10px 16px", borderBottom: "1px solid #DDE8DD", background: "#F2F7F2" }}>
             {["SUBJECT", "MEMBER", "CATEGORY", "DATE", "STATUS", ""].map(h => (

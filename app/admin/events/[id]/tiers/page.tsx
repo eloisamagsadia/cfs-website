@@ -134,7 +134,7 @@ export default function EventTiersPage() {
           <div style={{ fontFamily: R, fontSize: "13px", color: "#1A8040", letterSpacing: "2px", marginBottom: "16px" }}>
             {editingId ? "EDIT TIER" : "NEW TIER"}
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+          <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div>
               <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>TIER NAME *</label>
               <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))}
