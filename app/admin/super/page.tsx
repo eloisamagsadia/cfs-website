@@ -274,13 +274,13 @@ export default function SuperAdminPage() {
             <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
               <div>
                 <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>MAX IMAGE POSTS/MONTH</label>
-                <input type="number" value={settings.max_image_posts_per_month}
+                <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} value={settings.max_image_posts_per_month}
                   onChange={e => setSettings((p: any) => ({ ...p, max_image_posts_per_month: Number(e.target.value) }))}
                   style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
               </div>
               <div>
                 <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>MAX POST LENGTH (chars)</label>
-                <input type="number" value={settings.max_community_post_length}
+                <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} value={settings.max_community_post_length}
                   onChange={e => setSettings((p: any) => ({ ...p, max_community_post_length: Number(e.target.value) }))}
                   style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
               </div>
@@ -299,13 +299,13 @@ export default function SuperAdminPage() {
               <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                 <div>
                   <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>MAX SPONSORS</label>
-                  <input type="number" value={sponsorPerks.max_sponsors}
+                  <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} value={sponsorPerks.max_sponsors}
                     onChange={e => setSponsorPerks((p: any) => ({ ...p, max_sponsors: Number(e.target.value) }))}
                     style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
                 </div>
                 <div>
                   <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>EARLY ACCESS DAYS</label>
-                  <input type="number" value={sponsorPerks.early_access_days}
+                  <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} value={sponsorPerks.early_access_days}
                     onChange={e => setSponsorPerks((p: any) => ({ ...p, early_access_days: Number(e.target.value) }))}
                     style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
                 </div>

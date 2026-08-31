@@ -47,8 +47,8 @@ export default function AdminEditProductPage() {
           <div><label style={lbl}>Name *</label><input style={inp} value={form.name} onChange={e=>upd("name",e.target.value)}/></div>
           <div><label style={lbl}>Description</label><textarea style={{...inp,resize:"vertical",minHeight:"80px"}} value={form.description} onChange={e=>upd("description",e.target.value)}/></div>
           <div className="stack-md" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px"}}>
-            <div><label style={lbl}>Price (P) *</label><input type="number" style={inp} value={form.price} onChange={e=>upd("price",e.target.value)}/></div>
-            <div><label style={lbl}>Stock</label><input type="number" style={inp} value={form.stock} onChange={e=>upd("stock",e.target.value)}/></div>
+            <div><label style={lbl}>Price (P) *</label><input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} style={inp} value={form.price} onChange={e=>upd("price",e.target.value)}/></div>
+            <div><label style={lbl}>Stock</label><input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} style={inp} value={form.stock} onChange={e=>upd("stock",e.target.value)}/></div>
           </div>
           <div>
             <label style={lbl}>Images</label>

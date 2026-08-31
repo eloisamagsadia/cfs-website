@@ -188,7 +188,7 @@ export default function DonatePage() {
             </div>
             <div>
               <label style={{ fontFamily:B, fontSize:"11px", color:C.muted, letterSpacing:"1px", display:"block", marginBottom:"8px" }}>CUSTOM AMOUNT (₱)</label>
-              <input type="number" placeholder="Enter custom amount" value={custom} onChange={e => setCustom(e.target.value)}
+              <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} placeholder="Enter custom amount" value={custom} onChange={e => setCustom(e.target.value)}
                 style={{ width:"100%", padding:"12px 16px", border:`1.5px solid ${custom ? C.forest : C.border}`, borderRadius:"10px", fontFamily:SG, fontSize:"18px", fontWeight:700, background:C.cream, color:C.forest, outline:"none", boxSizing:"border-box" }} />
             </div>
           </div>

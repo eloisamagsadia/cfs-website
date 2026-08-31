@@ -73,7 +73,7 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
           ].map(({ label, key }) => (
             <div key={key}>
               <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>{label}</label>
-              <input type="number" value={settings[key]} onChange={e => setSettings((p: any) => ({ ...p, [key]: Number(e.target.value) }))}
+              <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} value={settings[key]} onChange={e => setSettings((p: any) => ({ ...p, [key]: Number(e.target.value) }))}
                 style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
             </div>
           ))}
@@ -91,7 +91,7 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
             ].map(({ label, key }) => (
               <div key={key}>
                 <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>{label}</label>
-                <input type="number" value={perks[key]} onChange={e => setPerks((p: any) => ({ ...p, [key]: Number(e.target.value) }))}
+                <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} value={perks[key]} onChange={e => setPerks((p: any) => ({ ...p, [key]: Number(e.target.value) }))}
                   style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
               </div>
             ))}

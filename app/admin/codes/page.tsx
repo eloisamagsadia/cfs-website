@@ -74,8 +74,8 @@ export default function AdminCodesPage() {
               <option value="percent">Percent (%)</option>
               <option value="fixed">Fixed (₱)</option>
             </select>
-            <input type="number" value={form.discount_value} onChange={e=>setForm(p=>({...p,discount_value:e.target.value}))} placeholder="10" style={inp}/>
-            <input type="number" value={form.max_uses} onChange={e=>setForm(p=>({...p,max_uses:e.target.value}))} placeholder="Max uses (blank=∞)" style={inp}/>
+            <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} value={form.discount_value} onChange={e=>setForm(p=>({...p,discount_value:e.target.value}))} placeholder="10" style={inp}/>
+            <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} value={form.max_uses} onChange={e=>setForm(p=>({...p,max_uses:e.target.value}))} placeholder="Max uses (blank=∞)" style={inp}/>
             <input type="date" value={form.expires_at} onChange={e=>setForm(p=>({...p,expires_at:e.target.value}))} style={inp}/>
           </div>
         </div>

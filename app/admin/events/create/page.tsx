@@ -62,8 +62,8 @@ export default function CreateEventPage() {
         </div>
 
         <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
-          <div><label style={labelStyle}>Price (₱)</label><input type="number" style={inputStyle} value={form.price} onChange={e => upd("price", e.target.value)} placeholder="0 for free" /></div>
-          <div><label style={labelStyle}>Capacity</label><input type="number" style={inputStyle} value={form.capacity} onChange={e => upd("capacity", e.target.value)} placeholder="Blank = unlimited" /></div>
+          <div><label style={labelStyle}>Price (₱)</label><input type="number" inputMode="decimal" min="0" step="1" style={inputStyle} value={form.price} onChange={e => upd("price", e.target.value)} placeholder="0 for free" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} /></div>
+          <div><label style={labelStyle}>Capacity</label><input type="number" inputMode="numeric" min="0" step="1" style={inputStyle} value={form.capacity} onChange={e => upd("capacity", e.target.value)} placeholder="Blank = unlimited" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} /></div>
         </div>
 
         <div><label style={labelStyle}>Map URL</label><input style={inputStyle} value={form.map_url} onChange={e => upd("map_url", e.target.value)} placeholder="Google Maps URL" /></div>

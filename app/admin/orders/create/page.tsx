@@ -158,11 +158,11 @@ export default function CreateOrderPage() {
         <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
           <div>
             <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>SHIPPING FEE (₱)</label>
-            <input type="number" value={shippingFee} onChange={e => setShippingFee(Number(e.target.value))} style={inp} />
+            <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} value={shippingFee} onChange={e => setShippingFee(Number(e.target.value))} style={inp} />
           </div>
           <div>
             <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>DISCOUNT (₱)</label>
-            <input type="number" value={discount} onChange={e => setDiscount(Number(e.target.value))} style={inp} />
+            <input type="number" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} value={discount} onChange={e => setDiscount(Number(e.target.value))} style={inp} />
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid #DDE8DD", paddingTop: "12px" }}>

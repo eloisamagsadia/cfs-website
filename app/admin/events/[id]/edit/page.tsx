@@ -110,8 +110,8 @@ export default function AdminEventEditPage() {
         </div>
 
         <div className="edit-event-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-          <div><label style={labelStyle}>PRICE (₱)</label><input type="number" style={inputStyle} value={form.price} onChange={e => set("price", e.target.value)} /></div>
-          <div><label style={labelStyle}>CAPACITY</label><input type="number" style={inputStyle} value={form.capacity} onChange={e => set("capacity", e.target.value)} placeholder="Blank = unlimited" /></div>
+          <div><label style={labelStyle}>PRICE (₱)</label><input type="number" inputMode="decimal" min="0" step="1" style={inputStyle} value={form.price} onChange={e => set("price", e.target.value)} onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} /></div>
+          <div><label style={labelStyle}>CAPACITY</label><input type="number" inputMode="numeric" min="0" step="1" style={inputStyle} value={form.capacity} onChange={e => set("capacity", e.target.value)} placeholder="Blank = unlimited" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} /></div>
         </div>
 
         <div><label style={labelStyle}>BANNER URL</label><input style={inputStyle} value={form.banner_url} onChange={e => set("banner_url", e.target.value)} placeholder="https://..." /></div>
