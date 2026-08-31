@@ -74,6 +74,7 @@ CREATE TABLE events (
   status          TEXT NOT NULL DEFAULT 'upcoming'
                     CHECK (status IN ('upcoming','ongoing','completed','cancelled')),
   category_id     UUID REFERENCES event_categories,
+  is_hidden       BOOLEAN NOT NULL DEFAULT false,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
@@ -92,6 +93,7 @@ CREATE TABLE event_registrations (
 
 CREATE INDEX idx_events_date ON events (date);
 CREATE INDEX idx_events_status ON events (status);
+CREATE INDEX idx_events_is_hidden ON events (is_hidden);
 CREATE INDEX idx_event_registrations_user ON event_registrations (user_id);
 
 

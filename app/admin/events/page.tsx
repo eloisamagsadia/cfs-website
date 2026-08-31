@@ -1,7 +1,8 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { IconTicket, IconEdit, IconPin, IconUsers, IconTag, IconCalendar } from "@/components/shared/Icons";
+import { IconTicket, IconEdit, IconPin, IconUsers, IconTag, IconCalendar, IconEyeOff } from "@/components/shared/Icons";
+import EventVisibilityToggle from "@/components/admin/EventVisibilityToggle";
 
 export const metadata: Metadata = { title: "Manage Events" };
 export const dynamic = "force-dynamic";
@@ -65,8 +66,10 @@ export default async function AdminEventsPage() {
           const regCount = event.event_registrations?.length ?? 0;
           const capacity = event.capacity ?? 0;
 
+          const isHidden = !!event.is_hidden;
+
           return (
-            <div key={event.id} className="aev-row" style={{ background: "#ffffff", borderRadius: "14px", padding: "18px 20px", display: "flex", gap: "18px", alignItems: "center", boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 4px 14px rgba(15,42,30,0.05)" }}>
+            <div key={event.id} className="aev-row" style={{ background: "#ffffff", borderRadius: "14px", padding: "18px 20px", display: "flex", gap: "18px", alignItems: "center", boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 4px 14px rgba(15,42,30,0.05)", opacity: isHidden ? 0.72 : 1 }}>
 
               {/* Date tile */}
               <div style={{ flexShrink: 0, width: "62px", background: `linear-gradient(180deg, ${status.bg}, ${status.ring})`, borderRadius: "12px", padding: "10px 8px", textAlign: "center", color: "#ffffff", boxShadow: `0 4px 12px ${status.bg}30` }}>
@@ -100,11 +103,17 @@ export default async function AdminEventsPage() {
                     {event.price > 0 ? `₱${Number(event.price).toLocaleString()}` : "Free"}
                   </span>
                   <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: status.fg, background: status.bg, borderRadius: "999px", padding: "3px 10px", letterSpacing: "1.5px" }}>{status.label}</span>
+                  {isHidden && (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#B45309", background: "#FFF3E0", border: "1px solid #F0C48A", borderRadius: "999px", padding: "3px 10px", letterSpacing: "1.5px" }}>
+                      <IconEyeOff size={10} color="#B45309" /> HIDDEN
+                    </span>
+                  )}
                 </div>
               </div>
 
               {/* Actions */}
               <div className="aev-actions" style={{ display: "flex", gap: "6px", flexShrink: 0, alignItems: "center", justifyContent: "flex-end", flexWrap: "wrap" }}>
+                <EventVisibilityToggle id={event.id} initialHidden={isHidden} />
                 <Link href={`/admin/events/${event.id}/tiers`}
                   className="aev-btn-secondary"
                   style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#E8F0E4", border: "1.5px solid transparent", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>

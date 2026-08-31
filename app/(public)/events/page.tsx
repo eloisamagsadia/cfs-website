@@ -26,10 +26,14 @@ const C = {
 export default async function EventsPage() {
   const supabase = createAdminClient();
   const [{ data: allEvents }, { data: featured }] = await Promise.all([
-    (supabase as any).from("events").select("*").order("date", { ascending: false }),
+    (supabase as any).from("events")
+      .select("*")
+      .eq("is_hidden", false)
+      .order("date", { ascending: false }),
     (supabase as any).from("events")
       .select("id, title, date, banner_url, location, price, capacity, is_members_only, status")
       .eq("status", "upcoming")
+      .eq("is_hidden", false)
       .order("date", { ascending: true })
       .limit(1)
       .maybeSingle(),

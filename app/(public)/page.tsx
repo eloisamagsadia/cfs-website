@@ -31,6 +31,7 @@ export default async function HomePage() {
   const { data: events } = await (supabase.from("events") as any)
     .select("id, title, date, banner_url, location, price, capacity")
     .eq("status", "upcoming")
+    .eq("is_hidden", false)
     .order("date", { ascending: true })
     .limit(6);
 
