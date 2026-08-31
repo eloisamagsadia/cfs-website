@@ -102,7 +102,7 @@ export default function AdminDonationsPage() {
           NO DONATIONS {filter !== "all" ? `WITH STATUS "${filter.toUpperCase()}"` : "YET"}
         </div>
       ) : (
-        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "auto" }}>
+        <div className="table-scroll" style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px" }}>
           {/* Header */}
           <div style={{ background: "#F2F7F2", padding: "10px 20px", display: "grid", gridTemplateColumns: COLS, gap: "12px", minWidth: "900px" }}>
             {HEADERS.map(h => (
