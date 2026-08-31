@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
 import EventsBrowser from "@/components/public/EventsBrowser";
+import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
 import { IconCalendar, IconPin, IconTicket, IconUsers } from "@/components/shared/Icons";
 
 export const metadata: Metadata = { title: "Events — CFS" };
@@ -58,6 +59,7 @@ export default async function EventsPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: C.paper }}>
+      <RealtimeRefresh tables="events" />
       <style>{`
         @media (max-width: 900px) {
           .evl-hero-grid { grid-template-columns: 1fr !important; padding: 40px 24px !important; }

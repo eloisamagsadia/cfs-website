@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { IconCalendar, IconPin, IconTicket } from "@/components/shared/Icons";
+import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -39,6 +40,7 @@ export default async function HomePage() {
 
   return (
     <div style={{ background: C.paper, minHeight: "100vh" }}>
+      <RealtimeRefresh tables="events" />
 
       {/* ── HERO ── */}
       <section style={{ position: "relative", overflow: "hidden", padding: "72px 24px 64px" }}>

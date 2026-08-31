@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { IconTicket, IconEdit, IconPin, IconUsers, IconTag, IconCalendar, IconEyeOff } from "@/components/shared/Icons";
 import EventVisibilityToggle from "@/components/admin/EventVisibilityToggle";
+import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
 
 export const metadata: Metadata = { title: "Manage Events" };
 export const dynamic = "force-dynamic";
@@ -30,6 +31,7 @@ export default async function AdminEventsPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <RealtimeRefresh tables="events" />
       <style>{`
         @media (max-width: 720px) {
           .aev-row { flex-direction: column !important; align-items: stretch !important; }
