@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { IconFile, IconPhoto, IconX } from "@/components/shared/Icons";
+import { IconFile, IconPhoto, IconX, IconUpload } from "@/components/shared/Icons";
 import MediaPicker from "./MediaPicker";
 
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -64,7 +64,7 @@ export default function FileUpload({ folder, accept = "image/*", label = "IMAGE"
       <label style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", letterSpacing: "1px" }}>{label}</label>
 
       {preview ? (
-        <div style={{ position: "relative", display: "inline-block" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {isPdf ? (
             <div style={{ background: "#E8F0E4", border: "2px solid #1A8040", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", gap: "10px" }}>
               <IconFile size={24} color="#1A8040" />
@@ -72,14 +72,40 @@ export default function FileUpload({ folder, accept = "image/*", label = "IMAGE"
                 <div style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "1px" }}>PDF UPLOADED</div>
                 <a href={preview} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "11px", color: "#4A7C59", wordBreak: "break-all" }}>View PDF →</a>
               </div>
-              <button onClick={handleRemove} style={{ background: "#FFE8EC", border: "1px solid #CC334440", borderRadius: "4px", color: "#CC3344", padding: "4px 8px", cursor: "pointer", fontFamily: B, fontSize: "11px", display: "inline-flex", alignItems: "center", gap: "4px" }}><IconX size={10} color="#CC3344" /> Remove</button>
+              <button type="button" onClick={handleRemove} style={{ background: "#FFE8EC", border: "1px solid #CC334440", borderRadius: "4px", color: "#CC3344", padding: "4px 8px", cursor: "pointer", fontFamily: B, fontSize: "11px", display: "inline-flex", alignItems: "center", gap: "4px" }}><IconX size={10} color="#CC3344" /> Remove</button>
             </div>
           ) : (
             <div style={{ position: "relative", width: "160px", height: "120px", borderRadius: "8px", overflow: "hidden", border: "2px solid #1A8040" }}>
               <img src={preview} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              <button onClick={handleRemove} style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(255,255,255,0.9)", border: "none", borderRadius: "4px", color: "#CC3344", padding: "2px 4px", cursor: "pointer", display: "flex", alignItems: "center" }}><IconX size={10} color="#CC3344" /></button>
+              <button type="button" onClick={handleRemove} style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(255,255,255,0.9)", border: "none", borderRadius: "4px", color: "#CC3344", padding: "2px 4px", cursor: "pointer", display: "flex", alignItems: "center" }}><IconX size={10} color="#CC3344" /></button>
             </div>
           )}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ flex: 1, height: "1px", background: "#E4EDE4" }} />
+            <span style={{ fontFamily: B, fontSize: "10px", color: "#7A8E7A", letterSpacing: "1.2px", textTransform: "uppercase" }}>or replace</span>
+            <div style={{ flex: 1, height: "1px", background: "#E4EDE4" }} />
+          </div>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={uploading}
+              style={{ flex: "1 1 180px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "8px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 14px", cursor: uploading ? "wait" : "pointer", letterSpacing: "1.2px", outline: "none" }}
+            >
+              <IconUpload size={12} color="#1B3A2D" />
+              {uploading ? "UPLOADING…" : "UPLOAD NEW"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              style={{ flex: "1 1 180px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "8px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#E8F0E4", border: "1.5px solid transparent", borderRadius: "10px", padding: "10px 14px", cursor: "pointer", letterSpacing: "1.2px", outline: "none", transition: "background 0.15s" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "#DDE8DD"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "#E8F0E4"; }}
+            >
+              <IconPhoto size={12} color="#1B3A2D" />
+              PICK FROM LIBRARY
+            </button>
+          </div>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
