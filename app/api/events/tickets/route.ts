@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { event_id, tier_id } = body;
 
-  if (!event_id || !tier_id) return NextResponse.json({ error: "Missing event_id or tier_id" }, { status: 400 });
+  if (!event_id) return NextResponse.json({ error: "Missing event_id" }, { status: 400 });
 
   const supabase = db();
 
@@ -80,13 +80,20 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Get tier
-  const { data: tier } = await supabase.from("event_tiers").select("*").eq("id", tier_id).single();
-  if (!tier) return NextResponse.json({ error: "Tier not found" }, { status: 404 });
-  if (!tier.is_active) return NextResponse.json({ error: "This tier is no longer available" }, { status: 400 });
-  if (tier.slots_remaining !== null && tier.slots_remaining <= 0) {
-    return NextResponse.json({ error: "This tier is sold out" }, { status: 400 });
+  // Resolve tier (nullable — events without tiers use the event's own price)
+  let tier: any = null;
+  if (tier_id) {
+    const { data } = await supabase.from("event_tiers").select("*").eq("id", tier_id).single();
+    if (!data) return NextResponse.json({ error: "Tier not found" }, { status: 404 });
+    if (!data.is_active) return NextResponse.json({ error: "This tier is no longer available" }, { status: 400 });
+    if (data.slots_remaining !== null && data.slots_remaining <= 0) {
+      return NextResponse.json({ error: "This tier is sold out" }, { status: 400 });
+    }
+    tier = data;
   }
+
+  const tierName  = tier?.name  ?? "General Admission";
+  const tierPrice = tier?.price ?? Number(event.price ?? 0);
 
   // Get member profile
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", userId).single();
@@ -110,14 +117,14 @@ export async function POST(req: NextRequest) {
     event_name: event.title,
     event_date: event.date,
     event_location: event.location,
-    tier_id,
-    tier_name: tier.name,
-    tier_price: tier.price,
+    tier_id: tier_id ?? null,
+    tier_name: tierName,
+    tier_price: tierPrice,
     registered_at: new Date().toISOString(),
   };
 
   // Determine payment status
-  const payment_status = tier.price > 0 ? "pending" : "free";
+  const payment_status = tierPrice > 0 ? "pending" : "free";
 
   // Create ticket
   const { data: ticket, error } = await supabase
@@ -125,8 +132,8 @@ export async function POST(req: NextRequest) {
     .insert({
       event_id,
       user_id: userId,
-      tier_id,
-      status: tier.price > 0 ? "pending_payment" : "active",
+      tier_id: tier_id ?? null,
+      status: tierPrice > 0 ? "pending_payment" : "active",
       payment_status,
       qr_data,
     })
@@ -145,7 +152,7 @@ export async function POST(req: NextRequest) {
     user_id: userId,
     type: "event_reminder",
     title: `Ticket confirmed for ${event.title}! 🎫`,
-    message: `Your ${tier.name} ticket is ready. Ticket #${ticket.ticket_number}`,
+    message: `Your ${tierName} ticket is ready. Ticket #${ticket.ticket_number}`,
     link: `/members/tickets/${ticket.id}`,
   });
 
