@@ -147,7 +147,13 @@ export default function AdminEventEditPage() {
         </div>
 
         {/* Guidelines */}
-        <div><label style={labelStyle}>GUIDELINES POSTER URL</label><input style={inputStyle} value={form.guidelines_url} onChange={e => set("guidelines_url", e.target.value)} placeholder="https://... (image URL)" /></div>
+        <FileUpload
+          folder="events"
+          label="GUIDELINES POSTER"
+          currentUrl={form.guidelines_url}
+          onUploaded={url => set("guidelines_url", url)}
+          onRemove={() => set("guidelines_url", "")}
+        />
         <div><label style={labelStyle}>GUIDELINES TEXT</label><textarea style={{ ...inputStyle, minHeight: "90px", resize: "vertical" }} value={form.guidelines_text} onChange={e => set("guidelines_text", e.target.value)} placeholder="Rules, dress code, what to bring..." /></div>
 
         {/* Typography */}
