@@ -4,6 +4,7 @@ import { toISOWithPHT, toPHTInputString } from "@/lib/date";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { IconSparkle, IconTrash } from "@/components/shared/Icons";
+import FileUpload from "@/components/admin/FileUpload";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -114,7 +115,13 @@ export default function AdminEventEditPage() {
           <div><label style={labelStyle}>CAPACITY</label><input type="number" inputMode="numeric" min="0" step="1" style={inputStyle} value={form.capacity} onChange={e => set("capacity", e.target.value)} placeholder="Blank = unlimited" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} /></div>
         </div>
 
-        <div><label style={labelStyle}>BANNER URL</label><input style={inputStyle} value={form.banner_url} onChange={e => set("banner_url", e.target.value)} placeholder="https://..." /></div>
+        <FileUpload
+          folder="events"
+          label="BANNER IMAGE"
+          currentUrl={form.banner_url}
+          onUploaded={url => set("banner_url", url)}
+          onRemove={() => set("banner_url", "")}
+        />
         <div><label style={labelStyle}>MAP URL</label><input style={inputStyle} value={form.map_url} onChange={e => set("map_url", e.target.value)} placeholder="Google Maps URL" /></div>
 
         {/* Status */}
