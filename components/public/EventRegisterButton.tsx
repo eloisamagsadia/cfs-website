@@ -191,7 +191,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
       {sponsorDate && isSponsor && memberDate && now < memberDate && (
         <div style={{ background: "#1A804020", border: "1.5px solid #1A8040", borderRadius: "8px", padding: "8px 12px", display: "flex", alignItems: "center", gap: "8px" }}>
           <span style={{ fontSize: "14px" }}>✦</span>
-          <span style={{ fontFamily: B, fontSize: "12px", color: "#1A8040" }}>Early access — open for sponsors {memberDate.toLocaleDateString("en-PH", { month: "long", day: "numeric" })}</span>
+          <span style={{ fontFamily: B, fontSize: "12px", color: "#1A8040" }}>Sponsor early access active · General opens {memberDate.toLocaleDateString("en-PH", { month: "long", day: "numeric" })}</span>
         </div>
       )}
 
