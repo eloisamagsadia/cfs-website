@@ -300,9 +300,12 @@
 /* Any grid we opt into for "2-col on desktop, stack on mobile" or "3-col on desktop, stack on mobile" */
 @media (max-width: 768px) {
   .stack-md { grid-template-columns: 1fr !important; }
+  /* 4-col stat/quick-action grids: 2 cols on tablet, 1 col on phone */
+  .stack-4  { grid-template-columns: 1fr 1fr !important; }
 }
 @media (max-width: 600px) {
   .stack-sm { grid-template-columns: 1fr !important; }
+  .stack-4  { grid-template-columns: 1fr !important; }
 }
 
 /* Admin wide tables: keep their grid on desktop, scroll horizontally on mobile

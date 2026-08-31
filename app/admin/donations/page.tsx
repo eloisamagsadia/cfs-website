@@ -68,7 +68,7 @@ export default function AdminDonationsPage() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
+      <div className="stack-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
         {[
           { label: "TOTAL DONATIONS", value: donations.length,                      color: "#1B3A2D" },
           { label: "COLLECTED",       value: `₱${totalCollected.toLocaleString()}`, color: "#1A8040" },

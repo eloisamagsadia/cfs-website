@@ -61,7 +61,7 @@ export default function EventTicketsPage() {
       </div>
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
+      <div className="stack-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px" }}>
         {[
           { label: "REGISTERED", value: counts.active, color: "#1A8040" },
           { label: "CHECKED IN", value: counts.used, color: "#5A7A60" },
