@@ -28,6 +28,9 @@ export const R2_FOLDERS = {
 
 export type R2Folder = typeof R2_FOLDERS[keyof typeof R2_FOLDERS];
 
+/** Single source of truth for which folders any upload endpoint accepts. */
+export const ALLOWED_R2_FOLDERS: readonly R2Folder[] = Object.values(R2_FOLDERS);
+
 // ─── ALLOWED FILE TYPES ───────────────────────────────────────────────────────
 export const ALLOWED_IMAGE_TYPES = [
   "image/jpeg",

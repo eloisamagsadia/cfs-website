@@ -35,9 +35,9 @@ export default function SuperMorePage() {
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             {section.items.map(item => (
               <Link key={item.href} href={item.href} style={{ textDecoration: "none" }}>
-                <div style={{ background: "#1A1400", border: `2px solid ${item.color}30`, borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
-                  <span style={{ color: item.color, flexShrink: 0 }}>{item.icon}</span>
-                  <span style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D" }}>{item.label}</span>
+                <div style={{ background: "#ffffff", border: `1.5px solid ${item.color}30`, borderRadius: "12px", padding: "16px 18px", display: "flex", alignItems: "center", gap: "14px", boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 4px 12px rgba(15,42,30,0.05)" }}>
+                  <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: `${item.color}12`, border: `1px solid ${item.color}30`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: item.color }}>{item.icon}</div>
+                  <span style={{ fontFamily: B, fontSize: "14px", fontWeight: 600, color: "#1B3A2D" }}>{item.label}</span>
                 </div>
               </Link>
             ))}

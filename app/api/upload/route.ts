@@ -6,14 +6,13 @@ import {
   r2, R2_BUCKET, R2_PUBLIC_URL,
   ALLOWED_IMAGE_TYPES, ALLOWED_DOCUMENT_TYPES, ALLOWED_VIDEO_TYPES,
   MAX_IMAGE_SIZE, MAX_DOCUMENT_SIZE, MAX_VIDEO_SIZE,
+  ALLOWED_R2_FOLDERS,
   type R2Folder,
 } from "@/lib/r2";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { auth } from "@clerk/nextjs/server";
 
-const ALLOWED_FOLDERS: R2Folder[] = [
-  "avatars", "products", "events", "reports", "projects", "badges", "gallery", "community", "support", "messages",
-];
+const ALLOWED_FOLDERS: readonly R2Folder[] = ALLOWED_R2_FOLDERS;
 
 const MAX_DIMENSION = 1200;
 

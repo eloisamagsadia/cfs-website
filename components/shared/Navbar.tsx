@@ -65,8 +65,8 @@ export default async function Navbar() {
           {/* Nav links */}
           <div className="nav-links" style={{ display: "flex", gap: "28px", alignItems: "center" }}>
             {navLinks.map(({ label, href }) => (
-              <Link key={href} href={href} className="nav-link"
-                style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "1.5px", textDecoration: "none", fontWeight: "500" }} className="nav-link-light">
+              <Link key={href} href={href} className="nav-link nav-link-light"
+                style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "1.5px", textDecoration: "none", fontWeight: "500" }}>
                 {label}
               </Link>
             ))}

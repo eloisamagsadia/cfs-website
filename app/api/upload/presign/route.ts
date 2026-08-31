@@ -2,7 +2,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextRequest, NextResponse } from "next/server";
 import { nanoid } from "nanoid";
-import { r2, R2_BUCKET, R2_PUBLIC_URL, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES } from "@/lib/r2";
+import { r2, R2_BUCKET, R2_PUBLIC_URL, ALLOWED_IMAGE_TYPES, ALLOWED_VIDEO_TYPES, ALLOWED_R2_FOLDERS } from "@/lib/r2";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { auth } from "@clerk/nextjs/server";
 
@@ -23,8 +23,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid file type" }, { status: 400 });
   }
 
-  const allowedFolders = ["avatars", "products", "events", "reports", "projects", "badges", "gallery", "community", "support", "messages"];
-  if (!folder || !allowedFolders.includes(folder)) {
+  if (!folder || !ALLOWED_R2_FOLDERS.includes(folder as any)) {
     return NextResponse.json({ error: "Invalid folder" }, { status: 400 });
   }
 
