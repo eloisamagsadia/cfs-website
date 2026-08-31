@@ -2,9 +2,23 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { IconTrash, IconX, IconCheck, IconFile, IconUpload } from "@/components/shared/Icons";
+import StatBar from "@/components/shared/StatBar";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
+
+const FOLDER_COLORS: Record<string, string> = {
+  products:  "#1A8040",
+  events:    "#B78A1F",
+  avatars:   "#156530",
+  community: "#1A8040",
+  badges:    "#CC3344",
+  reports:   "#156530",
+  projects:  "#1A8040",
+  gallery:   "#7A8E7A",
+  support:   "#5A7A60",
+  messages:  "#5A7A60",
+};
 
 type MediaItem = {
   key: string;
@@ -251,19 +265,18 @@ export default function AdminMediaPage() {
         </div>
       </div>
 
-      {/* Stats */}
-      <div style={s.statsRow}>
-        {FOLDERS.filter(f => f !== "all").map(f => {
-          const count = items.filter(i => i.folder === f).length;
-          if (count === 0) return null;
-          return (
-            <div key={f} style={s.stat}>
-              <span style={s.statVal}>{count}</span>
-              {f}/
-            </div>
-          );
-        })}
-      </div>
+      {/* Stats — soft colored chips, click to filter */}
+      <StatBar items={FOLDERS.filter(f => f !== "all").map(f => {
+        const count = items.filter(i => i.folder === f).length;
+        return {
+          label: `${f.toUpperCase()}/`,
+          value: count,
+          color: FOLDER_COLORS[f] ?? "#1A8040",
+          active: folder === f,
+          onClick: () => setFolder(f),
+        };
+      }).filter(s => s.value > 0)} />
+
 
       {/* Folder tabs + search */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
