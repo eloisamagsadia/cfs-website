@@ -8,7 +8,19 @@ import { IconTicket, IconEdit, IconTrash, IconCheck, IconSparkle } from "@/compo
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-const TIER_COLORS = ["#1A8040", "#1A8040", "#156530", "#CC3344", "#5A7A60", "#1A8040"];
+const TIER_COLORS: { hex: string; name: string }[] = [
+  { hex: "#1A8040", name: "Forest" },
+  { hex: "#156530", name: "Pine" },
+  { hex: "#2563EB", name: "Blue" },
+  { hex: "#7C3AED", name: "Violet" },
+  { hex: "#DB2777", name: "Magenta" },
+  { hex: "#CC3344", name: "Red" },
+  { hex: "#F97316", name: "Orange" },
+  { hex: "#B78A1F", name: "Gold" },
+  { hex: "#0D9488", name: "Teal" },
+  { hex: "#5A7A60", name: "Sage" },
+  { hex: "#1B3A2D", name: "Deep" },
+];
 
 const DEFAULT_FORM = { name: "", price: 0, capacity: "", perks: "", color: "#1A8040" };
 
@@ -143,11 +155,33 @@ export default function EventTiersPage() {
             </div>
             <div>
               <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "8px" }}>COLOR</label>
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                {TIER_COLORS.map(c => (
-                  <button key={c} onClick={() => setForm(p => ({ ...p, color: c }))}
-                    style={{ width: "28px", height: "28px", borderRadius: "50%", background: c, border: form.color === c ? "3px solid #fff" : "3px solid transparent", cursor: "pointer" }} />
-                ))}
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+                {TIER_COLORS.map(c => {
+                  const active = form.color === c.hex;
+                  return (
+                    <button key={c.hex} type="button" onClick={() => setForm(p => ({ ...p, color: c.hex }))}
+                      title={c.name}
+                      aria-label={c.name}
+                      style={{
+                        width: "30px", height: "30px", borderRadius: "50%",
+                        background: c.hex,
+                        border: active ? `3px solid #ffffff` : "3px solid #ffffff",
+                        boxShadow: active
+                          ? `0 0 0 2px ${c.hex}, 0 4px 12px ${c.hex}40`
+                          : `0 0 0 1px #E4EDE4, 0 1px 3px rgba(15,42,30,0.08)`,
+                        cursor: "pointer",
+                        transition: "transform 0.1s, box-shadow 0.15s",
+                        transform: active ? "scale(1.08)" : "scale(1)",
+                        outline: "none",
+                        padding: 0,
+                      }} />
+                  );
+                })}
+                {form.color && (
+                  <span style={{ marginLeft: "6px", fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>
+                    {TIER_COLORS.find(c => c.hex === form.color)?.name ?? form.color}
+                  </span>
+                )}
               </div>
             </div>
             <div style={{ gridColumn: "1 / -1" }}>
