@@ -138,7 +138,7 @@ export default function AdminSidebar({ isSuper = false }: { isSuper?: boolean })
         <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px" }}>ADMIN PANEL</span>
       </div>
 
-      <nav style={{ position: "sticky", top: "80px", display: "flex", flexDirection: "column", gap: "20px" }}>
+      <nav style={{ position: "sticky", top: "80px", display: "flex", flexDirection: "column", gap: "20px", maxHeight: "calc(100vh - 100px)", overflowY: "auto", paddingRight: "4px" }}>
         {sections.map(section => (
           <div key={section.label}>
             <div style={{ fontFamily: R, fontSize: "9px", color: "#9AA899", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>{section.label}</div>
