@@ -178,6 +178,27 @@ export default async function SystemHealthPage() {
         })}
       </div>
 
+      {/* Deployment info */}
+      <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "14px", padding: "16px 20px" }}>
+        <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "1.5px", marginBottom: "10px" }}>DEPLOYMENT</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "10px" }}>
+          {[
+            { label: "COMMIT",       value: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 8) ?? null, mono: true },
+            { label: "BRANCH",       value: process.env.VERCEL_GIT_COMMIT_REF ?? null },
+            { label: "ENVIRONMENT",  value: process.env.VERCEL_ENV ?? process.env.NODE_ENV ?? null },
+            { label: "REGION",       value: process.env.VERCEL_REGION ?? null },
+            { label: "URL",          value: process.env.VERCEL_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? null },
+            { label: "MESSAGE",      value: process.env.VERCEL_GIT_COMMIT_MESSAGE?.slice(0, 80) ?? null },
+          ].map(f => (
+            <div key={f.label} style={{ background: "#F7FAF5", border: "1px solid #E4EDE4", borderRadius: "10px", padding: "10px 12px" }}>
+              <div style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#5A7A60", letterSpacing: "1.2px" }}>{f.label}</div>
+              <div style={{ fontFamily: f.mono ? "'SF Mono', ui-monospace, Menlo, monospace" : B, fontSize: "12px", color: f.value ? "#1B3A2D" : "#B7CDB7", marginTop: "3px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={f.value ?? ""}>{f.value ?? "not set"}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ fontFamily: B, fontSize: "11px", color: "#7A8E7A", marginTop: "10px" }}>Populated automatically by Vercel at build time. Empty values mean this instance wasn't built by Vercel (local dev).</div>
+      </div>
+
       {/* Environment variable presence table */}
       <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "14px", overflow: "hidden" }}>
         <div style={{ padding: "14px 20px", background: "#F7FAF5", borderBottom: "1px solid #E4EDE4" }}>
