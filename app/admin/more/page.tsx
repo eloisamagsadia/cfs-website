@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { auth } from "@clerk/nextjs/server";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -76,6 +75,7 @@ const adminSections: Section[] = [
       { label: "Fan Wall",      href: "/admin/events/fan-submissions", icon: icons.fanwall },
       { label: "Projects",      href: "/admin/projects",               icon: icons.projects },
       { label: "Reports",       href: "/admin/reports",                icon: icons.reports },
+      { label: "FAQ",           href: "/admin/faq",                    icon: icons.support },
     ],
   },
   {
@@ -92,45 +92,14 @@ const adminSections: Section[] = [
   },
 ];
 
-const superSection: Section = {
-  label: "SUPER ADMIN",
-  accent: "amber",
-  items: [
-    { label: "Command Center", href: "/super",                 icon: icons.command },
-    { label: "Analytics",      href: "/super/analytics",       icon: icons.analytics },
-    { label: "System Health",  href: "/super/system-health",   icon: icons.health },
-    { label: "Categories",     href: "/super/categories",      icon: icons.categories },
-    { label: "Donation Drives",href: "/super/donation-drives", icon: icons.donations },
-    { label: "Sponsor Perks",  href: "/super/sponsor-perks",   icon: icons.perks },
-    { label: "Badges",         href: "/super/badges",          icon: icons.badges },
-    { label: "Backup",         href: "/super/backup",          icon: icons.backup },
-    { label: "Roles",          href: "/super/roles",           icon: icons.roles },
-    { label: "Bulk Members",   href: "/super/bulk-members",    icon: icons.bulk },
-    { label: "Impersonate",    href: "/super/impersonate",     icon: icons.impersonate },
-    { label: "Audit Log",      href: "/super/audit",           icon: icons.audit },
-    { label: "Broadcast",      href: "/super/broadcast",       icon: icons.broadcast },
-    { label: "Finance",        href: "/super/finance",         icon: icons.finance },
-    { label: "Feature Flags",  href: "/super/feature-flags",   icon: icons.flags },
-    { label: "Exclusives",     href: "/super/exclusive",       icon: icons.exclusive },
-    { label: "Ticket Cleanup", href: "/super/tickets-cleanup", icon: icons.cleanup },
-    { label: "Site Settings",  href: "/super/settings",        icon: icons.settings },
-    { label: "Danger Zone",    href: "/super/danger",          icon: icons.danger },
-  ],
-};
-
 const exitSection: Section = {
   label: "EXIT",
   items: [{ label: "Back to Members", href: "/members", icon: icons.exit }],
 };
 
 export default function AdminMorePage() {
-  const { sessionClaims } = auth();
-  const role = (sessionClaims?.metadata as { role?: string })?.role ?? "";
-  const isSuper = role === "super_admin";
-
   const sections: Section[] = [
     ...adminSections,
-    ...(isSuper ? [superSection] : []),
     exitSection,
   ];
 
@@ -138,7 +107,7 @@ export default function AdminMorePage() {
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>MORE</h1>
-        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>{isSuper ? "All admin + super-admin tools" : "All admin tools"}</p>
+        <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>All admin tools</p>
       </div>
 
       {sections.map(section => {

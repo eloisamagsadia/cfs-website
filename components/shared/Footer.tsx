@@ -28,6 +28,8 @@ const socials = [
 
 const links = [
   { label: "Events", href: "/events" },
+  { label: "FAQ",    href: "/faq" },
+  { label: "Terms",  href: "/terms" },
 ];
 
 export default function Footer() {
