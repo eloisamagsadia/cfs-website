@@ -17,6 +17,8 @@ export default authMiddleware({
     "/donate(.*)",
     "/api/community/posts",
     "/verify(.*)",
+    "/support(.*)",
+    "/faq(.*)",
   ],
 
   async afterAuth(auth, req) {
