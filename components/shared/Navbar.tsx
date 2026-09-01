@@ -50,7 +50,7 @@ export default async function Navbar() {
 
   return (
     <>
-      <header style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(250,253,249,0.96)", backdropFilter: "blur(12px)", borderBottom: "1px solid #DDE8DD" }}>
+      <header style={{ position: "sticky", top: 0, zIndex: 50, background: "#FAFDF9", borderBottom: "1px solid #DDE8DD", willChange: "transform", transform: "translateZ(0)" }}>
         <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 32px", maxWidth: "1320px", margin: "0 auto" }}>
 
           {/* Logo */}

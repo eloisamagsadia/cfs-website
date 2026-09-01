@@ -37,7 +37,7 @@ export default function MobileAdminNav() {
   const pathname = usePathname();
 
   return (
-    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: "rgba(247,250,245,0.96)", backdropFilter: "blur(12px)", borderTop: "1px solid #F0C8A8", padding: "8px 0 calc(8px + env(safe-area-inset-bottom))", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 50, background: "#F7FAF5", borderTop: "1px solid #F0C8A8", padding: "8px 0 calc(8px + env(safe-area-inset-bottom))", display: "flex", justifyContent: "space-around", alignItems: "center", willChange: "transform", transform: "translateZ(0)" }}>
       {tabs.map(({ label, href, icon, exact }) => {
         const isActive = exact ? pathname === href : pathname.startsWith(href);
         return (
