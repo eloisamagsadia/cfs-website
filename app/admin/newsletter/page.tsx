@@ -32,6 +32,36 @@ export default function NewsletterAdminPage() {
   const [search, setSearch]   = useState("");
   const [busy, setBusy]       = useState<string | null>(null);
 
+  const [composeOpen, setComposeOpen] = useState(false);
+  const [subject, setSubject]   = useState("");
+  const [bodyDraft, setBodyDraft] = useState("");
+  const [testTo, setTestTo]     = useState("");
+  const [sending, setSending]   = useState(false);
+  const [sendMsg, setSendMsg]   = useState<{ ok: boolean; text: string } | null>(null);
+
+  async function sendBroadcast(mode: "test" | "all") {
+    if (!subject.trim() || !bodyDraft.trim()) { setSendMsg({ ok: false, text: "Subject and body are required." }); return; }
+    if (mode === "test" && !testTo.trim())    { setSendMsg({ ok: false, text: "Enter a test address." }); return; }
+    if (mode === "all") {
+      const active = subs.filter(s => !s.unsubscribed_at).length;
+      if (!confirm(`Send "${subject}" to all ${active} active subscribers?\n\nThis cannot be undone.`)) return;
+    }
+    setSending(true); setSendMsg(null);
+    try {
+      const payload: any = { subject: subject.trim(), body: bodyDraft, scope: "active" };
+      if (mode === "test") payload.test_to = testTo.trim();
+      const r = await fetch("/api/admin/newsletter/broadcast", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error);
+      if (mode === "test") setSendMsg({ ok: true, text: `Test sent to ${d.sent_to}.` });
+      else {
+        setSendMsg({ ok: true, text: `Sent to ${d.sent} of ${d.total} subscribers${d.failed ? ` (${d.failed} failed)` : ""}.` });
+        setSubject(""); setBodyDraft(""); setTestTo("");
+      }
+    } catch (e: any) { setSendMsg({ ok: false, text: e.message }); }
+    finally { setSending(false); }
+  }
+
   async function load() {
     setLoading(true); setError("");
     try {
@@ -81,11 +111,47 @@ export default function NewsletterAdminPage() {
             Non-member (and member) email opt-ins from the site footer and elsewhere. Use these when broadcasting outside Clerk.
           </p>
         </div>
-        <a href={`/api/admin/newsletter?scope=${scope}&format=csv`}
-          style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#156530", background: "#E8F0E4", border: "1.5px solid #B7D8B7", borderRadius: 10, padding: "10px 16px", cursor: "pointer", letterSpacing: 1.3, textDecoration: "none" }}>
-          ⤓ EXPORT CSV
-        </a>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button onClick={() => setComposeOpen(v => !v)}
+            style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#ffffff", background: composeOpen ? "#5A5A5A" : "#1A8040", border: "none", borderRadius: 10, padding: "10px 16px", cursor: "pointer", letterSpacing: 1.3 }}>
+            {composeOpen ? "CLOSE COMPOSE" : "✎ COMPOSE BROADCAST"}
+          </button>
+          <a href={`/api/admin/newsletter?scope=${scope}&format=csv`}
+            style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#156530", background: "#E8F0E4", border: "1.5px solid #B7D8B7", borderRadius: 10, padding: "10px 16px", cursor: "pointer", letterSpacing: 1.3, textDecoration: "none" }}>
+            ⤓ EXPORT CSV
+          </a>
+        </div>
       </div>
+
+      {/* Compose */}
+      {composeOpen && (
+        <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: 14, padding: "18px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ fontFamily: R, fontSize: 12, color: "#7A5A0F", letterSpacing: 2 }}>NEW BROADCAST</div>
+          <input value={subject} onChange={e => setSubject(e.target.value)} placeholder="Subject line…" style={{ ...inp, fontSize: 14, padding: "10px 14px" }} />
+          <textarea value={bodyDraft} onChange={e => setBodyDraft(e.target.value)}
+            placeholder={`Hey Colet supporters!\n\nSomething exciting is coming — here's the drop link…\n\nSupports plain text (paragraphs auto-formatted) OR raw HTML if you want links / bold / images.`}
+            rows={9}
+            style={{ ...inp, resize: "vertical" as const, lineHeight: 1.55, fontFamily: B, fontSize: 13 }} />
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <input value={testTo} onChange={e => setTestTo(e.target.value)} type="email" placeholder="Send TEST to (your email)"
+              style={{ ...inp, flex: 1, minWidth: 220 }} />
+            <button onClick={() => sendBroadcast("test")} disabled={sending}
+              style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#7A5A0F", background: "#FFF3D6", border: "1.5px solid transparent", borderRadius: 8, padding: "8px 14px", cursor: "pointer", letterSpacing: 1.2 }}>
+              {sending ? "…" : "SEND TEST"}
+            </button>
+            <button onClick={() => sendBroadcast("all")} disabled={sending}
+              style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: 8, padding: "8px 16px", cursor: "pointer", letterSpacing: 1.2 }}>
+              {sending ? "SENDING…" : `SEND TO ALL (${counts.active})`}
+            </button>
+          </div>
+          {sendMsg && (
+            <div style={{ background: sendMsg.ok ? "#E8F0E4" : "#FFE8EC", border: `1.5px solid ${sendMsg.ok ? "#1A8040" : "#CC3344"}`, borderRadius: 8, padding: "8px 12px", fontFamily: B, fontSize: 12, color: sendMsg.ok ? "#156530" : "#CC3344" }}>{sendMsg.text}</div>
+          )}
+          <div style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A", fontStyle: "italic" as const }}>
+            Every email includes an unsubscribe link tied to the subscriber's token — no config needed on your end.
+          </div>
+        </div>
+      )}
 
       {/* Tiles */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10 }}>
