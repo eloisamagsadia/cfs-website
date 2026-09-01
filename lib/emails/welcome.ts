@@ -1,6 +1,43 @@
 import { resend } from "./resend";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { applyVars } from "@/lib/email";
+import { renderWelcome, type WelcomeSections } from "@/lib/email/shells/welcome";
+import { resolveSections } from "@/lib/email-template-sections";
+
+async function loadWelcomeTemplate(): Promise<{ subject: string; sections: Record<string, unknown> | null } | null> {
+  try {
+    const supabase = createAdminClient();
+    const { data } = await (supabase.from("email_templates") as any)
+      .select("subject, sections")
+      .eq("key", "welcome")
+      .maybeSingle();
+    if (!data) return null;
+    return { subject: data.subject, sections: (data.sections ?? null) as Record<string, unknown> | null };
+  } catch {
+    return null;
+  }
+}
 
 export async function sendWelcomeEmail({ email, name }: { email: string; name: string }) {
+  const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://coletfs.com";
+  const vars = { member_name: name, site_url: SITE };
+
+  // Prefer section-based path through the locked shell.
+  const stored = await loadWelcomeTemplate();
+  if (stored?.sections) {
+    const sections = resolveSections("welcome", stored.sections) as unknown as WelcomeSections;
+    const subject = applyVars(stored.subject ?? "Welcome to Colet Fan Suporta ✦", vars);
+    const html    = renderWelcome(vars, sections);
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL!,
+      to: email,
+      subject,
+      html,
+    });
+    return;
+  }
+
+  // Fallback: original hardcoded welcome design.
   await resend.emails.send({
     from: process.env.RESEND_FROM_EMAIL!,
     to: email,
