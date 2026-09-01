@@ -39,6 +39,7 @@ const icons = {
 
 const superItems = [
   { label: "Command Center", href: "/super",                   icon: icons.command, exact: true },
+  { label: "Analytics",      href: "/super/analytics",         icon: icons.finance },
   { label: "Roles",          href: "/super/roles",             icon: icons.roles },
   { label: "Impersonate",    href: "/super/impersonate",       icon: icons.impersonate },
   { label: "Audit Log",      href: "/super/audit",             icon: icons.audit },
