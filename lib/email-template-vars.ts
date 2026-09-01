@@ -26,9 +26,13 @@ export const TEMPLATE_META: Record<TemplateKey, { label: string; description: st
     label: "Donation Receipt",
     description: "Sent after a donation successfully clears PayMongo.",
     vars: [
-      { name: "ref_no",   note: "Short reference number",                required: true },
-      { name: "amount",   note: "Formatted amount, e.g. '500.00'",       required: true },
-      { name: "body_html", note: "Pre-rendered receipt body with barcode + line items. Editing the outer wrapper is safe; leave this variable in place." },
+      { name: "ref_no",      note: "Short reference number",                required: true },
+      { name: "amount",      note: "Formatted amount, e.g. '500.00'",       required: true },
+      { name: "date_str",    note: "Receipt date, e.g. '09/01/2026'" },
+      { name: "time_str",    note: "Receipt time, e.g. '03:45 PM'" },
+      { name: "message",     note: "Optional donor message (may be empty)" },
+      { name: "barcode_svg", note: "Pre-rendered SVG barcode for the receipt (raw HTML — leave intact)" },
+      { name: "body_html",   note: "Pre-rendered receipt body with barcode + line items. Editing the outer wrapper is safe; leave this variable in place." },
     ],
   },
   order_confirmation: {
@@ -45,7 +49,7 @@ export const TEMPLATE_META: Record<TemplateKey, { label: string; description: st
   },
   welcome: {
     label: "Welcome",
-    description: "Reserved for a member-welcome flow. Edit freely; wiring to send is not required until you decide to activate it.",
+    description: "Sent automatically the moment a new member signs up (fires from the Clerk user.created webhook).",
     vars: [
       { name: "member_name", note: "Display name" },
       { name: "site_url",    note: "coletfs.com" },

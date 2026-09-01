@@ -19,10 +19,36 @@ export type EmailTemplateKey = "event_ticket" | "donation_receipt" | "order_conf
 
 const escapeReg = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-export function applyVars(template: string, vars: Record<string, string | number | undefined | null>): string {
+// Vars whose values are pre-rendered, trusted HTML fragments produced by our
+// own code (banners, invoice tables, SVG barcodes, etc). They bypass HTML
+// escaping. NEVER add a var here that comes from user input.
+const RAW_HTML_VARS = new Set([
+  "body_html", "items_table", "barcode_svg", "banner_block", "invoice_block",
+]);
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export function applyVars(
+  template: string,
+  vars: Record<string, string | number | undefined | null>,
+  opts?: { rawHtmlVars?: Iterable<string>; plaintext?: boolean },
+): string {
+  const rawAllowed = new Set<string>(RAW_HTML_VARS);
+  if (opts?.rawHtmlVars) Array.from(opts.rawHtmlVars).forEach(k => rawAllowed.add(k));
+
   let out = template;
   for (const [k, v] of Object.entries(vars)) {
-    const val = v == null ? "" : String(v);
+    const raw = v == null ? "" : String(v);
+    // Plaintext mode = don't escape (used for email subjects, which go into
+    // mail headers, not HTML). Raw-HTML vars also never get escaped.
+    const val = opts?.plaintext || rawAllowed.has(k) ? raw : escapeHtml(raw);
     out = out.replace(new RegExp(`\\{\\{\\s*${escapeReg(k)}\\s*\\}\\}`, "g"), val);
   }
   return out;
@@ -54,7 +80,7 @@ export async function renderTemplate(
   const tpl = await loadTemplate(key);
   if (!tpl) return null;
   return {
-    subject: applyVars(tpl.subject, vars),
+    subject: applyVars(tpl.subject, vars, { plaintext: true }),
     html: applyVars(tpl.html, vars),
   };
 }
@@ -96,9 +122,9 @@ export async function sendOrderConfirmation({
   if (stored?.sections) {
     const sections = resolveSections("order_confirmation", stored.sections) as unknown as OrderConfirmationSections;
     html    = renderOrderConfirmation(vars, sections);
-    subject = applyVars(stored.subject ?? "✦ Order Confirmed! #{{order_short_id}}", vars);
+    subject = applyVars(stored.subject ?? "✦ Order Confirmed! #{{order_short_id}}", vars, { plaintext: true });
   } else if (stored?.html) {
-    subject = applyVars(stored.subject, vars);
+    subject = applyVars(stored.subject, vars, { plaintext: true });
     html    = applyVars(stored.html, vars);
   }
 
@@ -246,9 +272,9 @@ export async function sendEventTicket({
   if (stored?.sections) {
     const sections = resolveSections("event_ticket", stored.sections) as unknown as EventTicketSections;
     html    = renderEventTicket(vars, sections);
-    subject = applyVars(stored.subject ?? "Your ticket for {{event_title}} — {{ticket_code}}", vars);
+    subject = applyVars(stored.subject ?? "Your ticket for {{event_title}} — {{ticket_code}}", vars, { plaintext: true });
   } else if (stored?.html) {
-    subject = applyVars(stored.subject, vars);
+    subject = applyVars(stored.subject, vars, { plaintext: true });
     html    = applyVars(stored.html, vars);
   }
 
@@ -612,9 +638,9 @@ export async function sendDonationReceipt({
   if (stored?.sections) {
     const sections = resolveSections("donation_receipt", stored.sections) as unknown as DonationReceiptSections;
     html    = renderDonationReceipt(vars, sections);
-    subject = applyVars(stored.subject ?? "Official Receipt #{{ref_no}} — CFS Donation", vars);
+    subject = applyVars(stored.subject ?? "Official Receipt #{{ref_no}} — CFS Donation", vars, { plaintext: true });
   } else if (stored?.html) {
-    subject = applyVars(stored.subject, vars);
+    subject = applyVars(stored.subject, vars, { plaintext: true });
     html    = applyVars(stored.html, vars);
   }
 
