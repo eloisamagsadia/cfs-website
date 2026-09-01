@@ -19,7 +19,6 @@ SET html = $HTML$
   <div style="max-width:600px;margin:0 auto;">
     <div style="text-align:center;padding:4px 0 20px;">
       <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;letter-spacing:0.5px;color:#1B3A2D;">Colet Fan Suporta</div>
-      <div style="font-size:10px;letter-spacing:2.5px;color:#5A7A60;margin-top:4px;">OFFICIAL FAN CLUB</div>
     </div>
     <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(27,58,45,0.08);">
       {{banner_block}}
@@ -57,7 +56,6 @@ SET html = $HTML$
   <div style="max-width:600px;margin:0 auto;">
     <div style="text-align:center;padding:4px 0 20px;">
       <div style="font-family:Georgia,serif;font-size:24px;font-weight:700;letter-spacing:0.5px;color:#1B3A2D;">Colet Fan Suporta</div>
-      <div style="font-size:10px;letter-spacing:2.5px;color:#5A7A60;margin-top:4px;">OFFICIAL FAN CLUB</div>
     </div>
     <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(27,58,45,0.08);padding:28px 28px 24px;">
       <div style="text-align:center;margin-bottom:14px;">
@@ -87,7 +85,6 @@ SET html = $HTML$
   <div style="max-width:600px;margin:0 auto;">
     <div style="text-align:center;padding:4px 0 20px;">
       <div style="font-family:Georgia,serif;font-size:24px;font-weight:700;letter-spacing:0.5px;color:#1B3A2D;">Colet Fan Suporta</div>
-      <div style="font-size:10px;letter-spacing:2.5px;color:#5A7A60;margin-top:4px;">OFFICIAL FAN CLUB</div>
     </div>
     <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(27,58,45,0.08);padding:32px 28px 26px;text-align:center;">
       <div style="font-size:36px;margin-bottom:10px;">♥</div>
