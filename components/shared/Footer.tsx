@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NewsletterSignup from "@/components/shared/NewsletterSignup";
 
 const R = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -49,6 +50,9 @@ export default function Footer() {
             </Link>
           ))}
         </div>
+
+        {/* Newsletter */}
+        <NewsletterSignup source="footer" />
 
         {/* Socials */}
         <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>

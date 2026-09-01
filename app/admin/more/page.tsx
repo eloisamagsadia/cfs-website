@@ -89,6 +89,7 @@ const adminSections: Section[] = [
       { label: "Support",       href: "/admin/support",      icon: icons.support },
       { label: "Shipping",      href: "/admin/shipping",     icon: icons.shipping },
       { label: "Emails",        href: "/admin/emails",       icon: icons.emails },
+      { label: "Newsletter",    href: "/admin/newsletter",   icon: icons.emails },
       { label: "Promo Codes",   href: "/admin/codes",        icon: icons.codes },
       { label: "Media",         href: "/admin/media",        icon: icons.media },
     ],

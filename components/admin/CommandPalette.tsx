@@ -45,6 +45,7 @@ const NAV_LINKS: { title: string; href: string; keywords?: string }[] = [
   { title: "Support",             href: "/admin/support",            keywords: "tickets help" },
   { title: "Shipping",            href: "/admin/shipping",           keywords: "delivery track" },
   { title: "Emails",              href: "/admin/emails",             keywords: "resend templates" },
+  { title: "Newsletter",          href: "/admin/newsletter",         keywords: "subscribers email list" },
   { title: "Promo Codes",         href: "/admin/codes",              keywords: "discount coupon" },
   { title: "Media Library",       href: "/admin/media",              keywords: "images r2 upload" },
   { title: "Super Admin",         href: "/super",                    keywords: "system" },
