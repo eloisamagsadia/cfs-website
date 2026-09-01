@@ -51,8 +51,17 @@ export default function AdminNotificationsPage() {
   const [members, setMembers] = useState<any[]>([]);
   const [events, setEvents] = useState<any[]>([]);
   const [memberSearch, setMemberSearch] = useState("");
+  const [broadcasts, setBroadcasts] = useState<any[]>([]);
 
-  useEffect(() => { loadStats(); loadMembers(); loadEvents(); }, []);
+  useEffect(() => { loadStats(); loadMembers(); loadEvents(); loadBroadcasts(); }, []);
+
+  async function loadBroadcasts() {
+    try {
+      const res = await fetch("/api/admin/notifications/broadcasts");
+      const data = await res.json();
+      if (res.ok) setBroadcasts(data.broadcasts ?? []);
+    } catch {}
+  }
 
   async function loadStats() {
     setLoadingStats(true);
@@ -97,6 +106,7 @@ export default function AdminNotificationsPage() {
       setResult({ ok: true, msg: `Sent to ${data.sent} member${data.sent !== 1 ? "s" : ""}!` });
       setForm({ title: "", message: "", type: "announcement", link: "", targetUserId: "", eventId: "" });
       await loadStats();
+      await loadBroadcasts();
     } catch (e: any) {
       setResult({ ok: false, msg: e.message ?? "Failed to send." });
     } finally {
@@ -260,6 +270,36 @@ export default function AdminNotificationsPage() {
           </span>
         </button>
       </div>
+
+      {/* Broadcast log */}
+      {broadcasts.length > 0 && (
+        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px" }}>
+          <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "2px", marginBottom: "14px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <IconMegaphone size={14} color="#1B3A2D" /> SENT BROADCASTS
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+            {broadcasts.map((b) => {
+              const d = b.details ?? {};
+              const targetLabel = d.target === "all" ? "ALL MEMBERS" : d.target === "event" ? "EVENT" : "MEMBER";
+              const targetColor = d.target === "all" ? "#156530" : d.target === "event" ? "#1E4A7A" : "#7A5A0F";
+              const targetBg    = d.target === "all" ? "#E8F0E4" : d.target === "event" ? "#E4EEF8" : "#FFF3D6";
+              return (
+                <div key={b.id} style={{ display: "grid", gridTemplateColumns: "auto 1fr auto auto", gap: "12px", alignItems: "center", padding: "10px 4px", borderBottom: "1px solid #F0F5F0" }}>
+                  <span style={{ fontFamily: R, fontSize: "9px", fontWeight: 700, color: targetColor, background: targetBg, borderRadius: "6px", padding: "3px 8px", letterSpacing: "1.2px", whiteSpace: "nowrap" }}>{targetLabel}</span>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "0.5px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.title ?? "(untitled)"}</div>
+                    <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>
+                      by <strong>{b.profiles?.display_name ?? b.user_id}</strong> · type <em>{d.type ?? "?"}</em>
+                    </div>
+                  </div>
+                  <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "1px", whiteSpace: "nowrap" }}>{d.sent ?? 0} SENT</span>
+                  <span style={{ fontFamily: B, fontSize: "11px", color: "#7A8E7A", whiteSpace: "nowrap" }}>{timeAgo(b.created_at)}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Recent history */}
       {stats?.recent?.length > 0 && (

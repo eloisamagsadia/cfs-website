@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();
@@ -38,12 +39,14 @@ export async function POST(req: NextRequest) {
 
       const rows = ((profiles ?? []) as any[]).map((p: any) => ({ ...notifBase, user_id: p.id }));
       if (rows.length > 0) await (admin.from("notifications") as any).insert(rows);
+      await logAudit({ userId, action: "broadcast_notification", target_type: "notifications", details: { target: "all", sent: rows.length, type: notifBase.type, title: notifBase.title }, req });
       return NextResponse.json({ sent: rows.length, target: "all" });
     }
 
     // Send to specific member
     if (target === "member" && targetUserId) {
       await (admin.from("notifications") as any).insert({ ...notifBase, user_id: targetUserId });
+      await logAudit({ userId, action: "broadcast_notification", target_type: "notifications", target_id: targetUserId, details: { target: "member", sent: 1, type: notifBase.type, title: notifBase.title }, req });
       return NextResponse.json({ sent: 1, target: "member" });
     }
 
@@ -60,6 +63,7 @@ export async function POST(req: NextRequest) {
         .map(r => ({ ...notifBase, type: "event_reminder", user_id: r.user_id }));
 
       if (rows.length > 0) await (admin.from("notifications") as any).insert(rows);
+      await logAudit({ userId, action: "broadcast_notification", target_type: "event_registrations", target_id: eventId, details: { target: "event", sent: rows.length, type: "event_reminder", title: notifBase.title, event_id: eventId }, req });
       return NextResponse.json({ sent: rows.length, target: "event" });
     }
 
