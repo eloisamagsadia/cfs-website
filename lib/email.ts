@@ -1,5 +1,7 @@
 import { Resend } from "resend";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { renderEventTicket, type EventTicketSections } from "@/lib/email/shells/event-ticket";
+import { resolveSections } from "@/lib/email-template-sections";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@cfs-binicolet.com";
@@ -24,15 +26,15 @@ export function applyVars(template: string, vars: Record<string, string | number
   return out;
 }
 
-async function loadTemplate(key: EmailTemplateKey): Promise<{ subject: string; html: string } | null> {
+async function loadTemplate(key: EmailTemplateKey): Promise<{ subject: string; html: string; sections: Record<string, unknown> | null } | null> {
   try {
     const supabase = createAdminClient();
     const { data, error } = await (supabase.from("email_templates") as any)
-      .select("subject, html")
+      .select("subject, html, sections")
       .eq("key", key)
       .maybeSingle();
     if (error || !data) return null;
-    return { subject: data.subject, html: data.html };
+    return { subject: data.subject, html: data.html, sections: (data.sections ?? null) as Record<string, unknown> | null };
   } catch {
     return null;
   }
@@ -205,7 +207,7 @@ export async function sendEventTicket({
       </div>
     </div>` : "";
 
-  const rendered = await renderTemplate("event_ticket", {
+  const vars = {
     event_title:    eventTitle,
     date_str:       dateStr,
     time_str:       timeStr,
@@ -217,10 +219,26 @@ export async function sendEventTicket({
     site_url:       SITE,
     banner_block:   bannerBlock,
     invoice_block:  invoiceBlock,
-  });
+  };
 
-  const subject = rendered?.subject ?? `Your ticket for ${eventTitle} — ${ticketCode}`;
-  const html = rendered?.html ?? `
+  // Section-based path (preferred). If sections are present in DB, render
+  // through the locked shell so the layout can't be broken. Falls back to
+  // legacy html column, then to hardcoded HTML below.
+  let subject: string | null = null;
+  let html:    string | null = null;
+
+  const stored = await loadTemplate("event_ticket");
+  if (stored?.sections) {
+    const sections = resolveSections("event_ticket", stored.sections) as unknown as EventTicketSections;
+    html    = renderEventTicket(vars, sections);
+    subject = applyVars(stored.subject ?? "Your ticket for {{event_title}} — {{ticket_code}}", vars);
+  } else if (stored?.html) {
+    subject = applyVars(stored.subject, vars);
+    html    = applyVars(stored.html, vars);
+  }
+
+  subject = subject ?? `Your ticket for ${eventTitle} — ${ticketCode}`;
+  html    = html    ?? `
 <div style="background:#FAF6EE;padding:32px 16px;font-family:'Helvetica Neue',Arial,sans-serif;">
   <div style="max-width:600px;margin:0 auto;">
 
@@ -320,6 +338,157 @@ export async function sendEventTicket({
   </div>
 </div>
     `;
+
+  await resend.emails.send({
+    from: `${FROM_NAME} <${FROM}>`,
+    to,
+    subject,
+    html,
+  });
+}
+
+// ─── EVENT TICKET BUNDLE (multiple tickets, one email) ──────────────────────
+export async function sendEventTicketBundle({
+  to, eventId, eventTitle, eventDate, eventEndDate, eventLocation, eventBanner,
+  tickets, tierName, subtotal, fee, amountPaid, paymentMethod, paymongoRef, paidAt,
+}: {
+  to: string;
+  eventId?: string;
+  eventTitle: string;
+  eventDate: string;
+  eventEndDate?: string;
+  eventLocation: string;
+  eventBanner?: string;
+  tickets: { ticketNumber: string; ticketId: string }[];
+  tierName?: string;
+  subtotal?: number;
+  fee?: number;
+  amountPaid?: number;
+  paymentMethod?: string;
+  paymongoRef?: string;
+  paidAt?: string;
+}) {
+  const SITE  = process.env.NEXT_PUBLIC_SITE_URL || "https://coletfs.com";
+  const start = new Date(eventDate);
+  const end   = eventEndDate ? new Date(eventEndDate) : new Date(start.getTime() + 3 * 60 * 60 * 1000);
+  const count = tickets.length;
+
+  const dateStr = start.toLocaleDateString("en-PH", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  const timeStr = start.toLocaleTimeString("en-PH",  { hour: "2-digit", minute: "2-digit", hour12: true });
+
+  const gcalUrl = "https://calendar.google.com/calendar/render?" + new URLSearchParams({
+    action:   "TEMPLATE",
+    text:     eventTitle,
+    dates:    `${toGoogleCalendarDate(start.toISOString())}/${toGoogleCalendarDate(end.toISOString())}`,
+    location: eventLocation,
+    details:  `Your ${count} CFS tickets\n\nView tickets: ${SITE}/members/tickets`,
+  }).toString();
+
+  const ticketsUrl = `${SITE}/members/tickets`;
+
+  const bannerBlock = eventBanner
+    ? `<img src="${eventBanner}" alt="${eventTitle}" width="600" style="display:block;width:100%;height:auto;border-top-left-radius:16px;border-top-right-radius:16px;object-fit:cover;max-height:260px;" />`
+    : `<div style="height:12px;background:linear-gradient(90deg,#1A8040 0%,#F5C82A 55%,#E88C4A 100%);border-top-left-radius:16px;border-top-right-radius:16px;"></div>`;
+
+  const ticketCards = tickets.map((t, i) => {
+    const code  = (t.ticketNumber ?? t.ticketId ?? "").toString().slice(0, 12).toUpperCase();
+    const qrData = eventId ? `${SITE}/verify/${t.ticketId}` : `TICKET:${t.ticketId}`;
+    const qrSrc  = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(qrData)}`;
+    return `
+      <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:14px;padding:20px;margin-top:${i === 0 ? 0 : 12}px;">
+        <div style="display:inline-block;background:#E8F0E4;color:#1A8040;font-size:9px;font-weight:700;letter-spacing:2px;padding:4px 10px;border-radius:999px;margin-bottom:10px;">TICKET ${i + 1} OF ${count}</div>
+        <div style="text-align:center;">
+          <div style="display:inline-block;background:#FAF6EE;border:1px dashed #C7D6BE;border-radius:12px;padding:12px;">
+            <img src="${qrSrc}" alt="Ticket QR" width="180" height="180" style="display:block;width:180px;height:180px;" />
+          </div>
+          <div style="margin-top:10px;font-size:9px;letter-spacing:2px;color:#5A7A60;">TICKET ID</div>
+          <div style="font-family:'Courier New',Courier,monospace;font-size:16px;font-weight:700;color:#1B3A2D;letter-spacing:2px;margin-top:2px;">${code}</div>
+        </div>
+      </div>`;
+  }).join("");
+
+  const invoiceBlock = amountPaid != null && amountPaid > 0 ? `
+    <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;padding:22px 24px;margin-top:16px;">
+      <div style="text-align:center;padding-bottom:14px;border-bottom:1px dashed #DDE8DD;">
+        <div style="font-family:Georgia,serif;font-size:11px;letter-spacing:3px;color:#1B3A2D;font-weight:700;">OFFICIAL RECEIPT</div>
+        <div style="font-family:'Courier New',monospace;font-size:11px;color:#7A8E7A;margin-top:4px;letter-spacing:1px;">REF #${(paymongoRef ?? tickets[0]?.ticketNumber ?? "").toString().slice(0, 20).toUpperCase()}</div>
+      </div>
+      <table style="width:100%;margin-top:14px;font-family:'Courier New',monospace;color:#1B3A2D;border-collapse:collapse;">
+        <tr>
+          <td style="padding:4px 0;font-size:12px;">${tierName ?? "Event Ticket"} × ${count}</td>
+          <td style="text-align:right;padding:4px 0;font-size:12px;">₱${(subtotal ?? amountPaid).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+        </tr>
+        ${fee != null && fee > 0 ? `
+        <tr>
+          <td style="padding:2px 0;font-size:11px;color:#7A8E7A;">Payment processing fee</td>
+          <td style="text-align:right;padding:2px 0;font-size:11px;color:#7A8E7A;">₱${fee.toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+        </tr>` : ""}
+        <tr><td colspan="2" style="border-top:1px dashed #DDE8DD;padding-top:8px;"></td></tr>
+        <tr>
+          <td style="font-weight:700;font-size:14px;letter-spacing:1px;">TOTAL PAID</td>
+          <td style="text-align:right;font-weight:700;font-size:14px;color:#1A8040;">₱${amountPaid.toLocaleString("en-PH", { minimumFractionDigits: 2 })}</td>
+        </tr>
+        <tr>
+          <td style="padding-top:10px;color:#7A8E7A;font-size:10px;letter-spacing:1.5px;">METHOD</td>
+          <td style="text-align:right;padding-top:10px;color:#7A8E7A;font-size:10px;letter-spacing:1px;">${(paymentMethod ?? "ONLINE").toUpperCase().replace(/_/g, " ")}</td>
+        </tr>
+        <tr>
+          <td style="color:#7A8E7A;font-size:10px;letter-spacing:1.5px;">DATE</td>
+          <td style="text-align:right;color:#7A8E7A;font-size:10px;">${new Date(paidAt ?? Date.now()).toLocaleString("en-PH", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true })}</td>
+        </tr>
+      </table>
+    </div>` : "";
+
+  const subject = `Your ${count} tickets for ${eventTitle}`;
+  const html = `
+<div style="background:#FAF6EE;padding:32px 16px;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;">
+
+    <div style="text-align:center;padding:4px 0 20px;">
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:700;letter-spacing:4px;color:#1B3A2D;">CFS</div>
+      <div style="font-size:11px;letter-spacing:3px;color:#5A7A60;margin-top:2px;">COLET FAN SUPORTA</div>
+    </div>
+
+    <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(27,58,45,0.08);">
+      ${bannerBlock}
+      <div style="padding:28px 28px 8px;text-align:center;">
+        <div style="display:inline-block;background:#E8F0E4;color:#1A8040;font-size:10px;font-weight:700;letter-spacing:2px;padding:5px 12px;border-radius:999px;">${count} TICKETS CONFIRMED ✦</div>
+        <h1 style="font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.2;color:#1B3A2D;margin:14px 0 8px;">${eventTitle}</h1>
+        <div style="font-size:13px;color:#3A5A30;letter-spacing:0.5px;">${dateStr}</div>
+        <div style="font-size:13px;color:#5A7A60;margin-top:2px;">${timeStr} &nbsp;·&nbsp; ${eventLocation}</div>
+      </div>
+      <div style="padding:16px 28px 24px;">
+        <p style="font-size:12px;color:#5A7A60;text-align:center;line-height:1.6;margin:0 0 12px;">Each ticket below has its own QR — scan any one to enter. Forward the codes to the friends coming with you.</p>
+        ${ticketCards}
+      </div>
+      <div style="padding:0 28px 28px;text-align:center;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+          <tr>
+            <td style="padding:4px;">
+              <a href="${gcalUrl}" target="_blank" style="display:inline-block;background:#1A8040;color:#FFFFFF;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;padding:12px 20px;border-radius:10px;box-shadow:0 4px 12px rgba(26,128,64,0.25);">ADD TO CALENDAR</a>
+            </td>
+            <td style="padding:4px;">
+              <a href="${ticketsUrl}" target="_blank" style="display:inline-block;background:#FFFFFF;color:#1B3A2D;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;padding:11px 19px;border-radius:10px;border:1.5px solid #DDE8DD;">VIEW MY TICKETS</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    ${invoiceBlock}
+
+    <div style="background:#EFF6EA;border:1px solid #DDE8DD;border-radius:12px;padding:16px 20px;margin-top:16px;font-size:12px;color:#3A5A30;line-height:1.6;">
+      <div style="font-weight:700;letter-spacing:1.5px;font-size:11px;color:#1A8040;margin-bottom:6px;">BEFORE THE EVENT</div>
+      Bring a valid ID. Doors typically open 30 minutes before start. Save this email — each attendee needs a QR or ticket ID to enter.
+    </div>
+
+    <div style="text-align:center;padding:22px 8px 4px;font-size:11px;color:#7A8E7A;line-height:1.7;">
+      See you there, kaFAM! ♥<br/>
+      <a href="${SITE}" style="color:#1A8040;text-decoration:none;">coletfs.com</a> &nbsp;·&nbsp; @coletfansuporta
+    </div>
+
+  </div>
+</div>`;
 
   await resend.emails.send({
     from: `${FROM_NAME} <${FROM}>`,
