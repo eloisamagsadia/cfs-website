@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { IconTicket, IconCart, IconHeart, IconMessage, IconFlag, IconStar, IconBell, IconClipboard, IconUser } from "@/components/shared/Icons";
 import MemberTagPicker from "@/components/admin/MemberTagPicker";
+import MemberSessions  from "@/components/admin/MemberSessions";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -93,6 +94,8 @@ export default function MemberActivityPage() {
           </div>
         </div>
       </div>
+
+      <MemberSessions userId={id} />
 
       {/* Count tiles */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: "10px" }}>
