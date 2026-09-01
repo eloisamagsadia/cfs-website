@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useClerk } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -28,19 +28,22 @@ const sections = [
     label: "MY STUFF",
     items: [
       { label: "Community",     href: "/members/community",     icon: icons.community },
+      { label: "My Tickets",    href: "/members/tickets",       icon: icons.tickets },
+      { label: "My Orders",     href: "/members/orders",        icon: icons.orders },
+      { label: "My Donations",  href: "/members/donations",     icon: icons.exclusive },
       { label: "Cart",          href: "/members/cart",          icon: icons.cart },
       { label: "Badges",        href: "/members/badges",        icon: icons.badges },
       { label: "Promo Codes",   href: "/members/codes",         icon: icons.codes },
       { label: "Letters",       href: "/members/letters",       icon: icons.letters },
       { label: "Exclusive",     href: "/members/exclusive",     icon: icons.exclusive },
-      { label: "My Orders",     href: "/members/orders",         icon: icons.orders },
     ],
   },
   {
     label: "ACCOUNT",
     items: [
-      { label: "Messages",      href: "/members/messages",      icon: icons.messages },
-      { label: "My Account",    href: "/members/account",        icon: icons.account },
+      { label: "Messages",       href: "/members/messages",      icon: icons.messages },
+      { label: "Notifications",  href: "/members/notifications", icon: icons.notifs },
+      { label: "My Account",     href: "/members/account",       icon: icons.account },
       { label: "Help & Support", href: "/members/support",       icon: icons.support },
     ],
   },
@@ -49,6 +52,10 @@ const sections = [
 export default function MembersMorePage() {
   const router = useRouter();
   const { signOut } = useClerk();
+  const { user } = useUser();
+  const role = (user?.publicMetadata as { role?: string })?.role ?? "";
+  const isAdmin = role === "admin" || role === "super_admin";
+  const isSuper = role === "super_admin";
   const [unreadMessages, setUnreadMessages] = useState(0);
   useEffect(() => {
     async function fetchCount() {
@@ -93,6 +100,35 @@ export default function MembersMorePage() {
           </div>
         </div>
       ))}
+
+      {/* Admin panels */}
+      {(isAdmin || isSuper) && (
+        <div>
+          <div style={{ fontFamily: R, fontSize: "10px", color: "#B78A1F", letterSpacing: "2px", marginBottom: "10px" }}>STAFF</div>
+          <div className="stack-sm" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+            {isAdmin && (
+              <Link href="/admin" style={{ textDecoration: "none" }}>
+                <div style={{ background: "#E8F4EC", border: "2px solid #1A804060", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span style={{ color: "#1A8040", flexShrink: 0 }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </span>
+                  <span style={{ fontFamily: B, fontSize: "13px", color: "#1A8040", fontWeight: 600 }}>Admin Panel</span>
+                </div>
+              </Link>
+            )}
+            {isSuper && (
+              <Link href="/super" style={{ textDecoration: "none" }}>
+                <div style={{ background: "#FFFDF4", border: "2px solid #F0D889", borderRadius: "12px", padding: "18px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
+                  <span style={{ color: "#B78A1F", flexShrink: 0 }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  </span>
+                  <span style={{ fontFamily: B, fontSize: "13px", color: "#B78A1F", fontWeight: 600 }}>Super Admin</span>
+                </div>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Sign out */}
       <div>
