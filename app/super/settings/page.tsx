@@ -5,6 +5,22 @@ import { IconCheck, IconWrench, IconSparkle, IconMegaphone } from "@/components/
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
+const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
+
+// datetime-local <-> ISO helpers (locale-safe for the input control)
+function toLocalInput(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function fromLocalInput(v: string): string | null {
+  if (!v) return null;
+  return new Date(v).toISOString();
+}
+function fmtWhen(d: Date): string {
+  return d.toLocaleString("en-PH", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "Asia/Manila" });
+}
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<any>(null);
@@ -119,6 +135,40 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
             {settings.announcement_active ? "HIDE" : "SHOW"}
           </button>
         </div>
+
+        {/* Scheduling window */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+          <div>
+            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>STARTS AT (optional)</label>
+            <input type="datetime-local" value={toLocalInput(settings.announcement_starts_at)} onChange={e => setSettings((p: any) => ({ ...p, announcement_starts_at: fromLocalInput(e.target.value) }))}
+              style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
+          </div>
+          <div>
+            <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>ENDS AT (optional)</label>
+            <input type="datetime-local" value={toLocalInput(settings.announcement_ends_at)} onChange={e => setSettings((p: any) => ({ ...p, announcement_ends_at: fromLocalInput(e.target.value) }))}
+              style={{ width: "100%", background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
+          </div>
+        </div>
+
+        {(() => {
+          const s = settings.announcement_starts_at ? new Date(settings.announcement_starts_at) : null;
+          const e = settings.announcement_ends_at   ? new Date(settings.announcement_ends_at)   : null;
+          const now = new Date();
+          const active = settings.announcement_active && settings.announcement_text?.trim();
+          let label = "";
+          let color = "#7A8E7A";
+          let bg    = "#F0F0F0";
+          if (!active) { label = "HIDDEN — toggle SHOW to make live"; }
+          else if (s && s > now) { label = `Waiting to go live — starts ${fmtWhen(s)}`; color = "#7A5A0F"; bg = "#FFF3D6"; }
+          else if (e && e <= now) { label = `Expired — ended ${fmtWhen(e)}`;             color = "#8A1E27"; bg = "#FFE8EC"; }
+          else { label = "LIVE on the site right now"; color = "#156530"; bg = "#E8F0E4"; }
+          if (active && e && e > now) label += ` · ends ${fmtWhen(e)}`;
+          return (
+            <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color, background: bg, borderRadius: "8px", padding: "6px 12px", letterSpacing: "1.2px", alignSelf: "flex-start" }}>
+              {label}
+            </div>
+          );
+        })()}
       </div>
 
       <button onClick={save} disabled={saving} style={{ fontFamily: R, fontSize: "12px", background: "#156530", color: "#F7FAF5", border: "none", borderRadius: "8px", padding: "12px 24px", cursor: "pointer", letterSpacing: "1.5px", width: "fit-content", opacity: saving ? 0.7 : 1 }}>
