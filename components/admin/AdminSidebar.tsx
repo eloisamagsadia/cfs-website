@@ -42,6 +42,7 @@ const superItems = [
   { label: "Analytics",      href: "/super/analytics",         icon: icons.finance },
   { label: "System Health",  href: "/super/system-health",     icon: icons.command },
   { label: "Categories",     href: "/super/categories",        icon: icons.reports },
+  { label: "Donation Drives",href: "/super/donation-drives",   icon: icons.donations },
   { label: "Roles",          href: "/super/roles",             icon: icons.roles },
   { label: "Impersonate",    href: "/super/impersonate",       icon: icons.impersonate },
   { label: "Audit Log",      href: "/super/audit",             icon: icons.audit },
