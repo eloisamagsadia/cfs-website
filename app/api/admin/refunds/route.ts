@@ -1,0 +1,108 @@
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
+
+async function requireAdmin() {
+  const { userId, sessionClaims } = auth();
+  if (!userId) return null;
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  if (!["admin", "super_admin"].includes(role ?? "")) return null;
+  return userId;
+}
+
+// GET /api/admin/refunds?status=pending
+export async function GET(req: NextRequest) {
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const status = new URL(req.url).searchParams.get("status");
+  const admin  = createAdminClient();
+
+  let q = (admin as any)
+    .from("refunds")
+    .select("*, profiles:user_id(display_name, avatar_url)")
+    .order("created_at", { ascending: false })
+    .limit(200);
+  if (status && status !== "all") q = q.eq("status", status);
+
+  const { data, error } = await q;
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ refunds: data ?? [] });
+}
+
+// POST /api/admin/refunds  { entity_type, entity_id, amount, reason, note?, user_id? }
+export async function POST(req: NextRequest) {
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const body = await req.json();
+  const { entity_type, entity_id, amount, reason, note, user_id } = body ?? {};
+  if (!entity_type || !entity_id || !reason || amount == null)
+    return NextResponse.json({ error: "entity_type, entity_id, amount, reason are required" }, { status: 400 });
+  if (!["order", "donation", "event_registration"].includes(entity_type))
+    return NextResponse.json({ error: "Invalid entity_type" }, { status: 400 });
+
+  const admin = createAdminClient();
+  const { data, error } = await (admin as any)
+    .from("refunds")
+    .insert({ entity_type, entity_id, amount, reason, note, user_id, requested_by: userId, status: "pending" })
+    .select()
+    .single();
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await logAudit({ userId, action: "create_refund", target_type: "refund", target_id: (data as any).id, details: { entity_type, entity_id, amount, reason }, req });
+  return NextResponse.json({ refund: data });
+}
+
+// PATCH /api/admin/refunds  { id, status?, paymongo_ref?, note? }
+export async function PATCH(req: NextRequest) {
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const body = await req.json();
+  const { id, status, paymongo_ref, note } = body ?? {};
+  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+
+  const patch: Record<string, unknown> = {};
+  if (status !== undefined)       patch.status = status;
+  if (paymongo_ref !== undefined) patch.paymongo_ref = paymongo_ref;
+  if (note !== undefined)         patch.note = note;
+  if (status === "completed") { patch.processed_by = userId; patch.processed_at = new Date().toISOString(); }
+
+  const admin = createAdminClient();
+  const { data, error } = await (admin as any)
+    .from("refunds")
+    .update(patch)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // If we just marked an order refund complete, sync the order payment_status.
+  if (status === "completed" && (data as any)?.entity_type === "order") {
+    await (admin as any).from("orders").update({ payment_status: "refunded" }).eq("id", (data as any).entity_id);
+  }
+  if (status === "completed" && (data as any)?.entity_type === "donation") {
+    await (admin as any).from("donations").update({ status: "refunded" }).eq("id", (data as any).entity_id);
+  }
+
+  await logAudit({ userId, action: "update_refund", target_type: "refund", target_id: id, details: patch, req });
+  return NextResponse.json({ refund: data });
+}
+
+// DELETE /api/admin/refunds?id=...
+export async function DELETE(req: NextRequest) {
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const id = new URL(req.url).searchParams.get("id");
+  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+
+  const admin = createAdminClient();
+  const { error } = await (admin as any).from("refunds").delete().eq("id", id);
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await logAudit({ userId, action: "delete_refund", target_type: "refund", target_id: id, req });
+  return NextResponse.json({ ok: true });
+}

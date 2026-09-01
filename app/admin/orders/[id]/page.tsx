@@ -1,5 +1,6 @@
 "use client";
 import SkeletonPage from "@/components/shared/SkeletonPage";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 
@@ -21,6 +22,45 @@ export default function AdminOrderDetailPage() {
   const [success, setSuccess] = useState("");
   const [orderStatus, setOrderStatus] = useState("");
   const [paymentStatus, setPaymentStatus] = useState("");
+  const [refundOpen, setRefundOpen] = useState(false);
+  const [refundAmount, setRefundAmount] = useState("");
+  const [refundReason, setRefundReason] = useState("");
+  const [refundNote, setRefundNote] = useState("");
+  const [refundBusy, setRefundBusy] = useState(false);
+  const [refundMsg, setRefundMsg] = useState("");
+  const [existingRefunds, setExistingRefunds] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!id) return;
+    fetch(`/api/admin/refunds?status=all`).then(r => r.json()).then(d => {
+      setExistingRefunds((d.refunds ?? []).filter((r: any) => r.entity_type === "order" && r.entity_id === id));
+    }).catch(() => {});
+  }, [id]);
+
+  const submitRefund = async () => {
+    setRefundBusy(true); setRefundMsg("");
+    try {
+      const res = await fetch("/api/admin/refunds", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          entity_type: "order",
+          entity_id: id,
+          user_id: order?.user_id ?? null,
+          amount: parseFloat(refundAmount || "0"),
+          reason: refundReason.trim(),
+          note: refundNote.trim() || null,
+        }),
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      setRefundMsg("Refund created (pending).");
+      setExistingRefunds(prev => [d.refund, ...prev]);
+      setRefundOpen(false);
+      setRefundAmount(""); setRefundReason(""); setRefundNote("");
+    } catch (e: any) { setRefundMsg(e.message); }
+    finally { setRefundBusy(false); }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -170,6 +210,50 @@ export default function AdminOrderDetailPage() {
             {saving ? "SAVING..." : "UPDATE ORDER"}
           </span>
         </button>
+      </div>
+
+      {/* Refunds */}
+      <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "14px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          <div style={{ fontFamily: R, fontSize: "11px", color: "#4A7C59", letterSpacing: "2px" }}>REFUNDS</div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Link href="/admin/refunds" style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", textDecoration: "underline" }}>View all →</Link>
+            <button onClick={() => { setRefundOpen(v => !v); setRefundAmount(String(order.total ?? "")); setRefundReason(""); setRefundNote(""); }}
+              style={{ fontFamily: R, fontSize: "11px", color: refundOpen ? "#5A7A60" : "#ffffff", background: refundOpen ? "#F0F0F0" : "#B78A1F", border: "none", borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1.2px" }}>
+              {refundOpen ? "CANCEL" : "START REFUND"}
+            </button>
+          </div>
+        </div>
+
+        {refundMsg && <div style={{ background: refundMsg.toLowerCase().includes("pending") ? "#E8F0E4" : "#FFE8EC", border: `1.5px solid ${refundMsg.toLowerCase().includes("pending") ? "#1A8040" : "#CC3344"}`, borderRadius: "8px", padding: "10px 14px", fontFamily: B, fontSize: "12px", color: refundMsg.toLowerCase().includes("pending") ? "#156530" : "#CC3344" }}>{refundMsg}</div>}
+
+        {refundOpen && (
+          <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: "10px", padding: "14px", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <input value={refundAmount} onChange={e => setRefundAmount(e.target.value)} placeholder="Amount (PHP)" type="number" min="0" step="0.01"
+              style={{ background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "9px 12px", fontFamily: B, fontSize: "13px", color: "#1B3A2D", outline: "none" }} />
+            <input value={refundReason} onChange={e => setRefundReason(e.target.value)} placeholder="Reason (customer-facing)"
+              style={{ background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "9px 12px", fontFamily: B, fontSize: "13px", color: "#1B3A2D", outline: "none" }} />
+            <textarea value={refundNote} onChange={e => setRefundNote(e.target.value)} placeholder="Internal note (optional)" rows={2}
+              style={{ background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "9px 12px", fontFamily: B, fontSize: "13px", color: "#1B3A2D", outline: "none", resize: "vertical" as const }} />
+            <button onClick={submitRefund} disabled={refundBusy || !refundReason.trim() || !refundAmount}
+              style={{ alignSelf: "flex-start", fontFamily: R, fontSize: "11px", color: "#ffffff", background: "#B78A1F", border: "none", borderRadius: "6px", padding: "8px 16px", cursor: refundBusy ? "not-allowed" : "pointer", letterSpacing: "1.2px" }}>
+              {refundBusy ? "CREATING…" : "CREATE REFUND"}
+            </button>
+          </div>
+        )}
+
+        {existingRefunds.length === 0 ? (
+          <div style={{ fontFamily: B, fontSize: "12px", color: "#7A8E7A" }}>No refunds recorded for this order.</div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            {existingRefunds.map((r: any) => (
+              <div key={r.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", background: "#F7FAF5", border: "1px solid #E4EDE4", borderRadius: "8px", fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>
+                <span>₱{Number(r.amount).toLocaleString("en-PH", { minimumFractionDigits: 2 })} — {r.reason}</span>
+                <span style={{ fontFamily: R, fontSize: "10px", letterSpacing: "1.2px", color: r.status === "completed" ? "#156530" : r.status === "failed" ? "#8A1E27" : "#7A5A0F" }}>{r.status.toUpperCase()}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
