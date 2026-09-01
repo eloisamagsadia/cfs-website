@@ -24,7 +24,32 @@ const icons = {
   codes:      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/></svg>,
   media:      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>,
   exit:       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
+  command:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+  roles:      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>,
+  audit:      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>,
+  broadcast:  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>,
+  finance:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
+  impersonate:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg>,
+  flags:      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>,
+  settings:   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
+  danger:     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+  exclusive:  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  cleanup:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>,
 };
+
+const superItems = [
+  { label: "Command Center", href: "/super",                   icon: icons.command, exact: true },
+  { label: "Roles",          href: "/super/roles",             icon: icons.roles },
+  { label: "Impersonate",    href: "/super/impersonate",       icon: icons.impersonate },
+  { label: "Audit Log",      href: "/super/audit",             icon: icons.audit },
+  { label: "Broadcast",      href: "/super/broadcast",         icon: icons.broadcast },
+  { label: "Finance",        href: "/super/finance",           icon: icons.finance },
+  { label: "Feature Flags",  href: "/super/feature-flags",     icon: icons.flags },
+  { label: "Exclusives",     href: "/super/exclusive",         icon: icons.exclusive },
+  { label: "Ticket Cleanup", href: "/super/tickets-cleanup",   icon: icons.cleanup },
+  { label: "Site Settings",  href: "/super/settings",          icon: icons.settings },
+  { label: "Danger Zone",    href: "/super/danger",            icon: icons.danger },
+];
 
 const sections = [
   {
@@ -81,6 +106,20 @@ function NavItem({ label, href, icon, exact }: { label: string; href: string; ic
   );
 }
 
+function SuperNavItem({ label, href, icon, exact }: { label: string; href: string; icon: React.ReactNode; exact?: boolean }) {
+  const pathname = usePathname();
+  const isActive = exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
+  return (
+    <Link href={href} style={{ textDecoration: "none", display: "block" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "7px 10px", borderRadius: "7px", position: "relative", background: isActive ? "#FFF3D6" : "transparent", transition: "background 0.15s" }}>
+        {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#B78A1F", borderRadius: "0 3px 3px 0" }} />}
+        <span style={{ color: isActive ? "#7A5A0F" : "#B78A1F", transition: "color 0.15s" }}>{icon}</span>
+        <span style={{ fontFamily: B, fontSize: "12px", color: isActive ? "#7A5A0F" : "#7A5A0F", letterSpacing: "0.3px" }}>{label}</span>
+      </div>
+    </Link>
+  );
+}
+
 export default function AdminSidebar({ isSuper = false }: { isSuper?: boolean }) {
   return (
     <aside style={{ width: "210px", flexShrink: 0 }}>
@@ -89,16 +128,6 @@ export default function AdminSidebar({ isSuper = false }: { isSuper?: boolean })
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1A8040" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px" }}>ADMIN PANEL</span>
       </div>
-
-      {/* Super-only: back to Command Center */}
-      {isSuper && (
-        <Link href="/super" style={{ textDecoration: "none", display: "block", marginBottom: "16px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "10px", background: "#FFFDF4", border: "1.5px solid #F0D889" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B78A1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <span style={{ fontFamily: R, fontSize: "11px", color: "#B78A1F", letterSpacing: "1.5px" }}>COMMAND CENTER →</span>
-          </div>
-        </Link>
-      )}
 
       <nav style={{ position: "sticky", top: "80px", display: "flex", flexDirection: "column", gap: "20px" }}>
         {sections.map(section => (
@@ -109,6 +138,18 @@ export default function AdminSidebar({ isSuper = false }: { isSuper?: boolean })
             </div>
           </div>
         ))}
+
+        {isSuper && (
+          <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: "10px", padding: "10px 6px 6px", marginTop: "4px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", fontFamily: R, fontSize: "9px", color: "#B78A1F", letterSpacing: "2px", padding: "0 8px 6px" }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#B78A1F" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              SUPER ADMIN
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+              {superItems.map(item => <SuperNavItem key={item.href} {...item} />)}
+            </div>
+          </div>
+        )}
 
         <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "12px" }}>
           <Link href="/members" style={{ textDecoration: "none" }}>
