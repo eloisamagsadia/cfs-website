@@ -70,6 +70,7 @@ const adminSections: Section[] = [
     label: "CONTENT",
     items: [
       { label: "Community",     href: "/admin/community",              icon: icons.community },
+      { label: "Chat Mod",      href: "/admin/chat",                   icon: icons.community },
       { label: "Reports Queue", href: "/admin/community-reports",      icon: icons.support },
       { label: "Fan Letters",   href: "/admin/fan-letters",            icon: icons.emails },
       { label: "Fan Wall",      href: "/admin/events/fan-submissions", icon: icons.fanwall },
