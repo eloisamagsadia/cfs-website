@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { IconMail, IconSend, IconCheck } from "@/components/shared/Icons";
 import { TEMPLATE_META, SAMPLE_VARS, type TemplateKey } from "@/lib/email-template-vars";
+import RichEmailEditor from "@/components/admin/RichEmailEditor";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -135,16 +136,16 @@ export default function EmailTemplateEditor() {
             <input style={inputStyle} value={subject} onChange={e => setSubject(e.target.value)} placeholder="Your ticket for {{event_title}}" />
           </div>
           <div>
-            <label style={labelStyle}>HTML BODY</label>
-            <textarea
+            <label style={labelStyle}>BODY</label>
+            <RichEmailEditor
               value={html}
-              onChange={e => setHtml(e.target.value)}
-              spellCheck={false}
-              style={{ ...inputStyle, minHeight: "460px", resize: "vertical", fontFamily: "'SF Mono', ui-monospace, Menlo, monospace", fontSize: "12px", lineHeight: 1.55, whiteSpace: "pre" as const }}
+              onChange={setHtml}
+              variables={meta!.vars.map(v => ({ name: v.name, note: v.note }))}
+              minHeight={440}
             />
           </div>
           <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "10px", padding: "12px 14px" }}>
-            <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "1.5px", marginBottom: "8px" }}>AVAILABLE VARIABLES</div>
+            <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "1.5px", marginBottom: "8px" }}>VARIABLE REFERENCE</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
               {meta!.vars.map(v => (
                 <div key={v.name} style={{ display: "flex", gap: "10px", alignItems: "flex-start", fontFamily: B, fontSize: "11px" }}>

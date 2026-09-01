@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { IconCheck, IconWarning, IconMail, IconSend, IconTrash, IconEdit } from "@/components/shared/Icons";
+import RichEmailEditor from "@/components/admin/RichEmailEditor";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -292,12 +293,16 @@ export default function AdminEmailPage() {
                 <input value={subject} onChange={e => setSubject(e.target.value)} placeholder="e.g. Thank you, {{name}}!" style={inp} />
               </div>
               <div>
-                <label style={label}>HTML BODY</label>
-                <textarea value={html} onChange={e => setHtml(e.target.value)} spellCheck={false}
-                  style={{ ...inp, minHeight: "420px", resize: "vertical", fontFamily: "'SF Mono', ui-monospace, Menlo, monospace", fontSize: "12px", lineHeight: 1.55, whiteSpace: "pre" as const }} />
-              </div>
-              <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "8px", padding: "10px 12px", fontFamily: B, fontSize: "11px", color: "#5A7A60", lineHeight: 1.6 }}>
-                <strong style={{ color: "#1A8040" }}>Variables:</strong> use <code style={{ background: "#E8F0E4", padding: "1px 5px", borderRadius: "4px" }}>{"{{name}}"}</code> to insert each recipient&apos;s display name. Legacy <code style={{ background: "#E8F0E4", padding: "1px 5px", borderRadius: "4px" }}>[NAME]</code> still works.
+                <label style={label}>BODY</label>
+                <RichEmailEditor
+                  value={html}
+                  onChange={setHtml}
+                  variables={[
+                    { name: "name",  note: "Recipient's display name" },
+                    { name: "email", note: "Recipient's email address" },
+                  ]}
+                  minHeight={420}
+                />
               </div>
             </div>
 
