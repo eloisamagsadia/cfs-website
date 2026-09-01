@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { IconTicket, IconCart, IconHeart, IconMessage, IconFlag, IconStar, IconBell, IconClipboard, IconUser } from "@/components/shared/Icons";
+import MemberTagPicker from "@/components/admin/MemberTagPicker";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -86,6 +87,9 @@ export default function MemberActivityPage() {
             {p?.role && <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#1A8040", background: "#E8F0E4", borderRadius: "6px", padding: "2px 8px", letterSpacing: "1.2px" }}>{p.role.toUpperCase()}</span>}
             {p?.is_banned && <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#8A1E27", background: "#FFE8EC", borderRadius: "6px", padding: "2px 8px", letterSpacing: "1.2px" }}>BANNED</span>}
             {p?.created_at && <span style={{ fontFamily: B, fontSize: "11px", color: "#7A8E7A" }}>Joined {new Date(p.created_at).toLocaleDateString("en-PH", { year: "numeric", month: "short", day: "numeric", timeZone: "Asia/Manila" })}</span>}
+          </div>
+          <div style={{ marginTop: "10px" }}>
+            <MemberTagPicker memberId={id} />
           </div>
         </div>
       </div>

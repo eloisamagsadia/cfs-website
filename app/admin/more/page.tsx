@@ -64,6 +64,7 @@ const adminSections: Section[] = [
       { label: "Donations", href: "/admin/donations", icon: icons.donations },
       { label: "Refunds",   href: "/admin/refunds",   icon: icons.refunds },
       { label: "Members",   href: "/admin/members",   icon: icons.members },
+      { label: "Member Tags", href: "/admin/tags",    icon: icons.codes },
     ],
   },
   {
