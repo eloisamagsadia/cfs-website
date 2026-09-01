@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
   IconCalendar, IconPin, IconUsers, IconTag, IconTicket, IconEdit,
-  IconEye, IconEyeOff, IconCheck,
+  IconEye, IconEyeOff, IconCheck, IconDownload,
 } from "@/components/shared/Icons";
 import EventVisibilityToggle from "@/components/admin/EventVisibilityToggle";
 
@@ -138,6 +138,11 @@ export default async function AdminEventDetailPage({ params }: { params: { id: s
               style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#5A7A60", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
               <IconEye size={12} color="#5A7A60" /> PREVIEW
             </a>
+            <Link href={`/admin/events/${event.id}/report`}
+              className="aed-action"
+              style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
+              <IconDownload size={12} color="#1B3A2D" /> REPORT
+            </Link>
             <Link href={`/admin/events/${event.id}/tiers`}
               className="aed-action"
               style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#E8F0E4", border: "1.5px solid transparent", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>

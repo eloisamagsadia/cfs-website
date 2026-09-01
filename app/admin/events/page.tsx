@@ -1,7 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { IconTicket, IconEdit, IconPin, IconUsers, IconTag, IconCalendar, IconEyeOff, IconEye } from "@/components/shared/Icons";
+import { IconTicket, IconEdit, IconPin, IconUsers, IconTag, IconCalendar, IconEyeOff, IconEye, IconDownload } from "@/components/shared/Icons";
 import EventVisibilityToggle from "@/components/admin/EventVisibilityToggle";
 import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
 
@@ -132,6 +132,11 @@ export default async function AdminEventsPage() {
                   className="aev-btn-secondary"
                   style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#E8F0E4", border: "1.5px solid transparent", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
                   <IconTicket size={12} color="#1B3A2D" /> TICKETS
+                </Link>
+                <Link href={`/admin/events/${event.id}/report`}
+                  className="aev-btn-ghost"
+                  style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#5A7A60", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
+                  <IconDownload size={12} color="#5A7A60" /> REPORT
                 </Link>
                 <Link href={`/admin/events/${event.id}/edit`}
                   className="aev-btn-primary"
