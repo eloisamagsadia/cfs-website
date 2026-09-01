@@ -19,12 +19,6 @@ export async function GET() {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const admin = createAdminClient();
-  const { data: tables, error } = await (admin as any).rpc("exec_sql", {}).catch(() => ({ data: null, error: null }));
-
-  // rpc('exec_sql') isn't guaranteed to exist; fall back to information_schema
-  // via a separate select on pg_stat_user_tables which is always available
-  // through PostgREST via a view if enabled. Cleaner: hard-code the list of
-  // tables we care about and query counts one by one.
 
   const TABLE_LIST = [
     "audit_log","badges","cart_items","chat_members","chat_messages","chat_nicknames","chat_reactions","chat_rooms",
