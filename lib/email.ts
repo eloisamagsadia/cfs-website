@@ -6,8 +6,8 @@ import { renderOrderConfirmation, type OrderConfirmationSections } from "@/lib/e
 import { resolveSections } from "@/lib/email-template-sections";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@cfs-binicolet.com";
-const FROM_NAME = process.env.RESEND_FROM_NAME ?? "CFS Bini Colet";
+const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@coletfs.com";
+const FROM_NAME = process.env.RESEND_FROM_NAME ?? "Colet Fan Suporta";
 
 // ─── TEMPLATE RENDERING ─────────────────────────────────────────────────────
 // Templates live in the `email_templates` table with placeholders like
@@ -147,7 +147,7 @@ export async function sendOrderConfirmation({
           <p style="color:#8AAA78;font-size:13px;margin:0;">${shippingAddress.city}, ${shippingAddress.province} ${shippingAddress.zip_code}</p>
         </div>
         <p style="color:#5A7A50;font-size:12px;text-align:center;">
-          Thank you for supporting CFS Bini Colet! ♥<br/>
+          Thank you for supporting Colet Fan Suporta! ♥<br/>
           For questions, contact us on our social media channels.
         </p>
       </div>
@@ -285,8 +285,7 @@ export async function sendEventTicket({
 
     <!-- Brand mark -->
     <div style="text-align:center;padding:4px 0 20px;">
-      <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:700;letter-spacing:4px;color:#1B3A2D;">CFS</div>
-      <div style="font-size:11px;letter-spacing:3px;color:#5A7A60;margin-top:2px;">COLET FAN SUPORTA</div>
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;letter-spacing:0.5px;color:#1B3A2D;">Colet Fan Suporta</div>
     </div>
 
     <!-- Card -->
@@ -486,8 +485,7 @@ export async function sendEventTicketBundle({
   <div style="max-width:600px;margin:0 auto;">
 
     <div style="text-align:center;padding:4px 0 20px;">
-      <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:700;letter-spacing:4px;color:#1B3A2D;">CFS</div>
-      <div style="font-size:11px;letter-spacing:3px;color:#5A7A60;margin-top:2px;">COLET FAN SUPORTA</div>
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;letter-spacing:0.5px;color:#1B3A2D;">Colet Fan Suporta</div>
     </div>
 
     <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(27,58,45,0.08);">
