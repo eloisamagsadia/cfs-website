@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
       const { data: ticket } = await (supabase.from("event_tickets") as any)
         .update({ status: "active", payment_status: "paid" })
         .eq("id", reference)
-        .select("id, ticket_number, user_id, events:event_id(title, date, location)")
+        .select("id, ticket_number, user_id, event_id, event_tiers:tier_id(name, price), events:event_id(id, title, date, location, banner_url, price)")
         .single();
 
       if (ticket?.user_id && ticket?.events) {
@@ -63,13 +63,34 @@ export async function POST(req: NextRequest) {
           } catch {}
         }
         if (email) {
-          const ev = ticket.events as any;
+          const ev   = ticket.events as any;
+          const tier = ticket.event_tiers as any;
+
+          // PayMongo shape: for payment.paid, eventData IS the payment.
+          // For link.payment.paid, payment nested at eventData.attributes.payments[0].
+          const payment       = eventData.attributes?.source ? eventData : eventData.attributes?.payments?.[0];
+          const paidCentavos  = payment?.attributes?.amount ?? eventData.attributes?.amount ?? 0;
+          const amountPaid    = paidCentavos ? paidCentavos / 100 : undefined;
+          const paymentMethod = payment?.attributes?.source?.type ?? undefined;
+          const paymongoRef   = payment?.id ?? eventData.id;
+          const subtotal      = Number(tier?.price ?? ev.price ?? 0) || undefined;
+          const fee           = amountPaid != null && subtotal != null ? Math.max(0, +(amountPaid - subtotal).toFixed(2)) : undefined;
+
           sendEventTicket({
             to: email,
+            eventId: ev.id,
             eventTitle: ev.title,
             eventDate: ev.date,
             eventLocation: ev.location ?? "TBA",
+            eventBanner: ev.banner_url ?? undefined,
             registrationId: ticket.ticket_number ?? ticket.id,
+            tierName: tier?.name ?? "General Admission",
+            subtotal,
+            fee,
+            amountPaid,
+            paymentMethod,
+            paymongoRef,
+            paidAt: new Date().toISOString(),
           }).catch(() => {});
         }
       }
