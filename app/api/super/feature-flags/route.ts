@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 async function requireSuper() {
   const { userId, sessionClaims } = auth();
@@ -40,5 +41,6 @@ export async function PATCH(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: enabled ? "enable_feature_flag" : "disable_feature_flag", target_type: "feature_flag", target_id: key, req });
   return NextResponse.json({ flag: data });
 }

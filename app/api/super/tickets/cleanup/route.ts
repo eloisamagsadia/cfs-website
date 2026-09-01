@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 async function requireSuper() {
   const { userId, sessionClaims } = auth();
@@ -40,5 +41,6 @@ export async function POST(req: NextRequest) {
     .select("id");
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "cleanup_pending_tickets", target_type: "event_tickets", details: { hours_cutoff: hours, cancelled_count: data?.length ?? 0 }, req });
   return NextResponse.json({ cancelled: data?.length ?? 0, hours });
 }

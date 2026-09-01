@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
     expires_at: expires_at || null, is_active: true, used_count: 0, product_ids: product_ids ?? [],
   }).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "create_promo_code", target_type: "promo_code", target_id: (data as any)?.id, details: { code: code.trim().toUpperCase(), discount_type, discount_value }, req });
   return NextResponse.json({ code: data }, { status: 201 });
 }
 
@@ -47,6 +49,7 @@ export async function PATCH(req: NextRequest) {
   const admin = createAdminClient();
   const { data, error } = await (admin.from("promo_codes") as any).update({ is_active }).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: is_active ? "activate_promo_code" : "deactivate_promo_code", target_type: "promo_code", target_id: id, req });
   return NextResponse.json({ code: data });
 }
 
@@ -59,5 +62,6 @@ export async function DELETE(req: NextRequest) {
   const admin = createAdminClient();
   const { error } = await (admin.from("promo_codes") as any).delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "delete_promo_code", target_type: "promo_code", target_id: id, req });
   return NextResponse.json({ success: true });
 }

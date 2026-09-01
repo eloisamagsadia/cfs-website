@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 function requireAdmin() {
   const { userId, sessionClaims } = auth();
@@ -75,6 +76,15 @@ export async function PATCH(req: NextRequest) {
       is_read: false,
     });
   }
+
+  await logAudit({
+    userId: gate.userId!,
+    action: action === "complete" ? "complete_manual_donation" : "cancel_manual_donation",
+    target_type: "donation",
+    target_id: id,
+    details: { amount: donation.donation_amount ?? donation.amount, manual_reference: manual_reference ?? null },
+    req,
+  });
 
   return NextResponse.json({ donation: updated });
 }

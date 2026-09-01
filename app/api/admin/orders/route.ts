@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendOrderConfirmation } from "@/lib/email";
+import { logAudit } from "@/lib/audit";
 
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();
@@ -55,6 +56,7 @@ export async function PATCH(req: NextRequest) {
     });
   }
 
+  await logAudit({ userId, action: "update_order", target_type: "order", target_id: id, details: { order_status, payment_status }, req });
   return NextResponse.json({ order: data });
 }
 
@@ -95,5 +97,6 @@ export async function POST(req: NextRequest) {
     console.error("Failed to send order confirmation email:", e);
   }
 
+  await logAudit({ userId, action: "create_order", target_type: "order", target_id: (data as any)?.id, details: { total, item_count: items.length }, req });
   return NextResponse.json({ order: data }, { status: 201 });
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();
@@ -39,6 +40,8 @@ export async function PATCH(req: NextRequest) {
   const admin = createAdminClient();
   const { data, error } = await (admin.from("community_posts") as any).update(payload).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  const action = is_hidden === true ? "hide_post" : is_hidden === false ? "unhide_post" : is_pinned === true ? "pin_post" : is_pinned === false ? "unpin_post" : "moderate_post";
+  await logAudit({ userId, action, target_type: "community_post", target_id: id, details: payload, req });
   return NextResponse.json({ post: data });
 }
 
@@ -51,5 +54,6 @@ export async function DELETE(req: NextRequest) {
   const admin = createAdminClient();
   const { error } = await (admin.from("community_posts") as any).delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "delete_post", target_type: "community_post", target_id: id, req });
   return NextResponse.json({ success: true });
 }
