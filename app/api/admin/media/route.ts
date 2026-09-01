@@ -2,6 +2,7 @@ import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { r2, R2_BUCKET, R2_PUBLIC_URL, deleteFromR2 } from "@/lib/r2";
+import { logAudit } from "@/lib/audit";
 
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();
@@ -58,6 +59,7 @@ export async function DELETE(req: NextRequest) {
     const { keys } = await req.json() as { keys: string[] };
     if (!keys?.length) return NextResponse.json({ error: "No keys provided" }, { status: 400 });
     await Promise.all(keys.map(key => deleteFromR2(`${R2_PUBLIC_URL}/${key}`)));
+    await logAudit({ userId, action: "delete_media", target_type: "r2_object", details: { keys, count: keys.length }, req });
     return NextResponse.json({ deleted: keys.length });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

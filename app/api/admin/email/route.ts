@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { resend } from "@/lib/emails/resend";
 import { applyVars } from "@/lib/email";
+import { logAudit } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
   const { userId, sessionClaims } = auth();
@@ -48,6 +49,19 @@ export async function POST(req: NextRequest) {
       errors.push(`${recipient.email}: ${e.message}`);
     }
   }
+
+  await logAudit({
+    userId,
+    action: "send_manual_email",
+    target_type: "recipients",
+    details: {
+      subject: String(subject).slice(0, 200),
+      recipient_count: recipients.length,
+      sent,
+      failed: errors.length,
+    },
+    req,
+  });
 
   return NextResponse.json({ sent, errors });
 }

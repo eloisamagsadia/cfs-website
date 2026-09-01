@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();
@@ -36,6 +37,7 @@ export async function POST(req: NextRequest) {
     published_at: is_published ? new Date().toISOString() : null,
   }).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "create_report", target_type: "transparency_report", target_id: (data as any)?.id, details: { title: title?.trim(), year, quarter, published: !!is_published }, req });
   return NextResponse.json({ report: data }, { status: 201 });
 }
 
@@ -59,6 +61,8 @@ export async function PATCH(req: NextRequest) {
   const admin = createAdminClient();
   const { data, error } = await (admin.from("transparency_reports") as any).update(payload).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  const action = updates.is_published === true ? "publish_report" : updates.is_published === false ? "unpublish_report" : "edit_report";
+  await logAudit({ userId, action, target_type: "transparency_report", target_id: id, details: { fields: Object.keys(payload) }, req });
   return NextResponse.json({ report: data });
 }
 
@@ -71,5 +75,6 @@ export async function DELETE(req: NextRequest) {
   const admin = createAdminClient();
   const { error } = await (admin.from("transparency_reports") as any).delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "delete_report", target_type: "transparency_report", target_id: id, req });
   return NextResponse.json({ success: true });
 }

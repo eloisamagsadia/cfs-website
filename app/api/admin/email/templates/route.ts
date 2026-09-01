@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
     .select()
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "create_manual_template", target_type: "email_manual_template", target_id: (data as any)?.id, details: { name: name?.trim() }, req });
   return NextResponse.json({ template: data }, { status: 201 });
 }
 
@@ -64,6 +66,7 @@ export async function PATCH(req: NextRequest) {
     .select()
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "edit_manual_template", target_type: "email_manual_template", target_id: id, details: { fields: Object.keys(patch).filter(k => k !== "updated_by") }, req });
   return NextResponse.json({ template: data });
 }
 
@@ -83,5 +86,6 @@ export async function DELETE(req: NextRequest) {
 
   const { error } = await (admin as any).from("email_manual_templates").delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "delete_manual_template", target_type: "email_manual_template", target_id: id, req });
   return NextResponse.json({ success: true });
 }
