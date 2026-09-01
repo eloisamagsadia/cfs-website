@@ -58,6 +58,7 @@ const adminSections: Section[] = [
     label: "MANAGE",
     items: [
       { label: "Events",    href: "/admin/events",    icon: icons.events },
+      { label: "Waitlist",  href: "/admin/waitlist",  icon: icons.members },
       { label: "Shop",      href: "/admin/shop",      icon: icons.shop },
       { label: "Orders",    href: "/admin/orders",    icon: icons.orders },
       { label: "Donations", href: "/admin/donations", icon: icons.donations },

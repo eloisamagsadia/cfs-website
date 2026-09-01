@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { IconTicket, IconCheck } from "@/components/shared/Icons";
 import { calculateFee, type PaymentMethod } from "@/lib/paymongo";
+import WaitlistButton from "@/components/public/WaitlistButton";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -182,11 +183,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
   }
 
   if (isFull && !hasTiers) {
-    return (
-      <div style={{ background: "#FFE8EC", border: "2px solid #CC3344", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
-        <div style={{ fontFamily: R, fontSize: "14px", color: "#CC3344", letterSpacing: "1.5px" }}>EVENT IS FULL</div>
-      </div>
-    );
+    return <WaitlistButton eventId={event.id} isLoggedIn={isLoggedIn} />;
   }
 
   return (
