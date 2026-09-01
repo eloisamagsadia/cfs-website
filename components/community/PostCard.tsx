@@ -76,6 +76,20 @@ interface PostCardProps {
 
 export default function PostCard({ post, currentUserId, onDelete }: PostCardProps) {
   const [deleted, setDeleted] = useState(false);
+  const [reporting, setReporting] = useState(false);
+  const [reportSent, setReportSent] = useState(false);
+
+  async function submitReport(reason: string) {
+    setReporting(false);
+    try {
+      const r = await fetch("/api/community/report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ post_id: post.id, reason }),
+      });
+      if (r.ok) setReportSent(true);
+    } catch {}
+  }
   const [previewComments, setPreviewComments] = useState<any[]>([]);
   const [showComments, setShowComments] = useState(false);
   const [loadingComments, setLoadingComments] = useState(false);
@@ -233,13 +247,19 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M19 6l-1 14H6L5 6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M10 11v6M14 11v6" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/><path d="M9 6V4h6v2" stroke="#CC3344" strokeWidth="2" strokeLinecap="round"/></svg>
                   Delete post
                 </button>
-              </>) : (
+              </>) : (<>
                 <button onClick={(e) => { e.stopPropagation(); handleCopyPostLink(); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#1B3A2D", textAlign: "left" }}
                   onMouseEnter={e => (e.currentTarget.style.background = "#F2F7F2")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#1B3A2D" strokeWidth="2" strokeLinecap="round"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#1B3A2D" strokeWidth="2" strokeLinecap="round"/></svg>
                   Copy link
                 </button>
-              )}
+                <div style={{ borderTop: "1px solid #DDE8DD", margin: "4px 0" }}/>
+                <button onClick={(e) => { e.stopPropagation(); setShowMenu(false); setReporting(true); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "8px", background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#CC3344", textAlign: "left" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#FFF1F3")} onMouseLeave={e => (e.currentTarget.style.background = "none")}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#CC3344" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                  Report post
+                </button>
+              </>)}
             </div>
           )}
         </div>
@@ -470,6 +490,46 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
       {showRepostMenu && <div onMouseDown={e => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setShowRepostMenu(false); }} style={{ position: "fixed", inset: 0, zIndex: 10 }} />}
       {showMenu && <div onMouseDown={e => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setShowMenu(false); }} style={{ position: "fixed", inset: 0, zIndex: 30 }} />}
       {showCommentReactions && <div onMouseDown={e => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); setShowCommentReactions(null); }} style={{ position: "fixed", inset: 0, zIndex: 15 }} />}
+
+      {/* Report reason picker */}
+      {reporting && (
+        <div onClick={(e) => { e.stopPropagation(); setReporting(false); }} style={{ position: "fixed", inset: 0, background: "rgba(15,42,30,0.65)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "24px" }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ background: "#ffffff", borderRadius: "14px", padding: "22px", width: "100%", maxWidth: "380px", display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "14px", color: "#1B3A2D", letterSpacing: "2px" }}>REPORT POST</div>
+            <p style={{ fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "12px", color: "#5A7A60", margin: "0 0 6px" }}>Pick a reason. Reports go to the mod queue for review.</p>
+            {[
+              ["spam",          "Spam or unwanted"],
+              ["harassment",    "Harassment or bullying"],
+              ["hate",          "Hate speech"],
+              ["nsfw",          "NSFW / inappropriate"],
+              ["misinformation","Misinformation"],
+              ["off_topic",     "Off-topic"],
+              ["other",         "Other"],
+            ].map(([reason, label]) => (
+              <button key={reason} onClick={(e) => { e.stopPropagation(); submitReport(reason); }}
+                style={{ fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#1B3A2D", background: "#F7FAF5", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "9px 12px", cursor: "pointer", textAlign: "left" }}>
+                {label}
+              </button>
+            ))}
+            <button onClick={(e) => { e.stopPropagation(); setReporting(false); }}
+              style={{ fontFamily: "var(--font-space-grotesk,'Space Grotesk',sans-serif)", fontSize: "10px", fontWeight: 700, color: "#5A7A60", background: "transparent", border: "none", padding: "8px 0 0", cursor: "pointer", letterSpacing: "1.2px" }}>
+              CANCEL
+            </button>
+          </div>
+        </div>
+      )}
+      {reportSent && (
+        <div onClick={(e) => { e.stopPropagation(); setReportSent(false); }} style={{ position: "fixed", inset: 0, background: "rgba(15,42,30,0.65)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "24px" }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ background: "#ffffff", borderRadius: "14px", padding: "22px 24px", width: "100%", maxWidth: "340px", textAlign: "center" }}>
+            <div style={{ fontFamily: "var(--font-righteous,'Righteous',sans-serif)", fontSize: "14px", color: "#1A8040", letterSpacing: "2px" }}>REPORT SENT ✓</div>
+            <p style={{ fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "12px", color: "#5A7A60", margin: "8px 0 14px" }}>Thanks — our mods will take a look.</p>
+            <button onClick={(e) => { e.stopPropagation(); setReportSent(false); }}
+              style={{ fontFamily: "var(--font-space-grotesk,'Space Grotesk',sans-serif)", fontSize: "10px", fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: "8px", padding: "9px 18px", cursor: "pointer", letterSpacing: "1.2px" }}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

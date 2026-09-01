@@ -78,6 +78,7 @@ const sections = [
     label: "CONTENT",
     items: [
       { label: "Community",     href: "/admin/community",              icon: icons.community },
+      { label: "Reports Queue", href: "/admin/community-reports",      icon: icons.support },
       { label: "Fan Wall",      href: "/admin/events/fan-submissions", icon: icons.fanwall },
       { label: "Projects",      href: "/admin/projects",               icon: icons.projects },
       { label: "Reports",       href: "/admin/reports",                icon: icons.reports },
