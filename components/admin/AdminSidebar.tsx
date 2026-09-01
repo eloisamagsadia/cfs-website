@@ -38,29 +38,6 @@ const icons = {
   refunds:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 3 3 9 9 9"/></svg>,
 };
 
-const superItems = [
-  { label: "Command Center", href: "/super",                   icon: icons.command, exact: true },
-  { label: "Analytics",      href: "/super/analytics",         icon: icons.finance },
-  { label: "System Health",  href: "/super/system-health",     icon: icons.command },
-  { label: "Categories",     href: "/super/categories",        icon: icons.reports },
-  { label: "Donation Drives",href: "/super/donation-drives",   icon: icons.donations },
-  { label: "Sponsor Perks",  href: "/super/sponsor-perks",     icon: icons.exclusive },
-  { label: "Badges",         href: "/super/badges",            icon: icons.roles },
-  { label: "Backup",         href: "/super/backup",            icon: icons.exit },
-  { label: "Cache",          href: "/super/cache",             icon: icons.command },
-  { label: "Roles",          href: "/super/roles",             icon: icons.roles },
-  { label: "Bulk Members",   href: "/super/bulk-members",      icon: icons.members },
-  { label: "Impersonate",    href: "/super/impersonate",       icon: icons.impersonate },
-  { label: "Audit Log",      href: "/super/audit",             icon: icons.audit },
-  { label: "Broadcast",      href: "/super/broadcast",         icon: icons.broadcast },
-  { label: "Finance",        href: "/super/finance",           icon: icons.finance },
-  { label: "Feature Flags",  href: "/super/feature-flags",     icon: icons.flags },
-  { label: "Exclusives",     href: "/super/exclusive",         icon: icons.exclusive },
-  { label: "Ticket Cleanup", href: "/super/tickets-cleanup",   icon: icons.cleanup },
-  { label: "Site Settings",  href: "/super/settings",          icon: icons.settings },
-  { label: "Danger Zone",    href: "/super/danger",            icon: icons.danger },
-];
-
 const sections = [
   {
     label: "OVERVIEW",
@@ -124,20 +101,6 @@ function NavItem({ label, href, icon, exact }: { label: string; href: string; ic
   );
 }
 
-function SuperNavItem({ label, href, icon, exact }: { label: string; href: string; icon: React.ReactNode; exact?: boolean }) {
-  const pathname = usePathname();
-  const isActive = exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
-  return (
-    <Link href={href} style={{ textDecoration: "none", display: "block" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "7px 10px", borderRadius: "7px", position: "relative", background: isActive ? "#FFF3D6" : "transparent", transition: "background 0.15s" }}>
-        {isActive && <div style={{ position: "absolute", left: 0, top: "20%", height: "60%", width: "3px", background: "#B78A1F", borderRadius: "0 3px 3px 0" }} />}
-        <span style={{ color: isActive ? "#7A5A0F" : "#B78A1F", transition: "color 0.15s" }}>{icon}</span>
-        <span style={{ fontFamily: B, fontSize: "12px", color: isActive ? "#7A5A0F" : "#7A5A0F", letterSpacing: "0.3px" }}>{label}</span>
-      </div>
-    </Link>
-  );
-}
-
 export default function AdminSidebar({ isSuper = false }: { isSuper?: boolean }) {
   return (
     <aside style={{ width: "210px", flexShrink: 0 }}>
@@ -158,15 +121,12 @@ export default function AdminSidebar({ isSuper = false }: { isSuper?: boolean })
         ))}
 
         {isSuper && (
-          <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: "10px", padding: "10px 6px 6px", marginTop: "4px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", fontFamily: R, fontSize: "9px", color: "#B78A1F", letterSpacing: "2px", padding: "0 8px 6px" }}>
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#B78A1F" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              SUPER ADMIN
+          <Link href="/super" style={{ textDecoration: "none" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "10px", background: "#FFFDF4", border: "1.5px solid #F0D889" }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B78A1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span style={{ fontFamily: R, fontSize: "11px", color: "#B78A1F", letterSpacing: "1.5px" }}>COMMAND CENTER →</span>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
-              {superItems.map(item => <SuperNavItem key={item.href} {...item} />)}
-            </div>
-          </div>
+          </Link>
         )}
 
         <div style={{ borderTop: "1px solid #DDE8DD", paddingTop: "12px" }}>
