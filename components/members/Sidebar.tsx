@@ -33,6 +33,7 @@ const sections = [
     items: [
       { label: "Dashboard",     href: "/members",               icon: icons.dashboard,  exact: true },
       { label: "Community",     href: "/members/community",     icon: icons.community },
+      { label: "Polls",         href: "/members/polls",         icon: icons.badges },
       { label: "Letters",       href: "/members/letters",       icon: icons.letters },
     ]
   },

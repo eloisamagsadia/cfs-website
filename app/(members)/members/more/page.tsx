@@ -28,6 +28,7 @@ const sections = [
     label: "MY STUFF",
     items: [
       { label: "Community",     href: "/members/community",     icon: icons.community },
+      { label: "Polls",         href: "/members/polls",         icon: icons.badges },
       { label: "My Tickets",    href: "/members/tickets",       icon: icons.tickets },
       { label: "My Orders",     href: "/members/orders",        icon: icons.orders },
       { label: "My Donations",  href: "/members/donations",     icon: icons.exclusive },

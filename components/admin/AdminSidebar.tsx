@@ -91,6 +91,7 @@ const sections = [
       { label: "Fan Wall",      href: "/admin/events/fan-submissions", icon: icons.fanwall },
       { label: "Projects",      href: "/admin/projects",               icon: icons.projects },
       { label: "Reports",       href: "/admin/reports",                icon: icons.reports },
+      { label: "Polls",         href: "/admin/polls",                  icon: icons.checkin },
       { label: "FAQ",           href: "/admin/faq",                    icon: icons.support },
     ]
   },
