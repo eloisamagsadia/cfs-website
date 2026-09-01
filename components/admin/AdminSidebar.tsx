@@ -81,7 +81,7 @@ function NavItem({ label, href, icon, exact }: { label: string; href: string; ic
   );
 }
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ isSuper = false }: { isSuper?: boolean }) {
   return (
     <aside style={{ width: "210px", flexShrink: 0 }}>
       {/* Header */}
@@ -89,6 +89,16 @@ export default function AdminSidebar() {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1A8040" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         <span style={{ fontFamily: R, fontSize: "11px", color: "#1A8040", letterSpacing: "2px" }}>ADMIN PANEL</span>
       </div>
+
+      {/* Super-only: back to Command Center */}
+      {isSuper && (
+        <Link href="/super" style={{ textDecoration: "none", display: "block", marginBottom: "16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "10px", background: "#FFFDF4", border: "1.5px solid #F0D889" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B78A1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span style={{ fontFamily: R, fontSize: "11px", color: "#B78A1F", letterSpacing: "1.5px" }}>COMMAND CENTER →</span>
+          </div>
+        </Link>
+      )}
 
       <nav style={{ position: "sticky", top: "80px", display: "flex", flexDirection: "column", gap: "20px" }}>
         {sections.map(section => (

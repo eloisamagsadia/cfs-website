@@ -33,10 +33,19 @@ const sections = [
     ]
   },
   {
+    label: "REVENUE",
+    items: [
+      { label: "Financials",      href: "/super/finance",    icon: icons.audit },
+    ]
+  },
+  {
     label: "SYSTEM",
     items: [
       { label: "Site Settings",   href: "/super/settings",   icon: icons.settings },
       { label: "Audit Log",       href: "/super/audit",      icon: icons.audit },
+      { label: "Feature Flags",   href: "/super/feature-flags", icon: icons.command },
+      { label: "Sign in as…",     href: "/super/impersonate", icon: icons.roles },
+      { label: "Pending Tickets", href: "/super/tickets-cleanup", icon: icons.audit },
       { label: "Danger Zone",     href: "/super/danger",     icon: icons.danger },
     ]
   },
