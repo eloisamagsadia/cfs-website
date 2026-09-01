@@ -12,28 +12,38 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 export default async function SuperCommandCenter() {
   const db = createAdminClient();
 
-  const [
-    { count: total_members },
-    { count: sponsors },
-    { count: admins },
-    { count: moderators },
-    { count: total_posts },
-    { count: total_tickets },
-    { count: total_events },
-    { count: exclusive_content },
-  ] = await Promise.all([
-    db.from("profiles").select("*", { count: "exact", head: true }),
-    db.from("profiles").select("*", { count: "exact", head: true }).eq("role", "sponsor"),
-    db.from("profiles").select("*", { count: "exact", head: true }).eq("role", "admin"),
-    db.from("profiles").select("*", { count: "exact", head: true }).eq("role", "moderator"),
-    db.from("community_posts").select("*", { count: "exact", head: true }).eq("is_hidden", false),
-    (db as any).from("event_tickets").select("*", { count: "exact", head: true }),
-    (db as any).from("events").select("*", { count: "exact", head: true }),
-    (db as any).from("exclusive_content").select("*", { count: "exact", head: true }),
-  ]);
+  // Every read wrapped so a single failing query (missing table, stale schema
+  // cache, RLS glitch) doesn't crash the whole command center.
+  const safeCount = async (p: any): Promise<number> => {
+    try { const r = await p; return r?.error ? 0 : (r?.count ?? 0); } catch { return 0; }
+  };
+  const safeRow = async <T,>(p: any): Promise<T | null> => {
+    try { const r = await p; return r?.error ? null : (r?.data ?? null); } catch { return null; }
+  };
 
-  const { data: settings } = await (db as any).from("site_settings").select("*").single();
-  const { data: sponsorPerks } = await (db as any).from("sponsor_perks").select("*").single();
+  const [
+    total_members,
+    sponsors,
+    admins,
+    moderators,
+    total_posts,
+    total_tickets,
+    total_events,
+    exclusive_content,
+    settings,
+    sponsorPerks,
+  ] = await Promise.all([
+    safeCount(db.from("profiles").select("*", { count: "exact", head: true })),
+    safeCount(db.from("profiles").select("*", { count: "exact", head: true }).eq("role", "sponsor")),
+    safeCount(db.from("profiles").select("*", { count: "exact", head: true }).eq("role", "admin")),
+    safeCount(db.from("profiles").select("*", { count: "exact", head: true }).eq("role", "moderator")),
+    safeCount(db.from("community_posts").select("*", { count: "exact", head: true }).eq("is_hidden", false)),
+    safeCount((db as any).from("event_tickets").select("*", { count: "exact", head: true })),
+    safeCount((db as any).from("events").select("*", { count: "exact", head: true })),
+    safeCount((db as any).from("exclusive_content").select("*", { count: "exact", head: true })),
+    safeRow<any>((db as any).from("site_settings").select("*").maybeSingle()),
+    safeRow<any>((db as any).from("sponsor_perks").select("*").maybeSingle()),
+  ]);
 
   const stats = [
     { label: "TOTAL MEMBERS",    value: <LiveMemberCount initial={total_members ?? 0} />,               color: "#1B3A2D", icon: <IconUsers size={18} color="#1B3A2D" />,    href: "/super/roles" },
