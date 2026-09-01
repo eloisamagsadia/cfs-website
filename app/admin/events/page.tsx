@@ -1,7 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { IconTicket, IconEdit, IconPin, IconUsers, IconTag, IconCalendar, IconEyeOff } from "@/components/shared/Icons";
+import { IconTicket, IconEdit, IconPin, IconUsers, IconTag, IconCalendar, IconEyeOff, IconEye } from "@/components/shared/Icons";
 import EventVisibilityToggle from "@/components/admin/EventVisibilityToggle";
 import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
 
@@ -85,7 +85,9 @@ export default async function AdminEventsPage() {
 
               {/* Info column */}
               <div style={{ flex: 1, minWidth: "220px" }}>
-                <div style={{ fontFamily: R, fontSize: "15px", color: "#1B3A2D", letterSpacing: "0.5px", marginBottom: "6px" }}>{event.title}</div>
+                <Link href={`/admin/events/${event.id}`} style={{ textDecoration: "none" }}>
+                  <div style={{ fontFamily: R, fontSize: "15px", color: "#1B3A2D", letterSpacing: "0.5px", marginBottom: "6px" }}>{event.title}</div>
+                </Link>
                 <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center", fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
                     <IconCalendar size={12} color="#7A8E7A" />
@@ -116,6 +118,11 @@ export default async function AdminEventsPage() {
               {/* Actions */}
               <div className="aev-actions" style={{ display: "flex", gap: "6px", flexShrink: 0, alignItems: "center", justifyContent: "flex-end", flexWrap: "wrap" }}>
                 <EventVisibilityToggle id={event.id} initialHidden={isHidden} />
+                <a href={`/events/${event.id}`} target="_blank" rel="noopener noreferrer"
+                  className="aev-btn-ghost"
+                  style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#5A7A60", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
+                  <IconEye size={12} color="#5A7A60" /> PREVIEW
+                </a>
                 <Link href={`/admin/events/${event.id}/tiers`}
                   className="aev-btn-secondary"
                   style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#E8F0E4", border: "1.5px solid transparent", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
