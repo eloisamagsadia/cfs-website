@@ -16,7 +16,7 @@ const FONT_OPTIONS: { value: "serif" | "sans" | "display"; label: string }[] = [
 
 export default function CreateEventPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ title: "", description: "", date: "", location: "", map_url: "", price: "0", capacity: "", is_members_only: false, banner_url: "", status: "upcoming", sponsor_access_at: "", member_access_at: "", guidelines_url: "", guidelines_text: "", heading_font: "serif", body_font: "sans" });
+  const [form, setForm] = useState({ title: "", description: "", date: "", location: "", map_url: "", price: "0", capacity: "", bundle_size: "1", is_members_only: false, banner_url: "", status: "upcoming", sponsor_access_at: "", member_access_at: "", guidelines_url: "", guidelines_text: "", heading_font: "serif", body_font: "sans" });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const upd = (k: string, v: any) => setForm(p => ({ ...p, [k]: v }));
@@ -32,7 +32,7 @@ export default function CreateEventPage() {
     try {
       const res = await fetch("/api/admin/events", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, date: toISOWithPHT(form.date), price: Number(form.price) || 0, capacity: form.capacity ? Number(form.capacity) : null, sponsor_access_at: toISOWithPHT(form.sponsor_access_at), member_access_at: toISOWithPHT(form.member_access_at) }),
+        body: JSON.stringify({ ...form, date: toISOWithPHT(form.date), price: Number(form.price) || 0, bundle_size: Math.max(1, Number(form.bundle_size) || 1), capacity: form.capacity ? Number(form.capacity) : null, sponsor_access_at: toISOWithPHT(form.sponsor_access_at), member_access_at: toISOWithPHT(form.member_access_at) }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to create");
@@ -64,6 +64,12 @@ export default function CreateEventPage() {
         <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
           <div><label style={labelStyle}>Price (₱)</label><input type="number" inputMode="decimal" min="0" step="1" style={inputStyle} value={form.price} onChange={e => upd("price", e.target.value)} placeholder="0 for free" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} /></div>
           <div><label style={labelStyle}>Capacity</label><input type="number" inputMode="numeric" min="0" step="1" style={inputStyle} value={form.capacity} onChange={e => upd("capacity", e.target.value)} placeholder="Blank = unlimited" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} /></div>
+        </div>
+
+        <div>
+          <label style={labelStyle}>Tickets per purchase (bundle size)</label>
+          <input type="number" inputMode="numeric" min="1" max="20" step="1" style={inputStyle} value={form.bundle_size} onChange={e => upd("bundle_size", e.target.value)} placeholder="1" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} />
+          <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", display: "block", marginTop: "4px" }}>1 = solo tickets. Higher (e.g. 4) = each checkout creates that many tickets, price × N, capacity −N.</span>
         </div>
 
         <div><label style={labelStyle}>Map URL</label><input style={inputStyle} value={form.map_url} onChange={e => upd("map_url", e.target.value)} placeholder="Google Maps URL" /></div>

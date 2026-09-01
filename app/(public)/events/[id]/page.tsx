@@ -42,7 +42,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
 
   const [{ data: event }, { count: regCount }] = await Promise.all([
     (supabase.from("events") as any).select("*").eq("id", params.id).single(),
-    (supabase as any).from("event_tickets").select("id", { count: "exact", head: true }).eq("event_id", params.id).neq("status", "cancelled"),
+    (supabase as any).from("event_tickets").select("id", { count: "exact", head: true }).eq("event_id", params.id).in("status", ["active", "used"]),
   ]);
 
   if (!event) notFound();
@@ -52,7 +52,8 @@ export default async function EventDetailPage({ params }: { params: { id: string
   let isRegistered = false;
   let existingTicketId: string | null = null;
   if (user) {
-    const { data: reg } = await (supabase as any).from("event_tickets").select("id").eq("event_id", params.id).eq("user_id", userId).single();
+    const { data: regs } = await (supabase as any).from("event_tickets").select("id").eq("event_id", params.id).eq("user_id", userId).order("created_at", { ascending: true }).limit(1);
+    const reg = regs?.[0];
     isRegistered = !!reg;
     existingTicketId = reg?.id ?? null;
   }

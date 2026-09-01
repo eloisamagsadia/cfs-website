@@ -51,7 +51,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
 
     if (!hasTiers) {
       if (event.price > 0) {
-        // Legacy paid event without tiers — create ticket then pay
+        // Legacy paid event without tiers — create ticket(s) then pay
         setLoading(true); setError("");
         try {
           const ticketRes = await fetch("/api/events/tickets", {
@@ -61,16 +61,19 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
           });
           const ticketData = await ticketRes.json();
           if (!ticketRes.ok) throw new Error(ticketData.error);
-          const legacyTotal = Math.round(event.price + calcFee(event.price));
+          const qty = Number(ticketData.bundle_size ?? 1) || 1;
+          const baseTotal = event.price * qty;
+          const legacyTotal = Math.round(baseTotal + calcFee(baseTotal));
+          const ref = ticketData.bundle_id ?? ticketData.ticket.id;
           const payRes = await fetch("/api/paymongo/create-link", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               amount: legacyTotal,
-              description: `${event.title} — Ticket`,
+              description: qty > 1 ? `${event.title} — ${qty} Tickets` : `${event.title} — Ticket`,
               type: "ticket",
-              reference_id: ticketData.ticket.id,
-              success_url: `${window.location.origin}/payment/success?type=ticket&ref=${ticketData.ticket.id}`,
+              reference_id: ref,
+              success_url: `${window.location.origin}/payment/success?type=ticket&ref=${ref}`,
               metadata: { payment_method: method },
             }),
           });
@@ -105,7 +108,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
     if (!tier) { setError("Please select a tier."); return; }
 
     if (tier.price > 0) {
-      // Paid tier — create ticket with pending_payment status, then redirect to checkout
+      // Paid tier — create ticket(s) with pending_payment status, then redirect to checkout
       setLoading(true); setError("");
       try {
         const ticketRes = await fetch("/api/events/tickets", {
@@ -115,16 +118,19 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         });
         const ticketData = await ticketRes.json();
         if (!ticketRes.ok) throw new Error(ticketData.error);
-        const tierTotal = Math.round(tier.price + calcFee(tier.price));
+        const qty = Number(ticketData.bundle_size ?? 1) || 1;
+        const baseTotal = tier.price * qty;
+        const tierTotal = Math.round(baseTotal + calcFee(baseTotal));
+        const ref = ticketData.bundle_id ?? ticketData.ticket.id;
         const payRes = await fetch("/api/paymongo/create-link", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             amount: tierTotal,
-            description: `${event.title} — ${tier.name}`,
+            description: qty > 1 ? `${event.title} — ${tier.name} × ${qty}` : `${event.title} — ${tier.name}`,
             type: "ticket",
-            reference_id: ticketData.ticket.id,
-            success_url: `${window.location.origin}/payment/success?type=ticket&ref=${ticketData.ticket.id}`,
+            reference_id: ref,
+            success_url: `${window.location.origin}/payment/success?type=ticket&ref=${ref}`,
             metadata: { payment_method: method },
           }),
         });
@@ -254,12 +260,22 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
 
       {/* Fee breakdown for paid tiers */}
       {!isNotOpenYet && !isEarlyAccessOnly && (() => {
-        const basePrice = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
-        if (!basePrice) return null;
+        const perTicket = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
+        if (!perTicket) return null;
+        const qty = Math.max(1, Number(event.bundle_size ?? 1) || 1);
+        const basePrice = perTicket * qty;
         const fee   = calcFee(basePrice);
         const total = basePrice + fee;
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {qty > 1 && (
+              <div style={{ background: "#FFF9E5", border: "1.5px solid #F0D889", borderRadius: "10px", padding: "10px 14px", display: "flex", gap: "8px", alignItems: "center" }}>
+                <IconTicket size={16} color="#7A5A0F" />
+                <span style={{ fontFamily: B, fontSize: "12px", color: "#7A5A0F", lineHeight: 1.5 }}>
+                  <strong>Bundle of {qty}</strong> — one purchase gives you {qty} tickets & {qty} QR codes to share.
+                </span>
+              </div>
+            )}
             <div style={{ background: "#F0F7F0", border: "1.5px solid #B7D8B7", borderRadius: "10px", padding: "12px 14px", display: "flex", gap: "10px", alignItems: "flex-start" }}>
               <span style={{ display: "inline-flex", flexShrink: 0, width: "28px", height: "28px", borderRadius: "6px", background: "#ffffff", border: "1px solid #DDE8DD", alignItems: "center", justifyContent: "center", fontFamily: B, fontSize: "10px", fontWeight: 700, color: "#1B3A2D", letterSpacing: "0.5px" }}>QR</span>
               <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
@@ -271,7 +287,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
             </div>
             <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "10px", padding: "12px 14px", display: "flex", flexDirection: "column", gap: "6px" }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Ticket price</span>
+                <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Ticket price{qty > 1 ? ` × ${qty}` : ""}</span>
                 <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>₱{fmt(basePrice)}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -295,16 +311,20 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
       })()}
 
       {!isNotOpenYet && !isEarlyAccessOnly && (() => {
-        const basePrice = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
+        const perTicket = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
+        const qty = Math.max(1, Number(event.bundle_size ?? 1) || 1);
+        const basePrice = perTicket * qty;
         const total = basePrice ? Math.round(basePrice + calcFee(basePrice)) : 0;
         const paidAndUnaccepted = basePrice > 0 && !termsAccepted;
         const disabled = loading || paidAndUnaccepted;
+        const freeLabel = qty > 1 ? `RSVP FREE — ${qty} TICKETS ✦` : "RSVP FREE ✦";
+        const paidLabel = qty > 1 ? `PAY ₱${fmt(total)} FOR ${qty} TICKETS →` : `PAY ₱${fmt(total)} →`;
         return (
           <button onClick={handleRegister} disabled={disabled}
             style={{ position: "relative", display: "block", width: "100%", background: "transparent", border: "none", padding: 0, cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.6 : 1 }}>
             <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "8px" }} />
             <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "15px", background: loading ? "#E8F5E9" : "#1A8040", color: loading ? "#4A7C59" : "#ffffff", padding: "14px", border: "2px solid #1B3A2D", borderRadius: "8px", textAlign: "center", letterSpacing: "2px" }}>
-              {loading ? "LOADING..." : !isLoggedIn ? "LOGIN TO REGISTER" : basePrice ? `PAY ₱${fmt(total)} →` : "RSVP FREE ✦"}
+              {loading ? "LOADING..." : !isLoggedIn ? "LOGIN TO REGISTER" : basePrice ? paidLabel : freeLabel}
             </span>
           </button>
         );

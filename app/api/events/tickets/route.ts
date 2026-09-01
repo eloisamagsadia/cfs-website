@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkAndAwardBadges } from "@/lib/badges";
-import { sendEventTicket } from "@/lib/email";
+import { sendEventTicket, sendEventTicketBundle } from "@/lib/email";
+import { randomUUID } from "crypto";
 
 const db = () => createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -99,66 +100,89 @@ export async function POST(req: NextRequest) {
   // Get member profile
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", userId).single();
 
-  // Check already has ticket for this event
-  const { data: existing } = await supabase
+  // Check already has ticket(s) for this event — one purchase per user, even for bundles
+  const { count: existingCount } = await (supabase as any)
     .from("event_tickets")
-    .select("id")
+    .select("id", { count: "exact", head: true })
     .eq("event_id", event_id)
-    .eq("user_id", userId)
-    .single();
-  if (existing) return NextResponse.json({ error: "You already have a ticket for this event" }, { status: 409 });
+    .eq("user_id", userId);
+  if ((existingCount ?? 0) > 0) return NextResponse.json({ error: "You already have a ticket for this event" }, { status: 409 });
 
-  // Build QR data
-  const qr_data = {
-    member_id: userId,
-    member_name: profile?.display_name ?? "Member",
-    member_email: profile?.email ?? "",
-    avatar_url: profile?.avatar_url ?? null,
-    event_id,
-    event_name: event.title,
-    event_date: event.date,
-    event_location: event.location,
-    tier_id: tier_id ?? null,
-    tier_name: tierName,
-    tier_price: tierPrice,
-    registered_at: new Date().toISOString(),
-  };
+  // Bundle size — number of tickets created per purchase. Defaults to 1 (solo).
+  const bundleSize = Math.max(1, Math.min(20, Number(event.bundle_size ?? 1) || 1));
+
+  // Capacity gate — counts only paid/checked-in tickets so stale pending_payment holds don't block paying users.
+  // For bundles, the whole bundle must fit.
+  if (event.capacity) {
+    const { count } = await (supabase as any)
+      .from("event_tickets")
+      .select("id", { count: "exact", head: true })
+      .eq("event_id", event_id)
+      .in("status", ["active", "used"]);
+    if ((count ?? 0) + bundleSize > event.capacity) {
+      return NextResponse.json({ error: "This event is fully booked" }, { status: 400 });
+    }
+  }
 
   // Determine payment status
   const payment_status = tierPrice > 0 ? "pending" : "free";
+  const bundle_id = randomUUID();
 
-  // Create ticket
-  const { data: ticket, error } = await supabase
-    .from("event_tickets")
-    .insert({
+  // Build N ticket rows with a shared bundle_id
+  const rows = Array.from({ length: bundleSize }, (_, i) => ({
+    event_id,
+    user_id: userId,
+    tier_id: tier_id ?? null,
+    status: tierPrice > 0 ? "pending_payment" : "active",
+    payment_status,
+    bundle_id,
+    qr_data: {
+      member_id: userId,
+      member_name: profile?.display_name ?? "Member",
+      member_email: profile?.email ?? "",
+      avatar_url: profile?.avatar_url ?? null,
       event_id,
-      user_id: userId,
+      event_name: event.title,
+      event_date: event.date,
+      event_location: event.location,
       tier_id: tier_id ?? null,
-      status: tierPrice > 0 ? "pending_payment" : "active",
-      payment_status,
-      qr_data,
-    })
+      tier_name: tierName,
+      tier_price: tierPrice,
+      bundle_index: i + 1,
+      bundle_size: bundleSize,
+      registered_at: new Date().toISOString(),
+    },
+  }));
+
+  const { data: tickets, error } = await supabase
+    .from("event_tickets")
+    .insert(rows)
     .select(`
       *,
       profiles:user_id(id, display_name, avatar_url),
       event_tiers:tier_id(id, name, price, color),
       events:event_id(id, title, date, location)
-    `)
-    .single();
+    `);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error || !tickets?.length) return NextResponse.json({ error: error?.message ?? "Failed to create tickets" }, { status: 500 });
 
-  // Notify member
+  const firstTicket = tickets[0] as any;
+
+  // Notify member (single notification per purchase, even for bundles)
   await (supabase.from("notifications") as any).insert({
     user_id: userId,
     type: "event_reminder",
-    title: `Ticket confirmed for ${event.title}! 🎫`,
-    message: `Your ${tierName} ticket is ready. Ticket #${ticket.ticket_number}`,
-    link: `/members/tickets/${ticket.id}`,
+    title: bundleSize > 1
+      ? `${bundleSize} tickets confirmed for ${event.title}! 🎫`
+      : `Ticket confirmed for ${event.title}! 🎫`,
+    message: bundleSize > 1
+      ? `Your ${bundleSize} × ${tierName} tickets are ready.`
+      : `Your ${tierName} ticket is ready. Ticket #${firstTicket.ticket_number}`,
+    link: `/members/tickets/${firstTicket.id}`,
   });
 
-  // Email the ticket — only for free events; paid events are emailed from
-  // the PayMongo webhook after payment succeeds. Non-blocking.
+  // Email the ticket(s) — only for free events; paid events are emailed
+  // from the PayMongo webhook after payment succeeds. Non-blocking.
   if (payment_status === "free") {
     let email = (profile as any)?.email as string | null;
     if (!email) {
@@ -168,18 +192,32 @@ export async function POST(req: NextRequest) {
       } catch {}
     }
     if (email) {
-      sendEventTicket({
-        to: email,
-        eventTitle: event.title,
-        eventDate: event.date,
-        eventLocation: event.location ?? "TBA",
-        registrationId: ticket.ticket_number ?? ticket.id,
-      }).catch(() => {});
+      if (bundleSize > 1) {
+        sendEventTicketBundle({
+          to: email,
+          eventId: event.id,
+          eventTitle: event.title,
+          eventDate: event.date,
+          eventLocation: event.location ?? "TBA",
+          eventBanner: event.banner_url ?? undefined,
+          tickets: tickets.map((t: any) => ({ ticketNumber: t.ticket_number, ticketId: t.id })),
+          tierName,
+        }).catch(() => {});
+      } else {
+        sendEventTicket({
+          to: email,
+          eventTitle: event.title,
+          eventDate: event.date,
+          eventLocation: event.location ?? "TBA",
+          registrationId: firstTicket.ticket_number ?? firstTicket.id,
+        }).catch(() => {});
+      }
     }
   }
 
   // Award badges
   await checkAndAwardBadges(userId, "event_count");
 
-  return NextResponse.json({ ticket });
+  // Return: first ticket for legacy callers, plus bundle_id (used as payment reference) and full list
+  return NextResponse.json({ ticket: firstTicket, tickets, bundle_id, bundle_size: bundleSize });
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyWebhookSignature } from "@/lib/paymongo";
-import { sendDonationReceipt, sendEventTicket } from "@/lib/email";
+import { sendDonationReceipt, sendEventTicket, sendEventTicketBundle } from "@/lib/email";
 import { clerkClient } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
@@ -46,25 +46,37 @@ export async function POST(req: NextRequest) {
       .eq("type", type);
 
     if (type === "ticket") {
-      const { data: ticket } = await (supabase.from("event_tickets") as any)
+      // Reference may be a bundle_id (new flow, one row or many) or a legacy ticket.id.
+      // Try bundle_id first; if nothing matched, fall back to updating by ticket id.
+      let tickets: any[] = [];
+      const byBundle = await (supabase.from("event_tickets") as any)
         .update({ status: "active", payment_status: "paid" })
-        .eq("id", reference)
-        .select("id, ticket_number, user_id, event_id, event_tiers:tier_id(name, price), events:event_id(id, title, date, location, banner_url, price)")
-        .single();
+        .eq("bundle_id", reference)
+        .select("id, ticket_number, user_id, event_id, event_tiers:tier_id(name, price), events:event_id(id, title, date, location, banner_url, price)");
+      if (byBundle.data?.length) {
+        tickets = byBundle.data;
+      } else {
+        const byId = await (supabase.from("event_tickets") as any)
+          .update({ status: "active", payment_status: "paid" })
+          .eq("id", reference)
+          .select("id, ticket_number, user_id, event_id, event_tiers:tier_id(name, price), events:event_id(id, title, date, location, banner_url, price)");
+        tickets = byId.data ?? [];
+      }
 
-      if (ticket?.user_id && ticket?.events) {
+      const first = tickets[0];
+      if (first?.user_id && first?.events) {
         const { data: profile } = await supabase
-          .from("profiles").select("email").eq("id", ticket.user_id).single();
+          .from("profiles").select("email").eq("id", first.user_id).single();
         let email = (profile as any)?.email as string | null;
         if (!email) {
           try {
-            const clerkUser = await clerkClient.users.getUser(ticket.user_id);
+            const clerkUser = await clerkClient.users.getUser(first.user_id);
             email = clerkUser.emailAddresses[0]?.emailAddress ?? null;
           } catch {}
         }
         if (email) {
-          const ev   = ticket.events as any;
-          const tier = ticket.event_tiers as any;
+          const ev   = first.events as any;
+          const tier = first.event_tiers as any;
 
           // PayMongo shape: for payment.paid, eventData IS the payment.
           // For link.payment.paid, payment nested at eventData.attributes.payments[0].
@@ -73,25 +85,45 @@ export async function POST(req: NextRequest) {
           const amountPaid    = paidCentavos ? paidCentavos / 100 : undefined;
           const paymentMethod = payment?.attributes?.source?.type ?? undefined;
           const paymongoRef   = payment?.id ?? eventData.id;
-          const subtotal      = Number(tier?.price ?? ev.price ?? 0) || undefined;
+          const perTicketPrice = Number(tier?.price ?? ev.price ?? 0) || 0;
+          const subtotal      = perTicketPrice > 0 ? perTicketPrice * tickets.length : undefined;
           const fee           = amountPaid != null && subtotal != null ? Math.max(0, +(amountPaid - subtotal).toFixed(2)) : undefined;
 
-          sendEventTicket({
-            to: email,
-            eventId: ev.id,
-            eventTitle: ev.title,
-            eventDate: ev.date,
-            eventLocation: ev.location ?? "TBA",
-            eventBanner: ev.banner_url ?? undefined,
-            registrationId: ticket.ticket_number ?? ticket.id,
-            tierName: tier?.name ?? "General Admission",
-            subtotal,
-            fee,
-            amountPaid,
-            paymentMethod,
-            paymongoRef,
-            paidAt: new Date().toISOString(),
-          }).catch(() => {});
+          if (tickets.length > 1) {
+            sendEventTicketBundle({
+              to: email,
+              eventId: ev.id,
+              eventTitle: ev.title,
+              eventDate: ev.date,
+              eventLocation: ev.location ?? "TBA",
+              eventBanner: ev.banner_url ?? undefined,
+              tickets: tickets.map((t: any) => ({ ticketNumber: t.ticket_number, ticketId: t.id })),
+              tierName: tier?.name ?? "General Admission",
+              subtotal,
+              fee,
+              amountPaid,
+              paymentMethod,
+              paymongoRef,
+              paidAt: new Date().toISOString(),
+            }).catch(() => {});
+          } else {
+            sendEventTicket({
+              to: email,
+              eventId: ev.id,
+              eventTitle: ev.title,
+              eventDate: ev.date,
+              eventLocation: ev.location ?? "TBA",
+              eventBanner: ev.banner_url ?? undefined,
+              registrationId: first.ticket_number ?? first.id,
+              tierName: tier?.name ?? "General Admission",
+              subtotal: perTicketPrice > 0 ? perTicketPrice : undefined,
+              fee,
+              amountPaid,
+              paymentMethod,
+              paymongoRef,
+              paidAt: new Date().toISOString(),
+            }).catch(() => {});
+          }
         }
       }
     }
@@ -138,9 +170,16 @@ export async function POST(req: NextRequest) {
       .eq("type", type);
 
     if (type === "ticket") {
-      await (supabase.from("event_tickets") as any)
+      // Try bundle_id first (new flow); fall back to ticket.id (legacy).
+      const byBundle = await (supabase.from("event_tickets") as any)
         .update({ payment_status: "failed" })
-        .eq("id", reference);
+        .eq("bundle_id", reference)
+        .select("id");
+      if (!byBundle.data?.length) {
+        await (supabase.from("event_tickets") as any)
+          .update({ payment_status: "failed" })
+          .eq("id", reference);
+      }
     }
 
     if (type === "donation") {
