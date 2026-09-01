@@ -1,6 +1,8 @@
 import { Resend } from "resend";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { renderEventTicket, type EventTicketSections } from "@/lib/email/shells/event-ticket";
+import { renderDonationReceipt, type DonationReceiptSections } from "@/lib/email/shells/donation-receipt";
+import { renderOrderConfirmation, type OrderConfirmationSections } from "@/lib/email/shells/order-confirmation";
 import { resolveSections } from "@/lib/email-template-sections";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -78,17 +80,30 @@ export async function sendOrderConfirmation({
     <tr><td style="color:#F0EAD6;font-weight:bold;padding:4px 0;font-family:sans-serif;">TOTAL</td><td style="color:#F07228;font-weight:bold;text-align:right;font-family:sans-serif;">₱${total.toLocaleString()}</td></tr>
   </table>`;
 
-  const rendered = await renderTemplate("order_confirmation", {
+  const vars = {
     order_short_id: orderShortId,
     items_table: itemsTable,
     ship_name: shippingAddress.full_name,
     ship_line1: `${shippingAddress.street}, ${shippingAddress.barangay}`,
     ship_line2: `${shippingAddress.city}, ${shippingAddress.province} ${shippingAddress.zip_code}`,
     total: total.toLocaleString(),
-  });
+  };
 
-  const subject = rendered?.subject ?? `✦ Order Confirmed! #${orderShortId}`;
-  const html = rendered?.html ?? `
+  let subject: string | null = null;
+  let html:    string | null = null;
+
+  const stored = await loadTemplate("order_confirmation");
+  if (stored?.sections) {
+    const sections = resolveSections("order_confirmation", stored.sections) as unknown as OrderConfirmationSections;
+    html    = renderOrderConfirmation(vars, sections);
+    subject = applyVars(stored.subject ?? "✦ Order Confirmed! #{{order_short_id}}", vars);
+  } else if (stored?.html) {
+    subject = applyVars(stored.subject, vars);
+    html    = applyVars(stored.html, vars);
+  }
+
+  subject = subject ?? `✦ Order Confirmed! #${orderShortId}`;
+  html    = html    ?? `
       <div style="background:#0F1A0B;padding:32px;font-family:sans-serif;max-width:600px;margin:0 auto;">
         <div style="text-align:center;margin-bottom:24px;">
           <h1 style="color:#3CCE2A;font-size:28px;letter-spacing:4px;margin:0;">CFS</h1>
@@ -580,14 +595,31 @@ export async function sendDonationReceipt({
     </div>
   </div>`;
 
-  const rendered = await renderTemplate("donation_receipt", {
+  const vars = {
     ref_no: refNo,
     amount: Number(amount).toLocaleString("en-PH", { minimumFractionDigits: 2 }),
+    date_str: date,
+    time_str: time,
+    message: message ?? "",
+    barcode_svg: makeBarcode(donationId),
     body_html: bodyHtml,
-  });
+  };
 
-  const subject = rendered?.subject ?? `Official Receipt #${refNo} — CFS Donation`;
-  const html = rendered?.html ?? `<div style="background:#f0f0f0;padding:32px 0;font-family:${mono};">${bodyHtml}</div>`;
+  let subject: string | null = null;
+  let html:    string | null = null;
+
+  const stored = await loadTemplate("donation_receipt");
+  if (stored?.sections) {
+    const sections = resolveSections("donation_receipt", stored.sections) as unknown as DonationReceiptSections;
+    html    = renderDonationReceipt(vars, sections);
+    subject = applyVars(stored.subject ?? "Official Receipt #{{ref_no}} — CFS Donation", vars);
+  } else if (stored?.html) {
+    subject = applyVars(stored.subject, vars);
+    html    = applyVars(stored.html, vars);
+  }
+
+  subject = subject ?? `Official Receipt #${refNo} — CFS Donation`;
+  html    = html    ?? `<div style="background:#f0f0f0;padding:32px 0;font-family:${mono};">${bodyHtml}</div>`;
 
   await resend.emails.send({
     from: `${FROM_NAME} <${FROM}>`,

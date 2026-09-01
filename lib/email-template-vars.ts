@@ -70,13 +70,13 @@ export const SAMPLE_VARS: Record<TemplateKey, Record<string, string>> = {
     invoice_block:  "",
   },
   donation_receipt: {
-    ref_no:    "DONATE-SAMPLE",
-    amount:    "500.00",
-    body_html: `<div style="background:#ffffff;max-width:380px;margin:0 auto;padding:32px 28px;box-shadow:0 4px 20px rgba(0,0,0,0.12);text-align:center;font-family:'Courier New',monospace;">
-      <div style="font-size:11px;letter-spacing:3px;color:#111;margin-bottom:4px;">OFFICIAL RECEIPT</div>
-      <div style="font-size:15px;font-weight:bold;letter-spacing:2px;color:#111;">CFS — COLET FAN SUPORTA</div>
-      <div style="margin-top:12px;font-size:13px;color:#111;">₱500.00 — Fan Support Donation</div>
-    </div>`,
+    ref_no:      "DONATE-SAMPLE",
+    amount:      "500.00",
+    date_str:    "09/01/2026",
+    time_str:    "03:45 PM",
+    message:     "",
+    barcode_svg: `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="56" style="display:block;margin:0 auto;"><rect x="0" y="0" width="2" height="56" fill="#111"/><rect x="4" y="0" width="1" height="56" fill="#111"/><rect x="8" y="0" width="3" height="56" fill="#111"/><rect x="14" y="0" width="1" height="56" fill="#111"/><rect x="18" y="0" width="2" height="56" fill="#111"/><rect x="24" y="0" width="1" height="56" fill="#111"/><rect x="28" y="0" width="3" height="56" fill="#111"/><rect x="34" y="0" width="2" height="56" fill="#111"/><rect x="38" y="0" width="1" height="56" fill="#111"/><rect x="42" y="0" width="3" height="56" fill="#111"/></svg>`,
+    body_html: "",
   },
   order_confirmation: {
     order_short_id: "ORDER123",
