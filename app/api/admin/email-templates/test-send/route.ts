@@ -6,7 +6,7 @@ import { SAMPLE_VARS } from "@/lib/email-template-vars";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@cfs-binicolet.com";
-const FROM_NAME = process.env.RESEND_FROM_NAME ?? "CFS Bini Colet";
+const FROM_NAME = process.env.RESEND_FROM_NAME ?? "Colet Fan Suporta";
 
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();

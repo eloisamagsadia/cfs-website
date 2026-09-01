@@ -52,7 +52,7 @@ export async function sendWelcomeEmail({ email, name }: { email: string; name: s
     <!-- Header -->
     <div style="text-align:center;margin-bottom:32px;">
       <div style="display:inline-block;background:#1A3D14;border:2px solid #2C4820;border-radius:10px;padding:8px 20px;">
-        <span style="font-size:11px;color:#3CCE2A;letter-spacing:4px;font-weight:700;">✦ CFS · BINI COLET ✦</span>
+        <span style="font-size:11px;color:#3CCE2A;letter-spacing:4px;font-weight:700;">✦ COLET FAN SUPORTA ✦</span>
       </div>
     </div>
 
@@ -72,8 +72,8 @@ export async function sendWelcomeEmail({ email, name }: { email: string; name: s
           Hi <strong style="color:#F0EAD6;">${name}</strong>,
         </p>
         <p style="margin:0 0 20px;font-size:15px;color:#9DB88A;line-height:1.8;">
-          You're officially part of the <strong style="color:#3CCE2A;">CFS Bini Colet Fan Club</strong> — 
-          the home of Colet Fan Suporta (Iu-ers) in the Philippines. We're so glad you're here! 🎉
+          You're officially part of the <strong style="color:#3CCE2A;">Colet Fan Suporta</strong> community —
+          the home of Iu-ers in the Philippines. We're so glad you're here! 🎉
         </p>
 
         <!-- What you can do -->
@@ -120,8 +120,8 @@ export async function sendWelcomeEmail({ email, name }: { email: string; name: s
 
     <!-- Footer -->
     <div style="text-align:center;margin-top:24px;">
-      <p style="font-size:11px;color:#2C4820;margin:0 0 4px;letter-spacing:1px;">CFS · BINI COLET FAN CLUB</p>
-      <p style="font-size:11px;color:#1A2614;margin:0;">Colet Fan Suporta · Philippines</p>
+      <p style="font-size:11px;color:#2C4820;margin:0 0 4px;letter-spacing:1px;">COLET FAN SUPORTA</p>
+      <p style="font-size:11px;color:#1A2614;margin:0;">Philippines</p>
     </div>
 
   </div>

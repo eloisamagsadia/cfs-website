@@ -59,8 +59,8 @@ export function renderEventTicket(vars: EventTicketVars, sections: EventTicketSe
 
     <!-- Brand mark (locked) -->
     <div style="text-align:center;padding:4px 0 20px;">
-      <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:700;letter-spacing:4px;color:#1B3A2D;">CFS</div>
-      <div style="font-size:11px;letter-spacing:3px;color:#5A7A60;margin-top:2px;">COLET FAN SUPORTA</div>
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;font-weight:700;letter-spacing:0.5px;color:#1B3A2D;">Colet Fan Suporta</div>
+      <div style="font-size:10px;letter-spacing:2.5px;color:#5A7A60;margin-top:4px;">OFFICIAL FAN CLUB</div>
     </div>
 
     <!-- Card (locked shell) -->

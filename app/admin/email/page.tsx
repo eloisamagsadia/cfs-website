@@ -23,7 +23,7 @@ const DEFAULT_HTML = `<div style="background:#FAF6EE;padding:32px 16px;font-fami
       <h2 style="font-family:Georgia,serif;font-size:22px;color:#1B3A2D;margin:0 0 14px;">Hi {{name}},</h2>
       <p style="font-size:14px;color:#3A5A30;line-height:1.7;margin:0 0 12px;">Your message here…</p>
       <div style="border-top:1px dashed #DDE8DD;padding-top:16px;margin-top:20px;font-size:12px;color:#7A8E7A;text-align:center;">
-        With love,<br/><strong style="color:#1A8040;">CFS Bini Colet Fan Club</strong>
+        With love,<br/><strong style="color:#1A8040;">Colet Fan Suporta</strong>
       </div>
     </div>
   </div>

@@ -44,5 +44,5 @@ ALTER TABLE public.email_manual_templates ENABLE ROW LEVEL SECURITY;
 INSERT INTO public.email_manual_templates (name, subject, html, is_builtin) VALUES
 ('Thank You',      'Thank you for your support, {{name}}!',              '<div>Thank you, {{name}}!</div>', true),
 ('Reward / Badge', 'You earned a special reward, {{name}}! ✦',           '<div>Congrats, {{name}}!</div>', true),
-('Announcement',   'Important update from CFS Bini Colet Fan Club',       '<div>Hi {{name}}, we have news…</div>', true)
+('Announcement',   'Important update from Colet Fan Suporta',       '<div>Hi {{name}}, we have news…</div>', true)
 ON CONFLICT (name) DO NOTHING;

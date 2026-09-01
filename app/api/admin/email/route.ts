@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   }
 
   const FROM = process.env.RESEND_FROM_EMAIL ?? "noreply@coletfs.com";
-  const FROM_NAME = process.env.RESEND_FROM_NAME ?? "CFS Bini Colet";
+  const FROM_NAME = process.env.RESEND_FROM_NAME ?? "Colet Fan Suporta";
 
   // Callers may still send `message` (plaintext) for backwards compat; wrap
   // it in a minimal shell so old flows keep working. New flows pass `html`.

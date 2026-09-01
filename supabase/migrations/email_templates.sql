@@ -71,7 +71,7 @@ $HTML$
 -- but the barcode/table are computed in code and rendered as {{body_html}}.)
 INSERT INTO public.email_templates (key, subject, html) VALUES (
   'donation_receipt',
-  'Official Receipt #{{ref_no}} — CFS Donation',
+  'Official Receipt #{{ref_no}} — Colet Fan Suporta Donation',
   $HTML$
 <div style="background:#f0f0f0;padding:32px 0;font-family:Courier New, Courier, monospace;">
   {{body_html}}
@@ -113,7 +113,7 @@ INSERT INTO public.email_templates (key, subject, html) VALUES (
   <div style="max-width:600px;margin:0 auto;">
     <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;padding:32px;text-align:center;">
       <h1 style="font-family:Georgia,serif;font-size:26px;color:#1B3A2D;margin:0 0 10px;">Welcome, {{member_name}}!</h1>
-      <p style="font-size:14px;color:#5A7A60;line-height:1.7;margin:0 0 18px;">You're officially part of the CFS fan community.</p>
+      <p style="font-size:14px;color:#5A7A60;line-height:1.7;margin:0 0 18px;">You're officially part of the Colet Fan Suporta community.</p>
       <a href="{{site_url}}/members" style="display:inline-block;background:#1A8040;color:#FFFFFF;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;padding:12px 24px;border-radius:10px;">EXPLORE MEMBERS AREA</a>
     </div>
   </div>

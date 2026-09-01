@@ -71,7 +71,7 @@ export const TEMPLATE_SECTIONS: Partial<Record<string, TemplateSectionsConfig>> 
         key: "footer_html",
         label: "Footer signoff",
         type: "rich",
-        default: "Thank you for supporting CFS Bini Colet! ♥<br/>For questions, contact us on our social media channels.",
+        default: "Thank you for supporting Colet Fan Suporta! ♥<br/>For questions, contact us on our social media channels.",
       },
     ],
   },
