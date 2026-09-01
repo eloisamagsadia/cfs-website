@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import Navbar from "@/components/shared/Navbar";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import MobileAdminNav from "@/components/admin/MobileAdminNav";
+import CommandPalette from "@/components/admin/CommandPalette";
 import type { Metadata } from "next";
 export const metadata: Metadata = { title:{ default:"Admin", template:"%s | CFS Admin" } };
 
@@ -17,6 +18,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <main style={{ flex:1, minWidth:0 }}>{children}</main>
       </div>
       <div className="mobile-only"><MobileAdminNav/></div>
+      <CommandPalette/>
     </div>
   );
 }

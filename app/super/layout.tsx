@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import SuperSidebar from "@/components/super/SuperSidebar";
 import MobileSuperNav from "@/components/super/MobileSuperNav";
 import Navbar from "@/components/shared/Navbar";
+import CommandPalette from "@/components/admin/CommandPalette";
 
 export default async function SuperLayout({ children }: { children: React.ReactNode }) {
   const { userId, sessionClaims } = auth();
@@ -20,6 +21,7 @@ export default async function SuperLayout({ children }: { children: React.ReactN
         <main style={{ flex: 1, minWidth: 0 }}>{children}</main>
       </div>
       <div className="mobile-only"><MobileSuperNav /></div>
+      <CommandPalette />
     </div>
   );
 }
