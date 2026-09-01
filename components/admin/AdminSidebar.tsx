@@ -44,6 +44,7 @@ const superItems = [
   { label: "Categories",     href: "/super/categories",        icon: icons.reports },
   { label: "Donation Drives",href: "/super/donation-drives",   icon: icons.donations },
   { label: "Sponsor Perks",  href: "/super/sponsor-perks",     icon: icons.exclusive },
+  { label: "Badges",         href: "/super/badges",            icon: icons.roles },
   { label: "Roles",          href: "/super/roles",             icon: icons.roles },
   { label: "Impersonate",    href: "/super/impersonate",       icon: icons.impersonate },
   { label: "Audit Log",      href: "/super/audit",             icon: icons.audit },
