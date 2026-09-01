@@ -56,27 +56,62 @@ export default async function AnalyticsPage() {
   const db = createAdminClient();
   const cutoffISO = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
+  // Every query is wrapped so a single failure doesn't nuke the entire dashboard.
+  // Missing / errored data just renders as zero.
+  const safe = async <T,>(p: Promise<{ data: any; count?: number | null; error: any }>, fallback: T): Promise<T> => {
+    try {
+      const r = await p;
+      if (r.error) return fallback;
+      return r as unknown as T;
+    } catch { return fallback; }
+  };
+
   const [
-    { count: totalMembers },
-    { count: sponsors },
-    { count: activeTickets },
-    { count: totalEvents },
-    { data: recentSignups },
-    { data: recentTickets },
-    { data: donationsAll },
-    { data: ordersAll },
-    { data: topEvents },
+    membersRes,
+    sponsorsRes,
+    activeTicketsRes,
+    totalEventsRes,
+    signupsRes,
+    ticketsRes,
+    donationsRes,
+    ordersRes,
+    eventsListRes,
+    allTicketsRes,
   ] = await Promise.all([
-    db.from("profiles").select("*", { count: "exact", head: true }),
-    db.from("profiles").select("*", { count: "exact", head: true }).eq("role", "sponsor"),
-    (db as any).from("event_tickets").select("*", { count: "exact", head: true }).in("status", ["active", "used"]),
-    (db as any).from("events").select("*", { count: "exact", head: true }),
-    db.from("profiles").select("created_at").gte("created_at", cutoffISO),
-    (db as any).from("event_tickets").select("created_at, status").gte("created_at", cutoffISO).in("status", ["active", "used"]),
-    (db as any).from("donations").select("created_at, amount, donation_amount, status").eq("status", "completed"),
-    (db as any).from("orders").select("created_at, total, payment_status").eq("payment_status", "paid"),
-    (db as any).from("events").select("id, title, event_tickets(count)").order("date", { ascending: false }).limit(20),
+    safe(db.from("profiles").select("*", { count: "exact", head: true }) as any, { count: 0 } as any),
+    safe(db.from("profiles").select("*", { count: "exact", head: true }).eq("role", "sponsor") as any, { count: 0 } as any),
+    safe((db as any).from("event_tickets").select("*", { count: "exact", head: true }).in("status", ["active", "used"]), { count: 0 } as any),
+    safe((db as any).from("events").select("*", { count: "exact", head: true }), { count: 0 } as any),
+    safe(db.from("profiles").select("created_at").gte("created_at", cutoffISO) as any, { data: [] } as any),
+    safe((db as any).from("event_tickets").select("created_at, status").gte("created_at", cutoffISO).in("status", ["active", "used"]), { data: [] } as any),
+    safe((db as any).from("donations").select("created_at, amount, donation_amount, status").eq("status", "completed"), { data: [] } as any),
+    safe((db as any).from("orders").select("created_at, total, payment_status").eq("payment_status", "paid"), { data: [] } as any),
+    safe((db as any).from("events").select("id, title").order("date", { ascending: false }).limit(50), { data: [] } as any),
+    safe((db as any).from("event_tickets").select("event_id").in("status", ["active", "used"]), { data: [] } as any),
   ]);
+
+  const totalMembers   = (membersRes as any).count as number | null;
+  const sponsors       = (sponsorsRes as any).count as number | null;
+  const activeTickets  = (activeTicketsRes as any).count as number | null;
+  const totalEvents    = (totalEventsRes as any).count as number | null;
+  const recentSignups  = (signupsRes as any).data as any[] | null;
+  const recentTickets  = (ticketsRes as any).data as any[] | null;
+  const donationsAll   = (donationsRes as any).data as any[] | null;
+  const ordersAll      = (ordersRes as any).data as any[] | null;
+  const eventsList     = (eventsListRes as any).data as any[] | null;
+  const allTickets     = (allTicketsRes as any).data as any[] | null;
+
+  // Ticket counts per event, computed in JS instead of via a fragile PostgREST
+  // count-embed that requires an FK relationship the schema cache may not know about.
+  const ticketsByEvent = new Map<string, number>();
+  for (const t of allTickets ?? []) {
+    const id = t?.event_id;
+    if (!id) continue;
+    ticketsByEvent.set(id, (ticketsByEvent.get(id) ?? 0) + 1);
+  }
+  const topEvents = (eventsList ?? []).map((e: any) => ({
+    id: e.id, title: e.title, event_tickets: [{ count: ticketsByEvent.get(e.id) ?? 0 }],
+  }));
 
   // 30-day series
   const signupSeries    = buildSeries(recentSignups as any[], "created_at");
