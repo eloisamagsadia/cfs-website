@@ -24,7 +24,8 @@ export default async function AdminEmailTemplatesPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
-        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>EMAIL TEMPLATES</h1>
+        <Link href="/admin/emails" style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", textDecoration: "none" }}>← All email tools</Link>
+        <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px", marginTop: "4px" }}>AUTOMATED EMAIL TEMPLATES</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
           Edit the subject line and HTML body sent for each automated email. Changes take effect immediately.
         </p>
