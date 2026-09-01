@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IconX, IconCheck, IconWarning } from "@/components/shared/Icons";
 import StatBar from "@/components/shared/StatBar";
 
@@ -39,14 +39,28 @@ function timeAgo(date: string) {
 export default function AdminMembersClient({ members, callerRole }: { members: any[], callerRole: string }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
+  const [tagFilter, setTagFilter] = useState<string>("");
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [localMembers, setLocalMembers] = useState(members);
   const [selectedMember, setSelectedMember] = useState<any>(null);
   const [sponsorCount, setSponsorCount] = useState(members.filter(m => m.role === "sponsor").length);
+  const [tagsByMember, setTagsByMember] = useState<Record<string, { id: string; name: string; color: string }[]>>({});
+  const [allTags, setAllTags]           = useState<{ id: string; name: string; color: string; usage_count?: number }[]>([]);
 
   const isSuperAdmin = callerRole === "super_admin";
 
-  const filtered = localMembers.filter(m => {
+  // Batch-load tag assignments + tag palette in parallel
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/admin/members/tags").then(r => r.json()).catch(() => ({})),
+      fetch("/api/admin/tags").then(r => r.json()).catch(() => ({})),
+    ]).then(([assigns, tags]) => {
+      setTagsByMember(assigns.byMember ?? {});
+      setAllTags(tags.tags ?? []);
+    });
+  }, []);
+
+  const filtered = useMemo(() => localMembers.filter(m => {
     const q = search.toLowerCase();
     const matchSearch = !q ||
       (m.display_name ?? "").toLowerCase().includes(q) ||
@@ -55,8 +69,9 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
       filter === "all" ? true :
       filter === "banned" ? m.is_banned :
       m.role === filter && !m.is_banned;
-    return matchSearch && matchFilter;
-  });
+    const matchTag = !tagFilter || (tagsByMember[m.id] ?? []).some(t => t.id === tagFilter);
+    return matchSearch && matchFilter && matchTag;
+  }), [localMembers, search, filter, tagFilter, tagsByMember]);
 
   async function changeRole(member: any, newRole: string) {
     setLoadingId(member.id);
@@ -148,6 +163,26 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
         </div>
       </div>
 
+      {/* Tag filter row */}
+      {allTags.length > 0 && (
+        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
+          <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#5A7A60", letterSpacing: "1.3px" }}>TAG</span>
+          <button type="button" onClick={() => setTagFilter("")}
+            style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: !tagFilter ? "#ffffff" : "#1B3A2D", background: !tagFilter ? "#1A8040" : "#F2F7F2", border: "none", borderRadius: "999px", padding: "5px 12px", cursor: "pointer", letterSpacing: "1.2px" }}>
+            ANY
+          </button>
+          {allTags.map(t => {
+            const active = tagFilter === t.id;
+            return (
+              <button key={t.id} type="button" onClick={() => setTagFilter(active ? "" : t.id)}
+                style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: active ? "#ffffff" : t.color, background: active ? t.color : `${t.color}18`, border: `1.5px solid ${active ? t.color : "transparent"}`, borderRadius: "999px", padding: "5px 12px", cursor: "pointer", letterSpacing: "1.1px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                {t.name}{typeof t.usage_count === "number" ? ` · ${t.usage_count}` : ""}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Table — desktop only */}
       <div className="members-table-desktop" style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
         <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", background: "#F2F7F2", padding: "12px 20px" }}>
@@ -179,11 +214,20 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                     : <span style={{ fontFamily: R, fontSize: "13px", color: roleColor }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>
                   }
                 </div>
-                <div>
-                  <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#1B3A2D", display: "flex", alignItems: "center", gap: "6px" }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontFamily: B, fontSize: "13px", color: m.is_banned ? "#5A3030" : "#1B3A2D", display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
                     {m.display_name ?? "—"}
                     {m.is_banned && <span style={{ fontFamily: R, fontSize: "9px", color: "#CC3344", background: "#FFE8EC", border: "1px solid #CC334440", borderRadius: "4px", padding: "1px 6px" }}>BANNED</span>}
                   </div>
+                  {(tagsByMember[m.id] ?? []).length > 0 && (
+                    <div style={{ display: "flex", gap: "4px", flexWrap: "wrap", marginTop: "3px" }}>
+                      {(tagsByMember[m.id] ?? []).map(t => (
+                        <span key={t.id} style={{ fontFamily: SG, fontSize: "8px", fontWeight: 700, color: "#ffffff", background: t.color, borderRadius: "999px", padding: "1px 7px", letterSpacing: "1px" }}>
+                          {t.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
