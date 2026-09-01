@@ -178,10 +178,10 @@ export default async function AnalyticsPage() {
           <AnalyticsChart data={ticketSeries} color="#156530" variant="bar" />
         </ChartCard>
         <ChartCard title="DONATIONS · 30D" value={peso(donationSeries.reduce((s, p) => s + p.value, 0))} accent="#B78A1F">
-          <AnalyticsChart data={donationSeries} color="#B78A1F" variant="bar" valueFormatter={(v) => `₱${v}`} />
+          <AnalyticsChart data={donationSeries} color="#B78A1F" variant="bar" valuePrefix="₱" />
         </ChartCard>
         <ChartCard title="ORDER REVENUE · 30D" value={peso(orderSeries.reduce((s, p) => s + p.value, 0))} accent="#7A5A0F">
-          <AnalyticsChart data={orderSeries} color="#7A5A0F" variant="bar" valueFormatter={(v) => `₱${v}`} />
+          <AnalyticsChart data={orderSeries} color="#7A5A0F" variant="bar" valuePrefix="₱" />
         </ChartCard>
       </div>
 

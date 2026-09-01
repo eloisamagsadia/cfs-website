@@ -10,7 +10,7 @@ interface Props {
   data: Point[];
   color?: string;
   variant?: "bar" | "line";
-  valueFormatter?: (v: number) => string;
+  valuePrefix?: string;
   height?: number;
 }
 
@@ -25,9 +25,9 @@ function fmtDay(day: string) {
   return d.toLocaleDateString("en-PH", { month: "short", day: "numeric" });
 }
 
-export default function AnalyticsChart({ data, color = "#1A8040", variant = "bar", valueFormatter, height = 240 }: Props) {
+export default function AnalyticsChart({ data, color = "#1A8040", variant = "bar", valuePrefix = "", height = 240 }: Props) {
   const tick = { fontFamily: SG, fontSize: 10, fill: "#5A7A60" };
-  const fmt = valueFormatter ?? ((v: number) => String(v));
+  const fmt = (v: number) => `${valuePrefix}${v.toLocaleString()}`;
 
   return (
     <div style={{ width: "100%", height }}>
