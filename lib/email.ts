@@ -70,14 +70,14 @@ export async function sendOrderConfirmation({
   shippingAddress: any;
 }) {
   const itemRows = items
-    .map(i => `<tr><td style="padding:8px 0;color:#F0EAD6;font-family:sans-serif;">${i.products?.name ?? "Item"} × ${i.quantity}</td><td style="padding:8px 0;color:#F07228;text-align:right;font-family:sans-serif;">₱${((i.products?.price ?? 0) * i.quantity).toLocaleString()}</td></tr>`)
+    .map(i => `<tr><td style="padding:6px 0;color:#1B3A2D;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;">${i.products?.name ?? "Item"} × ${i.quantity}</td><td style="padding:6px 0;color:#1A8040;text-align:right;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:600;">₱${((i.products?.price ?? 0) * i.quantity).toLocaleString()}</td></tr>`)
     .join("");
 
   const orderShortId = orderId.slice(0, 8).toUpperCase();
-  const itemsTable = `<table style="width:100%;border-collapse:collapse;border-top:1px solid #2C4820;">
+  const itemsTable = `<table style="width:100%;border-collapse:collapse;">
     ${itemRows}
-    <tr><td colspan="2" style="border-top:1px solid #2C4820;padding-top:8px;"></td></tr>
-    <tr><td style="color:#F0EAD6;font-weight:bold;padding:4px 0;font-family:sans-serif;">TOTAL</td><td style="color:#F07228;font-weight:bold;text-align:right;font-family:sans-serif;">₱${total.toLocaleString()}</td></tr>
+    <tr><td colspan="2" style="border-top:1px dashed #DDE8DD;padding-top:8px;"></td></tr>
+    <tr><td style="color:#1B3A2D;font-weight:700;padding:4px 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;letter-spacing:1px;">TOTAL</td><td style="color:#1A8040;font-weight:700;text-align:right;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;">₱${total.toLocaleString()}</td></tr>
   </table>`;
 
   const vars = {

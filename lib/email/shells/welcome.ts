@@ -1,6 +1,7 @@
 // Fixed HTML shell for the welcome email (member onboarding).
-// The brand wrapper is locked; admins edit headline, welcome message,
-// what-to-do-next list, and footer signoff.
+// Matches the event_ticket palette: cream background, white brand card,
+// forest green accents, Georgia serif headings. Locked layout — admins
+// edit only headline_text, intro_html, next_steps_html, footer_html.
 
 import { applyVars } from "@/lib/email";
 
@@ -25,18 +26,42 @@ export function renderWelcome(vars: WelcomeVars, sections: WelcomeSections): str
     footer_html:     applyVars(sections.footer_html     ?? "", asVars),
   };
 
-  return `<div style="background:#0F1A0B;padding:32px;font-family:sans-serif;max-width:600px;margin:0 auto;">
-  <div style="text-align:center;margin-bottom:24px;">
-    <h1 style="color:#3CCE2A;font-size:28px;letter-spacing:4px;margin:0;">CFS</h1>
-    <p style="color:#8AAA78;margin:4px 0;">Colet Fan Suporta</p>
-  </div>
+  return `<div style="background:#FAF6EE;padding:32px 16px;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;">
 
-  <div style="background:#1A2614;border:2px solid #2C4820;border-radius:12px;padding:24px;">
-    <h2 style="color:#F0EAD6;font-size:20px;letter-spacing:2px;margin:0 0 12px;">${s.headline_text}</h2>
-    <div style="color:#8AAA78;font-size:14px;line-height:1.6;margin:0 0 12px;">${s.intro_html}</div>
-    <div style="color:#F0EAD6;font-size:14px;line-height:1.8;margin:0;">${s.next_steps_html}</div>
-  </div>
+    <!-- Brand mark (locked) -->
+    <div style="text-align:center;padding:4px 0 20px;">
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:700;letter-spacing:4px;color:#1B3A2D;">CFS</div>
+      <div style="font-size:11px;letter-spacing:3px;color:#5A7A60;margin-top:2px;">COLET FAN SUPORTA</div>
+    </div>
 
-  <p style="color:#5A7A50;font-size:12px;text-align:center;margin-top:20px;line-height:1.6;">${s.footer_html}</p>
+    <!-- Card (locked shell) -->
+    <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(27,58,45,0.08);">
+      <!-- Accent stripe -->
+      <div style="height:8px;background:linear-gradient(90deg,#1A8040 0%,#F5C82A 55%,#E88C4A 100%);"></div>
+
+      <div style="padding:30px 28px 24px;text-align:center;">
+        <div style="display:inline-block;background:#E8F0E4;color:#1A8040;font-size:10px;font-weight:700;letter-spacing:2px;padding:5px 12px;border-radius:999px;">JOIN THE FAM ✦</div>
+        <h1 style="font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.2;color:#1B3A2D;margin:14px 0 10px;">${s.headline_text}</h1>
+      </div>
+
+      <div style="padding:0 28px 28px;">
+        <div style="font-size:14px;color:#3A5A30;line-height:1.7;margin:0 0 18px;">
+          ${s.intro_html}
+        </div>
+
+        <div style="background:#FAF6EE;border:1px dashed #C7D6BE;border-radius:12px;padding:18px 20px;color:#1B3A2D;font-size:14px;line-height:1.8;">
+          ${s.next_steps_html}
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer (locked) -->
+    <div style="text-align:center;padding:22px 8px 4px;font-size:11px;color:#7A8E7A;line-height:1.7;">
+      ${s.footer_html}<br/>
+      <a href="${vars.site_url}" style="color:#1A8040;text-decoration:none;">coletfs.com</a> &nbsp;·&nbsp; @coletfansuporta
+    </div>
+
+  </div>
 </div>`;
 }

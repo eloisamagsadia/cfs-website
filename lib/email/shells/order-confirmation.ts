@@ -1,6 +1,7 @@
-// Fixed HTML shell for the order confirmation email. The brand wrapper,
-// items table, and shipping card are locked here. Admins edit only the
-// headline text, optional intro, and footer signoff.
+// Fixed HTML shell for the order confirmation email.
+// Matches the event_ticket palette: cream background, white brand card,
+// forest green accents, Georgia serif headings. Locked layout — admins
+// edit only headline_text, intro_html, footer_html.
 
 import { applyVars } from "@/lib/email";
 
@@ -28,31 +29,54 @@ export function renderOrderConfirmation(vars: OrderConfirmationVars, sections: O
   };
 
   const introBlock = s.intro_html.trim()
-    ? `<div style="color:#8AAA78;font-size:13px;line-height:1.6;margin:0 0 14px;">${s.intro_html}</div>`
+    ? `<div style="padding:0 28px 8px;font-size:13px;color:#3A5A30;line-height:1.7;text-align:center;">${s.intro_html}</div>`
     : "";
 
-  return `<div style="background:#0F1A0B;padding:32px;font-family:sans-serif;max-width:600px;margin:0 auto;">
-  <div style="text-align:center;margin-bottom:24px;">
-    <h1 style="color:#3CCE2A;font-size:28px;letter-spacing:4px;margin:0;">CFS</h1>
-    <p style="color:#8AAA78;margin:4px 0;">Colet Fan Suporta</p>
-  </div>
+  return `<div style="background:#FAF6EE;padding:32px 16px;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;">
 
-  <div style="background:#1A2614;border:2px solid #2C4820;border-radius:12px;padding:24px;margin-bottom:20px;">
-    <h2 style="color:#F0EAD6;font-size:18px;letter-spacing:2px;margin:0 0 8px;">${s.headline_text}</h2>
-    <p style="color:#8AAA78;font-size:14px;margin:0 0 16px;">Order ID: <strong style="color:#F5C82A;">#${vars.order_short_id}</strong></p>
-    ${introBlock}
-    ${vars.items_table}
-  </div>
+    <!-- Brand mark (locked) -->
+    <div style="text-align:center;padding:4px 0 20px;">
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:700;letter-spacing:4px;color:#1B3A2D;">CFS</div>
+      <div style="font-size:11px;letter-spacing:3px;color:#5A7A60;margin-top:2px;">COLET FAN SUPORTA</div>
+    </div>
 
-  <div style="background:#1A2614;border:2px solid #2C4820;border-radius:12px;padding:20px;margin-bottom:20px;">
-    <h3 style="color:#3CCE2A;font-size:13px;letter-spacing:2px;margin:0 0 10px;">SHIPPING TO</h3>
-    <p style="color:#F0EAD6;font-size:14px;margin:0;">${vars.ship_name}</p>
-    <p style="color:#8AAA78;font-size:13px;margin:4px 0;">${vars.ship_line1}</p>
-    <p style="color:#8AAA78;font-size:13px;margin:0;">${vars.ship_line2}</p>
-  </div>
+    <!-- Card (locked shell) -->
+    <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(27,58,45,0.08);">
+      <div style="height:8px;background:linear-gradient(90deg,#1A8040 0%,#F5C82A 55%,#E88C4A 100%);"></div>
 
-  <p style="color:#5A7A50;font-size:12px;text-align:center;line-height:1.6;">
-    ${s.footer_html}
-  </p>
+      <div style="padding:30px 28px 8px;text-align:center;">
+        <div style="display:inline-block;background:#E8F0E4;color:#1A8040;font-size:10px;font-weight:700;letter-spacing:2px;padding:5px 12px;border-radius:999px;">ORDER PLACED ✦</div>
+        <h1 style="font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.2;color:#1B3A2D;margin:14px 0 8px;">${s.headline_text}</h1>
+        <div style="font-size:12px;color:#5A7A60;letter-spacing:1px;">ORDER ID · <strong style="color:#1B3A2D;letter-spacing:1.5px;">#${vars.order_short_id}</strong></div>
+      </div>
+
+      ${introBlock}
+
+      <!-- Items table (locked) -->
+      <div style="padding:20px 28px 8px;">
+        <div style="background:#FAF6EE;border:1px dashed #C7D6BE;border-radius:12px;padding:16px 18px;">
+          ${vars.items_table}
+        </div>
+      </div>
+
+      <!-- Shipping address (locked) -->
+      <div style="padding:14px 28px 26px;">
+        <div style="border-top:1px dashed #DDE8DD;padding-top:14px;">
+          <div style="font-size:10px;letter-spacing:2px;color:#5A7A60;margin-bottom:6px;">SHIPPING TO</div>
+          <div style="font-size:14px;color:#1B3A2D;font-weight:600;">${vars.ship_name}</div>
+          <div style="font-size:12px;color:#5A7A60;margin-top:2px;">${vars.ship_line1}</div>
+          <div style="font-size:12px;color:#5A7A60;">${vars.ship_line2}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer (locked) -->
+    <div style="text-align:center;padding:22px 8px 4px;font-size:11px;color:#7A8E7A;line-height:1.7;">
+      ${s.footer_html}<br/>
+      <a href="https://coletfs.com" style="color:#1A8040;text-decoration:none;">coletfs.com</a> &nbsp;·&nbsp; @coletfansuporta
+    </div>
+
+  </div>
 </div>`;
 }

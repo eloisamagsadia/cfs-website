@@ -80,7 +80,7 @@ export const SAMPLE_VARS: Record<TemplateKey, Record<string, string>> = {
   },
   order_confirmation: {
     order_short_id: "ORDER123",
-    items_table:    `<table style="width:100%;border-collapse:collapse;border-top:1px solid #2C4820;"><tr><td style="padding:8px 0;color:#F0EAD6;">Sample Item × 1</td><td style="padding:8px 0;color:#F07228;text-align:right;">₱500</td></tr><tr><td colspan="2" style="border-top:1px solid #2C4820;padding-top:8px;"></td></tr><tr><td style="color:#F0EAD6;font-weight:bold;padding:4px 0;">TOTAL</td><td style="color:#F07228;font-weight:bold;text-align:right;">₱500</td></tr></table>`,
+    items_table:    `<table style="width:100%;border-collapse:collapse;"><tr><td style="padding:6px 0;color:#1B3A2D;font-size:13px;">Sample Item × 1</td><td style="padding:6px 0;color:#1A8040;text-align:right;font-size:13px;font-weight:600;">₱500</td></tr><tr><td colspan="2" style="border-top:1px dashed #DDE8DD;padding-top:8px;"></td></tr><tr><td style="color:#1B3A2D;font-weight:700;padding:4px 0;font-size:14px;letter-spacing:1px;">TOTAL</td><td style="color:#1A8040;font-weight:700;text-align:right;font-size:14px;">₱500</td></tr></table>`,
     ship_name:      "Sample Fan",
     ship_line1:     "123 Sample Street, Sample Barangay",
     ship_line2:     "Quezon City, Metro Manila 1100",
