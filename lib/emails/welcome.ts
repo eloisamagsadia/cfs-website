@@ -26,7 +26,7 @@ export async function sendWelcomeEmail({ email, name }: { email: string; name: s
   const stored = await loadWelcomeTemplate();
   if (stored?.sections) {
     const sections = resolveSections("welcome", stored.sections) as unknown as WelcomeSections;
-    const subject = applyVars(stored.subject ?? "Welcome to Colet Fan Suporta ✦", vars);
+    const subject = applyVars(stored.subject ?? "Welcome to Colet Fan Suporta ✦", vars, { plaintext: true });
     const html    = renderWelcome(vars, sections);
     await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL!,

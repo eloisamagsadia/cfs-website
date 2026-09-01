@@ -2,6 +2,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
+import { sendWelcomeEmail } from "@/lib/emails/welcome";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -57,6 +58,12 @@ export async function POST(req: Request) {
     }
 
     console.log("✓ Profile created for", id, email);
+
+    if (email) {
+      sendWelcomeEmail({ email, name: displayName }).catch(err => {
+        console.error("Welcome email failed for", email, err);
+      });
+    }
   }
 
   if (evt.type === "user.deleted") {

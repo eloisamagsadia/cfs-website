@@ -40,29 +40,28 @@ DROP POLICY IF EXISTS "no_public_access_email_templates" ON public.email_templat
 -- service-role bypasses RLS by design.
 
 -- ─── SEED ───────────────────────────────────────────────────────────────
+-- Note: this raw HTML column is a *fallback*. Real production sends use
+-- the locked shell in lib/email/shells/*.ts driven by the `sections`
+-- JSON. See email_templates_light_theme.sql for the migration that
+-- brought the seed onto the current cream/white palette.
+--
 -- event_ticket
 INSERT INTO public.email_templates (key, subject, html) VALUES (
   'event_ticket',
-  '🎫 Your ticket for {{event_title}}',
+  'Your ticket for {{event_title}} — {{ticket_code}}',
   $HTML$
-<div style="background:#0F1A0B;padding:32px;font-family:sans-serif;max-width:600px;margin:0 auto;">
-  <div style="text-align:center;margin-bottom:24px;">
-    <h1 style="color:#3CCE2A;font-size:28px;letter-spacing:4px;margin:0;">CFS</h1>
-    <p style="color:#8AAA78;margin:4px 0;">Colet Fan Suporta</p>
-  </div>
-  <div style="background:#1A3D14;border:2px solid #3CCE2A;border-radius:12px;padding:24px;text-align:center;">
-    <div style="font-size:40px;margin-bottom:12px;">🎫</div>
-    <h2 style="color:#F0EAD6;font-size:20px;letter-spacing:2px;margin:0 0 6px;">{{event_title}}</h2>
-    <p style="color:#3CCE2A;font-size:14px;margin:0 0 4px;">{{event_date_long}}</p>
-    <p style="color:#8AAA78;font-size:14px;margin:0 0 20px;">📍 {{event_location}}</p>
-    <div style="background:#0F1A0B;border-radius:8px;padding:12px;display:inline-block;">
-      <p style="color:#F5C82A;font-size:12px;letter-spacing:2px;margin:0 0 4px;">TICKET ID</p>
-      <p style="color:#F0EAD6;font-size:16px;font-weight:bold;margin:0;">{{ticket_id}}</p>
+<div style="background:#FAF6EE;padding:32px 16px;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;">
+    <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;overflow:hidden;padding:28px;text-align:center;">
+      <h1 style="font-family:Georgia,serif;font-size:26px;color:#1B3A2D;margin:0 0 8px;">{{event_title}}</h1>
+      <div style="font-size:13px;color:#3A5A30;">{{date_str}} · {{time_str}}</div>
+      <div style="font-size:13px;color:#5A7A60;margin-top:4px;">{{event_location}}</div>
+      <div style="margin-top:20px;padding:12px 16px;background:#FAF6EE;border:1px dashed #C7D6BE;border-radius:12px;display:inline-block;">
+        <div style="font-size:10px;letter-spacing:2px;color:#5A7A60;">TICKET ID</div>
+        <div style="font-family:'Courier New',monospace;font-size:16px;font-weight:700;color:#1B3A2D;margin-top:2px;">{{ticket_code}}</div>
+      </div>
     </div>
   </div>
-  <p style="color:#5A7A50;font-size:12px;text-align:center;margin-top:20px;">
-    Please present this email or your ticket ID at the event. See you there! ✦
-  </p>
 </div>
 $HTML$
 ) ON CONFLICT (key) DO NOTHING;
@@ -85,52 +84,39 @@ INSERT INTO public.email_templates (key, subject, html) VALUES (
   'order_confirmation',
   '✦ Order Confirmed! #{{order_short_id}}',
   $HTML$
-<div style="background:#0F1A0B;padding:32px;font-family:sans-serif;max-width:600px;margin:0 auto;">
-  <div style="text-align:center;margin-bottom:24px;">
-    <h1 style="color:#3CCE2A;font-size:28px;letter-spacing:4px;margin:0;">CFS</h1>
-    <p style="color:#8AAA78;margin:4px 0;">Colet Fan Suporta</p>
+<div style="background:#FAF6EE;padding:32px 16px;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;">
+    <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;padding:28px;">
+      <div style="text-align:center;margin-bottom:14px;">
+        <div style="display:inline-block;background:#E8F0E4;color:#1A8040;font-size:10px;font-weight:700;letter-spacing:2px;padding:5px 12px;border-radius:999px;">ORDER CONFIRMED ✦</div>
+      </div>
+      <p style="font-size:13px;color:#5A7A60;text-align:center;margin:0 0 18px;">Order ID: <strong style="color:#1B3A2D;font-family:'Courier New',monospace;">#{{order_short_id}}</strong></p>
+      {{items_table}}
+      <div style="margin-top:22px;padding-top:16px;border-top:1px dashed #DDE8DD;">
+        <div style="font-size:10px;letter-spacing:2px;color:#1A8040;font-weight:700;margin-bottom:6px;">SHIPPING TO</div>
+        <p style="font-size:14px;color:#1B3A2D;margin:0;font-weight:600;">{{ship_name}}</p>
+        <p style="font-size:13px;color:#5A7A60;margin:4px 0;">{{ship_line1}}</p>
+        <p style="font-size:13px;color:#5A7A60;margin:0;">{{ship_line2}}</p>
+      </div>
+    </div>
   </div>
-  <div style="background:#1A2614;border:2px solid #2C4820;border-radius:12px;padding:24px;margin-bottom:20px;">
-    <h2 style="color:#F0EAD6;font-size:18px;letter-spacing:2px;margin:0 0 8px;">ORDER CONFIRMED ✦</h2>
-    <p style="color:#8AAA78;font-size:14px;margin:0 0 16px;">Order ID: <strong style="color:#F5C82A;">#{{order_short_id}}</strong></p>
-    {{items_table}}
-  </div>
-  <div style="background:#1A2614;border:2px solid #2C4820;border-radius:12px;padding:20px;margin-bottom:20px;">
-    <h3 style="color:#3CCE2A;font-size:13px;letter-spacing:2px;margin:0 0 10px;">SHIPPING TO</h3>
-    <p style="color:#F0EAD6;font-size:14px;margin:0;">{{ship_name}}</p>
-    <p style="color:#8AAA78;font-size:13px;margin:4px 0;">{{ship_line1}}</p>
-    <p style="color:#8AAA78;font-size:13px;margin:0;">{{ship_line2}}</p>
-  </div>
-  <p style="color:#5A7A50;font-size:12px;text-align:center;">
-    Thank you for supporting CFS Bini Colet! ♥<br/>
-    For questions, contact us on our social media channels.
-  </p>
 </div>
 $HTML$
 ) ON CONFLICT (key) DO NOTHING;
 
--- welcome (transactional catch-all — used for new-member welcome. Other
--- notifications can be added later; this seeds the row so the admin UI
--- has something to edit.)
+-- welcome (fires from Clerk user.created webhook after profile is created)
 INSERT INTO public.email_templates (key, subject, html) VALUES (
   'welcome',
-  '✦ Welcome to CFS, {{member_name}}!',
+  'Welcome to Colet Fan Suporta ✦',
   $HTML$
-<div style="background:#0F1A0B;padding:32px;font-family:sans-serif;max-width:600px;margin:0 auto;">
-  <div style="text-align:center;margin-bottom:24px;">
-    <h1 style="color:#3CCE2A;font-size:28px;letter-spacing:4px;margin:0;">CFS</h1>
-    <p style="color:#8AAA78;margin:4px 0;">Colet Fan Suporta</p>
+<div style="background:#FAF6EE;padding:32px 16px;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;">
+    <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;padding:32px;text-align:center;">
+      <h1 style="font-family:Georgia,serif;font-size:26px;color:#1B3A2D;margin:0 0 10px;">Welcome, {{member_name}}!</h1>
+      <p style="font-size:14px;color:#5A7A60;line-height:1.7;margin:0 0 18px;">You're officially part of the CFS fan community.</p>
+      <a href="{{site_url}}/members" style="display:inline-block;background:#1A8040;color:#FFFFFF;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;padding:12px 24px;border-radius:10px;">EXPLORE MEMBERS AREA</a>
+    </div>
   </div>
-  <div style="background:#1A2614;border:2px solid #2C4820;border-radius:12px;padding:24px;">
-    <h2 style="color:#F0EAD6;font-size:20px;letter-spacing:2px;margin:0 0 12px;">WELCOME, {{member_name}} ♥</h2>
-    <p style="color:#8AAA78;font-size:14px;line-height:1.6;margin:0 0 12px;">You're now part of the CFS fan community. Here's what you can do next:</p>
-    <ul style="color:#F0EAD6;font-size:14px;line-height:1.8;margin:0 0 12px;padding-left:20px;">
-      <li>Browse upcoming events at <a href="{{site_url}}/events" style="color:#3CCE2A;">coletfs.com/events</a></li>
-      <li>Introduce yourself in the community feed</li>
-      <li>Grab your fan card from your profile</li>
-    </ul>
-  </div>
-  <p style="color:#5A7A50;font-size:12px;text-align:center;margin-top:20px;">Salamat sa pagsuporta kay Colet! ✦</p>
 </div>
 $HTML$
 ) ON CONFLICT (key) DO NOTHING;
