@@ -102,8 +102,15 @@ if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
       {/* Announcement */}
       <div style={{ background: "#FFFFFF", border: "2px solid #1A8040", borderRadius: "12px", padding: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
         <div style={{ fontFamily: R, fontSize: "12px", color: "#1A8040", letterSpacing: "2px", display: "flex", alignItems: "center", gap: "6px" }}><IconMegaphone size={12} color="#1A8040" /> SITE ANNOUNCEMENT</div>
+        <p style={{ fontFamily: B, fontSize: "11px", color: "#7A8E7A", margin: 0 }}>Renders as a dismissible banner at the top of every page (public + members). Members can dismiss per-message.</p>
         <input value={settings.announcement_text ?? ""} onChange={e => setSettings((p: any) => ({ ...p, announcement_text: e.target.value }))} placeholder="Announcement text..."
           style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+          <input value={settings.announcement_cta_label ?? ""} onChange={e => setSettings((p: any) => ({ ...p, announcement_cta_label: e.target.value }))} placeholder="CTA button label (optional)"
+            style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
+          <input value={settings.announcement_cta_url ?? ""} onChange={e => setSettings((p: any) => ({ ...p, announcement_cta_url: e.target.value }))} placeholder="CTA URL (e.g. /events)"
+            style={{ background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" as const }} />
+        </div>
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
           <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>Color:</label>
           <input type="color" value={settings.announcement_color ?? "#1A8040"} onChange={e => setSettings((p: any) => ({ ...p, announcement_color: e.target.value }))}

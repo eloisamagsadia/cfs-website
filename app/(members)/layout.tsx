@@ -2,6 +2,8 @@ import Navbar from "@/components/shared/Navbar";
 import MembersSidebar from "@/components/members/Sidebar";
 import ToastNotifications from "@/components/shared/ToastNotifications";
 import MobileNav from "@/components/members/MobileNav";
+import AnnouncementBanner from "@/components/shared/AnnouncementBanner";
+import { loadActiveAnnouncement } from "@/lib/site-announcement";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { sendWelcomeEmail } from "@/lib/emails/welcome";
 import { createClient } from "@supabase/supabase-js";
@@ -30,21 +32,12 @@ export default async function MembersLayout({ children }: { children: React.Reac
     }
   }
 
-  // Fetch active announcement
-  const { data: siteSettings } = await (admin() as any)
-    .from("site_settings")
-    .select("announcement_text, announcement_active, announcement_color")
-    .single();
-  const announcement = siteSettings?.announcement_active ? siteSettings : null;
+  const ann = await loadActiveAnnouncement();
 
   return (
     <div style={{ display:"flex", flexDirection:"column", minHeight:"100vh", background:"#F7FAF5" }}>
       <Navbar/>
-      {announcement && (
-        <div style={{ background: announcement.announcement_color + "20", borderBottom: `2px solid ${announcement.announcement_color}`, padding: "10px 24px", textAlign: "center" }}>
-          <span style={{ fontFamily: "var(--font-barlow,'Barlow',sans-serif)", fontSize: "13px", color: "#1B3A2D" }}>{announcement.announcement_text}</span>
-        </div>
-      )}
+      {ann && <AnnouncementBanner text={ann.text} color={ann.color} ctaLabel={ann.ctaLabel} ctaUrl={ann.ctaUrl} />}
       <div style={{ flex:1, maxWidth:"1280px", margin:"0 auto", width:"100%", padding:"24px 16px 90px", display:"flex", gap:"28px" }}>
         <div className="desktop-sidebar">
           <MembersSidebar isAdmin={isAdmin} role={role}/>
