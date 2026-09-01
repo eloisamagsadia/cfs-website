@@ -56,8 +56,8 @@ const sections = [
       { label: "Notifications", href: "/admin/notifications",          icon: icons.notifs },
       { label: "Support",       href: "/admin/support",              icon: icons.notifs },
       { label: "Shipping",      href: "/admin/shipping",             icon: icons.orders },
-      { label: "Email",         href: "/admin/email",                icon: icons.notifs },
-      { label: "Email Templates", href: "/admin/email-templates",     icon: icons.notifs },
+      { label: "Send Email",       href: "/admin/email",                icon: icons.notifs },
+      { label: "Email Templates",  href: "/admin/email-templates",      icon: icons.notifs },
       { label: "Promo Codes",   href: "/admin/codes",                  icon: icons.codes },
       { label: "Media",         href: "/admin/media",                  icon: icons.media },
     ]
