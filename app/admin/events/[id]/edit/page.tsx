@@ -22,7 +22,7 @@ export default function AdminEventEditPage() {
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     title: "", description: "", date: "", location: "", map_url: "",
-    capacity: "", price: "0", bundle_size: "1", is_members_only: false, banner_url: "", status: "upcoming", sponsor_access_at: "", member_access_at: "",
+    capacity: "", price: "0", is_members_only: false, banner_url: "", status: "upcoming", sponsor_access_at: "", member_access_at: "",
     guidelines_url: "", guidelines_text: "", heading_font: "serif", body_font: "sans",
   });
 
@@ -40,7 +40,7 @@ export default function AdminEventEditPage() {
           date: ev.date ? toPHTInputString(ev.date) : "",
           location: ev.location ?? "", map_url: ev.map_url ?? "",
           capacity: ev.capacity ? String(ev.capacity) : "",
-          price: String(ev.price ?? 0), bundle_size: String(ev.bundle_size ?? 1), is_members_only: ev.is_members_only ?? false,
+          price: String(ev.price ?? 0), is_members_only: ev.is_members_only ?? false,
           banner_url: ev.banner_url ?? "", status: ev.status ?? "upcoming", sponsor_access_at: ev.sponsor_access_at ? toPHTInputString(ev.sponsor_access_at) : "", member_access_at: ev.member_access_at ? toPHTInputString(ev.member_access_at) : "",
           guidelines_url: ev.guidelines_url ?? "", guidelines_text: ev.guidelines_text ?? "",
           heading_font: ev.heading_font ?? "serif", body_font: ev.body_font ?? "sans",
@@ -59,7 +59,7 @@ export default function AdminEventEditPage() {
       const res = await fetch("/api/admin/events", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, ...form, date: toISOWithPHT(form.date), price: Number(form.price), bundle_size: Math.max(1, Number(form.bundle_size) || 1), capacity: form.capacity ? Number(form.capacity) : null, sponsor_access_at: toISOWithPHT(form.sponsor_access_at), member_access_at: toISOWithPHT(form.member_access_at) }),
+        body: JSON.stringify({ id, ...form, date: toISOWithPHT(form.date), price: Number(form.price), capacity: form.capacity ? Number(form.capacity) : null, sponsor_access_at: toISOWithPHT(form.sponsor_access_at), member_access_at: toISOWithPHT(form.member_access_at) }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to save");
@@ -115,11 +115,6 @@ export default function AdminEventEditPage() {
           <div><label style={labelStyle}>CAPACITY</label><input type="number" inputMode="numeric" min="0" step="1" style={inputStyle} value={form.capacity} onChange={e => set("capacity", e.target.value)} placeholder="Blank = unlimited" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} /></div>
         </div>
 
-        <div>
-          <label style={labelStyle}>TICKETS PER PURCHASE (BUNDLE SIZE)</label>
-          <input type="number" inputMode="numeric" min="1" max="20" step="1" style={inputStyle} value={form.bundle_size} onChange={e => set("bundle_size", e.target.value)} placeholder="1" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }} />
-          <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60", display: "block", marginTop: "4px" }}>Set to 1 for solo tickets. Set higher (e.g. 4) to sell in bundles — one checkout creates that many tickets, price is multiplied, capacity decrements by the bundle size.</span>
-        </div>
 
         <FileUpload
           folder="events"

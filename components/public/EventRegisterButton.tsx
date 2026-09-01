@@ -62,16 +62,15 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
           });
           const ticketData = await ticketRes.json();
           if (!ticketRes.ok) throw new Error(ticketData.error);
-          const qty = Number(ticketData.bundle_size ?? 1) || 1;
-          const baseTotal = event.price * qty;
-          const legacyTotal = Math.round(baseTotal + calcFee(baseTotal));
+          // No-tier events are always solo (bundle_size lives on tiers now).
+          const legacyTotal = Math.round(event.price + calcFee(event.price));
           const ref = ticketData.bundle_id ?? ticketData.ticket.id;
           const payRes = await fetch("/api/paymongo/create-link", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               amount: legacyTotal,
-              description: qty > 1 ? `${event.title} — ${qty} Tickets` : `${event.title} — Ticket`,
+              description: `${event.title} — Ticket`,
               type: "ticket",
               reference_id: ref,
               success_url: `${window.location.origin}/payment/success?type=ticket&ref=${ref}`,
@@ -119,16 +118,16 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         });
         const ticketData = await ticketRes.json();
         if (!ticketRes.ok) throw new Error(ticketData.error);
-        const qty = Number(ticketData.bundle_size ?? 1) || 1;
-        const baseTotal = tier.price * qty;
-        const tierTotal = Math.round(baseTotal + calcFee(baseTotal));
+        // tier.price is the FLAT bundle total — do not multiply by bundle_size.
+        const qty = Number(tier.bundle_size ?? 1) || 1;
+        const tierTotal = Math.round(tier.price + calcFee(tier.price));
         const ref = ticketData.bundle_id ?? ticketData.ticket.id;
         const payRes = await fetch("/api/paymongo/create-link", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             amount: tierTotal,
-            description: qty > 1 ? `${event.title} — ${tier.name} × ${qty}` : `${event.title} — ${tier.name}`,
+            description: qty > 1 ? `${event.title} — ${tier.name} (${qty} tickets)` : `${event.title} — ${tier.name}`,
             type: "ticket",
             reference_id: ref,
             success_url: `${window.location.origin}/payment/success?type=ticket&ref=${ref}`,
@@ -257,10 +256,11 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
 
       {/* Fee breakdown for paid tiers */}
       {!isNotOpenYet && !isEarlyAccessOnly && (() => {
-        const perTicket = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
-        if (!perTicket) return null;
-        const qty = Math.max(1, Number(event.bundle_size ?? 1) || 1);
-        const basePrice = perTicket * qty;
+        // tier.price is the FLAT total for the whole bundle (bundle-ness lives on tier).
+        // For events without tiers, event.price is a single-ticket price.
+        const basePrice = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
+        if (!basePrice) return null;
+        const qty = Math.max(1, Number(selectedTier?.bundle_size ?? 1) || 1);
         const fee   = calcFee(basePrice);
         const total = basePrice + fee;
         return (
@@ -269,7 +269,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
               <div style={{ background: "#FFF9E5", border: "1.5px solid #F0D889", borderRadius: "10px", padding: "10px 14px", display: "flex", gap: "8px", alignItems: "center" }}>
                 <IconTicket size={16} color="#7A5A0F" />
                 <span style={{ fontFamily: B, fontSize: "12px", color: "#7A5A0F", lineHeight: 1.5 }}>
-                  <strong>Bundle of {qty}</strong> — one purchase gives you {qty} tickets & {qty} QR codes to share.
+                  <strong>Bundle tier</strong> — flat price includes {qty} tickets & {qty} QR codes to share.
                 </span>
               </div>
             )}
@@ -284,7 +284,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
             </div>
             <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: "10px", padding: "12px 14px", display: "flex", flexDirection: "column", gap: "6px" }}>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>Ticket price{qty > 1 ? ` × ${qty}` : ""}</span>
+                <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59" }}>{qty > 1 ? `Bundle price (${qty} tickets)` : "Ticket price"}</span>
                 <span style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>₱{fmt(basePrice)}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -308,9 +308,9 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
       })()}
 
       {!isNotOpenYet && !isEarlyAccessOnly && (() => {
-        const perTicket = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
-        const qty = Math.max(1, Number(event.bundle_size ?? 1) || 1);
-        const basePrice = perTicket * qty;
+        // tier.price is the FLAT total; qty comes from the tier itself.
+        const basePrice = selectedTier?.price > 0 ? selectedTier.price : (!hasTiers && event.price > 0) ? event.price : 0;
+        const qty = Math.max(1, Number(selectedTier?.bundle_size ?? 1) || 1);
         const total = basePrice ? Math.round(basePrice + calcFee(basePrice)) : 0;
         const paidAndUnaccepted = basePrice > 0 && !termsAccepted;
         const disabled = loading || paidAndUnaccepted;

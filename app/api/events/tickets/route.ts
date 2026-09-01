@@ -88,8 +88,13 @@ export async function POST(req: NextRequest) {
     const { data } = await supabase.from("event_tiers").select("*").eq("id", tier_id).single();
     if (!data) return NextResponse.json({ error: "Tier not found" }, { status: 404 });
     if (!data.is_active) return NextResponse.json({ error: "This tier is no longer available" }, { status: 400 });
-    if (data.slots_remaining !== null && data.slots_remaining <= 0) {
-      return NextResponse.json({ error: "This tier is sold out" }, { status: 400 });
+    const need = Math.max(1, Math.min(20, Number((data as any).bundle_size ?? 1) || 1));
+    if (data.slots_remaining !== null && data.slots_remaining < need) {
+      return NextResponse.json({
+        error: data.slots_remaining <= 0
+          ? "This tier is sold out"
+          : `Only ${data.slots_remaining} slot${data.slots_remaining === 1 ? "" : "s"} left in this tier — not enough for a bundle of ${need}.`,
+      }, { status: 400 });
     }
     tier = data;
   }
@@ -108,8 +113,10 @@ export async function POST(req: NextRequest) {
     .eq("user_id", userId);
   if ((existingCount ?? 0) > 0) return NextResponse.json({ error: "You already have a ticket for this event" }, { status: 409 });
 
-  // Bundle size — number of tickets created per purchase. Defaults to 1 (solo).
-  const bundleSize = Math.max(1, Math.min(20, Number(event.bundle_size ?? 1) || 1));
+  // Bundle size lives on the tier now (each tier decides its own quantity).
+  // tier.price is the FLAT total for the bundle — not per ticket.
+  // Fallback to 1 for events without tiers.
+  const bundleSize = Math.max(1, Math.min(20, Number(tier?.bundle_size ?? 1) || 1));
 
   // Capacity gate — counts only paid/checked-in tickets so stale pending_payment holds don't block paying users.
   // For bundles, the whole bundle must fit.

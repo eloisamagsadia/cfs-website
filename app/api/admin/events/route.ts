@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await req.json();
-  const { title, description, date, location, map_url, capacity, price, bundle_size, is_members_only, banner_url, status, category_id, sponsor_access_at, member_access_at, guidelines_url, guidelines_text, heading_font, body_font, is_hidden } = body;
+  const { title, description, date, location, map_url, capacity, price, is_members_only, banner_url, status, category_id, sponsor_access_at, member_access_at, guidelines_url, guidelines_text, heading_font, body_font, is_hidden } = body;
   if (!title?.trim()) return NextResponse.json({ error: "Title is required" }, { status: 400 });
   if (!date) return NextResponse.json({ error: "Date is required" }, { status: 400 });
   const admin = createAdminClient();
@@ -32,7 +32,6 @@ export async function POST(req: NextRequest) {
     title: title.trim(), description: description?.trim() || null, date,
     location: location?.trim() || null, map_url: map_url?.trim() || null,
     capacity: capacity ? Number(capacity) : null, price: Number(price ?? 0),
-    bundle_size: Math.max(1, Math.min(20, Number(bundle_size ?? 1) || 1)),
     is_members_only: !!is_members_only, banner_url: banner_url?.trim() || null,
     status: status || "upcoming", category_id: category_id || null, sponsor_access_at: sponsor_access_at || null, member_access_at: member_access_at || null,
     guidelines_url: guidelines_url?.trim() || null,
@@ -60,7 +59,6 @@ export async function PATCH(req: NextRequest) {
   if (updates.map_url !== undefined) payload.map_url = updates.map_url?.trim() || null;
   if (updates.capacity !== undefined) payload.capacity = updates.capacity ? Number(updates.capacity) : null;
   if (updates.price !== undefined) payload.price = Number(updates.price);
-  if (updates.bundle_size !== undefined) payload.bundle_size = Math.max(1, Math.min(20, Number(updates.bundle_size ?? 1) || 1));
   if (updates.is_members_only !== undefined) payload.is_members_only = updates.is_members_only;
   if (updates.banner_url !== undefined) payload.banner_url = updates.banner_url?.trim() || null;
   if (updates.status !== undefined) payload.status = updates.status;

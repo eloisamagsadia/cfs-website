@@ -22,7 +22,7 @@ const TIER_COLORS: { hex: string; name: string }[] = [
   { hex: "#1B3A2D", name: "Deep" },
 ];
 
-const DEFAULT_FORM = { name: "", price: 0, capacity: "", perks: "", color: "#1A8040" };
+const DEFAULT_FORM = { name: "", price: 0, capacity: "", perks: "", color: "#1A8040", bundle_size: "1" };
 
 export default function EventTiersPage() {
   const { id: event_id } = useParams();
@@ -62,6 +62,7 @@ export default function EventTiersPage() {
       capacity: form.capacity ? Number(form.capacity) : null,
       perks: form.perks.split("\n").map(p => p.trim()).filter(Boolean),
       color: form.color,
+      bundle_size: Math.max(1, Number(form.bundle_size) || 1),
     };
     const method = editingId ? "PATCH" : "POST";
     const res = await fetch("/api/events/tiers", {
@@ -90,6 +91,7 @@ export default function EventTiersPage() {
       capacity: tier.capacity ?? "",
       perks: (tier.perks ?? []).join("\n"),
       color: tier.color ?? "#1A8040",
+      bundle_size: String(tier.bundle_size ?? 1),
     });
     setEditingId(tier.id);
     setShowForm(true);
@@ -182,6 +184,18 @@ export default function EventTiersPage() {
                     {TIER_COLORS.find(c => c.hex === form.color)?.name ?? form.color}
                   </span>
                 )}
+              </div>
+            </div>
+            <div style={{ gridColumn: "1 / -1", background: Number(form.bundle_size) > 1 ? "#FFFDF4" : "#F7FAF5", border: `1.5px solid ${Number(form.bundle_size) > 1 ? "#F0D889" : "#DDE8DD"}`, borderRadius: "8px", padding: "12px 14px" }}>
+              <label style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", display: "block", marginBottom: "4px" }}>TICKETS IN THIS BUNDLE</label>
+              <input type="number" min="1" max="20" step="1" onWheel={e => (e.currentTarget as HTMLInputElement).blur()} onKeyDown={e => { if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault(); }}
+                value={form.bundle_size} onChange={e => setForm(p => ({ ...p, bundle_size: e.target.value }))}
+                placeholder="1"
+                style={{ width: "100%", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "6px", padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }} />
+              <div style={{ fontFamily: B, fontSize: "11px", color: Number(form.bundle_size) > 1 ? "#7A5A0F" : "#5A7A60", marginTop: "6px", lineHeight: 1.5 }}>
+                {Number(form.bundle_size) > 1
+                  ? <><strong>Bundle tier:</strong> one purchase creates {form.bundle_size} tickets. Price above (₱{Number(form.price).toLocaleString()}) is the flat total for the whole bundle, not per ticket.</>
+                  : "1 = solo tier. Set higher (e.g. 4) to make this a bundle tier — one purchase gives buyer that many tickets at the flat price above."}
               </div>
             </div>
             <div style={{ gridColumn: "1 / -1" }}>

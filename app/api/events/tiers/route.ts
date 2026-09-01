@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   if (!userId || !["admin", "super_admin"].includes(role ?? "")) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { event_id, name, price, capacity, perks, color } = body;
+  const { event_id, name, price, capacity, perks, color, bundle_size } = body;
 
   if (!event_id || !name) return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
 
@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
       slots_remaining: capacity ?? null,
       perks: perks ?? [],
       color: color ?? "#3CCE2A",
+      bundle_size: Math.max(1, Math.min(20, Number(bundle_size ?? 1) || 1)),
     })
     .select()
     .single();
@@ -57,6 +58,10 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json();
   const { id, ...updates } = body;
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+
+  if (updates.bundle_size !== undefined) {
+    updates.bundle_size = Math.max(1, Math.min(20, Number(updates.bundle_size ?? 1) || 1));
+  }
 
   const { data: tier, error } = await db()
     .from("event_tiers")
