@@ -107,7 +107,13 @@ export default function AdminOrderDetailPage() {
             {new Date(order.created_at).toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })}
           </p>
         </div>
-        <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
+        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <Link href={`/admin/orders/${id}/packing-slip`} target="_blank" rel="noreferrer"
+            style={{ fontFamily: R, fontSize: "11px", color: "#7A5A0F", background: "#FFF3D6", border: "1.5px solid #F0D889", borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1.2px", textDecoration: "none" }}>
+            🖨 PACKING SLIP
+          </Link>
+          <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
+        </div>
       </div>
 
       {error && <div style={{ background: "#FFE8EC", border: "1.5px solid #CC3344", borderRadius: "8px", padding: "12px 16px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
