@@ -143,6 +143,11 @@ export default async function AdminEventDetailPage({ params }: { params: { id: s
               style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
               <IconDownload size={12} color="#1B3A2D" /> REPORT
             </Link>
+            <Link href={`/admin/events/${event.id}/poster`} target="_blank" rel="noreferrer"
+              className="aed-action"
+              style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#7A5A0F", background: "#FFF3D6", border: "1.5px solid #F0D889", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
+              🖨 POSTER
+            </Link>
             <Link href={`/admin/events/${event.id}/tiers`}
               className="aed-action"
               style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#E8F0E4", border: "1.5px solid transparent", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
