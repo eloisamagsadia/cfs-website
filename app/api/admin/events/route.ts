@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
     is_hidden: !!is_hidden,
   }).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "create_event", target_type: "event", target_id: (data as any)?.id, details: { title: title?.trim() }, req });
   return NextResponse.json({ event: data }, { status: 201 });
 }
 
@@ -72,6 +74,7 @@ export async function PATCH(req: NextRequest) {
   const admin = createAdminClient();
   const { data, error } = await (admin.from("events") as any).update(payload).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "edit_event", target_type: "event", target_id: id, details: { fields: Object.keys(payload) }, req });
   return NextResponse.json({ event: data });
 }
 
@@ -84,5 +87,6 @@ export async function DELETE(req: NextRequest) {
   const admin = createAdminClient();
   const { error } = await (admin.from("events") as any).delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit({ userId, action: "delete_event", target_type: "event", target_id: id, req });
   return NextResponse.json({ success: true });
 }

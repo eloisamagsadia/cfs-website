@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
+import { logAudit } from "@/lib/audit";
 
 const admin = () => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -20,6 +21,14 @@ export async function POST(req: NextRequest) {
   if (!targetUserId) return NextResponse.json({ error: "Missing targetUserId" }, { status: 400 });
 
   await admin().from("profiles").update({ is_banned: banned }).eq("id", targetUserId);
+
+  await logAudit({
+    userId,
+    action: banned ? "ban_member" : "unban_member",
+    target_type: "profile",
+    target_id: targetUserId,
+    req,
+  });
 
   return NextResponse.json({ ok: true });
 }

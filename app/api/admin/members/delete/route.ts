@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
+import { logAudit } from "@/lib/audit";
 
 const db = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -45,6 +46,14 @@ export async function POST(req: NextRequest) {
     target_type: "member",
     target_id: targetUserId,
     notes: "User deleted by super admin",
+  });
+
+  await logAudit({
+    userId,
+    action: "delete_member",
+    target_type: "profile",
+    target_id: targetUserId,
+    req,
   });
 
   return NextResponse.json({ ok: true });
