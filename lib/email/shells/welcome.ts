@@ -38,7 +38,7 @@ export function renderWelcome(vars: WelcomeVars, sections: WelcomeSections): str
     <!-- Card (locked shell) -->
     <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(27,58,45,0.08);">
       <!-- Accent stripe -->
-      <div style="height:8px;background:linear-gradient(90deg,#1A8040 0%,#F5C82A 55%,#E88C4A 100%);"></div>
+      <div style="height:8px;background:linear-gradient(90deg,#156530 0%,#1A8040 50%,#4ACB6E 100%);"></div>
 
       <div style="padding:30px 28px 24px;text-align:center;">
         <div style="display:inline-block;background:#E8F0E4;color:#1A8040;font-size:10px;font-weight:700;letter-spacing:2px;padding:5px 12px;border-radius:999px;">JOIN THE FAM ✦</div>

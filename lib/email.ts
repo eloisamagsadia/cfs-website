@@ -185,7 +185,7 @@ export async function sendEventTicket({
 
   const bannerBlock = eventBanner
     ? `<img src="${eventBanner}" alt="${eventTitle}" width="600" style="display:block;width:100%;height:auto;border-top-left-radius:16px;border-top-right-radius:16px;object-fit:cover;max-height:260px;" />`
-    : `<div style="height:12px;background:linear-gradient(90deg,#1A8040 0%,#F5C82A 55%,#E88C4A 100%);border-top-left-radius:16px;border-top-right-radius:16px;"></div>`;
+    : `<div style="height:12px;background:linear-gradient(90deg,#156530 0%,#1A8040 50%,#4ACB6E 100%);border-top-left-radius:16px;border-top-right-radius:16px;"></div>`;
 
   const invoiceBlock = amountPaid != null && amountPaid > 0 ? `
     <div style="background:#FFFFFF;border:1px solid #DDE8DD;border-radius:16px;padding:22px 24px;margin-top:16px;">
@@ -403,7 +403,7 @@ export async function sendEventTicketBundle({
 
   const bannerBlock = eventBanner
     ? `<img src="${eventBanner}" alt="${eventTitle}" width="600" style="display:block;width:100%;height:auto;border-top-left-radius:16px;border-top-right-radius:16px;object-fit:cover;max-height:260px;" />`
-    : `<div style="height:12px;background:linear-gradient(90deg,#1A8040 0%,#F5C82A 55%,#E88C4A 100%);border-top-left-radius:16px;border-top-right-radius:16px;"></div>`;
+    : `<div style="height:12px;background:linear-gradient(90deg,#156530 0%,#1A8040 50%,#4ACB6E 100%);border-top-left-radius:16px;border-top-right-radius:16px;"></div>`;
 
   const ticketCards = tickets.map((t, i) => {
     const code  = (t.ticketNumber ?? t.ticketId ?? "").toString().slice(0, 12).toUpperCase();

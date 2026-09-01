@@ -66,7 +66,7 @@ export const SAMPLE_VARS: Record<TemplateKey, Record<string, string>> = {
     gcal_url:       "https://calendar.google.com/",
     tickets_url:    "https://coletfs.com/members/tickets",
     site_url:       "https://coletfs.com",
-    banner_block:   `<div style="height:12px;background:linear-gradient(90deg,#1A8040 0%,#F5C82A 55%,#E88C4A 100%);border-top-left-radius:16px;border-top-right-radius:16px;"></div>`,
+    banner_block:   `<div style="height:12px;background:linear-gradient(90deg,#156530 0%,#1A8040 50%,#4ACB6E 100%);border-top-left-radius:16px;border-top-right-radius:16px;"></div>`,
     invoice_block:  "",
   },
   donation_receipt: {
