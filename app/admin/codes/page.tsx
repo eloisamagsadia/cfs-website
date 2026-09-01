@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { IconSparkle, IconCheck, IconTrash } from "@/components/shared/Icons";
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
@@ -58,9 +59,15 @@ export default function AdminCodesPage() {
   const SB={ACTIVE:"#E8F0E4",INACTIVE:"#F2F7F2",EXPIRED:"#FFE8EC","USED UP":"#E8F4EC"};
   return(
     <div style={{display:"flex",flexDirection:"column",gap:"20px"}}>
-      <div>
-        <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#1B3A2D",letterSpacing:"3px",marginBottom:"4px"}}>PROMO CODES</h1>
-        <p style={{fontFamily:B,fontSize:"13px",color:"#4A7C59"}}>{codes.length} total · {codes.filter(c=>getStatus(c)==="ACTIVE").length} active</p>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",gap:"12px",flexWrap:"wrap"}}>
+        <div>
+          <h1 style={{fontFamily:R,fontSize:"1.6rem",color:"#1B3A2D",letterSpacing:"3px",marginBottom:"4px"}}>PROMO CODES</h1>
+          <p style={{fontFamily:B,fontSize:"13px",color:"#4A7C59"}}>{codes.length} total · {codes.filter(c=>getStatus(c)==="ACTIVE").length} active</p>
+        </div>
+        <Link href="/admin/codes/performance"
+          style={{fontFamily:SG,fontSize:"11px",fontWeight:700,color:"#156530",background:"#E8F0E4",border:"1.5px solid #B7D8B7",borderRadius:"10px",padding:"10px 16px",cursor:"pointer",letterSpacing:"1.3px",textDecoration:"none"}}>
+          📊 PERFORMANCE REPORT
+        </Link>
       </div>
       <div style={{background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",padding:"20px"}}>
         <div style={{fontFamily:R,fontSize:"13px",color:"#156530",letterSpacing:"2px",marginBottom:"14px"}}>GENERATE NEW CODE</div>
