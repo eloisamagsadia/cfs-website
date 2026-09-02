@@ -37,12 +37,19 @@ export default function SettingsPage() {
 
   async function save() {
     setSaving(true);
-    await Promise.all([
-      fetch("/api/super/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }),
-      fetch("/api/admin/sponsor-perks", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(perks) }),
-    ]);
-    setSaving(false); setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      const [s, p] = await Promise.all([
+        fetch("/api/super/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }),
+        fetch("/api/admin/sponsor-perks", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(perks) }),
+      ]);
+      if (!s.ok || !p.ok) throw new Error("save failed");
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch {
+      alert("Could not save settings. Try again.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function toggleMaintenance() {

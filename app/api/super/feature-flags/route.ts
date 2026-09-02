@@ -38,9 +38,10 @@ export async function PATCH(req: NextRequest) {
     .update({ enabled, updated_by: userId })
     .eq("key", key)
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (!data) return NextResponse.json({ error: `Feature flag "${key}" not found` }, { status: 404 });
   await logAudit({ userId, action: enabled ? "enable_feature_flag" : "disable_feature_flag", target_type: "feature_flag", target_id: key, req });
   return NextResponse.json({ flag: data });
 }

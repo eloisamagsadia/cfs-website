@@ -19,10 +19,17 @@ export default function BackupPage() {
   const [lastExport, setLast] = useState<Date | null>(null);
 
   useEffect(() => {
-    fetch("/api/super/backup/tables").then(r => r.json()).then(d => {
-      if (d.error) setError(d.error);
-      else { setTables(d.tables ?? []); setTotal(d.total_rows ?? 0); }
-    }).catch(e => setError(e.message)).finally(() => setLoading(false));
+    fetch("/api/super/backup/tables")
+      .then(async r => {
+        if (!r.ok) {
+          const body = await r.json().catch(() => ({}));
+          throw new Error(body?.error ?? `Load failed (${r.status})`);
+        }
+        return r.json();
+      })
+      .then(d => { setTables(d.tables ?? []); setTotal(d.total_rows ?? 0); })
+      .catch(e => setError(e.message ?? "Failed to load tables"))
+      .finally(() => setLoading(false));
   }, []);
 
   async function exportSnapshot() {
