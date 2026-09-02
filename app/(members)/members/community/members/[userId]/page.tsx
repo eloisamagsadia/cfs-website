@@ -2,11 +2,12 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect, notFound } from "next/navigation";
 import MemberProfile from "@/components/community/MemberProfile";
+import { ensureProfile } from "@/lib/ensure-profile";
 import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { userId: string } }): Promise<Metadata> {
   const supabase = createAdminClient();
-  const { data: profileRaw } = await (((supabase.from("profiles") as any) as any) as any).select("display_name").eq("id", params.userId).single();
+  const { data: profileRaw } = await (((supabase.from("profiles") as any) as any) as any).select("display_name").eq("id", params.userId).maybeSingle();
   const profile = profileRaw as any;
   return { title: profile?.display_name ?? "Member Profile" };
 }
@@ -15,6 +16,11 @@ export default async function MemberProfilePage({ params }: { params: { userId: 
   const supabase = createAdminClient();
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
+
+  // Self-heal: if the profile row was never created (missed webhook, pre-webhook
+  // signup, etc.), backfill it from Clerk before rendering.
+  const healed = await ensureProfile(params.userId);
+  if (!healed) notFound();
 
   const [
     { data: profile },
@@ -25,7 +31,7 @@ export default async function MemberProfilePage({ params }: { params: { userId: 
     { count: followingCount },
     { data: badges },
   ] = await Promise.all([
-    (((supabase.from("profiles") as any) as any) as any).select("*").eq("id", params.userId).single(),
+    (((supabase.from("profiles") as any) as any) as any).select("*").eq("id", params.userId).maybeSingle(),
     // Their own posts
     (((supabase.from("community_posts") as any) as any) as any)
       .select("*, profiles:user_id(id,display_name,avatar_url), community_reactions(id,user_id,reaction_type), community_comments(id), community_reposts(id,user_id)")
