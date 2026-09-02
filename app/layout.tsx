@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, DM_Serif_Display, Barlow } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import PageViewTracker from "@/components/shared/PageViewTracker";
 import "./globals.css";
 
 export const viewport = { themeColor: "#FAFDF9" };
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           style={{ backgroundColor: "#FAFDF9", color: "#1A1A18", fontFamily: "var(--font-barlow,'Barlow',sans-serif)" }}
         >
           {children}
+          <PageViewTracker />
         </body>
       </html>
     </ClerkProvider>

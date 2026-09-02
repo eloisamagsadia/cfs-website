@@ -15,12 +15,15 @@ const CATEGORY_META: Record<Category, { label: string; fg: string; bg: string }>
   buy:     { label: "Purchase",      fg: "#7A5A0F", bg: "#FFF3D6" },
   content: { label: "Community",     fg: "#156530", bg: "#E8F0E4" },
   service: { label: "Support",       fg: "#5A1E7A", bg: "#F0E4F8" },
-  member:  { label: "Member area",   fg: "#3A5A30", bg: "#EAF1E8" },
+  member:  { label: "Page visit",    fg: "#3A5A30", bg: "#EAF1E8" },
   admin:   { label: "Admin action",  fg: "#8A1E27", bg: "#FFE8EC" },
   system:  { label: "System",        fg: "#4A5A60", bg: "#EAEEF0" },
 };
 
 const ACTION_MAP: Record<string, { verb: string; category: Category; targetLabel?: string }> = {
+  // Page visits
+  visit_page:               { verb: "opened",                          category: "member",  targetLabel: "page" },
+
   // Auth
   login:                    { verb: "signed in",                       category: "auth" },
   logout:                   { verb: "signed out",                      category: "auth" },
@@ -169,6 +172,9 @@ const DETAIL_KEY_LABEL: Record<string, string> = {
   hours_cutoff:    "Age cutoff (hours)",
   via:             "Via",
   expires_in_seconds: "Expires in (seconds)",
+  path:            "Page",
+  title:           "Page title",
+  referer:         "Came from",
 };
 
 function humanKey(k: string): string {
@@ -347,9 +353,14 @@ export default function AuditPage() {
             const isExpanded = expanded.has(log.id);
             const hasDetails = (log.details && Object.keys(log.details).length > 0) || !!log.ip_address;
             const who = log.profiles?.display_name ?? (log.user_id ? "Someone" : "A visitor");
-            const targetLine = info.targetLabel && log.target_id
-              ? `${info.targetLabel} · ${shortId(log.target_id)}`
-              : friendlyTargetType(log.target_type) || null;
+            // For page visits, show the full path (it's the human-readable target).
+            // For other targets, show a short ID.
+            const isPageVisit = log.action === "visit_page";
+            const targetLine = isPageVisit && log.target_id
+              ? log.target_id
+              : (info.targetLabel && log.target_id
+                ? `${info.targetLabel} · ${shortId(log.target_id)}`
+                : friendlyTargetType(log.target_type) || null);
 
             return (
               <div key={log.id}>

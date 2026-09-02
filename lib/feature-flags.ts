@@ -4,7 +4,8 @@ export type FeatureFlagKey =
   | "bundles_enabled"
   | "shop_enabled"
   | "community_read_only"
-  | "maintenance_banner";
+  | "maintenance_banner"
+  | "page_tracking_enabled";
 
 /**
  * Server-side check for a feature flag. Returns fallback if the row is missing

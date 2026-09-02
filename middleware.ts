@@ -19,6 +19,7 @@ export default authMiddleware({
     "/verify(.*)",
     "/support(.*)",
     "/faq(.*)",
+    "/api/track/(.*)",
   ],
 
   async afterAuth(auth, req) {
