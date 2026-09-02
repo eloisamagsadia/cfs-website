@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, DM_Serif_Display, Barlow } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import PageViewTracker from "@/components/shared/PageViewTracker";
+import MaintenanceGate from "@/components/shared/MaintenanceGate";
 import "./globals.css";
 
 export const viewport = { themeColor: "#FAFDF9" };
@@ -43,7 +44,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           className="antialiased min-h-screen"
           style={{ backgroundColor: "#FAFDF9", color: "#1A1A18", fontFamily: "var(--font-barlow,'Barlow',sans-serif)" }}
         >
-          {children}
+          {/* MaintenanceGate runs everywhere — public, members, admin, super.
+              Admins bypass automatically. The announcement banner is rendered
+              by the (public) and (members) nested layouts, which own their
+              own header/footer chrome. */}
+          <MaintenanceGate>{children}</MaintenanceGate>
           <PageViewTracker />
         </body>
       </html>
