@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { IconTicket, IconCart, IconHeart, IconUser, IconShoppingBag } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
@@ -49,10 +50,22 @@ const NAV_LINKS: { title: string; href: string; keywords?: string }[] = [
   { title: "Newsletter",          href: "/admin/newsletter",         keywords: "subscribers email list" },
   { title: "Promo Codes",         href: "/admin/codes",              keywords: "discount coupon" },
   { title: "Media Library",       href: "/admin/media",              keywords: "images r2 upload" },
-  { title: "Super Admin",         href: "/super",                    keywords: "system" },
+];
+
+// Super-admin-only shortcuts, merged into NAV_LINKS at render time when
+// the caller is super_admin. Kept separate so regular admins never see
+// entries that would redirect or 403.
+const SUPER_NAV_LINKS: { title: string; href: string; keywords?: string }[] = [
+  { title: "Super Admin",         href: "/super",                    keywords: "system command" },
   { title: "Audit Log",           href: "/super/audit",              keywords: "history trail" },
   { title: "Analytics",           href: "/super/analytics",          keywords: "charts stats" },
   { title: "System Health",       href: "/super/system-health",      keywords: "diagnostics" },
+  { title: "Finance",             href: "/super/finance",            keywords: "revenue money" },
+  { title: "Feature Flags",       href: "/super/feature-flags",      keywords: "toggles switches" },
+  { title: "Impersonate",         href: "/super/impersonate",        keywords: "sign in as user" },
+  { title: "Pending Tickets",     href: "/super/tickets-cleanup",    keywords: "abandoned cleanup" },
+  { title: "Site Settings",       href: "/super/settings",           keywords: "maintenance banner" },
+  { title: "Danger Zone",         href: "/super/danger",             keywords: "destructive" },
 ];
 
 const GROUP_LABEL: Record<Group, string> = {
@@ -74,6 +87,8 @@ export default function CommandPalette() {
   const [active, setActive]   = useState(0);
   const inputRef              = useRef<HTMLInputElement | null>(null);
   const router                = useRouter();
+  const { user }              = useUser();
+  const isSuper               = ((user?.publicMetadata as any)?.role ?? "") === "super_admin";
 
   // Cmd/Ctrl-K toggles the palette
   useEffect(() => {
@@ -93,14 +108,16 @@ export default function CommandPalette() {
     if (open) { setQ(""); setActive(0); setTimeout(() => inputRef.current?.focus(), 30); }
   }, [open]);
 
-  // Nav filter for the current query
+  // Nav filter for the current query — regular admins only see admin
+  // shortcuts; super admins additionally get the /super/* shortcuts.
   const navItems: Item[] = useMemo(() => {
     const term = q.trim().toLowerCase();
-    return NAV_LINKS
+    const pool = isSuper ? [...NAV_LINKS, ...SUPER_NAV_LINKS] : NAV_LINKS;
+    return pool
       .filter(n => !term || n.title.toLowerCase().includes(term) || (n.keywords ?? "").includes(term))
       .slice(0, term ? 6 : 12)
       .map(n => ({ key: `nav:${n.href}`, group: "nav" as Group, title: n.title, subtitle: n.href, href: n.href, accent: "#4A7C59" }));
-  }, [q]);
+  }, [q, isSuper]);
 
   // Debounced remote search
   useEffect(() => {
