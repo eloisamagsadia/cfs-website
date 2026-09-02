@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -231,7 +232,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
         <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "linear-gradient(135deg,#1A8040,#1A8040)", padding: "2px", flexShrink: 0 }}>
           <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
             {profile.avatar_url
-              ? <img src={profile.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ? <Image src={profile.avatar_url} alt="" width={40} height={40} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               : <span style={{ fontFamily: R, fontSize: "15px", color: "#1A8040" }}>{(profile.display_name ?? "M")[0].toUpperCase()}</span>
             }
           </div>
@@ -308,14 +309,16 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
           {post.images.length === 1 ? (
             isVideo(post.images[0])
               ? <video src={post.images[0]} controls style={{ width: "100%", maxHeight: "400px", display: "block", background: "#000" }} />
-              : <img src={post.images[0]} alt="" style={{ width: "100%", maxHeight: "400px", objectFit: "cover", display: "block" }} />
+              : <div style={{ position: "relative", width: "100%", height: 400 }}>
+                  <Image src={post.images[0]} alt="" fill sizes="(max-width: 720px) 100vw, 640px" style={{ objectFit: "cover" }} />
+                </div>
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2px" }}>
               {post.images.slice(0, 4).map((url: string, i: number) => (
-                <div key={i} style={{ position: "relative" }}>
+                <div key={i} style={{ position: "relative", height: "180px" }}>
                   {isVideo(url)
                     ? <video src={url} controls style={{ width: "100%", height: "180px", objectFit: "cover", display: "block" }} />
-                    : <img src={url} alt="" style={{ width: "100%", height: "180px", objectFit: "cover", display: "block" }} />
+                    : <Image src={url} alt="" fill sizes="(max-width: 720px) 50vw, 320px" style={{ objectFit: "cover" }} />
                   }
                   {i === 3 && post.images.length > 4 && (
                     <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -413,7 +416,7 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
                   {/* Avatar — no bubble box */}
                   <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#E8F0E4", border: "1.5px solid #DDE8DD", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
                     {comment.profiles?.avatar_url
-                      ? <img src={comment.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      ? <Image src={comment.profiles.avatar_url} alt="" width={32} height={32} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       : <span style={{ fontFamily: R, fontSize: "12px", color: "#1A8040" }}>{(comment.profiles?.display_name ?? "M")[0].toUpperCase()}</span>
                     }
                   </div>

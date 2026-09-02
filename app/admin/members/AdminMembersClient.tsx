@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { IconX, IconCheck, IconWarning } from "@/components/shared/Icons";
 import StatBar from "@/components/shared/StatBar";
 
@@ -210,7 +211,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <div style={{ width: "32px", height: "32px", borderRadius: "50%", border: `2px solid ${roleColor}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
                   {m.avatar_url
-                    ? <img src={m.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    ? <Image src={m.avatar_url} alt="" width={32} height={32} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     : <span style={{ fontFamily: R, fontSize: "13px", color: roleColor }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>
                   }
                 </div>
@@ -288,7 +289,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
             >
               <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: `2px solid ${roleColor}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
                 {m.avatar_url
-                  ? <img src={m.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ? <Image src={m.avatar_url} alt="" width={40} height={40} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   : <span style={{ fontFamily: R, fontSize: "15px", color: roleColor }}>{(m.display_name ?? "M")[0].toUpperCase()}</span>
                 }
               </div>
@@ -343,7 +344,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
             <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
               <div style={{ width: "56px", height: "56px", borderRadius: "50%", border: `2px solid ${ROLE_COLORS[selectedMember.role] ?? "#1A8040"}`, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {selectedMember.avatar_url
-                  ? <img src={selectedMember.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ? <Image src={selectedMember.avatar_url} alt="" width={56} height={56} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   : <span style={{ fontFamily: R, fontSize: "22px", color: ROLE_COLORS[selectedMember.role] ?? "#1A8040" }}>{(selectedMember.display_name ?? "M")[0].toUpperCase()}</span>
                 }
               </div>

@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 import Link from "next/link";
+import Image from "next/image";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -72,7 +73,7 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
       <button onClick={() => setOpen(p => !p)}
         style={{ background: "none", border: `2px solid ${open ? badge.color : "#DDE8DD"}`, borderRadius: "50%", padding: "2px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", width: "38px", height: "38px", transition: "border-color 0.15s" }}>
         {avatarUrl
-          ? <img src={avatarUrl} alt="" style={{ width: "30px", height: "30px", borderRadius: "50%", objectFit: "cover" }} />
+          ? <Image src={avatarUrl} alt="" width={30} height={30} style={{ borderRadius: "50%", objectFit: "cover" }} />
           : <div style={{ width: "30px", height: "30px", borderRadius: "50%", background: badge.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <span style={{ fontFamily: R, fontSize: "13px", color: badge.color }}>{(displayName ?? "M")[0].toUpperCase()}</span>
             </div>
@@ -85,7 +86,7 @@ export default function NavbarAvatar({ userId, displayName, avatarUrl, role }: N
           {/* Profile header */}
           <div style={{ padding: "10px 12px 12px", borderBottom: "1px solid #DDE8DD", marginBottom: "4px", display: "flex", alignItems: "center", gap: "10px" }}>
             {avatarUrl
-              ? <img src={avatarUrl} alt="" style={{ width: "38px", height: "38px", borderRadius: "50%", objectFit: "cover", border: `2px solid ${badge.color}`, flexShrink: 0 }} />
+              ? <Image src={avatarUrl} alt="" width={38} height={38} style={{ borderRadius: "50%", objectFit: "cover", border: `2px solid ${badge.color}`, flexShrink: 0 }} />
               : <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: badge.bg, border: `2px solid ${badge.color}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <span style={{ fontFamily: R, fontSize: "15px", color: badge.color }}>{(displayName ?? "M")[0].toUpperCase()}</span>
                 </div>
