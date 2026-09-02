@@ -15,7 +15,7 @@ export default function DangerPage() {
 
   async function exportMembers() {
     setExportLoading(true);
-    const res = await fetch("/api/admin/members/export");
+    const res = await fetch("/api/super/members-export");
     const data = await res.json();
     const csv = [
       ["ID","Display Name","Role","Joined","Banned"].join(","),

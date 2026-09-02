@@ -15,8 +15,11 @@ export async function POST(req: NextRequest) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const callerRole = (sessionClaims?.metadata as { role?: string })?.role;
-  if (!["admin", "super_admin"].includes(callerRole ?? "")) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Any role change is a permission-escalation-adjacent operation, so we
+  // require super_admin across the board (previously any admin could
+  // promote/demote to moderator/sponsor/member, which was inconsistent).
+  if (callerRole !== "super_admin") {
+    return NextResponse.json({ error: "Super admin only" }, { status: 403 });
   }
 
   const body = await req.json();
@@ -27,11 +30,6 @@ export async function POST(req: NextRequest) {
   }
   if (!VALID_ROLES.includes(newRole)) {
     return NextResponse.json({ error: "Invalid role" }, { status: 400 });
-  }
-
-  // Only super_admin can assign admin or super_admin roles
-  if (["super_admin", "admin"].includes(newRole) && callerRole !== "super_admin") {
-    return NextResponse.json({ error: "Only super admin can assign admin roles" }, { status: 403 });
   }
 
   // Update Clerk public metadata

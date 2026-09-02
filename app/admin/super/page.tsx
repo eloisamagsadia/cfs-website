@@ -42,7 +42,7 @@ export default function SuperAdminPage() {
   useEffect(() => {
     Promise.all([
       fetch("/api/admin/site-settings").then(r => r.json()),
-      fetch("/api/admin/audit-log").then(r => r.json()),
+      fetch("/api/super/audit-log").then(r => r.json()),
       fetch("/api/admin/sponsor-perks").then(r => r.json()),
       fetch("/api/admin/stats").then(r => r.json()).catch(() => ({ stats: null })),
     ]).then(([settingsData, logsData, perksData, statsData]) => {
@@ -149,7 +149,7 @@ export default function SuperAdminPage() {
 
   async function exportMembers() {
     setExportLoading(true);
-    const res = await fetch("/api/admin/members/export");
+    const res = await fetch("/api/super/members-export");
     const data = await res.json();
     const csv = [
       ["ID", "Display Name", "Role", "Joined", "Posts", "Banned"].join(","),

@@ -223,7 +223,7 @@ export default function AuditPage() {
   const [expanded, setExpanded]     = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    fetch("/api/admin/audit-log")
+    fetch("/api/super/audit-log")
       .then(r => r.json())
       .then(d => { if (d.error) setError(d.error); else setLogs(d.logs ?? []); })
       .catch(e => setError(e.message))

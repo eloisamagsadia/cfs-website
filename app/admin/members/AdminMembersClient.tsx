@@ -118,10 +118,10 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
   };
 
   // Can caller change this member's role?
-  function canChangeRole(target: any) {
-    if (target.role === "super_admin" && !isSuperAdmin) return false;
-    if (["admin"].includes(target.role) && !isSuperAdmin) return false;
-    return true;
+  // Role changes are super_admin only across the board — regular admins
+  // don't see the role dropdown at all (matches the tightened API gate).
+  function canChangeRole(_target: any) {
+    return isSuperAdmin;
   }
 
   return (
