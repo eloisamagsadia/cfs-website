@@ -101,14 +101,17 @@ export default function AdminWaitlistDetail() {
     if (waiting.length === 0) return;
     if (!confirm(`Notify all ${waiting.length} waiting member${waiting.length === 1 ? "" : "s"} that a spot may be available?`)) return;
     setBusy("__all__"); setError(""); setStatus("");
-    try {
-      for (const e of waiting) {
-        await fetch("/api/admin/waitlist", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: e.id, status: "notified" }) });
-      }
-      setStatus(`Notified ${waiting.length} member${waiting.length === 1 ? "" : "s"}.`);
-      load();
-    } catch (e: any) { setError(e.message); }
-    finally { setBusy(null); }
+    let ok = 0, failed = 0;
+    for (const e of waiting) {
+      try {
+        const r = await fetch("/api/admin/waitlist", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: e.id, status: "notified" }) });
+        if (r.ok) ok++; else failed++;
+      } catch { failed++; }
+    }
+    if (failed === 0) setStatus(`Notified ${ok} member${ok === 1 ? "" : "s"}.`);
+    else setError(`Notified ${ok}, ${failed} failed. Try again for the rest.`);
+    load();
+    setBusy(null);
   }
 
   if (loading) return <div style={{ padding: "48px", textAlign: "center", fontFamily: SG, letterSpacing: "2px", color: "#7A8E7A" }}>LOADING…</div>;

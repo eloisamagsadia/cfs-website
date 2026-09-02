@@ -28,19 +28,35 @@ export default function AdminCodesPage() {
   async function saveCode(){
     if(!form.code||!form.discount_value)return;
     setSaving(true);
-    await fetch("/api/admin/codes", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({code:form.code,discount_type:form.discount_type,discount_value:Number(form.discount_value),max_uses:form.max_uses?Number(form.max_uses):null,expires_at:form.expires_at||null,is_active:true,product_ids:form.product_ids}) });
-    setForm({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:"",product_ids:[]});
-    await loadCodes();
-    setSaving(false);
+    try {
+      const res = await fetch("/api/admin/codes", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({code:form.code,discount_type:form.discount_type,discount_value:Number(form.discount_value),max_uses:form.max_uses?Number(form.max_uses):null,expires_at:form.expires_at||null,is_active:true,product_ids:form.product_ids}) });
+      if (!res.ok) throw new Error("save failed");
+      setForm({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:"",product_ids:[]});
+      await loadCodes();
+    } catch (e: any) {
+      alert(e?.message ?? "Failed to save code. Try again.");
+    } finally {
+      setSaving(false);
+    }
   }
   async function toggleActive(id: string, current: boolean){
-    await fetch(`/api/admin/codes?id=${id}`, { method: "PATCH", headers: {"Content-Type":"application/json"}, body: JSON.stringify({is_active:!current}) });
-    loadCodes();
+    try {
+      const res = await fetch(`/api/admin/codes?id=${id}`, { method: "PATCH", headers: {"Content-Type":"application/json"}, body: JSON.stringify({is_active:!current}) });
+      if (!res.ok) throw new Error();
+      await loadCodes();
+    } catch {
+      alert("Could not toggle. Try again.");
+    }
   }
   async function deleteCode(id: string){
     if(!confirm("Delete this code?"))return;
-    await fetch(`/api/admin/codes?id=${id}`, { method: "DELETE" });
-    loadCodes();
+    try {
+      const res = await fetch(`/api/admin/codes?id=${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      await loadCodes();
+    } catch {
+      alert("Delete failed. Try again.");
+    }
   }
   function getStatus(c: any){
     if(!c.is_active)return"INACTIVE";

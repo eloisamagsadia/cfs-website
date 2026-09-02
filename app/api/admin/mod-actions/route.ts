@@ -38,11 +38,12 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { action_type, target_type, target_id, notes } = body;
 
-  const { data: action } = await (db() as any)
+  const { data: action, error } = await (db() as any)
     .from("mod_actions")
     .insert({ mod_id: userId, action_type, target_type, target_id, notes })
     .select()
     .single();
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json({ action });
 }

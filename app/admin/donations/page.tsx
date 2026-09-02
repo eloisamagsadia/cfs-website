@@ -35,10 +35,14 @@ export default function AdminDonationsPage() {
   const [search, setSearch]       = useState("");
 
   useEffect(() => {
-    fetch("/api/admin/donations").then(r => r.json()).then(d => {
-      setDonations(d.donations ?? []);
-      setLoading(false);
-    });
+    fetch("/api/admin/donations")
+      .then(async r => {
+        if (!r.ok) return { donations: [] };
+        return r.json();
+      })
+      .then(d => { setDonations(d?.donations ?? []); })
+      .catch(() => setDonations([]))
+      .finally(() => setLoading(false));
   }, []);
 
   const totalCollected = donations.filter(d => d.status === "completed").reduce((s, d) => s + Number(d.amount), 0);

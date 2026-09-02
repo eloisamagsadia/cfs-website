@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
+async function requireAdmin() {
+  const { userId, sessionClaims } = auth();
+  if (!userId) return null;
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  if (!["admin", "super_admin"].includes(role ?? "")) return null;
+  return userId;
+}
+
 export async function GET(req: NextRequest) {
+  if (!(await requireAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const supabase = createAdminClient();
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
@@ -11,12 +21,13 @@ export async function GET(req: NextRequest) {
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ products: data ?? [] });
   }
-  const { data, error } = await (((supabase.from("products") as any) as any) as any).select("*").eq("id", id).single();
+  const { data, error } = await (((supabase.from("products") as any) as any) as any).select("*").eq("id", id).maybeSingle();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ product: data });
 }
 
 export async function PUT(req: NextRequest) {
+  if (!(await requireAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const supabase = createAdminClient();
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
@@ -28,6 +39,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  if (!(await requireAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const supabase = createAdminClient();
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
