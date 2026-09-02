@@ -15,12 +15,25 @@ type Row = {
   events?: { title: string; date: string } | null;
 };
 
+type AutoRun = { created_at: string; details?: { cancelled_count?: number; hours_cutoff?: number } | null };
+
+function timeAgo(iso: string): string {
+  const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60_000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins} minute${mins === 1 ? "" : "s"} ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs} hour${hrs === 1 ? "" : "s"} ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
 function ageHours(iso: string): number {
   return Math.floor((Date.now() - new Date(iso).getTime()) / 3_600_000);
 }
 
 export default function PendingCleanupPage() {
   const [rows, setRows] = useState<Row[]>([]);
+  const [lastAuto, setLastAuto] = useState<AutoRun | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
@@ -35,6 +48,7 @@ export default function PendingCleanupPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Load failed");
       setRows(data.tickets ?? []);
+      setLastAuto(data.last_auto_cleanup ?? null);
     } catch (e: any) { setError(e.message); }
     finally { setLoading(false); }
   }
@@ -67,6 +81,20 @@ export default function PendingCleanupPage() {
         <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: "4px 0 0" }}>
           Unpaid tickets holding registration state. Cancel stale ones to free capacity signals and reduce clutter.
         </p>
+      </div>
+
+      {/* Auto-cleanup status */}
+      <div style={{ background: "#E8F0E4", border: "1.5px solid #B7D8B7", borderRadius: "12px", padding: "12px 16px", display: "flex", flexDirection: "column", gap: "4px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#156530", letterSpacing: "1.5px" }}>
+          <span style={{ display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", background: "#1A8040" }} />
+          AUTO-CLEANUP · ACTIVE
+        </div>
+        <div style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", lineHeight: 1.5 }}>
+          A scheduled job runs every hour and cancels pending tickets older than 24 hours automatically.
+          {lastAuto
+            ? ` Last run was ${timeAgo(lastAuto.created_at)} — cancelled ${lastAuto.details?.cancelled_count ?? 0} ticket${(lastAuto.details?.cancelled_count ?? 0) === 1 ? "" : "s"}.`
+            : " No auto-cleanup has cancelled anything yet — the log only records runs that actually cleaned something up."}
+        </div>
       </div>
 
       {error && <div style={{ background: "#FFE8EC", border: "1.5px solid #CC3344", borderRadius: "10px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}

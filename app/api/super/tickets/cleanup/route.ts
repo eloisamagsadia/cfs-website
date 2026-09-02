@@ -16,13 +16,26 @@ export async function GET() {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const admin = createAdminClient();
-  const { data, error } = await (admin.from("event_tickets") as any)
-    .select("id, ticket_number, user_id, event_id, created_at, events:event_id(title, date)")
-    .eq("status", "pending_payment")
-    .order("created_at", { ascending: false });
+  const [ticketsRes, lastAutoRes] = await Promise.all([
+    (admin.from("event_tickets") as any)
+      .select("id, ticket_number, user_id, event_id, created_at, events:event_id(title, date)")
+      .eq("status", "pending_payment")
+      .order("created_at", { ascending: false }),
+    // Most recent auto-cleanup run so the panel can show "Last auto-cleanup: X ago".
+    // The pg_cron job only logs runs that actually cancelled something.
+    (admin.from("audit_log") as any)
+      .select("created_at, details")
+      .eq("action", "cleanup_pending_tickets_auto")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+  ]);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ tickets: data ?? [] });
+  if (ticketsRes.error) return NextResponse.json({ error: ticketsRes.error.message }, { status: 500 });
+  return NextResponse.json({
+    tickets: ticketsRes.data ?? [],
+    last_auto_cleanup: lastAutoRes.data ?? null,
+  });
 }
 
 export async function POST(req: NextRequest) {
