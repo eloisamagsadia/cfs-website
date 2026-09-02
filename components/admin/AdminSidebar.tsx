@@ -78,6 +78,7 @@ const sections = [
       { label: "Check-In",      href: "/admin/check-in",               icon: icons.checkin },
       { label: "Notifications", href: "/admin/notifications",          icon: icons.notifs },
       { label: "Support",       href: "/admin/support",                icon: icons.support },
+      { label: "Contact",       href: "/admin/contact",                icon: icons.emails },
       { label: "Shipping",      href: "/admin/shipping",               icon: icons.shipping },
       { label: "Emails",        href: "/admin/emails",                 icon: icons.emails },
       { label: "Newsletter",    href: "/admin/newsletter",             icon: icons.emails },

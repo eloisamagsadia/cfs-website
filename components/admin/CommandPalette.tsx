@@ -43,6 +43,7 @@ const NAV_LINKS: { title: string; href: string; keywords?: string }[] = [
   { title: "Check-In",            href: "/admin/check-in",           keywords: "qr scan" },
   { title: "Notifications",       href: "/admin/notifications",      keywords: "broadcast push" },
   { title: "Support",             href: "/admin/support",            keywords: "tickets help" },
+  { title: "Contact Messages",    href: "/admin/contact",            keywords: "inquiries guest email" },
   { title: "Shipping",            href: "/admin/shipping",           keywords: "delivery track" },
   { title: "Emails",              href: "/admin/emails",             keywords: "resend templates" },
   { title: "Newsletter",          href: "/admin/newsletter",         keywords: "subscribers email list" },
