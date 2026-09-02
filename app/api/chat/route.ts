@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
       .eq("room_id", room.id)
       .order("created_at", { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
     const myMembership = (memberOf ?? []).find((m: any) => m.room_id === room.id);
     const { count: unread } = await (db() as any)

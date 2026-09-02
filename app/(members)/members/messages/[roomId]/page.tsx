@@ -184,12 +184,17 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
     if (!file) return;
     const url = await uploadImage(file);
     if (url) {
-      await fetch(`/api/chat/${params.roomId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: "", image_url: url, reply_to_id: replyTo?.id ?? null }),
-      });
-      setReplyTo(null);
+      try {
+        const res = await fetch(`/api/chat/${params.roomId}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: "", image_url: url, reply_to_id: replyTo?.id ?? null }),
+        });
+        if (!res.ok) throw new Error();
+        setReplyTo(null);
+      } catch {
+        alert("Failed to send image. Please try again.");
+      }
     }
     if (imgInputRef.current) imgInputRef.current.value = "";
   }
@@ -197,19 +202,26 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
   async function pinMessage(msgId: string) {
     setShowReactions(null);
     setHoveredMsg(null);
-    const res = await fetch(`/api/chat/${params.roomId}/pin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message_id: msgId }),
-    });
-    const d = await res.json();
+    let res: Response;
+    try {
+      res = await fetch(`/api/chat/${params.roomId}/pin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message_id: msgId }),
+      });
+      if (!res.ok) return;
+    } catch { return; }
+    const d = await res.json().catch(() => ({}));
     if (d.pinned) {
       const msg = messages.find(m => m.id === msgId);
       setPinnedMsg(msg ?? null);
     } else {
       setPinnedMsg(null);
     }
-    setMessages(prev => prev.map(m => m.id === msgId ? { ...m, is_pinned: d.pinned } : { ...m, is_pinned: m.is_pinned && msgId !== m.id ? m.is_pinned : false }));
+    // Only toggle the target message's pinned flag — leave others as-is.
+    // (Server only allows one pinned message at a time, so the previous pin
+    // will get unpinned on the server; we'll reconcile on next load.)
+    setMessages(prev => prev.map(m => m.id === msgId ? { ...m, is_pinned: !!d.pinned } : m));
   }
 
   function insertEmoji(emoji: any) {
@@ -256,25 +268,38 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
     if ((!input.trim() && !uploadingImg) || sending) return;
     setSending(true);
     const content = input.trim();
+    const savedReplyTo = replyTo;
     setInput("");
     setReplyTo(null);
-    await fetch(`/api/chat/${params.roomId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content, reply_to_id: replyTo?.id ?? null }),
-    });
-    setSending(false);
+    try {
+      const res = await fetch(`/api/chat/${params.roomId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content, reply_to_id: savedReplyTo?.id ?? null }),
+      });
+      if (!res.ok) throw new Error("send failed");
+    } catch {
+      // Restore the user's draft so they can retry.
+      setInput(content);
+      setReplyTo(savedReplyTo);
+      alert("Could not send. Try again.");
+    } finally {
+      setSending(false);
+    }
   }
 
   async function toggleReaction(msgId: string, emoji: string) {
     setShowReactions(null);
-    const res = await fetch(`/api/chat/${params.roomId}/reactions`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message_id: msgId, emoji }),
-    });
-    const d = await res.json();
-    setMsgReactions(prev => ({ ...prev, [msgId]: d.reactions ?? [] }));
+    try {
+      const res = await fetch(`/api/chat/${params.roomId}/reactions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message_id: msgId, emoji }),
+      });
+      if (!res.ok) return;
+      const d = await res.json().catch(() => ({ reactions: [] }));
+      setMsgReactions(prev => ({ ...prev, [msgId]: d.reactions ?? [] }));
+    } catch {}
   }
 
   function getDisplayName(m: any) {

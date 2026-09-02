@@ -34,14 +34,23 @@ export async function POST(req: NextRequest, { params }: { params: { roomId: str
 
   const { message_id, emoji } = await req.json();
 
-  // Toggle reaction
+  // Membership check — only members of this room can react to its messages.
+  const { data: member } = await (db() as any)
+    .from("chat_members")
+    .select("user_id")
+    .eq("room_id", params.roomId)
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (!member) return NextResponse.json({ error: "Not a member" }, { status: 403 });
+
+  // Toggle reaction — .maybeSingle() so an absent row doesn't crash.
   const { data: existing } = await (db() as any)
     .from("chat_reactions")
     .select("id")
     .eq("message_id", message_id)
     .eq("user_id", userId)
     .eq("emoji", emoji)
-    .single();
+    .maybeSingle();
 
   if (existing) {
     await (db() as any).from("chat_reactions").delete().eq("id", existing.id);
