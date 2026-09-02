@@ -6,8 +6,8 @@ import EventRegisterButton from "@/components/public/EventRegisterButton";
 import type { Metadata } from "next";
 import { IconCalendar, IconPin, IconUsers, IconTicket, IconSparkle, IconTag, IconClipboard, IconStar, IconCheck } from "@/components/shared/Icons";
 import EventShareRow from "@/components/public/EventShareRow";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300;
+
 
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";

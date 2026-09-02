@@ -6,7 +6,7 @@ import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
 import { IconCalendar, IconPin, IconTicket, IconUsers } from "@/components/shared/Icons";
 
 export const metadata: Metadata = { title: "Events — CFS" };
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";

@@ -1,8 +1,16 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Metadata } from "next";
 import Link from "next/link";
-import AnalyticsChart from "@/components/super/AnalyticsCharts";
+import dynamicImport from "next/dynamic";
 import { IconUsers, IconTicket, IconHeart, IconCart, IconStar } from "@/components/shared/Icons";
+
+// Recharts is ~300KB gzipped — dynamic-import so the dashboard ships
+// the SSR shell + stats immediately and only fetches the chart JS once
+// the client hydrates.
+const AnalyticsChart = dynamicImport(() => import("@/components/super/AnalyticsCharts"), {
+  ssr: false,
+  loading: () => <div style={{ height: 240, borderRadius: 12, background: "#F7FAF5", border: "1px dashed #DDE8DD" }} />,
+});
 
 export const metadata: Metadata = { title: "Analytics" };
 export const dynamic = "force-dynamic";

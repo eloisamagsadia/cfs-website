@@ -6,8 +6,8 @@ import AddToCartButton from "@/components/public/AddToCartButton";
 import ProductImageGallery from "@/components/public/ProductImageGallery";
 import { IconShoppingBag } from "@/components/shared/Icons";
 import type { Metadata } from "next";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300;
+
 
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";

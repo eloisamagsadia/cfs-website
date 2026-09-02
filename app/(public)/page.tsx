@@ -4,8 +4,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { IconCalendar, IconPin, IconTicket } from "@/components/shared/Icons";
 import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300;
+
 
 export const metadata: Metadata = {
   title: "Home",

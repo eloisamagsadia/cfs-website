@@ -17,30 +17,34 @@ const admin = () => createAdminClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-async function BellWithCount({ userId }: { userId: string }) {
+// Single combined fetch — one Supabase round-trip per navigation instead
+// of two separate Suspense-boundary queries. At hundreds of members this
+// halves the Navbar's DB cost.
+async function UserWidgets({ userId, role }: { userId: string; role: string }) {
   const supabase = admin();
-  const { count } = await supabase
-    .from("notifications")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", userId)
-    .eq("is_read", false);
-  return <NotificationBell initialCount={count ?? 0} userId={userId} />;
-}
+  const [{ count }, { data: profile }] = await Promise.all([
+    supabase
+      .from("notifications")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("is_read", false),
+    supabase
+      .from("profiles")
+      .select("display_name, avatar_url")
+      .eq("id", userId)
+      .single(),
+  ]);
 
-async function AvatarWithProfile({ userId, role }: { userId: string; role: string }) {
-  const supabase = admin();
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("display_name, avatar_url")
-    .eq("id", userId)
-    .single();
   return (
-    <NavbarAvatar
-      userId={userId}
-      displayName={profile?.display_name ?? "Member"}
-      avatarUrl={profile?.avatar_url ?? null}
-      role={role}
-    />
+    <>
+      <NotificationBell initialCount={count ?? 0} userId={userId} />
+      <NavbarAvatar
+        userId={userId}
+        displayName={profile?.display_name ?? "Member"}
+        avatarUrl={profile?.avatar_url ?? null}
+        role={role}
+      />
+    </>
   );
 }
 
@@ -76,14 +80,14 @@ export default async function Navbar() {
           {/* Right side */}
           <div style={{ display: "flex", gap: "14px", alignItems: "center" }}>
             {userId ? (
-              <>
-                <Suspense fallback={<div style={{ width: "34px", height: "34px" }} />}>
-                  <BellWithCount userId={userId} />
-                </Suspense>
-                <Suspense fallback={<div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#FFFFFF", border: "1.5px solid #DDE8DD" }} />}>
-                  <AvatarWithProfile userId={userId} role={role} />
-                </Suspense>
-              </>
+              <Suspense fallback={
+                <>
+                  <div style={{ width: "34px", height: "34px" }} />
+                  <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#FFFFFF", border: "1.5px solid #DDE8DD" }} />
+                </>
+              }>
+                <UserWidgets userId={userId} role={role} />
+              </Suspense>
             ) : (
               <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                 <Link href="/sign-in"
@@ -91,7 +95,7 @@ export default async function Navbar() {
                   SIGN IN
                 </Link>
                 <Link href="/sign-up" style={{ textDecoration: "none" }}>
-                  <div style={{ fontFamily: R, fontSize: "11px", background: "#1B3A2D", color: "#fff", padding: "8px 20px", borderRadius: "6px", letterSpacing: "1px", fontWeight: "700", fontSize: "11px" }}>
+                  <div style={{ fontFamily: R, fontSize: "11px", background: "#1B3A2D", color: "#fff", padding: "8px 20px", borderRadius: "6px", letterSpacing: "1px", fontWeight: "700" }}>
                     JOIN ✦
                   </div>
                 </Link>

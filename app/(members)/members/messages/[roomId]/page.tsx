@@ -1,12 +1,16 @@
 "use client";
 import SkeletonPage from "@/components/shared/SkeletonPage";
 import { useEffect, useState, useRef } from "react";
+import dynamic from "next/dynamic";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
-import data from "@emoji-mart/data";
-import Picker from "@emoji-mart/react";
 import { IconX, IconCamera, IconUsers, IconSparkle } from "@/components/shared/Icons";
+
+// Emoji picker + its data are ~400KB combined; lazy-load so they only
+// ship when the user actually opens the picker.
+const Picker = dynamic(() => import("@emoji-mart/react").then(m => m.default), { ssr: false });
+async function loadEmojiData() { return (await import("@emoji-mart/data")).default; }
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -34,6 +38,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
   const [showReactions, setShowReactions] = useState<string | null>(null);
   const [msgReactions, setMsgReactions] = useState<Record<string, any[]>>({});
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [emojiData, setEmojiData] = useState<any>(null);
   const [mentionSearch, setMentionSearch] = useState<string | null>(null);
   const [mentionIndex, setMentionIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
@@ -490,7 +495,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
       {showEmojiPicker && (
         <div style={{ position: "relative", margin: "0 4px 4px" }}>
           <div ref={emojiPickerRef} style={{ position: "absolute", bottom: "0", left: "0", zIndex: 200 }}>
-            <Picker data={data} onEmojiSelect={insertEmoji} theme="dark" set="native" previewPosition="none" skinTonePosition="none" />
+            {emojiData && <Picker data={emojiData} onEmojiSelect={insertEmoji} theme="dark" set="native" previewPosition="none" skinTonePosition="none" />}
           </div>
         </div>
       )}
@@ -518,6 +523,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
           rows={1}
           style={{ flex: 1, background: "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "20px", padding: "10px 16px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "none", lineHeight: 1.5, maxHeight: "100px", overflowY: "auto", boxSizing: "border-box" }} />
         <button onClick={() => setShowEmojiPicker(p => !p)}
+          onClickCapture={() => { if (!emojiData) loadEmojiData().then(setEmojiData); }}
           style={{ background: showEmojiPicker ? "#E8F0E4" : "#F2F7F2", border: `1.5px solid ${showEmojiPicker ? "#1A8040" : "#DDE8DD"}`, borderRadius: "50%", width: "40px", height: "40px", cursor: "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <IconSparkle size={18} color={showEmojiPicker ? "#1A8040" : "#5A7A60"} />
         </button>

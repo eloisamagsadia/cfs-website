@@ -2,8 +2,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import { IconShoppingBag } from "@/components/shared/Icons";
 import Link from "next/link";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300;
+
 
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";

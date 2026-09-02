@@ -1,11 +1,22 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { BreakdownChart, CashflowBar } from "@/components/public/ReportCharts";
+import dynamicImport from "next/dynamic";
 import ReportReceiptPreview from "@/components/public/ReportReceiptPreview";
 import type { Metadata } from "next";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+
+// Recharts is ~300KB gzipped. Split it out so the report shell + text
+// content ship immediately and only load the chart JS after hydration.
+const BreakdownChart = dynamicImport(() => import("@/components/public/ReportCharts").then(m => m.BreakdownChart), {
+  ssr: false,
+  loading: () => <div style={{ height: 220, borderRadius: 12, background: "#F7FAF5", border: "1px dashed #DDE8DD" }} />,
+});
+const CashflowBar = dynamicImport(() => import("@/components/public/ReportCharts").then(m => m.CashflowBar), {
+  ssr: false,
+  loading: () => <div style={{ height: 180, borderRadius: 12, background: "#F7FAF5", border: "1px dashed #DDE8DD" }} />,
+});
+export const revalidate = 300;
+
 
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
