@@ -52,20 +52,32 @@ export default function AdminChatRoomPage() {
   const [working, setWorking]   = useState<string | null>(null);
   const [search, setSearch]     = useState("");
   const [senderFilter, setSenderFilter] = useState("");
+  const [needsReason, setNeedsReason] = useState(false);
+  const [reason, setReason]           = useState("");
 
-  async function load() {
+  async function load(reasonArg?: string) {
     setLoading(true); setError("");
     try {
-      const r = await fetch(`/api/admin/chat/messages?room_id=${id}`);
+      const url = reasonArg
+        ? `/api/admin/chat/messages?room_id=${id}&reason=${encodeURIComponent(reasonArg)}`
+        : `/api/admin/chat/messages?room_id=${id}`;
+      const r = await fetch(url);
       const d = await r.json();
       if (!r.ok) throw new Error(d.error);
       setRoom(d.room);
       setMessages(d.messages ?? []);
       setMembers(d.members ?? []);
+      setNeedsReason(!!d.requires_reason);
     } catch (e: any) { setError(e.message); }
     finally { setLoading(false); }
   }
   useEffect(() => { if (id) load(); }, [id]);
+
+  function submitReason() {
+    if (reason.trim().length < 5) { setError("Please provide a brief reason (5+ characters)."); return; }
+    setError("");
+    load(reason.trim());
+  }
 
   const filtered = useMemo(() => {
     return messages.filter(m => {
@@ -117,6 +129,41 @@ export default function AdminChatRoomPage() {
         </div>
       </div>
 
+      {/* DM privacy notice — always shown for DMs, whether gated or already opened */}
+      {!room.is_group && (
+        <div style={{ background: "#FFE8EC", border: "2px solid #CC3344", borderRadius: "14px", padding: "16px 20px", display: "flex", gap: "14px", alignItems: "flex-start" }}>
+          <div style={{ flexShrink: 0, background: "#CC3344", color: "#ffffff", width: 36, height: 36, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+            <IconWarning size={18} color="#ffffff" />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: R, fontSize: "13px", color: "#8A1E27", letterSpacing: "2px", marginBottom: 4 }}>PRIVATE DIRECT MESSAGE</div>
+            <div style={{ fontFamily: B, fontSize: "13px", color: "#8A1E27", lineHeight: 1.55 }}>
+              This is a private conversation between members. Only open it when investigating a report or serious policy violation. Your access is logged with your name{needsReason ? "" : ", the reason you gave"}, timestamp, and the participants' IDs — the affected members can request this record.
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reason gate — DM messages don't load until ops explains why */}
+      {needsReason && (
+        <div style={{ background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "14px", padding: "18px 20px", display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#8A1E27", letterSpacing: "1.5px" }}>REASON REQUIRED TO OPEN</div>
+          <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>Cite the report ID, ticket, or policy concern that led you here.</div>
+          <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} placeholder="e.g. Report #42 — user X flagged as harassment"
+            style={{ background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", resize: "vertical" as const, lineHeight: 1.55 }} />
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <button onClick={submitReason} disabled={loading}
+              style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: "#8A1E27", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.3px" }}>
+              {loading ? "OPENING…" : "OPEN CONVERSATION"}
+            </button>
+            <Link href="/admin/chat" style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#5A7A60", textDecoration: "none", letterSpacing: "1.3px" }}>
+              ← CANCEL
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {!needsReason && (<>
       {/* Participants */}
       <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "14px", padding: "14px 18px" }}>
         <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#5A7A60", letterSpacing: "1.5px", marginBottom: "10px" }}>PARTICIPANTS ({members.length})</div>
@@ -173,6 +220,7 @@ export default function AdminChatRoomPage() {
           ))
         )}
       </div>
+      </>)}
     </div>
   );
 }

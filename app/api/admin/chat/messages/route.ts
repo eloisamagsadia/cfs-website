@@ -11,17 +11,35 @@ async function requireAdmin() {
   return userId;
 }
 
-// GET /api/admin/chat/messages?room_id=...  → list w/ sender profiles
+// GET /api/admin/chat/messages?room_id=...&reason=<text>  → list w/ sender profiles
+// `reason` is required for DM rooms (is_group=false); guests get nothing.
+// Each fetch is audit-logged as view_chat_room so members can be shown who
+// accessed their DMs if we ever need to demonstrate accountability.
 export async function GET(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const roomId = new URL(req.url).searchParams.get("room_id");
+  const url    = new URL(req.url);
+  const roomId = url.searchParams.get("room_id");
+  const reason = (url.searchParams.get("reason") ?? "").trim().slice(0, 500);
   if (!roomId) return NextResponse.json({ error: "room_id required" }, { status: 400 });
 
   const admin = createAdminClient();
-  const [room, msgs, members] = await Promise.all([
-    (admin as any).from("chat_rooms").select("*").eq("id", roomId).maybeSingle(),
+  const { data: room } = await (admin as any).from("chat_rooms").select("*").eq("id", roomId).maybeSingle();
+  if (!room) return NextResponse.json({ error: "Room not found" }, { status: 404 });
+
+  const isDm = !room.is_group;
+  if (isDm && !reason) {
+    // Return metadata only — client will prompt for a reason before requesting messages.
+    return NextResponse.json({
+      room,
+      messages: [],
+      members: [],
+      requires_reason: true,
+    });
+  }
+
+  const [msgs, members] = await Promise.all([
     (admin as any)
       .from("chat_messages")
       .select("id, room_id, sender_id, content, image_url, created_at, edited_at, reply_to_id, is_pinned, profiles:sender_id(display_name, avatar_url)")
@@ -34,8 +52,22 @@ export async function GET(req: NextRequest) {
       .eq("room_id", roomId),
   ]);
 
+  await logAudit({
+    userId,
+    action: "view_chat_room",
+    target_type: "chat_room",
+    target_id: roomId,
+    details: {
+      is_group: !!room.is_group,
+      participants: (members.data as any[] ?? []).map((m: any) => m.user_id),
+      message_count: (msgs.data as any[] ?? []).length,
+      reason: reason || null,
+    },
+    req,
+  });
+
   return NextResponse.json({
-    room: room.data ?? null,
+    room,
     messages: msgs.data ?? [],
     members: members.data ?? [],
   });

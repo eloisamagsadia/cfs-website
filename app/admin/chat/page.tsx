@@ -85,6 +85,9 @@ export default function AdminChatModPage() {
         </div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>CHAT MODERATION</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>All chat rooms. Read-only browse with the ability to delete abusive messages. Every deletion is audit-logged.</p>
+        <p style={{ fontFamily: B, fontSize: "12px", color: "#8A1E27", marginTop: "4px" }}>
+          Opening a <strong>DM</strong> requires a written reason and creates a permanent audit record. Only open one when investigating a specific report.
+        </p>
       </div>
 
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
