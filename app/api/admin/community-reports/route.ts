@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
       id, reporter_id, post_id, comment_id, reason, status, created_at,
       reviewed_by, reviewed_at, resolution_note,
       reporter:reporter_id(id, display_name, avatar_url),
-      post:post_id(id, content, is_hidden, user_id, media_url, profiles:user_id(display_name, avatar_url)),
+      post:post_id(id, content, is_hidden, user_id, images, profiles:user_id(display_name, avatar_url)),
       comment:comment_id(id, content, user_id, profiles:user_id(display_name, avatar_url))
     `).order("created_at", { ascending: false });
   if (status && VALID_STATUS.includes(status as any)) q = q.eq("status", status);

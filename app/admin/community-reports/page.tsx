@@ -21,7 +21,7 @@ interface Report {
   reviewed_at: string | null;
   resolution_note: string | null;
   reporter?: { id: string; display_name?: string; avatar_url?: string } | null;
-  post?: { id: string; content?: string; is_hidden?: boolean; user_id?: string; media_url?: string; profiles?: { display_name?: string; avatar_url?: string } } | null;
+  post?: { id: string; content?: string; is_hidden?: boolean; user_id?: string; images?: string[]; profiles?: { display_name?: string; avatar_url?: string } } | null;
   comment?: { id: string; content?: string; user_id?: string; profiles?: { display_name?: string; avatar_url?: string } } | null;
 }
 
@@ -154,8 +154,12 @@ export default function CommunityReportsPage() {
                   ) : (
                     <div style={{ fontFamily: B, fontSize: "12px", color: "#B7CDB7", fontStyle: "italic" }}>(target deleted or empty)</div>
                   )}
-                  {isPost && rep.post?.media_url && (
-                    <img src={rep.post.media_url} alt="" style={{ maxHeight: "140px", marginTop: "8px", borderRadius: "6px" }} />
+                  {isPost && rep.post?.images && rep.post.images.length > 0 && (
+                    <div style={{ display: "flex", gap: "6px", marginTop: "8px", flexWrap: "wrap" }}>
+                      {rep.post.images.slice(0, 4).map((src, i) => (
+                        <img key={i} src={src} alt="" style={{ maxHeight: "140px", borderRadius: "6px" }} />
+                      ))}
+                    </div>
                   )}
                   {isPost && rep.post?.id && (
                     <div style={{ marginTop: "8px" }}>
