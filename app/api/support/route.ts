@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 const db = () => createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -39,6 +40,16 @@ export async function POST(req: NextRequest) {
   }).select().single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  logAudit({
+    userId,
+    action: "open_support_ticket",
+    target_type: "support_ticket",
+    target_id: (data as any)?.id,
+    details: { category: category ?? "general", subject: subject.trim().slice(0, 80), has_attachments: !!(attachments?.length) },
+    req,
+  });
+
   return NextResponse.json({ ticket: data }, { status: 201 });
 }
 

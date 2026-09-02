@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 const admin = () => createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -118,6 +119,20 @@ export async function POST(req: NextRequest) {
     .select("image_post_count")
     .eq("id", userId)
     .single();
+
+  logAudit({
+    userId,
+    action: "create_post",
+    target_type: "community_post",
+    target_id: (post as any)?.id,
+    details: {
+      has_images: !!hasImages,
+      has_video: !!(video_url || video_embed_url),
+      category_id: category_id ?? null,
+      content_length: content?.trim()?.length ?? 0,
+    },
+    req,
+  });
 
   return NextResponse.json({
     post,

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkAndAwardBadges } from "@/lib/badges";
+import { logAudit } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
   const supabase = createAdminClient();
@@ -56,6 +57,15 @@ export async function POST(req: NextRequest) {
 
   // Check badges
   await checkAndAwardBadges(userId, "event_count");
+
+  logAudit({
+    userId,
+    action: "register_event",
+    target_type: "event",
+    target_id: event_id,
+    details: { event_title: event.title, ticket_type, legacy: true },
+    req,
+  });
 
   return NextResponse.json({ registration: reg });
 }

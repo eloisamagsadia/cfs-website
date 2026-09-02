@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 export async function POST(req: NextRequest, { params }: { params: { userId: string } }) {
   const supabase = createAdminClient();
@@ -26,6 +27,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
     link: `/members/community/members`,
   });
 
+  logAudit({ userId, action: "follow_user", target_type: "user", target_id: params.userId, req });
   return NextResponse.json({ following: true });
 }
 
@@ -37,5 +39,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { userId: s
   await (((supabase.from("community_follows") as any) as any) as any).delete()
     .eq("follower_id", userId).eq("following_id", params.userId);
 
+  logAudit({ userId, action: "unfollow_user", target_type: "user", target_id: params.userId, req });
   return NextResponse.json({ following: false });
 }

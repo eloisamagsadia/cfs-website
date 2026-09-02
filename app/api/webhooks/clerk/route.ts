@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendWelcomeEmail } from "@/lib/emails/welcome";
+import { logAudit } from "@/lib/audit";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -58,6 +59,7 @@ export async function POST(req: Request) {
     }
 
     console.log("✓ Profile created for", id, email);
+    logAudit({ userId: id, action: "signup", target_type: "user", target_id: id, details: { display_name: displayName, email } });
 
     if (email) {
       sendWelcomeEmail({ email, name: displayName }).catch(err => {
@@ -70,6 +72,19 @@ export async function POST(req: Request) {
     const { id } = evt.data;
     await supabaseAdmin.from("profiles").delete().eq("id", id);
     console.log("✓ Profile deleted for", id);
+    if (id) logAudit({ userId: id, action: "delete_account", target_type: "user", target_id: id });
+  }
+
+  // Session lifecycle → login / logout audit trail
+  if (evt.type === "session.created") {
+    const { user_id, id } = evt.data as any;
+    if (user_id) logAudit({ userId: user_id, action: "login", target_type: "session", target_id: id ?? null });
+  }
+
+  if (evt.type === "session.ended" || evt.type === "session.removed" || evt.type === "session.revoked") {
+    const { user_id, id } = evt.data as any;
+    const action = evt.type === "session.revoked" ? "session_revoked" : "logout";
+    if (user_id) logAudit({ userId: user_id, action, target_type: "session", target_id: id ?? null, details: { clerk_event: evt.type } });
   }
 
   return new Response("OK", { status: 200 });

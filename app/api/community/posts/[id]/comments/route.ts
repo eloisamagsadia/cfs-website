@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const supabase = createAdminClient();
@@ -51,6 +52,15 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     });
   }
 
+  logAudit({
+    userId,
+    action: "create_comment",
+    target_type: "community_post",
+    target_id: params.id,
+    details: { comment_id: (comment as any)?.id, parent_comment_id: parent_comment_id ?? null },
+    req,
+  });
+
   return NextResponse.json({ comment });
 }
 
@@ -62,5 +72,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   const commentId = searchParams.get("commentId");
   if (!commentId) return NextResponse.json({ error: "Comment ID required" }, { status: 400 });
   await (((supabase.from("community_comments") as any) as any) as any).delete().eq("id", commentId).eq("user_id", userId);
+  logAudit({ userId, action: "delete_comment", target_type: "community_comment", target_id: commentId, details: { post_id: params.id }, req });
   return NextResponse.json({ success: true });
 }

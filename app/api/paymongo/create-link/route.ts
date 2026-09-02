@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createPaymentLink, tocentavos } from "@/lib/paymongo";
+import { logAudit } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
   const { userId } = auth();
@@ -49,6 +50,21 @@ export async function POST(req: NextRequest) {
       const rows = rawDriveIds.map(id => ({ donation_id: ref, drive_id: id, amount: perDrive }));
       await (supabase.from("donation_drive_allocations") as any).insert(rows);
     }
+
+    logAudit({
+      userId,
+      action: "make_donation",
+      target_type: "donation",
+      target_id: ref,
+      details: {
+        amount: Number(amount),
+        donation_amount: donation_amount ? Number(donation_amount) : null,
+        is_anonymous: !!metadata?.anonymous,
+        is_manual: isManual,
+        drive_count: rawDriveIds.length,
+      },
+      req,
+    });
   }
 
   // Manual donations skip PayMongo entirely — the /payment/manual screen shows instructions.

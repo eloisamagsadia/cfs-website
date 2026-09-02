@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 const VALID_REASONS = ["spam", "harassment", "hate", "nsfw", "misinformation", "off_topic", "other"] as const;
 
@@ -42,6 +43,15 @@ export async function POST(req: NextRequest) {
 
   const { data, error } = await (admin as any).from("community_reports").insert(row).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  logAudit({
+    userId,
+    action: "report_content",
+    target_type: post_id ? "community_post" : "community_comment",
+    target_id: post_id ?? comment_id,
+    details: { reason, report_id: (data as any)?.id },
+    req,
+  });
 
   return NextResponse.json({ report: data }, { status: 201 });
 }

@@ -3,6 +3,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkAndAwardBadges } from "@/lib/badges";
 import { sendEventTicket, sendEventTicketBundle } from "@/lib/email";
+import { logAudit } from "@/lib/audit";
 import { randomUUID } from "crypto";
 
 const db = () => createAdminClient(
@@ -224,6 +225,24 @@ export async function POST(req: NextRequest) {
 
   // Award badges
   await checkAndAwardBadges(userId, "event_count");
+
+  // Audit — buyer initiated a ticket purchase (or free registration).
+  logAudit({
+    userId,
+    action: tierPrice > 0 ? "purchase_ticket" : "register_event",
+    target_type: "event",
+    target_id: event_id,
+    details: {
+      event_title: event.title,
+      tier_name: tierName,
+      tier_price: tierPrice,
+      bundle_size: bundleSize,
+      bundle_id,
+      payment_status,
+      ticket_count: tickets.length,
+    },
+    req,
+  });
 
   // Return: first ticket for legacy callers, plus bundle_id (used as payment reference) and full list
   return NextResponse.json({ ticket: firstTicket, tickets, bundle_id, bundle_size: bundleSize });

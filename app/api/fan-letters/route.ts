@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 export async function GET() {
   const db = createAdminClient();
@@ -35,6 +36,14 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  logAudit({
+    userId,
+    action: "submit_fan_letter",
+    target_type: "fan_letter",
+    target_id: (data as any)?.id,
+    details: { title: title.trim().slice(0, 80), content_length: content.length },
+    req,
+  });
   return NextResponse.json({ letter: data });
 }
 
@@ -51,5 +60,6 @@ export async function DELETE(req: NextRequest) {
     .eq("user_id", userId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  logAudit({ userId, action: "delete_fan_letter", target_type: "fan_letter", target_id: id, req });
   return NextResponse.json({ ok: true });
 }

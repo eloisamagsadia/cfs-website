@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 // POST /api/newsletter/subscribe  { email, source? }  — public
 export async function POST(req: NextRequest) {
@@ -32,6 +33,7 @@ export async function POST(req: NextRequest) {
     await (admin as any).from("newsletter_subscribers")
       .update({ unsubscribed_at: null, subscribed_at: new Date().toISOString(), source, user_id: userId ?? null, opt_in_ip: ip })
       .eq("id", existing.id);
+    logAudit({ userId: userId ?? null, action: "resubscribe_newsletter", target_type: "newsletter", target_id: String(existing.id), details: { source, email }, req });
     return NextResponse.json({ ok: true, resubscribed: true });
   }
 
@@ -40,5 +42,6 @@ export async function POST(req: NextRequest) {
   });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  logAudit({ userId: userId ?? null, action: "subscribe_newsletter", target_type: "newsletter", target_id: null, details: { source, email }, req });
   return NextResponse.json({ ok: true, created: true });
 }

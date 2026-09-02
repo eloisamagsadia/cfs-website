@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { logAudit } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
   const { userId } = auth();
@@ -43,6 +44,15 @@ export async function POST(req: NextRequest) {
       unit_price: i.products?.price ?? 0,
     }))
   );
+
+  logAudit({
+    userId,
+    action: "place_order",
+    target_type: "order",
+    target_id: order.id,
+    details: { item_count: items.length, subtotal, shipping_fee, total },
+    req,
+  });
 
   return NextResponse.json({ orderId: order.id }, { status: 201 });
 }
