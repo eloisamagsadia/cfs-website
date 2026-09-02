@@ -31,6 +31,7 @@ export default async function AccountPage() {
     { title:"MY MEDIA",  desc:"Images you've uploaded across the site",   href:"/members/account/media",    color:"#1A8040", bg:"#E8F4EC" },
     { title:"MY POSTS",   desc:"Your posts and reposts in the community",   href:"/members/account/posts",    color:"#1A8040", bg:"#E8F0E4" },
     { title:"MY ACTIVITY",desc:"Comments, reactions and interactions",      href:"/members/account/activity", color:"#156530", bg:"#E8F4EC" },
+    { title:"PRIVACY",    desc:"See who has opened your private DMs",        href:"/members/account/privacy",  color:"#8A1E27", bg:"#FFF3D6" },
   ];
 
   return (
