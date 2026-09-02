@@ -120,11 +120,17 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
   useEffect(() => {
     if (!showComments || previewComments.length > 0) return;
     setLoadingComments(true);
-    supabase.from("community_comments")
-      .select("*, profiles:user_id(id, display_name, avatar_url)")
-      .eq("post_id", post.id).is("parent_comment_id", null)
-      .order("created_at", { ascending: true }).limit(2)
-      .then(({ data }) => { setPreviewComments(data ?? []); setLoadingComments(false); });
+    // Fetch via API (admin client bypasses RLS). Direct client-side Supabase
+    // reads return nothing because the browser client isn't bridged to Clerk
+    // auth, so RLS sees the request as anon.
+    fetch(`/api/community/posts/${post.id}/comments`)
+      .then(r => r.ok ? r.json() : { comments: [] })
+      .then((d: any) => {
+        const top = (d.comments ?? []).filter((c: any) => !c.parent_comment_id).slice(0, 2);
+        setPreviewComments(top);
+      })
+      .catch(() => setPreviewComments([]))
+      .finally(() => setLoadingComments(false));
   }, [showComments]);
 
   useEffect(() => {
