@@ -3,18 +3,21 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
 
-async function requireAdmin() {
+// Refunds are financial actions — restricted to super_admin only.
+// Regular admins never see the Refunds nav entry (gated in the sidebar
+// + more page + command palette) and this API refuses their calls.
+async function requireSuper() {
   const { userId, sessionClaims } = auth();
   if (!userId) return null;
   const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (!["admin", "super_admin"].includes(role ?? "")) return null;
+  if (role !== "super_admin") return null;
   return userId;
 }
 
 // GET /api/admin/refunds?status=pending
 export async function GET(req: NextRequest) {
-  const userId = await requireAdmin();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const userId = await requireSuper();
+  if (!userId) return NextResponse.json({ error: "Super admin only" }, { status: 403 });
 
   const status = new URL(req.url).searchParams.get("status");
   const admin  = createAdminClient();
@@ -33,8 +36,8 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/refunds  { entity_type, entity_id, amount, reason, note?, user_id? }
 export async function POST(req: NextRequest) {
-  const userId = await requireAdmin();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const userId = await requireSuper();
+  if (!userId) return NextResponse.json({ error: "Super admin only" }, { status: 403 });
 
   const body = await req.json();
   const { entity_type, entity_id, amount, reason, note, user_id } = body ?? {};
@@ -57,8 +60,8 @@ export async function POST(req: NextRequest) {
 
 // PATCH /api/admin/refunds  { id, status?, paymongo_ref?, note? }
 export async function PATCH(req: NextRequest) {
-  const userId = await requireAdmin();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const userId = await requireSuper();
+  if (!userId) return NextResponse.json({ error: "Super admin only" }, { status: 403 });
 
   const body = await req.json();
   const { id, status, paymongo_ref, note } = body ?? {};
@@ -93,8 +96,8 @@ export async function PATCH(req: NextRequest) {
 
 // DELETE /api/admin/refunds?id=...
 export async function DELETE(req: NextRequest) {
-  const userId = await requireAdmin();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const userId = await requireSuper();
+  if (!userId) return NextResponse.json({ error: "Super admin only" }, { status: 403 });
 
   const id = new URL(req.url).searchParams.get("id");
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });

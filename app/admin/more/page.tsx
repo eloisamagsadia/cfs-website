@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
-type Item = { label: string; href: string; icon: React.ReactNode };
+type Item = { label: string; href: string; icon: React.ReactNode; superOnly?: boolean };
 type Section = { label: string; items: Item[]; accent?: "green" | "amber" };
 
 const svg = (d: React.ReactNode) => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{d}</svg>;
@@ -62,7 +63,7 @@ const adminSections: Section[] = [
       { label: "Shop",      href: "/admin/shop",      icon: icons.shop },
       { label: "Orders",    href: "/admin/orders",    icon: icons.orders },
       { label: "Donations", href: "/admin/donations", icon: icons.donations },
-      { label: "Refunds",   href: "/admin/refunds",   icon: icons.refunds },
+      { label: "Refunds",   href: "/admin/refunds",   icon: icons.refunds, superOnly: true },
       { label: "Members",   href: "/admin/members",   icon: icons.members },
       { label: "Member Tags", href: "/admin/tags",    icon: icons.codes },
     ],
@@ -103,8 +104,18 @@ const exitSection: Section = {
 };
 
 export default function AdminMorePage() {
+  const { sessionClaims } = auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role ?? "";
+  const isSuper = role === "super_admin";
+
+  // Filter superOnly entries out for non-super admins; drop any sections
+  // that end up empty.
+  const filteredAdminSections: Section[] = adminSections
+    .map(s => ({ ...s, items: s.items.filter(i => !i.superOnly || isSuper) }))
+    .filter(s => s.items.length > 0);
+
   const sections: Section[] = [
-    ...adminSections,
+    ...filteredAdminSections,
     exitSection,
   ];
 

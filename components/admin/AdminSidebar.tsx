@@ -38,6 +38,7 @@ const icons = {
   refunds:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 3 3 9 9 9"/></svg>,
 };
 
+// Nav entries marked superOnly are hidden from non-super admins.
 const sections = [
   {
     label: "OVERVIEW",
@@ -53,7 +54,7 @@ const sections = [
       { label: "Shop",          href: "/admin/shop",                   icon: icons.shop },
       { label: "Orders",        href: "/admin/orders",                 icon: icons.orders },
       { label: "Donations",     href: "/admin/donations",              icon: icons.donations },
-      { label: "Refunds",       href: "/admin/refunds",                icon: icons.refunds },
+      { label: "Refunds",       href: "/admin/refunds",                icon: icons.refunds, superOnly: true },
       { label: "Members",       href: "/admin/members",                icon: icons.members },
       { label: "Member Tags",   href: "/admin/tags",                   icon: icons.codes },
     ]
@@ -113,14 +114,18 @@ export default function AdminSidebar({ isSuper = false }: { isSuper?: boolean })
       </div>
 
       <nav style={{ position: "sticky", top: "80px", display: "flex", flexDirection: "column", gap: "20px", maxHeight: "calc(100vh - 100px)", overflowY: "auto", paddingRight: "4px" }}>
-        {sections.map(section => (
-          <div key={section.label}>
-            <div style={{ fontFamily: R, fontSize: "9px", color: "#9AA899", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>{section.label}</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
-              {section.items.map(item => <NavItem key={item.href} {...item} />)}
+        {sections.map(section => {
+          const visibleItems = section.items.filter(i => !(i as any).superOnly || isSuper);
+          if (visibleItems.length === 0) return null;
+          return (
+            <div key={section.label}>
+              <div style={{ fontFamily: R, fontSize: "9px", color: "#9AA899", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>{section.label}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+                {visibleItems.map(item => <NavItem key={item.href} {...item} />)}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {isSuper && (
           <Link href="/super" style={{ textDecoration: "none" }}>

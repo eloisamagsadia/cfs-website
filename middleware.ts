@@ -63,10 +63,11 @@ export default authMiddleware({
         url.pathname = "/members";
         return NextResponse.redirect(url);
       }
-      // /admin/super is a super-admin-only dashboard that lives under the
-      // /admin tree. Regular admins get redirected to /admin so they don't
-      // land on a page whose panels all 403 for them.
-      if (pathname.startsWith("/admin/super") && role !== "super_admin") {
+      // Super-admin-only pages that happen to live under the /admin tree.
+      // Regular admins get redirected to /admin so they never land on a
+      // page whose actions all 403 for them.
+      const superOnlyAdminPrefixes = ["/admin/super", "/admin/refunds"];
+      if (role !== "super_admin" && superOnlyAdminPrefixes.some(p => pathname === p || pathname.startsWith(`${p}/`))) {
         const url = req.nextUrl.clone();
         url.pathname = "/admin";
         return NextResponse.redirect(url);

@@ -29,7 +29,6 @@ const NAV_LINKS: { title: string; href: string; keywords?: string }[] = [
   { title: "Shop Stock",          href: "/admin/shop/stock",         keywords: "inventory low" },
   { title: "Orders",              href: "/admin/orders",             keywords: "sales" },
   { title: "Donations",           href: "/admin/donations",          keywords: "money" },
-  { title: "Refunds",             href: "/admin/refunds",            keywords: "money back" },
   { title: "Members",             href: "/admin/members",            keywords: "users profiles" },
   { title: "Member Tags",         href: "/admin/tags",               keywords: "labels segments" },
   { title: "Community",           href: "/admin/community",          keywords: "posts" },
@@ -56,6 +55,7 @@ const NAV_LINKS: { title: string; href: string; keywords?: string }[] = [
 // the caller is super_admin. Kept separate so regular admins never see
 // entries that would redirect or 403.
 const SUPER_NAV_LINKS: { title: string; href: string; keywords?: string }[] = [
+  { title: "Refunds",             href: "/admin/refunds",            keywords: "money back financial" },
   { title: "Super Admin",         href: "/super",                    keywords: "system command" },
   { title: "Audit Log",           href: "/super/audit",              keywords: "history trail" },
   { title: "Analytics",           href: "/super/analytics",          keywords: "charts stats" },
