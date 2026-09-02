@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
 import EventsBrowser from "@/components/public/EventsBrowser";
 import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
@@ -143,7 +144,7 @@ export default async function EventsPage() {
                 {/* Banner */}
                 <div style={{ position: "relative", aspectRatio: "16/9", background: C.forest }}>
                   {next.banner_url ? (
-                    <img src={next.banner_url} alt={next.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    <Image src={next.banner_url} alt={next.title} fill sizes="(max-width: 768px) 100vw, 800px" priority style={{ objectFit: "cover" }} />
                   ) : (
                     <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(135deg, ${C.forest}, ${C.deep})` }}>
                       <IconCalendar size={54} color="rgba(255,255,255,0.25)" />

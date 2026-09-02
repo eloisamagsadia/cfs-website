@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { IconMail, IconSend, IconEdit } from "@/components/shared/Icons";
 
 export const metadata: Metadata = { title: "Emails" };
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";

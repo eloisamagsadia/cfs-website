@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import { IconEdit, IconShoppingBag } from "@/components/shared/Icons";
 import AdminActionButton from "@/components/shared/AdminActionButton";
 export const metadata: Metadata = { title: "Manage Shop" };
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
+
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";

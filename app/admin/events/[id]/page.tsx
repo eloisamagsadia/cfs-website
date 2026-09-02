@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
+import Image from "next/image";
 import {
   IconCalendar, IconPin, IconUsers, IconTag, IconTicket, IconEdit,
   IconEye, IconEyeOff, IconCheck, IconDownload,
@@ -9,8 +10,8 @@ import {
 import EventVisibilityToggle from "@/components/admin/EventVisibilityToggle";
 
 export const metadata: Metadata = { title: "Event Details" };
-export const dynamic  = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
+
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -95,7 +96,7 @@ export default async function AdminEventDetailPage({ params }: { params: { id: s
       <div style={{ background: "#ffffff", borderRadius: "16px", overflow: "hidden", boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 6px 20px rgba(15,42,30,0.06)" }}>
         {event.banner_url ? (
           <div style={{ width: "100%", height: "220px", position: "relative", overflow: "hidden" }}>
-            <img src={event.banner_url} alt={event.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <Image src={event.banner_url} alt={event.title} fill sizes="(max-width: 720px) 100vw, 900px" style={{ objectFit: "cover" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%)" }} />
           </div>
         ) : (

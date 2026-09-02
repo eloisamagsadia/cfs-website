@@ -3,8 +3,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { IconEdit } from "@/components/shared/Icons";
 import AdminActionButton from "@/components/shared/AdminActionButton";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
+
 
 export const metadata: Metadata = { title: "Manage Projects" };
 const R  = "var(--font-righteous,'Righteous',sans-serif)";

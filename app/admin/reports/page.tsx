@@ -3,8 +3,8 @@ import Link from "next/link";
 import { IconEdit, IconClipboard, IconFile } from "@/components/shared/Icons";
 import AdminActionButton from "@/components/shared/AdminActionButton";
 import type { Metadata } from "next";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
+
 
 export const metadata: Metadata = { title: "Transparency Reports" };
 const R  = "var(--font-righteous,'Righteous',sans-serif)";

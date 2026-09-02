@@ -5,7 +5,7 @@ import { IconMail, IconEdit } from "@/components/shared/Icons";
 import { TEMPLATE_META, type TemplateKey } from "@/lib/email-template-vars";
 
 export const metadata: Metadata = { title: "Email Templates" };
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";

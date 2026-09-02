@@ -3,8 +3,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { IconWarning } from "@/components/shared/Icons";
 import LiveMemberCount from "@/components/shared/LiveMemberCount";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
+
 
 export const metadata: Metadata = { title:"Admin Dashboard" };
 const R="var(--font-righteous,'Righteous',sans-serif)";

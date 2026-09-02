@@ -2,8 +2,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import { IconUsers, IconSparkle, IconShield, IconWrench, IconMessage, IconTicket, IconStar, IconLightning, IconMegaphone } from "@/components/shared/Icons";
 import LiveMemberCount from "@/components/shared/LiveMemberCount";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
+
 
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";

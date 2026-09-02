@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import EventRegisterButton from "@/components/public/EventRegisterButton";
 import type { Metadata } from "next";
 import { IconCalendar, IconPin, IconUsers, IconTicket, IconSparkle, IconTag, IconClipboard, IconStar, IconCheck } from "@/components/shared/Icons";
@@ -147,7 +148,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
             {/* Banner card (left) */}
             <div className="evd-hero-banner" style={{ position: "relative", aspectRatio: "4/3", borderRadius: "20px", overflow: "hidden", background: C.deep, boxShadow: "0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06)" }}>
               {event.banner_url ? (
-                <img src={event.banner_url} alt={event.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <Image src={event.banner_url} alt={event.title} fill sizes="(max-width: 768px) 100vw, 720px" priority style={{ objectFit: "cover" }} />
               ) : (
                 <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(135deg, ${C.deep} 0%, ${C.forest} 100%)` }}>
                   <IconCalendar size={64} color="rgba(255,255,255,0.28)" />

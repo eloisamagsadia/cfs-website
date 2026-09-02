@@ -5,8 +5,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import ReportActions from "./ReportActions";
 
 export const metadata: Metadata = { title: "Event Summary Report" };
-export const dynamic  = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
+
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";

@@ -2,8 +2,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 import AdminMembersClient from "./AdminMembersClient";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
+
 
 
 export const metadata: Metadata = { title: "Manage Members" };
