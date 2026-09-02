@@ -48,6 +48,7 @@ export default function AdminWaitlistDetail() {
   const [status, setStatus]   = useState("");
   const [busy, setBusy]       = useState<string | null>(null);
   const [filter, setFilter]   = useState<Status | "all">("waiting");
+  const [promoteN, setPromoteN] = useState<string>("1");
 
   async function load() {
     setLoading(true); setError("");
@@ -91,6 +92,25 @@ export default function AdminWaitlistDetail() {
       const d = await r.json();
       if (!r.ok) throw new Error(d.error);
       setStatus("Entry deleted.");
+      load();
+    } catch (e: any) { setError(e.message); }
+    finally { setBusy(null); }
+  }
+
+  async function promoteNext() {
+    const n = parseInt(promoteN, 10);
+    if (!Number.isFinite(n) || n < 1) { setError("Enter a positive number."); return; }
+    const waitingCount = entries.filter(e => e.status === "waiting").length;
+    if (waitingCount === 0) return;
+    const actual = Math.min(n, waitingCount);
+    if (!confirm(`Notify the top ${actual} waiting member${actual === 1 ? "" : "s"} (oldest first)?`)) return;
+    setBusy("__promote__"); setError(""); setStatus("");
+    try {
+      const r = await fetch("/api/admin/waitlist/promote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ event_id: eventId, count: n }) });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error);
+      if (d.failed > 0) setError(`Notified ${d.promoted}, ${d.failed} failed. Try again for the rest.`);
+      else setStatus(`Notified ${d.promoted} member${d.promoted === 1 ? "" : "s"}.`);
       load();
     } catch (e: any) { setError(e.message); }
     finally { setBusy(null); }
@@ -152,10 +172,34 @@ export default function AdminWaitlistDetail() {
           ))}
         </div>
         {counts.waiting > 0 && (
-          <button onClick={notifyAll} disabled={busy === "__all__"}
-            style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#ffffff", background: "#1E4A7A", border: "none", borderRadius: "8px", padding: "8px 14px", cursor: "pointer", letterSpacing: "1.2px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
-            <IconBell size={11} color="#ffffff" /> NOTIFY ALL WAITING
-          </button>
+          <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: 8, padding: "3px 4px 3px 10px" }}>
+              <span style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#5A7A60", letterSpacing: 1.2 }}>NEXT</span>
+              <input
+                type="number" min={1} max={counts.waiting}
+                value={promoteN}
+                onChange={e => setPromoteN(e.target.value)}
+                onWheel={e => (e.currentTarget as HTMLInputElement).blur()}
+                style={{ width: 44, background: "transparent", border: "none", outline: "none", fontFamily: B, fontSize: 13, color: "#1B3A2D", textAlign: "center" as const }}
+              />
+              <button onClick={promoteNext} disabled={busy === "__promote__"}
+                title={openSeats != null ? `${openSeats} seat${openSeats === 1 ? "" : "s"} open` : "Notify the top N oldest waiting members"}
+                style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: 6, padding: "6px 12px", cursor: "pointer", letterSpacing: 1.2, display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <IconBell size={10} color="#ffffff" /> {busy === "__promote__" ? "…" : "PROMOTE"}
+              </button>
+            </div>
+            {openSeats != null && openSeats > 0 && (
+              <button onClick={() => { setPromoteN(String(openSeats)); }}
+                title={`Fill all ${openSeats} open seat${openSeats === 1 ? "" : "s"}`}
+                style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#156530", background: "#E8F0E4", border: "1.5px solid transparent", borderRadius: 8, padding: "5px 10px", cursor: "pointer", letterSpacing: 1.2 }}>
+                = {openSeats} OPEN
+              </button>
+            )}
+            <button onClick={notifyAll} disabled={busy === "__all__"}
+              style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#ffffff", background: "#1E4A7A", border: "none", borderRadius: "8px", padding: "8px 14px", cursor: "pointer", letterSpacing: "1.2px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+              <IconBell size={11} color="#ffffff" /> NOTIFY ALL
+            </button>
+          </div>
         )}
       </div>
 
