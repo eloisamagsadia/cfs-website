@@ -1,8 +1,9 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { WebhookEvent } from "@clerk/nextjs/server";
+import { WebhookEvent, clerkClient } from "@clerk/nextjs/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendWelcomeEmail } from "@/lib/emails/welcome";
+import { sendSessionAlertEmail } from "@/lib/emails/session-alert";
 import { logAudit } from "@/lib/audit";
 
 const supabaseAdmin = createClient(
@@ -77,8 +78,37 @@ export async function POST(req: Request) {
 
   // Session lifecycle → login / logout audit trail
   if (evt.type === "session.created") {
-    const { user_id, id } = evt.data as any;
+    const { user_id, id, client_id, last_active_at, latest_activity } = evt.data as any;
     if (user_id) logAudit({ userId: user_id, action: "login", target_type: "session", target_id: id ?? null });
+
+    // Branded sign-in alert (replaces Clerk's default "New device signed in" email).
+    // Disable Clerk's built-in template in the dashboard to avoid double sends.
+    if (user_id) {
+      try {
+        const u = await clerkClient.users.getUser(user_id);
+        const email = u.emailAddresses?.[0]?.emailAddress;
+        if (email) {
+          const name = [u.firstName, u.lastName].filter(Boolean).join(" ")
+                    || u.username
+                    || email.split("@")[0]
+                    || "there";
+          const la  = latest_activity ?? {};
+          const dev = [la.browser_name, la.device_type && `on ${la.device_type}`].filter(Boolean).join(" ") || null;
+          const loc = [la.city, la.country].filter(Boolean).join(", ") || null;
+          await sendSessionAlertEmail({
+            email,
+            name,
+            ip:         la.ip_address ?? null,
+            device:     dev,
+            location:   loc,
+            signInType: la.is_mobile ? "Mobile" : "Web",
+            when:       last_active_at ? new Date(last_active_at) : new Date(),
+          });
+        }
+      } catch (err) {
+        console.error("session-alert email failed for", user_id, err);
+      }
+    }
   }
 
   if (evt.type === "session.ended" || evt.type === "session.removed" || evt.type === "session.revoked") {
