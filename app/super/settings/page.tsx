@@ -30,7 +30,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/admin/site-settings").then(r => r.json()),
+      fetch("/api/super/site-settings").then(r => r.json()),
       fetch("/api/admin/sponsor-perks").then(r => r.json()),
     ]).then(([s, p]) => { setSettings(s.settings); setPerks(p.perks); });
   }, []);
@@ -38,7 +38,7 @@ export default function SettingsPage() {
   async function save() {
     setSaving(true);
     await Promise.all([
-      fetch("/api/admin/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }),
+      fetch("/api/super/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }),
       fetch("/api/admin/sponsor-perks", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(perks) }),
     ]);
     setSaving(false); setSaved(true);
@@ -46,13 +46,13 @@ export default function SettingsPage() {
   }
 
   async function toggleMaintenance() {
-    const res = await fetch("/api/admin/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ maintenance_mode: !settings.maintenance_mode }) });
+    const res = await fetch("/api/super/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ maintenance_mode: !settings.maintenance_mode }) });
     const data = await res.json();
     if (data.settings) setSettings(data.settings);
   }
 
   async function toggleAnnouncement() {
-    const res = await fetch("/api/admin/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ announcement_text: settings.announcement_text, announcement_color: settings.announcement_color, announcement_active: !settings.announcement_active }) });
+    const res = await fetch("/api/super/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ announcement_text: settings.announcement_text, announcement_color: settings.announcement_color, announcement_active: !settings.announcement_active }) });
     const data = await res.json();
     if (data.settings) setSettings(data.settings);
   }

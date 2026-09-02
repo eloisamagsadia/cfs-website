@@ -29,7 +29,7 @@ export default function RolesPage() {
   async function updateRole(userId: string, role: string) {
     setUpdating(userId);
     setError(""); setSuccess("");
-    const res = await fetch("/api/admin/members/role", {
+    const res = await fetch("/api/super/members-role", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ targetUserId: userId, role }),

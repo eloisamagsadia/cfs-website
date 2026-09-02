@@ -41,7 +41,7 @@ export default function SuperAdminPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/admin/site-settings").then(r => r.json()),
+      fetch("/api/super/site-settings").then(r => r.json()),
       fetch("/api/super/audit-log").then(r => r.json()),
       fetch("/api/admin/sponsor-perks").then(r => r.json()),
       fetch("/api/admin/stats").then(r => r.json()).catch(() => ({ stats: null })),
@@ -86,7 +86,7 @@ export default function SuperAdminPage() {
 
   async function saveSetting(key: string, value: any) {
     setSaving(true);
-    const res = await fetch("/api/admin/site-settings", {
+    const res = await fetch("/api/super/site-settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ [key]: value }),
@@ -98,7 +98,7 @@ export default function SuperAdminPage() {
 
   async function saveSettings() {
     setSaving(true);
-    const res = await fetch("/api/admin/site-settings", {
+    const res = await fetch("/api/super/site-settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(settings),
@@ -139,7 +139,7 @@ export default function SuperAdminPage() {
 
   async function resetImagePostCounts() {
     if (!confirm("Reset ALL members image post counts to 0? This cannot be undone.")) return;
-    await fetch("/api/admin/site-settings", {
+    await fetch("/api/super/site-settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reset_image_counts: true }),
@@ -329,7 +329,7 @@ export default function SuperAdminPage() {
                 style={{ width: "36px", height: "32px", borderRadius: "6px", border: "1.5px solid #DDE8DD", cursor: "pointer" }} />
               <button onClick={async () => {
                 setSaving(true);
-                const res = await fetch("/api/admin/site-settings", {
+                const res = await fetch("/api/super/site-settings", {
                   method: "PATCH",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ announcement_text: settings.announcement_text, announcement_color: settings.announcement_color, announcement_active: !settings.announcement_active }),

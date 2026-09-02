@@ -75,7 +75,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
 
   async function changeRole(member: any, newRole: string) {
     setLoadingId(member.id);
-    const res = await fetch("/api/admin/members/role", {
+    const res = await fetch("/api/super/members-role", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ targetUserId: member.id, role: newRole }),

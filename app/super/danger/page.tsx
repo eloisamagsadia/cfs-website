@@ -9,7 +9,7 @@ export default function DangerPage() {
 
   async function resetImageCounts() {
     if (!confirm("Reset ALL members image post counts to 0? This cannot be undone.")) return;
-    await fetch("/api/admin/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ reset_image_counts: true }) });
+    await fetch("/api/super/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ reset_image_counts: true }) });
     alert("Done! All image post counts reset.");
   }
 
