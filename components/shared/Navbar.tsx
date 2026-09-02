@@ -57,7 +57,8 @@ export default async function Navbar() {
           <Link href="/" style={{ textDecoration: "none" }}>
             <img
               src="https://media.coletfs.com/assets/logo/cfs-logo.svg"
-              alt="CFS Logo"
+              alt="Colet Fan Suporta"
+              className="cfs-nav-logo"
               style={{ height: "120px", width: "auto", display: "block", marginTop: "-15px", marginBottom: "-15px" }}
             />
           </Link>

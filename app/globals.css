@@ -216,6 +216,22 @@
 /* Navbar mobile */
 @media (max-width: 768px) {
   .nav-links { display: none !important; }
+  /* Shrink the logo — 120px was fine for desktop but crowded the mobile bar,
+     and iOS Safari's filter/mask rendering on the source SVG makes it look
+     muddy at large sizes. */
+  .cfs-nav-logo {
+    height: 64px !important;
+    margin-top: -8px !important;
+    margin-bottom: -8px !important;
+    /* Force a clean rasterization path to avoid the dark cast some browsers
+       apply to the SVG's feColorMatrix + embedded PNG combo. */
+    image-rendering: -webkit-optimize-contrast;
+  }
+  /* Tighten navbar padding to compensate */
+  header > nav { padding: 6px 16px !important; }
+}
+@media (max-width: 380px) {
+  .cfs-nav-logo { height: 52px !important; }
 }
 
 /* Community page mobile */
