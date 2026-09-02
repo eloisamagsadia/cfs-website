@@ -241,8 +241,15 @@ export default function PostDetail({ post, initialComments, currentUser }: { pos
       })
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"community_comments",filter:`post_id=eq.${post.id}`},async(p)=>{
         if(p.new.user_id===currentUser.id)return;
-        const{data}=await supabase.from("community_comments").select("*, profiles:user_id(id,display_name,avatar_url)").eq("id",p.new.id).single();
-        if(data)setComments(prev=>{ if(prev.find(x=>x.id===data.id))return prev; return [...prev,data]; });
+        // Browser Supabase client isn't Clerk-bridged, so this direct read
+        // may return null under RLS. Non-fatal — refresh will show the comment.
+        try {
+          const res = await fetch(`/api/community/posts/${post.id}/comments`);
+          if (!res.ok) return;
+          const { comments: rows } = await res.json();
+          const fresh = (rows ?? []).find((c: any) => c.id === p.new.id);
+          if (fresh) setComments(prev => (prev.find(x => x.id === fresh.id) ? prev : [...prev, fresh]));
+        } catch {}
       })
       .on("postgres_changes",{event:"DELETE",schema:"public",table:"community_comments",filter:`post_id=eq.${post.id}`},(p)=>{
         setComments(prev=>prev.filter(c=>c.id!==p.old.id));

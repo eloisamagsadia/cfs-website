@@ -33,18 +33,26 @@ export default function ReactionBar({
     setTimeout(() => setAnimating(false), 300);
 
     // Optimistic
+    const snapshot = reactions;
     if (isLiked) {
       setReactions(prev => prev.filter(r => r.user_id !== currentUserId));
     } else {
       setReactions(prev => [...prev, { user_id: currentUserId, reaction_type: "heart", post_id: postId }]);
     }
 
-    await fetch(`/api/community/posts/${postId}/react`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reaction_type: "heart" }),
-    });
-    setLoading(false);
+    try {
+      const res = await fetch(`/api/community/posts/${postId}/react`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reaction_type: "heart" }),
+      });
+      if (!res.ok) throw new Error("react failed");
+    } catch {
+      // Roll back on failure so UI doesn't drift from server state.
+      setReactions(snapshot);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

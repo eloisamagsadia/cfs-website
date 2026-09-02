@@ -150,22 +150,43 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
   async function handleSubmitComment() {
     if (!newComment.trim() || submitting) return;
     setSubmitting(true);
-    const res = await fetch(`/api/community/posts/${post.id}/comments`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: newComment.trim() }),
-    });
-    const data = await res.json();
-    if (data.comment) { setPreviewComments(prev => [...prev, data.comment]); setNewComment(""); }
-    setSubmitting(false);
-    commentInputRef.current?.focus();
+    try {
+      const res = await fetch(`/api/community/posts/${post.id}/comments`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: newComment.trim() }),
+      });
+      if (!res.ok) throw new Error("comment failed");
+      const data = await res.json();
+      if (data.comment) { setPreviewComments(prev => [...prev, data.comment]); setNewComment(""); }
+    } catch {
+      // Keep the draft in the input so the user can retry; button unlocks in finally.
+    } finally {
+      setSubmitting(false);
+      commentInputRef.current?.focus();
+    }
   }
 
   async function handleRepost() {
     setShowRepostMenu(false);
-    const res = await fetch(`/api/community/posts/${post.id}/repost`, { method: "POST" });
-    const data = await res.json();
-    setIsReposted(data.reposted);
-    setRepostCount((prev: number) => data.reposted ? prev + 1 : Math.max(0, prev - 1));
+    // Optimistic toggle so it feels instant; roll back on error.
+    const prevReposted = isReposted;
+    const prevCount = repostCount;
+    setIsReposted(!prevReposted);
+    setRepostCount((p: number) => !prevReposted ? p + 1 : Math.max(0, p - 1));
+    try {
+      const res = await fetch(`/api/community/posts/${post.id}/repost`, { method: "POST" });
+      if (!res.ok) throw new Error("repost failed");
+      const data = await res.json();
+      // Reconcile with the truth from the server.
+      setIsReposted(!!data.reposted);
+      setRepostCount((p: number) => {
+        if (data.reposted === prevReposted) return prevCount; // server disagreed with our toggle
+        return prevCount + (data.reposted ? 1 : -1);
+      });
+    } catch {
+      setIsReposted(prevReposted);
+      setRepostCount(prevCount);
+    }
   }
 
   function handleCopyLink() {
