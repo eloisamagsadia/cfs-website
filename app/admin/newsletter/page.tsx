@@ -38,6 +38,16 @@ export default function NewsletterAdminPage() {
   const [testTo, setTestTo]     = useState("");
   const [sending, setSending]   = useState(false);
   const [sendMsg, setSendMsg]   = useState<{ ok: boolean; text: string } | null>(null);
+  const [history, setHistory]   = useState<any[]>([]);
+
+  async function loadHistory() {
+    try {
+      const r = await fetch("/api/admin/newsletter/history");
+      const d = await r.json();
+      if (r.ok) setHistory(d.broadcasts ?? []);
+    } catch {}
+  }
+  useEffect(() => { loadHistory(); }, []);
 
   async function sendBroadcast(mode: "test" | "all") {
     if (!subject.trim() || !bodyDraft.trim()) { setSendMsg({ ok: false, text: "Subject and body are required." }); return; }
@@ -58,8 +68,28 @@ export default function NewsletterAdminPage() {
         setSendMsg({ ok: true, text: `Sent to ${d.sent} of ${d.total} subscribers${d.failed ? ` (${d.failed} failed)` : ""}.` });
         setSubject(""); setBodyDraft(""); setTestTo("");
       }
+      loadHistory();
     } catch (e: any) { setSendMsg({ ok: false, text: e.message }); }
     finally { setSending(false); }
+  }
+
+  function reopen(h: any) {
+    const d = h.details ?? {};
+    setSubject(d.subject ?? "");
+    setBodyDraft(""); // audit log doesn't store body — clarify with placeholder message
+    setSendMsg({ ok: true, text: "Subject copied. Paste your body — the log doesn't store message content." });
+    setComposeOpen(true);
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
+  }
+
+  function timeAgo(iso: string) {
+    const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    if (d < 30) return `${d}d ago`;
+    return new Date(iso).toLocaleDateString("en-PH", { month: "short", day: "numeric", timeZone: "Asia/Manila" });
   }
 
   async function load() {
@@ -149,6 +179,46 @@ export default function NewsletterAdminPage() {
           )}
           <div style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A", fontStyle: "italic" as const }}>
             Every email includes an unsubscribe link tied to the subscriber's token — no config needed on your end.
+          </div>
+        </div>
+      )}
+
+      {/* Broadcast history */}
+      {history.length > 0 && (
+        <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: 14, padding: "16px 20px" }}>
+          <div style={{ fontFamily: R, fontSize: 12, color: "#1B3A2D", letterSpacing: 2, marginBottom: 12 }}>SENT BROADCASTS</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {history.map(h => {
+              const d = h.details ?? {};
+              const isTest = h.action === "newsletter_test_send";
+              return (
+                <div key={h.id} style={{ display: "grid", gridTemplateColumns: "auto 1fr auto auto auto", gap: 10, alignItems: "center", padding: "9px 2px", borderBottom: "1px solid #F0F5F0" }}>
+                  <span style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: isTest ? "#7A5A0F" : "#156530", background: isTest ? "#FFF3D6" : "#E8F0E4", borderRadius: 6, padding: "2px 8px", letterSpacing: 1.2, whiteSpace: "nowrap" as const }}>
+                    {isTest ? "TEST" : "SENT"}
+                  </span>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontFamily: R, fontSize: 12, color: "#1B3A2D", letterSpacing: 0.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>{d.subject ?? "(no subject)"}</div>
+                    <div style={{ fontFamily: B, fontSize: 11, color: "#5A7A60" }}>by {h.profiles?.display_name ?? h.user_id.slice(0, 12)}{isTest && d.to && ` · to ${d.to}`}</div>
+                  </div>
+                  {!isTest && (
+                    <span style={{ fontFamily: R, fontSize: 11, color: "#1A8040", letterSpacing: 1 }}>{d.sent ?? 0}/{d.total ?? 0}</span>
+                  )}
+                  {!isTest && Number(d.failed ?? 0) > 0 && (
+                    <span style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#8A1E27", background: "#FFE8EC", borderRadius: 6, padding: "2px 8px", letterSpacing: 1.1 }}>{d.failed} FAILED</span>
+                  )}
+                  {isTest && <span />}
+                  {isTest && <span />}
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <span style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A", whiteSpace: "nowrap" as const }}>{timeAgo(h.created_at)}</span>
+                    <button onClick={() => reopen(h)}
+                      title="Copy subject to compose"
+                      style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#1A8040", background: "transparent", border: "1.5px solid #B7D8B7", borderRadius: 6, padding: "3px 8px", cursor: "pointer", letterSpacing: 1.1 }}>
+                      REOPEN
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
