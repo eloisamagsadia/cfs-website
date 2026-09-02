@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const { product_id, quantity = 1, variant = null } = await req.json();
   if (!product_id) return NextResponse.json({ error: "Missing product_id" }, { status: 400 });
 
-  const { data: existingRaw } = await (((supabase.from("cart_items") as any) as any) as any).select("*").eq("user_id", userId).eq("product_id", product_id).single();
+  const { data: existingRaw } = await (((supabase.from("cart_items") as any) as any) as any).select("*").eq("user_id", userId).eq("product_id", product_id).maybeSingle();
   const existing = existingRaw as any;
   if (existing) {
     const { data, error } = await (((supabase.from("cart_items") as any) as any) as any).update({ quantity: existing.quantity + quantity }).eq("id", existing.id).select().single();

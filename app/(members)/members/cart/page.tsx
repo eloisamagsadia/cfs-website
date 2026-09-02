@@ -35,13 +35,25 @@ export default function CartPage() {
 
   async function updateQty(id: string, qty: number) {
     if (qty < 1) { await removeItem(id); return; }
-    await fetch("/api/cart", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, quantity: qty }) });
+    const snapshot = items;
     setItems(prev => prev.map(i => i.id === id ? { ...i, quantity: qty } : i));
+    try {
+      const res = await fetch("/api/cart", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, quantity: qty }) });
+      if (!res.ok) throw new Error("update failed");
+    } catch {
+      setItems(snapshot);
+    }
   }
 
   async function removeItem(id: string) {
-    await fetch("/api/cart", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+    const snapshot = items;
     setItems(prev => prev.filter(i => i.id !== id));
+    try {
+      const res = await fetch("/api/cart", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+      if (!res.ok) throw new Error("delete failed");
+    } catch {
+      setItems(snapshot);
+    }
   }
 
   async function applyPromo() {

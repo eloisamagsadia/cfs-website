@@ -23,14 +23,23 @@ export default function ExclusivePage() {
 
   useEffect(() => {
     fetch("/api/exclusive")
-      .then(r => r.json())
-      .then((data) => {
-        const { content, error } = data ?? {};
-        if (!data) { setError("Failed to load"); setLoading(false); return; }
-        if (error) setError(error);
-        else setContent(content ?? []);
+      .then(async r => {
+        // Non-2xx: only surface the specific "Sponsors only" gate; other 4xx/5xx
+        // shouldn't masquerade as the gate screen.
+        if (!r.ok) {
+          const body = await r.json().catch(() => ({}));
+          setError(body?.error === "Sponsors only" ? "Sponsors only" : "Failed to load");
+          setLoading(false);
+          return null;
+        }
+        return r.json();
+      })
+      .then((data: any) => {
+        if (!data) return;
+        setContent(data.content ?? []);
         setLoading(false);
-      });
+      })
+      .catch(() => { setError("Failed to load"); setLoading(false); });
   }, []);
 
   const filtered = activeCategory === "all" ? content : content.filter(c => c.category === activeCategory);

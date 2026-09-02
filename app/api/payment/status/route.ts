@@ -15,19 +15,30 @@ export async function GET(req: NextRequest) {
 
   if (type === "donation") {
     const { data } = await (supabase.from("donations") as any)
-      .select("status, amount").eq("id", ref).eq("user_id", userId).single();
+      .select("status, amount").eq("id", ref).eq("user_id", userId).maybeSingle();
     return NextResponse.json({ status: data?.status ?? "pending", amount: data?.amount });
   }
 
   if (type === "ticket") {
-    const { data } = await (supabase.from("event_tickets") as any)
-      .select("status, payment_status").eq("id", ref).eq("user_id", userId).single();
-    return NextResponse.json({ status: data?.payment_status === "paid" ? "completed" : (data?.payment_status ?? "pending") });
+    // For bundle purchases, `ref` is the bundle_id (shared across N tickets).
+    // For legacy solo purchases, `ref` is the ticket.id. Try bundle_id first,
+    // fall back to id. All tickets in a bundle share status/payment_status
+    // so reading the first row is enough.
+    let row: any = null;
+    const byBundle = await (supabase.from("event_tickets") as any)
+      .select("status, payment_status").eq("bundle_id", ref).eq("user_id", userId).limit(1);
+    if (byBundle.data?.length) row = byBundle.data[0];
+    else {
+      const byId = await (supabase.from("event_tickets") as any)
+        .select("status, payment_status").eq("id", ref).eq("user_id", userId).maybeSingle();
+      row = byId.data ?? null;
+    }
+    return NextResponse.json({ status: row?.payment_status === "paid" ? "completed" : (row?.payment_status ?? "pending") });
   }
 
   if (type === "order") {
     const { data } = await (supabase.from("orders") as any)
-      .select("payment_status").eq("id", ref).eq("user_id", userId).single();
+      .select("payment_status").eq("id", ref).eq("user_id", userId).maybeSingle();
     return NextResponse.json({ status: data?.payment_status === "paid" ? "completed" : (data?.payment_status ?? "pending") });
   }
 

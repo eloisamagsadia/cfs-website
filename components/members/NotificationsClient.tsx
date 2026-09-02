@@ -109,22 +109,38 @@ export default function NotificationsClient({initialNotifications,userId}:{initi
   },[userId]);
   function toggleSound(){const n=!soundOn;setSoundOn(n);localStorage.setItem("cfs_notif_sound",String(n));if(n)playSound();}
   async function markRead(id:string){
+    const snap=notifications;
     setNotifications(prev=>prev.map(n=>n.id===id?{...n,is_read:true}:n));
-    await fetch("/api/notifications",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id})});
+    try {
+      const r=await fetch("/api/notifications",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id})});
+      if(!r.ok)throw new Error();
+    } catch { setNotifications(snap); }
   }
   async function markAllRead(){
+    const snap=notifications;
     setMarkingAll(true);
     setNotifications(prev=>prev.map(n=>({...n,is_read:true})));
-    await fetch("/api/notifications",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({all:true})});
-    setMarkingAll(false);
+    try {
+      const r=await fetch("/api/notifications",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({all:true})});
+      if(!r.ok)throw new Error();
+    } catch { setNotifications(snap); }
+    finally { setMarkingAll(false); }
   }
   async function deleteNotification(id:string){
+    const snap=notifications;
     setNotifications(prev=>prev.filter(n=>n.id!==id));
-    await fetch("/api/notifications",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({id})});
+    try {
+      const r=await fetch("/api/notifications",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({id})});
+      if(!r.ok)throw new Error();
+    } catch { setNotifications(snap); }
   }
   async function clearRead(){
+    const snap=notifications;
     setNotifications(prev=>prev.filter(n=>!n.is_read));
-    await fetch("/api/notifications",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({clearRead:true})});
+    try {
+      const r=await fetch("/api/notifications",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({clearRead:true})});
+      if(!r.ok)throw new Error();
+    } catch { setNotifications(snap); }
   }
   async function handleView(notif:any){
     if(!notif.is_read)await markRead(notif.id);

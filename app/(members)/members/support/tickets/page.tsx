@@ -37,17 +37,21 @@ export default function MyTicketsPage() {
     const text = replyText[ticketId]?.trim();
     if (!text) return;
     setReplying(ticketId);
-    const res = await fetch("/api/support", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: ticketId, member_reply: text, member_replied_at: new Date().toISOString() }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, member_reply: text, member_replied_at: new Date().toISOString() } : t));
-      setReplyText(prev => ({ ...prev, [ticketId]: "" }));
+    try {
+      const res = await fetch("/api/support", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: ticketId, member_reply: text, member_replied_at: new Date().toISOString() }),
+      });
+      if (res.ok) {
+        setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, member_reply: text, member_replied_at: new Date().toISOString() } : t));
+        setReplyText(prev => ({ ...prev, [ticketId]: "" }));
+      }
+    } catch {
+      // Network error — leave the draft in the box so user can retry.
+    } finally {
+      setReplying(null);
     }
-    setReplying(null);
   }
 
   return (

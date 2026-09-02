@@ -40,23 +40,35 @@ export default function MessagesPage() {
     if (!selected.length) return;
     setCreating(true);
     const isGroup = selected.length > 1;
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: isGroup ? groupName || "Group Chat" : null, is_group: isGroup, member_ids: selected }),
-    });
-    const data = await res.json();
-    setCreating(false);
-    setShowNew(false);
-    setSelected([]);
-    setGroupName("");
-    router.push(`/members/messages/${data.room.id}`);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: isGroup ? groupName || "Group Chat" : null, is_group: isGroup, member_ids: selected }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data?.room?.id) throw new Error(data?.error ?? "Failed to create room");
+      setShowNew(false);
+      setSelected([]);
+      setGroupName("");
+      router.push(`/members/messages/${data.room.id}`);
+    } catch (e: any) {
+      alert(e?.message ?? "Could not create the room. Try again.");
+    } finally {
+      setCreating(false);
+    }
   }
 
   async function leaveRoom(roomId: string) {
-    await fetch(`/api/chat/${roomId}/leave`, { method: "POST" });
+    const snap = rooms;
     setRooms(prev => prev.filter(r => r.id !== roomId));
     setConfirmDelete(null);
+    try {
+      const r = await fetch(`/api/chat/${roomId}/leave`, { method: "POST" });
+      if (!r.ok) throw new Error();
+    } catch {
+      setRooms(snap);
+    }
   }
 
   function getRoomName(room: any) {
