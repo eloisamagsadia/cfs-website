@@ -57,7 +57,8 @@ export default authMiddleware({
         url.searchParams.set("redirect_url", pathname);
         return NextResponse.redirect(url);
       }
-      const role = (sessionClaims?.metadata as { role?: string })?.role;
+      // Reuse the `role` we already read at the top instead of re-reading
+      // sessionClaims.metadata (saves the object lookup on every /admin request).
       if (!["admin", "super_admin"].includes(role ?? "")) {
         const url = req.nextUrl.clone();
         url.pathname = "/members";
@@ -80,7 +81,7 @@ export default authMiddleware({
         url.searchParams.set("redirect_url", pathname);
         return NextResponse.redirect(url);
       }
-      const role = (sessionClaims?.metadata as { role?: string })?.role;
+      // Reuse the `role` read at the top.
       if (role !== "super_admin") {
         const url = req.nextUrl.clone();
         url.pathname = "/members";

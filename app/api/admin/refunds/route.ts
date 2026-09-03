@@ -89,6 +89,21 @@ export async function PATCH(req: NextRequest) {
   if (status === "completed" && (data as any)?.entity_type === "donation") {
     await (admin as any).from("donations").update({ status: "refunded" }).eq("id", (data as any).entity_id);
   }
+  // Event ticket refunds — cancel every ticket in the bundle (or the single
+  // ticket for solo purchases). entity_id may be a bundle_id OR a ticket.id
+  // depending on when the ticket was created; try bundle_id first.
+  if (status === "completed" && ((data as any)?.entity_type === "event_registration" || (data as any)?.entity_type === "ticket")) {
+    const ref = (data as any).entity_id;
+    const byBundle = await (admin as any).from("event_tickets")
+      .update({ status: "cancelled", payment_status: "refunded" })
+      .eq("bundle_id", ref)
+      .select("id");
+    if (!byBundle.data?.length) {
+      await (admin as any).from("event_tickets")
+        .update({ status: "cancelled", payment_status: "refunded" })
+        .eq("id", ref);
+    }
+  }
 
   await logAudit({ userId, action: "update_refund", target_type: "refund", target_id: id, details: patch, req });
   return NextResponse.json({ refund: data });

@@ -174,6 +174,15 @@ export async function POST(req: NextRequest) {
 
   if (error || !tickets?.length) return NextResponse.json({ error: error?.message ?? "Failed to create tickets" }, { status: 500 });
 
+  // Sanity check: for bundles we asked for bundleSize rows. If we got fewer,
+  // roll back everything we inserted so the buyer isn't left with a partial
+  // bundle they still get charged for.
+  if (tickets.length !== bundleSize) {
+    const insertedIds = tickets.map((t: any) => t.id);
+    await (supabase as any).from("event_tickets").delete().in("id", insertedIds);
+    return NextResponse.json({ error: `Partial bundle insert (${tickets.length}/${bundleSize}) — rolled back. Please try again.` }, { status: 500 });
+  }
+
   const firstTicket = tickets[0] as any;
 
   // Notify member (single notification per purchase, even for bundles)

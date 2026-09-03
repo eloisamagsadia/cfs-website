@@ -21,16 +21,23 @@ export async function POST(req: NextRequest, { params }: { params: { roomId: str
     .single();
   if (!member) return NextResponse.json({ error: "Not a member" }, { status: 403 });
 
+  // Look up message scoped to this room — prevents pinning a message from
+  // another room by ID. .maybeSingle() so a stale/missing id doesn't crash.
   const { data: msg } = await (db() as any)
     .from("chat_messages")
     .select("is_pinned")
     .eq("id", message_id)
-    .single();
+    .eq("room_id", params.roomId)
+    .maybeSingle();
+  if (!msg) return NextResponse.json({ error: "Message not found in this room" }, { status: 404 });
 
-  const newPinned = !msg?.is_pinned;
+  const newPinned = !msg.is_pinned;
 
-  await (db() as any).from("chat_messages").update({ is_pinned: newPinned }).eq("id", message_id);
-  await (db() as any).from("chat_rooms").update({ pinned_message_id: newPinned ? message_id : null }).eq("id", params.roomId);
+  const upMsg = await (db() as any).from("chat_messages").update({ is_pinned: newPinned }).eq("id", message_id).eq("room_id", params.roomId);
+  if (upMsg.error) return NextResponse.json({ error: upMsg.error.message }, { status: 500 });
+
+  const upRoom = await (db() as any).from("chat_rooms").update({ pinned_message_id: newPinned ? message_id : null }).eq("id", params.roomId);
+  if (upRoom.error) return NextResponse.json({ error: upRoom.error.message }, { status: 500 });
 
   return NextResponse.json({ pinned: newPinned });
 }
