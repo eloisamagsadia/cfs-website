@@ -199,6 +199,35 @@ export default function NewsletterAdminPage() {
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontFamily: R, fontSize: 12, color: "#1B3A2D", letterSpacing: 0.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>{d.subject ?? "(no subject)"}</div>
                     <div style={{ fontFamily: B, fontSize: 11, color: "#5A7A60" }}>by {h.profiles?.display_name ?? h.user_id.slice(0, 12)}{isTest && d.to && ` · to ${d.to}`}</div>
+                    {!isTest && h.stats && (() => {
+                      const s = h.stats;
+                      const pct = (n: number) => s.sent > 0 ? Math.round((n / s.sent) * 100) : 0;
+                      return (
+                        <div style={{ display: "flex", gap: 6, marginTop: 4, flexWrap: "wrap" }}>
+                          <span title={`${s.delivered}/${s.sent} delivered`} style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#156530", background: "#E8F0E4", borderRadius: 6, padding: "1px 6px", letterSpacing: 1.1 }}>
+                            ✓ {pct(s.delivered)}% DEL
+                          </span>
+                          <span title={`${s.opened}/${s.sent} opened`} style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#1E4A7A", background: "#E4EEF8", borderRadius: 6, padding: "1px 6px", letterSpacing: 1.1 }}>
+                            👁 {pct(s.opened)}% OPEN
+                          </span>
+                          {s.clicked > 0 && (
+                            <span title={`${s.clicked}/${s.sent} clicked`} style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#7A5A0F", background: "#FFF3D6", borderRadius: 6, padding: "1px 6px", letterSpacing: 1.1 }}>
+                              🔗 {pct(s.clicked)}% CLK
+                            </span>
+                          )}
+                          {s.bounced > 0 && (
+                            <span title={`${s.bounced} bounced`} style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#8A1E27", background: "#FFE8EC", borderRadius: 6, padding: "1px 6px", letterSpacing: 1.1 }}>
+                              {s.bounced} BOUNCE
+                            </span>
+                          )}
+                          {s.complained > 0 && (
+                            <span title={`${s.complained} complained (spam)`} style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#8A1E27", background: "#FFE8EC", borderRadius: 6, padding: "1px 6px", letterSpacing: 1.1 }}>
+                              ⚠ {s.complained} SPAM
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
                   {!isTest && (
                     <span style={{ fontFamily: R, fontSize: 11, color: "#1A8040", letterSpacing: 1 }}>{d.sent ?? 0}/{d.total ?? 0}</span>

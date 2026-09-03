@@ -80,31 +80,50 @@ export async function POST(req: NextRequest) {
   const recipients = (subs as any[]) ?? [];
   if (recipients.length === 0) return NextResponse.json({ error: "No active subscribers to send to." }, { status: 400 });
 
+  // One broadcast_id ties every recipient row + audit_log entry together, so
+  // the history panel can aggregate open/bounce counts per send.
+  const broadcastId = (globalThis as any).crypto?.randomUUID?.() ?? require("crypto").randomUUID();
+
   // Send in modest batches to avoid hammering Resend / running into rate limits
   const CHUNK = 20;
   let sent = 0, failed = 0;
   const errors: string[] = [];
+  const deliveryRows: any[] = [];
 
   for (let i = 0; i < recipients.length; i += CHUNK) {
     const batch = recipients.slice(i, i + CHUNK);
     const results = await Promise.allSettled(batch.map(async (r: any) => {
       const url = `${SITE_URL}/api/newsletter/unsubscribe?token=${r.unsubscribe_token}`;
       const html = renderShell(bodyHtml, url);
-      await resend.emails.send({ from: `${FROM_NAME} <${FROM}>`, to: r.email, subject, html });
+      const res  = await resend.emails.send({ from: `${FROM_NAME} <${FROM}>`, to: r.email, subject, html });
+      return { email: r.email, message_id: (res as any)?.data?.id ?? (res as any)?.id ?? null };
     }));
     for (const res of results) {
-      if (res.status === "fulfilled") sent++;
-      else { failed++; errors.push(String((res as PromiseRejectedResult).reason?.message ?? "unknown")); }
+      if (res.status === "fulfilled") {
+        sent++;
+        const { email, message_id } = res.value as any;
+        deliveryRows.push({ broadcast_id: broadcastId, message_id, email, subject, kind: "newsletter" });
+      } else {
+        failed++;
+        errors.push(String((res as PromiseRejectedResult).reason?.message ?? "unknown"));
+      }
     }
+  }
+
+  // Persist per-recipient send records so the Resend webhook can attach
+  // delivery / open / bounce events by message_id later.
+  if (deliveryRows.length > 0) {
+    await (admin as any).from("email_deliveries").insert(deliveryRows);
   }
 
   await logAudit({
     userId,
     action: "newsletter_broadcast",
     target_type: "newsletter",
-    details: { subject, scope, sent, failed, total: recipients.length },
+    target_id: broadcastId,
+    details: { subject, scope, sent, failed, total: recipients.length, broadcast_id: broadcastId },
     req,
   });
 
-  return NextResponse.json({ ok: true, sent, failed, total: recipients.length, sample_errors: errors.slice(0, 3) });
+  return NextResponse.json({ ok: true, sent, failed, total: recipients.length, broadcast_id: broadcastId, sample_errors: errors.slice(0, 3) });
 }
