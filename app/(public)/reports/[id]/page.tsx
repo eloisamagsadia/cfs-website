@@ -33,35 +33,46 @@ const C = {
   green:  "#1A8040",
 };
 
+// Escape any HTML in user-controlled captures so an admin can't inject
+// <script> or event-handler attributes through a report body.
+function esc(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function renderMarkdown(text: string): string {
   return text
-    .replace(/^## (.+)$/gm, `<h2 style="font-family:${SG};font-size:1rem;font-weight:700;color:${C.forest};letter-spacing:2px;margin:24px 0 10px;border-bottom:1px solid ${C.border};padding-bottom:8px">$1</h2>`)
-    .replace(/^### (.+)$/gm, `<h3 style="font-family:${SG};font-size:0.9rem;font-weight:700;color:${C.sage};letter-spacing:1.5px;margin:20px 0 8px">$1</h3>`)
-    .replace(/\*\*(.+?)\*\*/g, `<strong style="color:${C.forest};font-weight:700">$1</strong>`)
+    .replace(/^## (.+)$/gm, (_m, t) => `<h2 style="font-family:${SG};font-size:1rem;font-weight:700;color:${C.forest};letter-spacing:2px;margin:24px 0 10px;border-bottom:1px solid ${C.border};padding-bottom:8px">${esc(t)}</h2>`)
+    .replace(/^### (.+)$/gm, (_m, t) => `<h3 style="font-family:${SG};font-size:0.9rem;font-weight:700;color:${C.sage};letter-spacing:1.5px;margin:20px 0 8px">${esc(t)}</h3>`)
+    .replace(/\*\*(.+?)\*\*/g, (_m, t) => `<strong style="color:${C.forest};font-weight:700">${esc(t)}</strong>`)
     .replace(/^\|[-| :]+\|$/gm, "")
     .replace(/^\|(.+)\|$/gm, (_: string, row: string) => {
       const cells = row.split("|").map((c: string) => c.trim());
       return (
         `<div style="display:flex;border-bottom:1px solid ${C.border}">` +
         cells.map((c: string, i: number) =>
-          `<div style="flex:${i === 0 ? 2 : 1};padding:8px 12px;font-family:${B};font-size:13px;color:${i === 0 ? C.forest : C.sage}">${c}</div>`
+          `<div style="flex:${i === 0 ? 2 : 1};padding:8px 12px;font-family:${B};font-size:13px;color:${i === 0 ? C.forest : C.sage}">${esc(c)}</div>`
         ).join("") +
         `</div>`
       );
     })
-    .replace(/^- (.+)$/gm, `<div style="display:flex;gap:8px;align-items:flex-start;margin:4px 0;padding-left:4px"><span style="color:${C.sage}">•</span><span style="font-family:${B};font-size:13px;color:${C.muted};line-height:1.7">$1</span></div>`)
+    .replace(/^- (.+)$/gm, (_m, t) => `<div style="display:flex;gap:8px;align-items:flex-start;margin:4px 0;padding-left:4px"><span style="color:${C.sage}">•</span><span style="font-family:${B};font-size:13px;color:${C.muted};line-height:1.7">${esc(t)}</span></div>`)
     .replace(/^\s*$/gm, `<div style="height:8px"></div>`);
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const supabase = createAdminClient();
-  const { data: rRaw } = await (supabase.from("transparency_reports") as any).select("title").eq("id", params.id).single();
+  const { data: rRaw } = await (supabase.from("transparency_reports") as any).select("title").eq("id", params.id).maybeSingle();
   return { title: (rRaw as any)?.title ?? "Transparency Report" };
 }
 
 export default async function ReportDetailPage({ params }: { params: { id: string } }) {
   const supabase = createAdminClient();
-  const { data: reportRaw } = await supabase.from("transparency_reports").select("*").eq("id", params.id).eq("is_published", true).single();
+  const { data: reportRaw } = await supabase.from("transparency_reports").select("*").eq("id", params.id).eq("is_published", true).maybeSingle();
   if (!reportRaw) notFound();
 
   const { data: receiptsRaw } = await supabase

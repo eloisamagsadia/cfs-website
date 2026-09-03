@@ -30,7 +30,7 @@ const C = {
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const supabase = createAdminClient();
-  const { data: e } = await (supabase.from("events") as any).select("title, description").eq("id", params.id).single();
+  const { data: e } = await (supabase.from("events") as any).select("title, description").eq("id", params.id).maybeSingle();
   return { title: (e as any)?.title ?? "Event", description: (e as any)?.description ?? "" };
 }
 

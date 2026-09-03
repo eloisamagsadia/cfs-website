@@ -23,7 +23,7 @@ const CAT_COLORS: Record<string, string> = {
 
 export async function generateMetadata({ params }: { params: { category: string; id: string } }): Promise<Metadata> {
   const supabase = createAdminClient();
-  const { data: pRaw } = await (((supabase.from("products") as any) as any) as any).select("name, description").eq("id", params.id).single();
+  const { data: pRaw } = await (((supabase.from("products") as any) as any) as any).select("name, description").eq("id", params.id).maybeSingle();
   const p = pRaw as any;
   return { title: p?.name ?? "Product", description: p?.description ?? "" };
 }
@@ -34,8 +34,8 @@ export default async function ProductDetailPage({ params }: { params: { category
   const user = userId ? { id: userId } : null;
 
   const [{ data: product, error: productError }, { data: category }] = await Promise.all([
-    (((supabase.from("products") as any) as any) as any).select("*, product_categories(name,slug)").eq("id", params.id).single(),
-    (((supabase.from("product_categories") as any) as any) as any).select("*").eq("slug", params.category).single(),
+    (((supabase.from("products") as any) as any) as any).select("*, product_categories(name,slug)").eq("id", params.id).maybeSingle(),
+    (((supabase.from("product_categories") as any) as any) as any).select("*").eq("slug", params.category).maybeSingle(),
   ]);
   if (productError) console.error("Product query error:", productError);
 

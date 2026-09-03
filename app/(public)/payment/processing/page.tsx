@@ -54,6 +54,12 @@ function ProcessingContent() {
     const poll = async () => {
       try {
         const res  = await fetch(`/api/payment/status?type=${type}&ref=${ref}`);
+        // Non-2xx (e.g. 401 if session expired) — surface as failed so the
+        // user gets a retry option instead of spinning forever.
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) setStatus("failed");
+          return;
+        }
         const data = await res.json();
         if (data.status === "completed") {
           setStatus("completed");
@@ -69,6 +75,25 @@ function ProcessingContent() {
   }, [ref, type, status]);
 
   const cta = CTA[type] ?? CTA.donation;
+
+  // Direct hit with no ref — can't poll anything. Show a clear error
+  // instead of spinning forever.
+  if (!ref) {
+    return (
+      <div style={{ minHeight: "100vh", background: C.paper, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
+        <div style={{ background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: "20px", padding: "40px 32px", maxWidth: "480px", textAlign: "center" }}>
+          <h1 style={{ fontFamily: S, fontSize: "1.6rem", color: C.forest, marginBottom: "12px" }}>No payment to track</h1>
+          <p style={{ fontFamily: B, fontSize: "13px", color: C.muted, marginBottom: "24px" }}>
+            This page needs a payment reference. If you were mid-checkout, start over from the item you were buying.
+          </p>
+          <button onClick={() => router.push("/")}
+            style={{ width: "100%", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: C.forest, color: "#ffffff", border: "none", borderRadius: "10px", padding: "13px", cursor: "pointer", letterSpacing: "1.5px" }}>
+            BACK TO HOME
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (status === "completed") {
     return (
