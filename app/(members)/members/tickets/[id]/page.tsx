@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkLine, SkCircle } from "@/components/shared/Skeleton";
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -51,8 +51,35 @@ export default function TicketPage() {
   }, [id]);
 
   if (loading) return (
-<div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+    <div style={{ maxWidth: 420, margin: "0 auto", display: "flex", flexDirection: "column", gap: 20 }}>
+      <SkLine w="120px" h="12px" />
+      {/* Ticket card shape */}
+      <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: 20, overflow: "hidden" }}>
+        <SkLine w="100%" h="6px" r="0" />
+        <div style={{ padding: "20px 24px 16px", display: "flex", flexDirection: "column", gap: 10, borderBottom: "1px dashed #DDE8DD" }}>
+          <SkLine w="140px" h="10px" />
+          <SkLine w="80%" h="20px" />
+        </div>
+        <div style={{ padding: "16px 24px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, borderBottom: "1px dashed #DDE8DD" }}>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <SkLine w="50px" h="9px" />
+              <SkLine w="80px" h="12px" />
+            </div>
+          ))}
+        </div>
+        <div style={{ padding: "16px 24px", display: "flex", gap: 12, alignItems: "center", borderBottom: "1px dashed #DDE8DD" }}>
+          <SkCircle size="44px" />
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
+            <SkLine w="140px" h="12px" />
+            <SkLine w="180px" h="10px" />
+          </div>
+        </div>
+        <div style={{ padding: 24, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+          <SkLine w="192px" h="192px" r="12px" />
+          <SkLine w="200px" h="10px" />
+        </div>
+      </div>
     </div>
   );
 

@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkHeader, SkLine, SkCircle } from "@/components/shared/Skeleton";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -99,7 +99,44 @@ export default function CheckoutPage() {
     }
   }
 
-  if (!isLoaded || loading) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
+  if (!isLoaded || loading) return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <SkHeader titleW="140px" subW="120px" />
+      <div className="sk-checkout-grid" style={{ display: "grid", gap: 20 }}>
+        {/* Item + form column */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 14, padding: 16, display: "flex", gap: 14, alignItems: "center" }}>
+            <SkCircle size="72px" />
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
+              <SkLine h="14px" w="70%" />
+              <SkLine h="12px" w="40%" />
+            </div>
+            <SkLine w="80px" h="16px" />
+          </div>
+          <div style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 14, padding: 18, display: "flex", flexDirection: "column", gap: 12 }}>
+            <SkLine h="14px" w="140px" />
+            {Array.from({ length: 3 }).map((_, i) => (
+              <SkLine key={i} h="38px" w="100%" r="8px" />
+            ))}
+          </div>
+        </div>
+        {/* Summary column */}
+        <div style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 14, padding: 18, display: "flex", flexDirection: "column", gap: 10, height: "fit-content" }}>
+          <SkLine h="14px" w="100px" />
+          <SkLine h="11px" w="100%" />
+          <SkLine h="11px" w="80%" />
+          <SkLine h="11px" w="60%" />
+          <SkLine h="1px" w="100%" r="0" style={{ margin: "6px 0" }} />
+          <SkLine h="16px" w="45%" />
+          <SkLine h="42px" w="100%" r="8px" />
+        </div>
+      </div>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .sk-checkout-grid { grid-template-columns: 1fr; }
+        @media (min-width: 769px) { .sk-checkout-grid { grid-template-columns: 1fr 320px; } }
+      ` }} />
+    </div>
+  );
   if (items.length === 0) { router.push("/members/cart"); return null; }
 
   const inputStyle = { width:"100%", background:"#F2F7F2", border:"1.5px solid #DDE8DD", borderRadius:"6px", padding:"10px 14px", color:"#1B3A2D", fontFamily:B, fontSize:"13px", outline:"none", boxSizing:"border-box" as const };

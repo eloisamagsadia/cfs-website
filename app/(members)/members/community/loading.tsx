@@ -1,25 +1,35 @@
-function Sk({ w="100%", h="14px", r="6px" }: { w?:string; h?:string; r?:string }) {
-  return <div style={{ width:w, height:h, borderRadius:r, background:"linear-gradient(90deg,#E4EDE4 25%,#DDE8DD 50%,#E4EDE4 75%)", backgroundSize:"200% 100%", animation:"shimmer 1.5s infinite" }}/>;
-}
+// Matches /members/community: header + composer + feed of post cards.
+import { SkHeader, SkLine, SkCircle } from "@/components/shared/Skeleton";
+
 export default function Loading() {
   return (
-    <>
-      <style>{`@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`}</style>
-      <div style={{ display:"flex", flexDirection:"column", gap:"20px" }}>
-        <div style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
-          <Sk h="28px" w="180px" r="6px"/>
-          <Sk h="13px" w="120px" r="4px"/>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <SkHeader titleW="180px" subW="140px" />
+      {/* Composer */}
+      <div style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 14, padding: 14, display: "flex", gap: 12, alignItems: "flex-start" }}>
+        <SkCircle size="42px" />
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
+          <SkLine h="42px" w="100%" r="10px" />
+          <SkLine h="12px" w="40%" />
         </div>
-        {Array.from({length:4}).map((_,i) => (
-          <div key={i} style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"18px 20px", display:"flex", gap:"14px", alignItems:"center" }}>
-            <Sk w="44px" h="44px" r="50%"/>
-            <div style={{ flex:1, display:"flex", flexDirection:"column", gap:"8px" }}>
-              <Sk h="14px" w="55%"/>
-              <Sk h="12px" w="35%"/>
+      </div>
+      {/* Post cards */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 14, padding: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <SkCircle size="36px" />
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                <SkLine h="12px" w="40%" />
+                <SkLine h="10px" w="25%" />
+              </div>
             </div>
+            <SkLine h="12px" w="100%" />
+            <SkLine h="12px" w="88%" />
+            <SkLine h="12px" w="60%" />
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }

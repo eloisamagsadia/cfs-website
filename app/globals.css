@@ -378,7 +378,7 @@
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 }
 
-/* Skeleton loader */
+/* Skeleton loader — legacy pulse (still used by <SkeletonPage />) */
 @keyframes skeleton-pulse {
   0%, 100% { opacity: 0.5; }
   50%       { opacity: 1; }
@@ -392,6 +392,46 @@
 .skeleton-title { height: 24px; margin-bottom: 12px; border-radius: 4px; width: 60%; }
 .skeleton-card { height: 120px; border-radius: 12px; }
 .skeleton-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; }
+
+/* Shimmer skeleton — new primitives (components/shared/Skeleton.tsx) */
+@keyframes sk-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.sk {
+  background: linear-gradient(90deg, #E4EDE4 25%, #DDE8DD 50%, #E4EDE4 75%);
+  background-size: 200% 100%;
+  animation: sk-shimmer 1.5s linear infinite;
+  border-radius: 6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk { animation: none; background: #DDE8DD; }
+}
+/* Responsive visibility helpers for skeleton composition. Mobile-first:
+   phones see .sk-mobile-only, desktop swaps to .sk-desktop-only at 769px. */
+.sk-mobile-only  { display: block; }
+.sk-desktop-only { display: none; }
+@media (min-width: 769px) {
+  .sk-mobile-only  { display: none;  }
+  .sk-desktop-only { display: block; }
+}
+/* Responsive stat grid — 2 cols on phones, 4 on desktop. */
+.sk-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (min-width: 769px) {
+  .sk-stat-grid { grid-template-columns: repeat(4, 1fr); }
+}
+/* Card grid (events/products/tiles) — 1 col mobile, 2 tablet, 3 desktop. */
+.sk-card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 640px) { .sk-card-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px){ .sk-card-grid { grid-template-columns: repeat(3, 1fr); } }
 
 /* Button press */
 .btn-press {

@@ -1,25 +1,38 @@
-function Sk({ w="100%", h="14px", r="6px" }: { w?:string; h?:string; r?:string }) {
-  return <div style={{ width:w, height:h, borderRadius:r, background:"linear-gradient(90deg,#E4EDE4 25%,#DDE8DD 50%,#E4EDE4 75%)", backgroundSize:"200% 100%", animation:"shimmer 1.5s infinite" }}/>;
-}
+// Matches /members/cart: cart items on the left, summary panel on the
+// right (desktop). On mobile the summary stacks below via CSS grid.
+import { SkHeader, SkLine, SkCircle } from "@/components/shared/Skeleton";
+
 export default function Loading() {
   return (
-    <>
-      <style>{`@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`}</style>
-      <div style={{ display:"flex", flexDirection:"column", gap:"20px" }}>
-        <div style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
-          <Sk h="28px" w="180px" r="6px"/>
-          <Sk h="13px" w="120px" r="4px"/>
-        </div>
-        {Array.from({length:4}).map((_,i) => (
-          <div key={i} style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"18px 20px", display:"flex", gap:"14px", alignItems:"center" }}>
-            <Sk w="44px" h="44px" r="50%"/>
-            <div style={{ flex:1, display:"flex", flexDirection:"column", gap:"8px" }}>
-              <Sk h="14px" w="55%"/>
-              <Sk h="12px" w="35%"/>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <SkHeader titleW="120px" subW="90px" />
+      <div className="sk-cart-grid" style={{ display: "grid", gap: 20 }}>
+        {/* Items list */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 12, padding: 12, display: "flex", gap: 12, alignItems: "center" }}>
+              <SkCircle size="64px" />
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
+                <SkLine h="13px" w="70%" />
+                <SkLine h="11px" w="45%" />
+              </div>
+              <SkLine w="60px" h="14px" />
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        {/* Summary */}
+        <div style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 14, padding: 18, display: "flex", flexDirection: "column", gap: 12, height: "fit-content" }}>
+          <SkLine h="14px" w="100px" />
+          <SkLine h="11px" w="100%" />
+          <SkLine h="11px" w="80%" />
+          <SkLine h="11px" w="60%" />
+          <SkLine h="42px" w="100%" r="8px" />
+        </div>
       </div>
-    </>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .sk-cart-grid { grid-template-columns: 1fr; }
+        @media (min-width: 769px) { .sk-cart-grid { grid-template-columns: 1fr 320px; } }
+      ` }} />
+    </div>
   );
 }

@@ -1,43 +1,34 @@
-function Sk({ w="100%", h="14px", r="6px" }: { w?:string; h?:string; r?:string }) {
-  return <div style={{ width:w, height:h, borderRadius:r, background:"linear-gradient(90deg,#E4EDE4 25%,#DDE8DD 50%,#E4EDE4 75%)", backgroundSize:"200% 100%", animation:"shimmer 1.5s infinite" }}/>;
-}
-export default function AdminLoading() {
+// Matches /admin dashboard: header + 4 stat cards + two recent-item panels
+// (recent orders, recent members). Mobile stacks the panels; desktop shows
+// them side by side via .sk-admin-recent-grid.
+import { SkHeader, SkStatGrid, SkLine, SkCircle } from "@/components/shared/Skeleton";
+
+export default function Loading() {
   return (
-    <>
-      <style>{`@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`}</style>
-      <div style={{ display:"flex", gap:"28px", padding:"32px 24px", maxWidth:"1280px", margin:"0 auto" }}>
-        <div style={{ width:"220px", flexShrink:0, display:"flex", flexDirection:"column", gap:"6px" }}>
-          {Array.from({length:8}).map((_,i) => (
-            <div key={i} style={{ display:"flex", gap:"10px", padding:"10px 14px", alignItems:"center" }}>
-              <Sk w="18px" h="18px" r="4px"/>
-              <Sk w="80px" h="12px"/>
-            </div>
-          ))}
-        </div>
-        <div style={{ flex:1, display:"flex", flexDirection:"column", gap:"20px" }}>
-          <div style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
-            <Sk h="28px" w="220px"/>
-            <Sk h="13px" w="140px"/>
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:"10px" }}>
-            {Array.from({length:4}).map((_,i) => (
-              <div key={i} style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"10px", padding:"18px 16px", display:"flex", flexDirection:"column", gap:"8px" }}>
-                <Sk h="32px" w="50px"/>
-                <Sk h="12px" w="90px"/>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <SkHeader titleW="220px" subW="160px" />
+      <SkStatGrid count={4} />
+      <div className="sk-admin-recent-grid" style={{ display: "grid", gap: 14 }}>
+        {Array.from({ length: 2 }).map((_, panel) => (
+          <div key={panel} style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 14, padding: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+            <SkLine h="14px" w="140px" />
+            {Array.from({ length: 5 }).map((_, row) => (
+              <div key={row} style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <SkCircle size="30px" />
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                  <SkLine h="11px" w="60%" />
+                  <SkLine h="10px" w="35%" />
+                </div>
+                <SkLine w="50px" h="12px" />
               </div>
             ))}
           </div>
-          {Array.from({length:5}).map((_,i) => (
-            <div key={i} style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"14px 20px", display:"flex", gap:"12px", alignItems:"center" }}>
-              <div style={{ flex:1, display:"flex", flexDirection:"column", gap:"7px" }}>
-                <Sk h="14px" w="50%"/>
-                <Sk h="12px" w="30%"/>
-              </div>
-              <Sk w="70px" h="26px" r="6px"/>
-            </div>
-          ))}
-        </div>
+        ))}
       </div>
-    </>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .sk-admin-recent-grid { grid-template-columns: 1fr; }
+        @media (min-width: 769px) { .sk-admin-recent-grid { grid-template-columns: 1fr 1fr; } }
+      ` }} />
+    </div>
   );
 }

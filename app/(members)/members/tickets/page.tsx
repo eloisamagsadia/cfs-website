@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkHeader, SkLine, SkCircle } from "@/components/shared/Skeleton";
 import { IconTicket, IconCheck } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
@@ -77,7 +77,23 @@ export default function MyTicketsPage() {
     return c;
   }, [tickets, now]);
 
-  if (loading) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
+  if (loading) return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <SkHeader titleW="180px" subW="140px" />
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 14, padding: "16px 18px", display: "flex", gap: 14, alignItems: "center" }}>
+            <SkCircle size="42px" />
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
+              <SkLine h="14px" w="65%" />
+              <SkLine h="11px" w="40%" />
+            </div>
+            <SkLine w="70px" h="24px" r="20px" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
