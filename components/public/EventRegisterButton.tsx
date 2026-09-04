@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { IconTicket, IconCheck } from "@/components/shared/Icons";
 import { calculateFee, type PaymentMethod } from "@/lib/paymongo";
 import WaitlistButton from "@/components/public/WaitlistButton";
+import { evaluateRegistrationGate } from "@/lib/event-registration";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -181,12 +182,47 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
     );
   }
 
+  // Registration closed (manual toggle or auto cutoff) — hard block, even for tiers.
+  // "ended" and "cancelled" fall through to other panels rendered elsewhere.
+  const gate = evaluateRegistrationGate(event);
+  if (!gate.open && (gate.reason === "manual" || gate.reason === "auto")) {
+    return (
+      <div style={{ background: "#FFE8EC", border: "2px solid #CC3344", borderRadius: 10, padding: 16, textAlign: "center" as const, display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ fontFamily: R, fontSize: 14, color: "#CC3344", letterSpacing: 1.5 }}>REGISTRATION CLOSED</div>
+        <div style={{ fontFamily: B, fontSize: 12, color: "#8A1E27", lineHeight: 1.5 }}>
+          {gate.reason === "manual"
+            ? "Sign-ups are locked. Reach out via support if you think this is a mistake."
+            : "The registration window has ended. Follow us for future events!"}
+        </div>
+      </div>
+    );
+  }
+
   if (isFull && !hasTiers) {
     return <WaitlistButton eventId={event.id} isLoggedIn={isLoggedIn} />;
   }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+
+      {/* Scheduled close countdown */}
+      {gate.closes_at && (() => {
+        const ms = new Date(gate.closes_at).getTime() - Date.now();
+        if (ms <= 0 || ms > 30 * 86400 * 1000) return null;   // only show within 30 days
+        const d = Math.floor(ms / 86400000);
+        const h = Math.floor((ms % 86400000) / 3600000);
+        const m = Math.floor((ms % 3600000) / 60000);
+        const label = d > 0 ? `${d}d ${h}h` : h > 0 ? `${h}h ${m}m` : `${m}m`;
+        const soon = ms < 24 * 3600 * 1000;
+        return (
+          <div style={{ background: soon ? "#FFE8EC" : "#FFF3D6", border: `1.5px solid ${soon ? "#F1C0C6" : "#F0D889"}`, borderRadius: 8, padding: "7px 12px", display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 12 }}>⏳</span>
+            <span style={{ fontFamily: B, fontSize: 12, color: soon ? "#8A1E27" : "#7A5A0F" }}>
+              Registration closes in <strong>{label}</strong>
+            </span>
+          </div>
+        );
+      })()}
 
       {/* Early access badge */}
       {sponsorDate && isSponsor && memberDate && now < memberDate && (

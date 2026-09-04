@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkAndAwardBadges } from "@/lib/badges";
+import { evaluateRegistrationGate } from "@/lib/event-registration";
 import { logAudit } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
@@ -16,6 +17,18 @@ export async function POST(req: NextRequest) {
   const { data: eventRaw } = await (((supabase.from("events") as any) as any) as any).select("*").eq("id", event_id).single();
   const event = eventRaw as any;
   if (!event) return NextResponse.json({ error: "Event not found" }, { status: 404 });
+
+  // Hard gate: manual close, auto-close cutoff, cancelled, or past date
+  const gate = evaluateRegistrationGate(event);
+  if (!gate.open) {
+    const msg =
+      gate.reason === "manual"    ? "Registration for this event is closed." :
+      gate.reason === "auto"      ? "The registration window has ended." :
+      gate.reason === "cancelled" ? "This event has been cancelled." :
+      gate.reason === "ended"     ? "This event has already ended." :
+      "Registration is not open.";
+    return NextResponse.json({ error: msg }, { status: 400 });
+  }
 
   // Check members only
   if (event.is_members_only) {

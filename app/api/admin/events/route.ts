@@ -69,6 +69,8 @@ export async function PATCH(req: NextRequest) {
   if (updates.heading_font !== undefined) payload.heading_font = updates.heading_font || "serif";
   if (updates.body_font !== undefined) payload.body_font = updates.body_font || "sans";
   if (updates.is_hidden !== undefined) payload.is_hidden = !!updates.is_hidden;
+  if (updates.registration_closed !== undefined) payload.registration_closed = !!updates.registration_closed;
+  if (updates.registration_closes_at !== undefined) payload.registration_closes_at = updates.registration_closes_at || null;
   const admin = createAdminClient();
   const { data, error } = await (admin.from("events") as any).update(payload).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

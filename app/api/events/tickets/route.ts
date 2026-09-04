@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getEffectiveUserId } from "@/lib/effective-user";
+import { evaluateRegistrationGate } from "@/lib/event-registration";
 import { checkAndAwardBadges } from "@/lib/badges";
 import { sendEventTicket, sendEventTicketBundle } from "@/lib/email";
 import { logAudit } from "@/lib/audit";
@@ -61,6 +62,18 @@ export async function POST(req: NextRequest) {
   // Get event
   const { data: event } = await (supabase as any).from("events").select("*").eq("id", event_id).single();
   if (!event) return NextResponse.json({ error: "Event not found" }, { status: 404 });
+
+  // Hard gate: registration closed (manual toggle or auto cutoff, cancelled, ended)
+  const gate = evaluateRegistrationGate(event);
+  if (!gate.open) {
+    const msg =
+      gate.reason === "manual"    ? "Registration for this event is closed." :
+      gate.reason === "auto"      ? "The registration window has ended." :
+      gate.reason === "cancelled" ? "This event has been cancelled." :
+      gate.reason === "ended"     ? "This event has already ended." :
+      "Registration is not open.";
+    return NextResponse.json({ error: msg }, { status: 400 });
+  }
 
   // Check early access
   const { sessionClaims } = auth();

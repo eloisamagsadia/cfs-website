@@ -24,6 +24,7 @@ export default function AdminEventEditPage() {
     title: "", description: "", date: "", location: "", map_url: "",
     capacity: "", price: "0", is_members_only: false, banner_url: "", status: "upcoming", sponsor_access_at: "", member_access_at: "",
     guidelines_url: "", guidelines_text: "", heading_font: "serif", body_font: "sans",
+    registration_closed: false, registration_closes_at: "",
   });
 
   const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
@@ -44,6 +45,8 @@ export default function AdminEventEditPage() {
           banner_url: ev.banner_url ?? "", status: ev.status ?? "upcoming", sponsor_access_at: ev.sponsor_access_at ? toPHTInputString(ev.sponsor_access_at) : "", member_access_at: ev.member_access_at ? toPHTInputString(ev.member_access_at) : "",
           guidelines_url: ev.guidelines_url ?? "", guidelines_text: ev.guidelines_text ?? "",
           heading_font: ev.heading_font ?? "serif", body_font: ev.body_font ?? "sans",
+          registration_closed: !!ev.registration_closed,
+          registration_closes_at: ev.registration_closes_at ? toPHTInputString(ev.registration_closes_at) : "",
         });
         setLoading(false);
       })
@@ -59,7 +62,15 @@ export default function AdminEventEditPage() {
       const res = await fetch("/api/admin/events", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, ...form, date: toISOWithPHT(form.date), price: Number(form.price), capacity: form.capacity ? Number(form.capacity) : null, sponsor_access_at: toISOWithPHT(form.sponsor_access_at), member_access_at: toISOWithPHT(form.member_access_at) }),
+        body: JSON.stringify({
+          id, ...form,
+          date: toISOWithPHT(form.date),
+          price: Number(form.price),
+          capacity: form.capacity ? Number(form.capacity) : null,
+          sponsor_access_at: toISOWithPHT(form.sponsor_access_at),
+          member_access_at:  toISOWithPHT(form.member_access_at),
+          registration_closes_at: form.registration_closes_at ? toISOWithPHT(form.registration_closes_at) : null,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to save");
@@ -192,6 +203,20 @@ export default function AdminEventEditPage() {
             <input type="datetime-local" style={inputStyle} value={form.member_access_at} onChange={e => set("member_access_at", e.target.value)} />
             <span style={{ fontFamily: B, fontSize: "10px", color: "#5A7A60" }}>Open to all members from this date & time (PHT)</span>
           </div>
+        </div>
+      </div>
+
+      {/* Close registration */}
+      <div style={{ background: "#FFE8EC10", border: "1.5px solid #F1C0C6", borderRadius: 10, padding: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ fontFamily: R, fontSize: 11, color: "#8A1E27", letterSpacing: 2, display: "flex", alignItems: "center", gap: 5 }}>🔒 CLOSE REGISTRATION</div>
+        <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: B, fontSize: 13, color: "#1B3A2D", cursor: "pointer" }}>
+          <input type="checkbox" checked={form.registration_closed} onChange={e => set("registration_closed", e.target.checked)} />
+          <span><strong>Manually close registration now</strong> — sign-ups locked immediately until you re-open.</span>
+        </label>
+        <div>
+          <label style={labelStyle}>Auto-close at (optional)</label>
+          <input type="datetime-local" style={inputStyle} value={form.registration_closes_at} onChange={e => set("registration_closes_at", e.target.value)} />
+          <span style={{ fontFamily: B, fontSize: 10, color: "#5A7A60" }}>Registration will stop accepting new sign-ups at this date & time (PHT). Leave blank to keep it open until the event, capacity, or manual close.</span>
         </div>
       </div>
 

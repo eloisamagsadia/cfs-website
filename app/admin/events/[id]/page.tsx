@@ -8,6 +8,8 @@ import {
   IconEye, IconEyeOff, IconCheck, IconDownload,
 } from "@/components/shared/Icons";
 import EventVisibilityToggle from "@/components/admin/EventVisibilityToggle";
+import EventRegistrationToggle from "@/components/admin/EventRegistrationToggle";
+import { evaluateRegistrationGate } from "@/lib/event-registration";
 
 export const metadata: Metadata = { title: "Event Details" };
 export const revalidate = 30;
@@ -129,11 +131,22 @@ export default async function AdminEventDetailPage({ params }: { params: { id: s
                 <IconEyeOff size={11} color="#B45309" /> HIDDEN
               </span>
             )}
+            {(() => {
+              const gate = evaluateRegistrationGate(event);
+              if (gate.open || gate.reason === "ended" || gate.reason === "cancelled") return null;
+              const label = gate.reason === "manual" ? "REG LOCKED" : "REG AUTO-CLOSED";
+              return (
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#8A1E27", background: "#FFE8EC", border: "1px solid #F1C0C6", borderRadius: 999, padding: "3px 10px", letterSpacing: 1.5 }}>
+                  🔒 {label}
+                </span>
+              );
+            })()}
           </div>
 
           {/* Actions */}
           <div className="aed-actions" style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center", justifyContent: "flex-end" }}>
             <EventVisibilityToggle id={event.id} initialHidden={isHidden} />
+            <EventRegistrationToggle id={event.id} initialClosed={!!event.registration_closed} initialClosesAt={event.registration_closes_at ?? null} />
             <a href={`/events/${event.id}`} target="_blank" rel="noopener noreferrer"
               className="aed-action"
               style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#5A7A60", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
