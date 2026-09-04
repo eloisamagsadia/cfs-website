@@ -45,8 +45,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
   const refList = Array.from(refs);
 
+  // NOTE: payment_transactions has NO email or method columns — buyer email
+  // lives on profiles (already joined via the tickets query above); the
+  // payment method is stored in metadata.payment_method. Selecting phantom
+  // columns fails the whole request silently (returns 0 rows), which was
+  // making every active ticket classify as "COMP" on the timeline.
   const { data: txns } = await (admin.from("payment_transactions") as any)
-    .select("id, reference_id, user_id, email, amount, currency, status, method, payment_link_id, paid_at, created_at, metadata, type")
+    .select("id, reference_id, user_id, amount, currency, status, payment_link_id, paid_at, created_at, metadata, type")
     .in("reference_id", refList)
     .eq("type", "ticket")
     .order("created_at", { ascending: false });
@@ -102,11 +107,11 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       buyer: {
         user_id: firstTicket.user_id,
         name: buyer.display_name ?? null,
-        email: buyer.email ?? txn?.email ?? null,
+        email: buyer.email ?? null,
       },
       amount:  txn?.amount != null ? Number(txn.amount) : (Number(tier?.price ?? 0) * bundleTickets.length),
       currency: txn?.currency ?? "PHP",
-      method:  (txn?.metadata as any)?.payment_method ?? txn?.method ?? null,
+      method:  (txn?.metadata as any)?.payment_method ?? null,
       payment_link_id: txn?.payment_link_id ?? null,
       txn_status: txn?.status ?? null,
       created_at: txn?.created_at ?? firstTicket.created_at,
