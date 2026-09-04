@@ -9,6 +9,12 @@ import { IconCalendar, IconPin, IconUsers, IconTicket, IconSparkle, IconTag, Ico
 import EventShareRow from "@/components/public/EventShareRow";
 export const revalidate = 300;
 
+// Hide the "X registered / Y" counts and the capacity progress bar from
+// the public event page. The Fully-booked state is still surfaced (so
+// buyers know they can't register) but the exact counts stay internal.
+// Admins still see full capacity on /admin/events dashboards.
+// Flip to true to show them publicly again.
+const SHOW_PUBLIC_CAPACITY = false;
 
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -207,23 +213,31 @@ export default async function EventDetailPage({ params }: { params: { id: string
                     </div>
                   </div>
                 )}
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <IconUsers size={16} color="#ffffff" />
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: B, fontSize: "14px", color: "#ffffff", fontWeight: 600 }}>
-                      {regCount ?? 0} registered{event.capacity ? ` / ${event.capacity}` : ""}
+                {SHOW_PUBLIC_CAPACITY ? (
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                    <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <IconUsers size={16} color="#ffffff" />
                     </div>
-                    <div style={{ fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.55)" }}>
-                      {event.capacity ? (isFull ? "This event is fully booked" : `${spotsLeft} spots remaining`) : "Unlimited capacity"}
+                    <div>
+                      <div style={{ fontFamily: B, fontSize: "14px", color: "#ffffff", fontWeight: 600 }}>
+                        {regCount ?? 0} registered{event.capacity ? ` / ${event.capacity}` : ""}
+                      </div>
+                      <div style={{ fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.55)" }}>
+                        {event.capacity ? (isFull ? "This event is fully booked" : `${spotsLeft} spots remaining`) : "Unlimited capacity"}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  isFull && (
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#CC334425", border: "1px solid #CC334480", borderRadius: "999px", padding: "6px 14px" }}>
+                      <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#ffcccc", letterSpacing: "1.5px" }}>FULLY BOOKED</span>
+                    </div>
+                  )
+                )}
               </div>
 
-              {/* Availability bar */}
-              {event.capacity && (
+              {/* Availability bar — internal only */}
+              {SHOW_PUBLIC_CAPACITY && event.capacity && (
                 <div style={{ marginBottom: "8px" }}>
                   <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: "999px", height: "6px", overflow: "hidden" }}>
                     <div style={{ height: "100%", width: `${pct}%`, background: isFull ? "#CC3344" : "linear-gradient(90deg, #1A8040, #4ACB6E)", borderRadius: "999px", transition: "width 0.5s" }} />
@@ -281,9 +295,11 @@ export default async function EventDetailPage({ params }: { params: { id: string
                   { icon: <IconClipboard size={16} color={C.green} />, label: "Time",     value: dateTime,                                          sub: "Manila time" },
                   { icon: <IconPin size={16} color={C.green} />,      label: "Location", value: event.location || "TBA" },
                   { icon: <IconTag size={16} color={C.green} />,      label: "Price",    value: priceTileValue,                                    sub: priceTileSub },
-                  { icon: <IconUsers size={16} color={C.green} />,    label: "Capacity", value: event.capacity ? `${event.capacity}` : "Unlimited", sub: event.capacity ? "attendees" : undefined },
-                  { icon: <IconTicket size={16} color={C.green} />,   label: "Registered", value: `${regCount ?? 0}`,                              sub: event.capacity ? `of ${event.capacity}` : undefined },
                 ];
+                if (SHOW_PUBLIC_CAPACITY) {
+                  tiles.push({ icon: <IconUsers size={16} color={C.green} />,  label: "Capacity",   value: event.capacity ? `${event.capacity}` : "Unlimited", sub: event.capacity ? "attendees" : undefined });
+                  tiles.push({ icon: <IconTicket size={16} color={C.green} />, label: "Registered", value: `${regCount ?? 0}`,                              sub: event.capacity ? `of ${event.capacity}` : undefined });
+                }
                 if (event.sponsor_access_at) tiles.push({ icon: <IconSparkle size={16} color={C.green} />, label: "Sponsor early access", value: new Date(event.sponsor_access_at).toLocaleString("en-PH", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" }), sub: "PHT" });
                 if (event.member_access_at)  tiles.push({ icon: <IconStar size={16} color={C.green} />,    label: "General registration", value: new Date(event.member_access_at).toLocaleString("en-PH", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" }), sub: "PHT" });
                 return tiles.map(({ icon, label, value, sub }) => (
@@ -336,7 +352,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
 
             {/* Availability + perks + button */}
             <div style={{ padding: "22px 24px" }}>
-              {event.capacity && (
+              {SHOW_PUBLIC_CAPACITY && event.capacity && (
                 <div style={{ marginBottom: "18px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
                     <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.muted, letterSpacing: "1.5px", textTransform: "uppercase" }}>
@@ -347,6 +363,11 @@ export default async function EventDetailPage({ params }: { params: { id: string
                   <div style={{ background: C.mist, borderRadius: "999px", height: "8px", overflow: "hidden", position: "relative" }}>
                     <div style={{ height: "100%", width: `${pct}%`, background: isFull ? "#CC3344" : "linear-gradient(90deg, #1A8040, #4ACB6E)", borderRadius: "999px", transition: "width 0.5s", boxShadow: isFull ? "none" : "0 0 12px rgba(74,203,110,0.5)" }} />
                   </div>
+                </div>
+              )}
+              {!SHOW_PUBLIC_CAPACITY && isFull && (
+                <div style={{ marginBottom: "18px", padding: "10px 14px", background: "#FFE8EC", border: "1.5px solid #CC3344", borderRadius: "10px", textAlign: "center" }}>
+                  <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#CC3344", letterSpacing: "1.5px" }}>FULLY BOOKED</span>
                 </div>
               )}
 
