@@ -94,27 +94,37 @@ export async function POST(req: Request) {
                     || "there";
 
           // The session.created webhook payload doesn't include latest_activity
-          // because the session was just created and no request has been logged
-          // yet. Wait a moment and fetch fresh, then pull activity from the API
-          // response (SDK returns camelCase; the webhook body is snake_case, so
-          // we try both). One retry covers the race where activity is still
-          // empty on first fetch.
-          const getActivity = async (attempt = 0): Promise<any> => {
-            try {
-              const s: any = await clerkClient.sessions.getSession(id);
-              const la = s?.latestActivity ?? s?.latest_activity ?? null;
-              if (la && (la.ip_address || la.ipAddress || la.city || la.country || la.browser_name || la.browserName)) return la;
-              if (attempt < 1) {
-                await new Promise(r => setTimeout(r, 1500));
-                return getActivity(attempt + 1);
-              }
-              return la ?? {};
-            } catch {
-              return {};
+          // — Clerk fires the event the instant a session is created, before
+          // any authenticated request has been logged. The SDK's typed
+          // getSession() also frequently omits the activity field. Hit the
+          // raw BAPI endpoint directly and retry with backoff so we give
+          // Clerk's activity pipeline enough time to catch up.
+          const CLERK_SECRET = process.env.CLERK_SECRET_KEY!;
+          const fetchActivity = async (): Promise<any> => {
+            const delays = [0, 2000, 4000, 6000]; // total ≤12s, well under Clerk's 15s webhook window
+            let latest: any = null;
+            for (const wait of delays) {
+              if (wait) await new Promise(r => setTimeout(r, wait));
+              try {
+                const r = await fetch(`https://api.clerk.com/v1/sessions/${id}`, {
+                  headers: { Authorization: `Bearer ${CLERK_SECRET}` },
+                  cache: "no-store",
+                });
+                if (!r.ok) continue;
+                const data: any = await r.json();
+                const la = data?.latest_activity ?? data?.latestActivity ?? null;
+                latest = la;
+                if (la && (la.ip_address || la.city || la.country || la.browser_name || la.device_type)) {
+                  return la;
+                }
+              } catch {}
             }
+            return latest ?? {};
           };
-          const laFresh = await getActivity();
-          const la = { ...(latest_activity ?? {}), ...laFresh };
+
+          const laFresh = await fetchActivity();
+          const la = { ...(latest_activity ?? {}), ...(laFresh ?? {}) };
+          console.log("[session-alert] activity for", user_id, JSON.stringify(la));
 
           const browser  = la.browserName  ?? la.browser_name  ?? null;
           const device   = la.deviceType   ?? la.device_type   ?? null;
