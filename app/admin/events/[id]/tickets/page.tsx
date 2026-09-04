@@ -43,9 +43,16 @@ export default function EventTicketsPage() {
   const [compError, setCompError] = useState("");
   const [compSuccess, setCompSuccess] = useState("");
 
-  // Cancel confirmation
-  const [confirmCancel, setConfirmCancel] = useState<{ id: string; bundle_id: string | null; label: string } | null>(null);
+  // Cancel confirmation + type-to-confirm phrase for bundles
+  const [confirmCancel, setConfirmCancel] = useState<{ id: string; bundle_id: string | null; label: string; buyer: string; bundleSize: number } | null>(null);
+  const [confirmPhrase, setConfirmPhrase] = useState("");
   const [cancelBusy, setCancelBusy] = useState(false);
+
+  // Undo toast state — shown for 30s after a successful cancel with
+  // enough context to restore the exact ticket(s) via PATCH.
+  const [undoToast, setUndoToast] = useState<{ ids: string[]; bundle_id: string | null; label: string; expiresAt: number } | null>(null);
+  const [undoBusy, setUndoBusy] = useState(false);
+  const [undoRemaining, setUndoRemaining] = useState(0);
 
   async function loadTickets() {
     const r = await fetch(`/api/events/tickets?event_id=${event_id}`);
@@ -114,6 +121,10 @@ export default function EventTicketsPage() {
 
   async function forceCancel() {
     if (!confirmCancel) return;
+    // Type-to-confirm gate for bundles — must type the buyer's name exactly
+    if (confirmCancel.bundleSize > 1 && confirmPhrase.trim().toLowerCase() !== (confirmCancel.buyer ?? "").trim().toLowerCase()) {
+      return; // button should be disabled anyway; belt & suspenders
+    }
     setCancelBusy(true);
     try {
       const url = confirmCancel.bundle_id
@@ -121,14 +132,56 @@ export default function EventTicketsPage() {
         : `/api/admin/events/tickets/comp?id=${confirmCancel.id}`;
       const res = await fetch(url, { method: "DELETE" });
       if (!res.ok) throw new Error();
+      const data = await res.json().catch(() => ({}));
       await loadTickets();
+      // Fire the UNDO toast with a 30s window
+      if (data?.undo) {
+        setUndoToast({
+          ids: data.undo.ids ?? [],
+          bundle_id: data.undo.bundle_id ?? null,
+          label: confirmCancel.label,
+          expiresAt: Date.now() + 30_000,
+        });
+        setUndoRemaining(30);
+      }
       setConfirmCancel(null);
+      setConfirmPhrase("");
     } catch {
       alert("Could not cancel. Try again.");
     } finally {
       setCancelBusy(false);
     }
   }
+
+  async function undoCancel() {
+    if (!undoToast) return;
+    setUndoBusy(true);
+    try {
+      const res = await fetch("/api/admin/events/tickets/comp", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: undoToast.ids, bundle_id: undoToast.bundle_id }),
+      });
+      if (!res.ok) throw new Error();
+      await loadTickets();
+      setUndoToast(null);
+    } catch {
+      alert("Undo failed. The ticket stayed cancelled.");
+    } finally {
+      setUndoBusy(false);
+    }
+  }
+
+  // Countdown for the undo toast — ticks every second, disappears at 0
+  useEffect(() => {
+    if (!undoToast) return;
+    const id = setInterval(() => {
+      const left = Math.max(0, Math.ceil((undoToast.expiresAt - Date.now()) / 1000));
+      setUndoRemaining(left);
+      if (left <= 0) { setUndoToast(null); clearInterval(id); }
+    }, 500);
+    return () => clearInterval(id);
+  }, [undoToast]);
 
   const btnPrimary: React.CSSProperties = { fontFamily: R, fontSize: "11px", background: "#1A8040", color: "#FFFFFF", border: "none", borderRadius: "6px", padding: "8px 16px", letterSpacing: "1px", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "6px" };
   const btnGhost: React.CSSProperties = { fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#5A7A60", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "8px 14px", cursor: "pointer", letterSpacing: "1.2px" };
@@ -232,7 +285,7 @@ export default function EventTicketsPage() {
                   </span>
                   {canCancel && (
                     <button
-                      onClick={() => setConfirmCancel({ id: ticket.id, bundle_id: bundleSize > 1 ? ticket.bundle_id : null, label: `${ticket.profiles?.display_name ?? "member"} · ${ticket.event_tiers?.name ?? "ticket"}${bundleSize > 1 ? ` (bundle of ${bundleSize})` : ""}` })}
+                      onClick={() => { setConfirmPhrase(""); setConfirmCancel({ id: ticket.id, bundle_id: bundleSize > 1 ? ticket.bundle_id : null, label: `${ticket.profiles?.display_name ?? "member"} · ${ticket.event_tiers?.name ?? "ticket"}${bundleSize > 1 ? ` (bundle of ${bundleSize})` : ""}`, buyer: ticket.profiles?.display_name ?? "member", bundleSize }); }}
                       title="Cancel this ticket"
                       style={{ background: "transparent", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 8px", cursor: "pointer", color: "#CC3344" }}>
                       <IconTrash size={12} color="#CC3344" />
@@ -324,22 +377,60 @@ export default function EventTicketsPage() {
       )}
 
       {/* Force-cancel confirmation */}
-      {confirmCancel && (
-        <div onClick={() => !cancelBusy && setConfirmCancel(null)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,42,30,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "16px", padding: "22px", maxWidth: "420px", width: "100%", display: "flex", flexDirection: "column", gap: "14px" }}>
-            <h2 style={{ fontFamily: R, fontSize: "1.1rem", color: "#1B3A2D", letterSpacing: "2px", margin: 0 }}>CANCEL TICKET?</h2>
-            <p style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60", margin: 0, lineHeight: 1.6 }}>
-              {confirmCancel.label}
-              {confirmCancel.bundle_id && " — all tickets in the bundle will be cancelled together."}
-            </p>
-            <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
-              <button onClick={() => setConfirmCancel(null)} style={btnGhost}>KEEP</button>
-              <button onClick={forceCancel} disabled={cancelBusy}
-                style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: "#CC3344", border: "none", borderRadius: "8px", padding: "8px 14px", cursor: cancelBusy ? "wait" : "pointer", letterSpacing: "1.2px" }}>
-                {cancelBusy ? "CANCELLING…" : "YES, CANCEL"}
-              </button>
+      {confirmCancel && (() => {
+        const isBundle = confirmCancel.bundleSize > 1;
+        const phraseOK = !isBundle || confirmPhrase.trim().toLowerCase() === (confirmCancel.buyer ?? "").trim().toLowerCase();
+        return (
+          <div onClick={() => !cancelBusy && setConfirmCancel(null)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,42,30,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+            <div onClick={e => e.stopPropagation()} style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "16px", padding: "22px", maxWidth: "460px", width: "100%", display: "flex", flexDirection: "column", gap: "14px" }}>
+              <h2 style={{ fontFamily: R, fontSize: "1.1rem", color: "#1B3A2D", letterSpacing: "2px", margin: 0 }}>
+                CANCEL {isBundle ? `${confirmCancel.bundleSize} TICKETS` : "TICKET"}?
+              </h2>
+              <p style={{ fontFamily: B, fontSize: "13px", color: "#5A7A60", margin: 0, lineHeight: 1.6 }}>
+                {confirmCancel.label}
+                {isBundle && " — all tickets in the bundle will be cancelled together."}
+              </p>
+              <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: 0, lineHeight: 1.5 }}>
+                The buyer will be emailed. You&apos;ll have a 30-second UNDO window after this.
+              </p>
+              {isBundle && (
+                <div>
+                  <label style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#CC3344", letterSpacing: "1.5px", display: "block", marginBottom: "6px" }}>
+                    Type the buyer&apos;s name to confirm: <strong style={{ color: "#1B3A2D" }}>{confirmCancel.buyer}</strong>
+                  </label>
+                  <input value={confirmPhrase} onChange={e => setConfirmPhrase(e.target.value)}
+                    placeholder="Type the name exactly"
+                    style={{ width: "100%", background: "#F2F7F2", border: `1.5px solid ${phraseOK ? "#1A8040" : "#DDE8DD"}`, borderRadius: "8px", padding: "9px 12px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none", boxSizing: "border-box" }}
+                    autoFocus />
+                </div>
+              )}
+              <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+                <button onClick={() => { setConfirmCancel(null); setConfirmPhrase(""); }} style={btnGhost}>KEEP</button>
+                <button onClick={forceCancel} disabled={cancelBusy || !phraseOK}
+                  style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: (cancelBusy || !phraseOK) ? "#B7A0A0" : "#CC3344", border: "none", borderRadius: "8px", padding: "8px 14px", cursor: (cancelBusy || !phraseOK) ? "not-allowed" : "pointer", letterSpacing: "1.2px" }}>
+                  {cancelBusy ? "CANCELLING…" : `YES, CANCEL ${isBundle ? confirmCancel.bundleSize + " TICKETS" : ""}`}
+                </button>
+              </div>
             </div>
           </div>
+        );
+      })()}
+
+      {/* UNDO toast — 30s window after cancel */}
+      {undoToast && (
+        <div style={{ position: "fixed", bottom: "24px", left: "50%", transform: "translateX(-50%)", zIndex: 1200, background: "#1B3A2D", color: "#ffffff", borderRadius: "12px", padding: "14px 18px", display: "flex", alignItems: "center", gap: "14px", boxShadow: "0 10px 30px rgba(0,0,0,0.25)", maxWidth: "520px" }}>
+          <div style={{ fontFamily: B, fontSize: "13px", flex: 1, minWidth: 0 }}>
+            <strong>Cancelled.</strong>{" "}
+            <span style={{ color: "rgba(255,255,255,0.75)" }}>{undoToast.label}</span>
+          </div>
+          <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.6)", letterSpacing: "1px" }}>{undoRemaining}s</span>
+          <button onClick={undoCancel} disabled={undoBusy}
+            style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, background: "#ffffff", color: "#1B3A2D", border: "none", borderRadius: "8px", padding: "8px 14px", cursor: undoBusy ? "wait" : "pointer", letterSpacing: "1.2px" }}>
+            {undoBusy ? "RESTORING…" : "UNDO"}
+          </button>
+          <button onClick={() => setUndoToast(null)} style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}>
+            <IconX size={14} color="rgba(255,255,255,0.7)" />
+          </button>
         </div>
       )}
     </div>
