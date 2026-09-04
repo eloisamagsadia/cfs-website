@@ -83,7 +83,12 @@ export default function EventTransactionsPage() {
   if (!data) return <div style={{ padding: 32, textAlign: "center", fontFamily: B, color: "#5A7A60" }}>Failed to load transactions.</div>;
 
   const s = data.summary;
-  const conversion = s.total > 0 ? Math.round((s.paid / (s.paid + s.pending + s.abandoned + s.failed)) * 100) : 0;
+  // Conversion = paid / (paid + pending + abandoned + failed). Comp
+  // tickets aren't payment attempts, so they're excluded. When the
+  // denominator is 0 (all-comp events, or no attempts yet), show "—"
+  // instead of NaN%.
+  const attempts = s.paid + s.pending + s.abandoned + s.failed;
+  const conversionLabel = attempts > 0 ? `${Math.round((s.paid / attempts) * 100)}%` : "—";
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -124,7 +129,7 @@ export default function EventTransactionsPage() {
         <SummaryCard label="REVENUE"   value={`₱${s.revenue.toLocaleString("en-PH", { minimumFractionDigits: 2 })}`} color="#1A8040" small />
       </div>
       <div style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 12, padding: "10px 14px", fontFamily: B, fontSize: 12, color: "#5A7A60", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-        <span>Conversion: <strong style={{ color: "#1B3A2D" }}>{conversion}%</strong> of attempts became paid tickets.</span>
+        <span>Conversion: <strong style={{ color: "#1B3A2D" }}>{conversionLabel}</strong>{attempts > 0 ? " of attempts became paid tickets." : " — no real payment attempts yet."}</span>
         <span>Abandoned = pending for &gt; 15 min without webhook.</span>
       </div>
 
