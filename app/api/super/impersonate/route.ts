@@ -57,23 +57,12 @@ export async function POST(req: NextRequest) {
     });
   } catch {}
 
-  // Return an ABSOLUTE URL so ops can copy-paste it into an incognito
-  // window. Same-tab (or same-browser new tab) will just keep the ops
-  // user's own session because Clerk cookies are shared per-origin —
-  // the ticket is ignored when a session already exists.
-  //
-  // Defensive normalisation: strip whitespace / trailing slashes /
-  // stray percent-encoded characters that could sneak in from an
-  // env var like `http://localhost:3000/\n` or `…3000%20`.
-  const rawOrigin = (
-    process.env.NEXT_PUBLIC_SITE_URL
-    ?? req.headers.get("origin")
-    ?? `https://${req.headers.get("host") ?? "coletfs.com"}`
-  ).trim();
-  const origin = rawOrigin
-    .replace(/\s+/g, "")     // any embedded whitespace
-    .replace(/%[0-9a-fA-F]{2}$/, "") // trailing percent-encoded byte
-    .replace(/\/+$/, "");    // trailing slashes
-  const signInUrl = `${origin}/sign-in?__clerk_ticket=${token.token}`;
-  return NextResponse.json({ sign_in_url: signInUrl, expires_in_seconds: 300, target_label: targetLabel });
+  // Return the token — the client builds the full URL using
+  // window.location.origin (guaranteed clean, browser-parsed).
+  // Env-var derived origins had a habit of carrying stray %/\n chars.
+  return NextResponse.json({
+    sign_in_token:      token.token,
+    expires_in_seconds: 300,
+    target_label:       targetLabel,
+  });
 }

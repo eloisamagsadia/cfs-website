@@ -63,10 +63,10 @@ export default function ImpersonatePage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Impersonation failed");
-      // Show the URL for copy-paste into an incognito window. Opening in a
-      // same-browser new tab wouldn't work — Clerk session cookies are shared
-      // per-origin, so the target session gets rejected in favor of ours.
-      setIssuedUrl(data.sign_in_url);
+      // Build the URL client-side from window.location.origin so it can't
+      // pick up stray characters from env vars.
+      const fullUrl = `${window.location.origin}/sign-in?__clerk_ticket=${data.sign_in_token}`;
+      setIssuedUrl(fullUrl);
       setIssuedFor(data.target_label ?? confirmTarget.display_name ?? confirmTarget.id);
       setIssuedExpiresAt(Date.now() + ((data.expires_in_seconds ?? 300) * 1000));
       setConfirmTarget(null);
