@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import QRCode from "react-qr-code";
+import { IconPrinter } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -14,11 +15,17 @@ const ACCENTS = [
   { label: "SUNRISE", bg: "#B78A1F", ink: "#FFFDF4", chip: "#FFFDF4" },
 ];
 
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-PH", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "Asia/Manila" });
+function fmtDate(iso: string | null | undefined) {
+  if (!iso) return "TBA";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "TBA";
+  return d.toLocaleDateString("en-PH", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "Asia/Manila" });
 }
-function fmtTime(iso: string) {
-  return new Date(iso).toLocaleTimeString("en-PH", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Asia/Manila" });
+function fmtTime(iso: string | null | undefined) {
+  if (!iso) return "TBA";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "TBA";
+  return d.toLocaleTimeString("en-PH", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Asia/Manila" });
 }
 function siteOrigin() {
   if (typeof window === "undefined") return "https://coletfansuporta.com";
@@ -38,7 +45,7 @@ export default function EventPosterPage() {
     if (!id) return;
     fetch(`/api/admin/events?id=${id}`)
       .then(r => r.json())
-      .then(d => { if (d.error) setError(d.error); else setEvent(d.event ?? d); })
+      .then(d => { if (d.error || !d.event) setError(d.error ?? "Event not found"); else setEvent(d.event); })
       .catch(e => setError(e.message));
   }, [id]);
 
@@ -79,8 +86,8 @@ export default function EventPosterPage() {
             <input type="checkbox" checked={showPrice} onChange={e => setShowPrice(e.target.checked)} /> Price
           </label>
           <button onClick={() => window.print()}
-            style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: 10, padding: "10px 18px", cursor: "pointer", letterSpacing: 1.3 }}>
-            🖨 PRINT / SAVE PDF
+            style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: 10, padding: "10px 18px", cursor: "pointer", letterSpacing: 1.3, display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <IconPrinter size={12} color="#ffffff" /> PRINT / SAVE PDF
           </button>
         </div>
       </div>

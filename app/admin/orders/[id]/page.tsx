@@ -3,6 +3,7 @@ import { SkDetailLoading } from "@/components/shared/Skeleton";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { IconPrinter } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -109,8 +110,8 @@ export default function AdminOrderDetailPage() {
         </div>
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
           <Link href={`/admin/orders/${id}/packing-slip`} target="_blank" rel="noreferrer"
-            style={{ fontFamily: R, fontSize: "11px", color: "#7A5A0F", background: "#FFF3D6", border: "1.5px solid #F0D889", borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1.2px", textDecoration: "none" }}>
-            🖨 PACKING SLIP
+            style={{ fontFamily: R, fontSize: "11px", color: "#7A5A0F", background: "#FFF3D6", border: "1.5px solid #F0D889", borderRadius: "6px", padding: "6px 14px", cursor: "pointer", letterSpacing: "1.2px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <IconPrinter size={11} color="#7A5A0F" /> PACKING SLIP
           </Link>
           <button onClick={() => router.back()} style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", background: "none", border: "none", cursor: "pointer" }}>← Back</button>
         </div>

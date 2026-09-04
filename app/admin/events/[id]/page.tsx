@@ -5,7 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import Image from "next/image";
 import {
   IconCalendar, IconPin, IconUsers, IconTag, IconTicket, IconEdit,
-  IconEye, IconEyeOff, IconCheck, IconDownload, IconLock,
+  IconEye, IconEyeOff, IconCheck, IconDownload, IconLock, IconPrinter,
 } from "@/components/shared/Icons";
 import EventVisibilityToggle from "@/components/admin/EventVisibilityToggle";
 import EventRegistrationToggle from "@/components/admin/EventRegistrationToggle";
@@ -160,7 +160,7 @@ export default async function AdminEventDetailPage({ params }: { params: { id: s
             <Link href={`/admin/events/${event.id}/poster`} target="_blank" rel="noreferrer"
               className="aed-action"
               style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#7A5A0F", background: "#FFF3D6", border: "1.5px solid #F0D889", borderRadius: "10px", padding: "9px 14px", letterSpacing: "1.2px" }}>
-              🖨 POSTER
+              <IconPrinter size={12} color="#7A5A0F" /> POSTER
             </Link>
             <Link href={`/admin/events/${event.id}/tiers`}
               className="aed-action"

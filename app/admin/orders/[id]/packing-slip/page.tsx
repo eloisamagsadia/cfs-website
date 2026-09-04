@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { IconPrinter } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -52,8 +53,8 @@ export default function PackingSlipPage() {
       <div className="no-print" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", background: "#F7FAF5", borderBottom: "1px solid #E4EDE4", position: "sticky", top: 0, zIndex: 10 }}>
         <Link href={`/admin/orders/${id}`} style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#5A7A60", textDecoration: "none", letterSpacing: 1.2 }}>← BACK TO ORDER</Link>
         <button onClick={() => window.print()}
-          style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: 10, padding: "10px 18px", cursor: "pointer", letterSpacing: 1.3 }}>
-          🖨  PRINT PACKING SLIP
+          style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: 10, padding: "10px 18px", cursor: "pointer", letterSpacing: 1.3, display: "inline-flex", alignItems: "center", gap: 6 }}>
+          <IconPrinter size={12} color="#ffffff" /> PRINT PACKING SLIP
         </button>
       </div>
 

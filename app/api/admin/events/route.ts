@@ -14,7 +14,18 @@ async function requireAdmin() {
 export async function GET(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const admin = createAdminClient();
+
+  // ?id=<uuid> → single-event lookup for detail/poster/edit clients
+  const id = new URL(req.url).searchParams.get("id");
+  if (id) {
+    const { data, error } = await (admin.from("events") as any).select("*").eq("id", id).maybeSingle();
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!data)  return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    return NextResponse.json({ event: data });
+  }
+
   const { data, error } = await (admin.from("events") as any).select("*").order("date", { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ events: data ?? [] });

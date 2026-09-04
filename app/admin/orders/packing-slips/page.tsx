@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { IconPrinter } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -161,8 +162,8 @@ export default function BatchPackingSlipsPage() {
           {loading ? "LOADING…" : `${orders.length} of ${ids.length} SLIP${ids.length === 1 ? "" : "S"}`}
         </div>
         <button onClick={() => window.print()} disabled={loading || orders.length === 0}
-          style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: 10, padding: "10px 18px", cursor: loading ? "wait" : "pointer", letterSpacing: 1.3 }}>
-          🖨 PRINT ALL
+          style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: 10, padding: "10px 18px", cursor: loading ? "wait" : "pointer", letterSpacing: 1.3, display: "inline-flex", alignItems: "center", gap: 6 }}>
+          <IconPrinter size={12} color="#ffffff" /> PRINT ALL
         </button>
       </div>
 

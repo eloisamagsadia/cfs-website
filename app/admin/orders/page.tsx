@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AdminActionButton from "@/components/shared/AdminActionButton";
 import StatBar from "@/components/shared/StatBar";
+import { IconPrinter } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -138,8 +139,8 @@ export default function AdminOrdersPage() {
         <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", background: "#FFF3D6", border: "1.5px solid #F0D889", borderRadius: 12, padding: "10px 14px" }}>
           <span style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#7A5A0F", letterSpacing: 1.3 }}>{selected.size} SELECTED</span>
           <button onClick={openBatchSlips} disabled={bulkBusy}
-            style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#7A5A0F", background: "#ffffff", border: "1.5px solid #F0D889", borderRadius: 8, padding: "6px 12px", cursor: "pointer", letterSpacing: 1.2 }}>
-            🖨 PRINT SLIPS
+            style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#7A5A0F", background: "#ffffff", border: "1.5px solid #F0D889", borderRadius: 8, padding: "6px 12px", cursor: "pointer", letterSpacing: 1.2, display: "inline-flex", alignItems: "center", gap: 5 }}>
+            <IconPrinter size={10} color="#7A5A0F" /> PRINT SLIPS
           </button>
           <button onClick={() => bulk({ order_status: "processing" }, "Mark PROCESSING")} disabled={bulkBusy}
             style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#156530", background: "#ffffff", border: "1.5px solid #B7D8B7", borderRadius: 8, padding: "6px 12px", cursor: "pointer", letterSpacing: 1.2 }}>
