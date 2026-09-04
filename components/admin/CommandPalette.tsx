@@ -63,7 +63,7 @@ const SUPER_NAV_LINKS: { title: string; href: string; keywords?: string }[] = [
   { title: "Finance",             href: "/super/finance",            keywords: "revenue money" },
   { title: "Feature Flags",       href: "/super/feature-flags",      keywords: "toggles switches" },
   { title: "Impersonate",         href: "/super/impersonate",        keywords: "sign in as user" },
-  { title: "Pending Tickets",     href: "/super/tickets-cleanup",    keywords: "abandoned cleanup" },
+  { title: "Pending Tickets",     href: "/admin/tickets-cleanup",    keywords: "abandoned cleanup" },
   { title: "Site Settings",       href: "/super/settings",           keywords: "maintenance banner" },
   { title: "Danger Zone",         href: "/super/danger",             keywords: "destructive" },
 ];

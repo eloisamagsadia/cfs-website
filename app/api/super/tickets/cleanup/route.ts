@@ -3,16 +3,20 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
 
-async function requireSuper() {
+// Pending-tickets cleanup is a routine ops task (freeing capacity signals
+// held by abandoned checkouts), not a sensitive super-only surface, so
+// admins can run it too. Kept at /api/super for URL stability with the
+// pg_cron job and any bookmarks.
+async function requireStaff() {
   const { userId, sessionClaims } = auth();
   if (!userId) return null;
   const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== "super_admin") return null;
+  if (role !== "admin" && role !== "super_admin") return null;
   return userId;
 }
 
 export async function GET() {
-  const userId = await requireSuper();
+  const userId = await requireStaff();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const admin = createAdminClient();
@@ -39,7 +43,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const userId = await requireSuper();
+  const userId = await requireStaff();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json().catch(() => ({}));

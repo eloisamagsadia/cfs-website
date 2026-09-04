@@ -85,7 +85,7 @@ export default async function LaunchDashboardPage() {
       <div>
         <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "1.5px", marginBottom: "10px" }}>NEEDS ATTENTION</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "10px" }}>
-          <ActionCard href="/super/tickets-cleanup" title="Pending tickets" count={(pendingCount as any).count ?? 0} note="Abandoned checkouts. Auto-cleanup runs hourly; use this to force a sweep." />
+          <ActionCard href="/admin/tickets-cleanup" title="Pending tickets" count={(pendingCount as any).count ?? 0} note="Abandoned checkouts. Auto-cleanup runs hourly; use this to force a sweep." />
           <ActionCard href="/admin/refunds" title="Pending refunds" count={(pendingRefunds as any).count ?? 0} note="Buyer-initiated or admin-created refund requests waiting for PayMongo action." />
           {viewerIsOwner && (
             <ActionCard href="/super/audit" title="Full activity log" count={null} note="Every login, purchase, comment, admin action — filtered and searchable." />

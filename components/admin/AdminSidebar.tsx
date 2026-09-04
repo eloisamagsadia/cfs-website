@@ -77,6 +77,7 @@ const sections = [
     label: "TOOLS",
     items: [
       { label: "Check-In",      href: "/admin/check-in",               icon: icons.checkin },
+      { label: "Pending Tickets", href: "/admin/tickets-cleanup",      icon: icons.checkin },
       { label: "Notifications", href: "/admin/notifications",          icon: icons.notifs },
       { label: "Support",       href: "/admin/support",                icon: icons.support },
       { label: "Contact",       href: "/admin/contact",                icon: icons.emails },

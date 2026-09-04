@@ -81,7 +81,7 @@ const sections: { label: string; color: string; items: { label: string; href: st
     color: "#156530",
     items: [
       { label: "Audit Log",       href: "/super/audit",           icon: icons.audit },
-      { label: "Pending Tickets", href: "/super/tickets-cleanup", icon: icons.cleanup },
+      { label: "Pending Tickets", href: "/admin/tickets-cleanup", icon: icons.cleanup },
       { label: "Backup",          href: "/super/backup",          icon: icons.backup },
       { label: "Danger Zone",     href: "/super/danger",          icon: icons.danger },
     ],
