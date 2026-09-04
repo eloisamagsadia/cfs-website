@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { filterHiddenFromList } from "@/lib/hidden-admins";
 
 export async function GET() {
   const { userId, sessionClaims } = auth();
@@ -15,5 +16,7 @@ export async function GET() {
     .select("id, display_name, avatar_url, role, created_at, is_banned, image_post_count, email")
     .order("created_at", { ascending: false });
 
-  return NextResponse.json({ members: members ?? [] });
+  // Hide owner accounts from other admins/super_admins.
+  const filtered = filterHiddenFromList((members ?? []) as any[], userId);
+  return NextResponse.json({ members: filtered });
 }

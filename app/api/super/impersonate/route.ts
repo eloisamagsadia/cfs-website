@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isOwner } from "@/lib/hidden-admins";
 
-async function requireSuper() {
-  const { userId, sessionClaims } = auth();
-  if (!userId) return null;
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== "super_admin") return null;
+// Impersonation is owner-only: signing in as another user is nuclear
+// enough that we don't want CFS shared super_admin to be able to do it
+// without the site owner's explicit involvement.
+async function requireOwner() {
+  const { userId } = auth();
+  if (!userId || !isOwner(userId)) return null;
   return userId;
 }
 
 export async function POST(req: NextRequest) {
-  const actorId = await requireSuper();
+  const actorId = await requireOwner();
   if (!actorId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { target_user_id, reason } = await req.json().catch(() => ({}));

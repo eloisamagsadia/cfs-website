@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSiteSettings } from "@/lib/site-settings";
+import { isOwner, isHiddenAdmin } from "@/lib/hidden-admins";
 import MaintenanceToggle from "./MaintenanceToggle";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +22,8 @@ const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 //
 // Everything links back to the full detail page so you can drill in.
 export default async function LaunchDashboardPage() {
+  const { userId } = auth();
+  const viewerIsOwner = isOwner(userId);
   const db = createAdminClient();
   const settings = await getSiteSettings();
   const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -47,6 +51,12 @@ export default async function LaunchDashboardPage() {
   const donationRevenue = (donationsToday.data ?? []).reduce((s: number, r: any) => s + Number(r?.donation_amount ?? r?.amount ?? 0), 0);
   const maintenanceOn = !!settings?.maintenance_mode;
   const announcementOn = !!settings?.announcement_active && !!settings?.announcement_text?.trim();
+
+  // Non-owners never see hidden-admin actions in the feed.
+  const activityRows: any[] = ((recentActivity as any).data ?? []);
+  const visibleActivity = viewerIsOwner
+    ? activityRows
+    : activityRows.filter(r => !isHiddenAdmin(r.user_id));
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -77,7 +87,9 @@ export default async function LaunchDashboardPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "10px" }}>
           <ActionCard href="/super/tickets-cleanup" title="Pending tickets" count={(pendingCount as any).count ?? 0} note="Abandoned checkouts. Auto-cleanup runs hourly; use this to force a sweep." />
           <ActionCard href="/admin/refunds" title="Pending refunds" count={(pendingRefunds as any).count ?? 0} note="Buyer-initiated or admin-created refund requests waiting for PayMongo action." />
-          <ActionCard href="/super/audit" title="Full activity log" count={null} note="Every login, purchase, comment, admin action — filtered and searchable." />
+          {viewerIsOwner && (
+            <ActionCard href="/super/audit" title="Full activity log" count={null} note="Every login, purchase, comment, admin action — filtered and searchable." />
+          )}
           <ActionCard href="/super/finance" title="Financials" count={null} note="Combined revenue from tickets, donations, orders with date range." />
         </div>
       </div>
@@ -93,12 +105,14 @@ export default async function LaunchDashboardPage() {
       <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "14px", overflow: "hidden" }}>
         <div style={{ padding: "12px 18px", background: "#F7FAF5", borderBottom: "1px solid #E4EDE4", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "1.5px" }}>LATEST ACTIVITY · LAST 15</div>
-          <Link href="/super/audit" style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#1A8040", textDecoration: "none", letterSpacing: "1.2px" }}>OPEN FULL LOG →</Link>
+          {viewerIsOwner && (
+            <Link href="/super/audit" style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#1A8040", textDecoration: "none", letterSpacing: "1.2px" }}>OPEN FULL LOG →</Link>
+          )}
         </div>
-        {((recentActivity as any).data ?? []).length === 0 ? (
+        {visibleActivity.length === 0 ? (
           <div style={{ padding: "32px", textAlign: "center", fontFamily: B, fontSize: "12px", color: "#7A8E7A" }}>Nothing yet.</div>
         ) : (
-          ((recentActivity as any).data as any[]).map((row, i) => (
+          visibleActivity.map((row, i) => (
             <div key={row.id} style={{ padding: "10px 18px", borderTop: i === 0 ? "none" : "1px solid #F0F5F0", display: "flex", gap: "10px", alignItems: "center", background: i % 2 === 0 ? "#ffffff" : "#FBFDFB" }}>
               <div style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#E8F0E4", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 {row.profiles?.avatar_url

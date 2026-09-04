@@ -4,6 +4,7 @@ import SuperSidebar from "@/components/super/SuperSidebar";
 import MobileSuperNav from "@/components/super/MobileSuperNav";
 import Navbar from "@/components/shared/Navbar";
 import CommandPalette from "@/components/admin/CommandPalette";
+import { isOwner } from "@/lib/hidden-admins";
 
 export default async function SuperLayout({ children }: { children: React.ReactNode }) {
   const { userId, sessionClaims } = auth();
@@ -11,13 +12,15 @@ export default async function SuperLayout({ children }: { children: React.ReactN
 
   if (!userId || role !== "super_admin") redirect("/members");
 
+  const owner = isOwner(userId);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#F7FAF5" }}>
       <Navbar />
       {/* Gold accent bar */}
       <div style={{ height: "3px", background: "linear-gradient(90deg, #156530, #1A8040, #156530)" }} />
       <div style={{ flex: 1, maxWidth: "1280px", margin: "0 auto", width: "100%", padding: "32px 24px 90px", display: "flex", gap: "28px" }}>
-        <div className="desktop-sidebar"><SuperSidebar /></div>
+        <div className="desktop-sidebar"><SuperSidebar isOwner={owner} /></div>
         <main style={{ flex: 1, minWidth: 0 }}>{children}</main>
       </div>
       <div className="mobile-only"><MobileSuperNav /></div>

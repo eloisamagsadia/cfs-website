@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { filterHiddenFromList } from "@/lib/hidden-admins";
 
 const db = () => createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,5 +19,6 @@ export async function GET(req: NextRequest) {
     .order("display_name", { ascending: true });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ members: data ?? [] });
+  const filtered = filterHiddenFromList((data ?? []) as any[], userId);
+  return NextResponse.json({ members: filtered });
 }

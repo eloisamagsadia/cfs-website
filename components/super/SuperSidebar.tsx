@@ -33,7 +33,13 @@ const icons = {
   member:     svg(<><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>),
 };
 
-const sections = [
+// Sidebar sections. Items flagged `owner` are only rendered when the
+// current viewer is the site owner (hidden super admin). Other super
+// admins never see them in the sidebar at all — the corresponding
+// endpoints/pages also gate on owner, so no way to reach them by URL.
+type SectionItem = { label: string; href: string; icon: React.ReactNode; exact?: boolean; owner?: boolean };
+
+const sections: { label: string; items: SectionItem[] }[] = [
   {
     label: "COMMAND",
     items: [
@@ -48,7 +54,7 @@ const sections = [
     items: [
       { label: "Role Management", href: "/super/roles",         icon: icons.roles },
       { label: "Bulk Members",    href: "/super/bulk-members",  icon: icons.bulk },
-      { label: "Sign in as…",     href: "/super/impersonate",   icon: icons.impersonate },
+      { label: "Sign in as…",     href: "/super/impersonate",   icon: icons.impersonate, owner: true },
       { label: "Badges",          href: "/super/badges",        icon: icons.badges },
     ]
   },
@@ -78,9 +84,9 @@ const sections = [
   {
     label: "SYSTEM",
     items: [
-      { label: "Audit Log",       href: "/super/audit",         icon: icons.audit },
+      { label: "Audit Log",       href: "/super/audit",         icon: icons.audit, owner: true },
       { label: "Pending Tickets", href: "/super/tickets-cleanup", icon: icons.cleanup },
-      { label: "Backup",          href: "/super/backup",        icon: icons.backup },
+      { label: "Backup",          href: "/super/backup",        icon: icons.backup, owner: true },
       { label: "Danger Zone",     href: "/super/danger",        icon: icons.danger },
     ]
   },
@@ -101,7 +107,13 @@ function NavItem({ label, href, icon, exact }: { label: string; href: string; ic
   );
 }
 
-export default function SuperSidebar() {
+export default function SuperSidebar({ isOwner = false }: { isOwner?: boolean }) {
+  // Prune owner-only items when the viewer isn't the owner, and drop
+  // whole sections that end up empty.
+  const visibleSections = sections
+    .map(s => ({ ...s, items: s.items.filter(i => !i.owner || isOwner) }))
+    .filter(s => s.items.length > 0);
+
   return (
     <aside style={{ width: "210px", flexShrink: 0 }}>
       {/* Header */}
@@ -114,7 +126,7 @@ export default function SuperSidebar() {
       </div>
 
       <nav style={{ position: "sticky", top: "80px", display: "flex", flexDirection: "column", gap: "20px", maxHeight: "calc(100vh - 100px)", overflowY: "auto", paddingRight: "4px" }}>
-        {sections.map(section => (
+        {visibleSections.map(section => (
           <div key={section.label}>
             <div style={{ fontFamily: R, fontSize: "9px", color: "#9AA870", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>{section.label}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>

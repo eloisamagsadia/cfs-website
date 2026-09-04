@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
+import { isOwner } from "@/lib/hidden-admins";
 
 // Run on Node runtime so we can stream a large JSON safely.
 export const runtime = "nodejs";
@@ -9,11 +10,11 @@ export const runtime = "nodejs";
 // get chopped. Bumping to the max in case the DB grows.
 export const maxDuration = 300;
 
-async function requireSuper() {
-  const { userId, sessionClaims } = auth();
-  if (!userId) return null;
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== "super_admin") return null;
+// Backup export is owner-only — full DB snapshots include member PII,
+// audit logs, payment refs. Only the site owner should be able to pull it.
+async function requireOwner() {
+  const { userId } = auth();
+  if (!userId || !isOwner(userId)) return null;
   return userId;
 }
 
@@ -50,7 +51,7 @@ async function fetchAll(admin: any, table: string): Promise<any[]> {
 }
 
 export async function POST(_req: NextRequest) {
-  const userId = await requireSuper();
+  const userId = await requireOwner();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const admin = createAdminClient();

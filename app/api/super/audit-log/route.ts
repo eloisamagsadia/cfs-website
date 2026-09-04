@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isOwner } from "@/lib/hidden-admins";
 
 const db = () => createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// Audit log is owner-only. The shared super_admin account cannot see
+// site-wide activity — that stays with the site owner alone.
 export async function GET(req: NextRequest) {
-  const { userId, sessionClaims } = auth();
-  const role = (sessionClaims?.metadata as any)?.role;
-  if (!userId || role !== "super_admin") {
-    return NextResponse.json({ error: "Super admin only" }, { status: 403 });
+  const { userId } = auth();
+  if (!userId || !isOwner(userId)) {
+    return NextResponse.json({ error: "Owner only" }, { status: 403 });
   }
 
   const { data: logs } = await (db() as any)
