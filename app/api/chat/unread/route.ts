@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getEffectiveUserId } from "@/lib/effective-user";
 
 const db = () => createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -10,11 +11,12 @@ const db = () => createAdminClient(
 export async function GET(req: NextRequest) {
   const { userId } = auth();
   if (!userId) return NextResponse.json({ count: 0 });
+  const effective = getEffectiveUserId() ?? userId;
 
   const { data: memberOf } = await (db() as any)
     .from("chat_members")
     .select("room_id, last_read_at")
-    .eq("user_id", userId);
+    .eq("user_id", effective);
 
   if (!memberOf?.length) return NextResponse.json({ count: 0 });
 
@@ -25,7 +27,7 @@ export async function GET(req: NextRequest) {
       .select("*", { count: "exact", head: true })
       .eq("room_id", m.room_id)
       .gt("created_at", m.last_read_at ?? "1970-01-01")
-      .neq("sender_id", userId);
+      .neq("sender_id", effective);
     if ((count ?? 0) > 0) unreadRooms++;
   }));
 

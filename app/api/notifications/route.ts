@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getEffectiveUserId } from "@/lib/effective-user";
 
 export async function GET(req: NextRequest) {
   const { userId } = auth();
@@ -10,7 +11,7 @@ export async function GET(req: NextRequest) {
   const unreadOnly = searchParams.get("unread") === "true";
   let query = (db.from("notifications") as any)
     .select("*")
-    .eq("user_id", userId)
+    .eq("user_id", getEffectiveUserId() ?? userId)
     .order("created_at", { ascending: false })
     .limit(20);
   if (unreadOnly) query = query.eq("is_read", false);
@@ -24,7 +25,7 @@ export async function PATCH(req: NextRequest) {
   const { id, all } = await req.json();
   const db = createAdminClient();
   if (all) {
-    await (db.from("notifications") as any).update({ is_read: true }).eq("user_id", userId).eq("is_read", false);
+    await (db.from("notifications") as any).update({ is_read: true }).eq("user_id", getEffectiveUserId() ?? userId).eq("is_read", false);
   } else if (id) {
     await (db.from("notifications") as any).update({ is_read: true }).eq("id", id);
   }
@@ -37,7 +38,7 @@ export async function DELETE(req: NextRequest) {
   const { id, clearRead } = await req.json();
   const db = createAdminClient();
   if (clearRead) {
-    await (db.from("notifications") as any).delete().eq("user_id", userId).eq("is_read", true);
+    await (db.from("notifications") as any).delete().eq("user_id", getEffectiveUserId() ?? userId).eq("is_read", true);
   } else if (id) {
     await (db.from("notifications") as any).delete().eq("id", id);
   }

@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getEffectiveUserId } from "@/lib/effective-user";
 import { redirect } from "next/navigation";
 import { BADGE_ICONS, BADGE_COLORS } from "@/lib/badges";
 import type { Metadata } from "next";
@@ -11,8 +12,9 @@ const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
 
 export default async function BadgesPage() {
-  const { userId } = auth();
-  if (!userId) redirect("/sign-in");
+  const realId = auth().userId;
+  if (!realId) redirect("/sign-in");
+  const userId = getEffectiveUserId() ?? realId;
 
   const supabase = createAdminClient();
   const [{ data: allBadges }, { data: earned }] = await Promise.all([

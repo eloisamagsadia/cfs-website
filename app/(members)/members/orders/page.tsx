@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getEffectiveUserId } from "@/lib/effective-user";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { IconShoppingBag } from "@/components/shared/Icons";
@@ -14,8 +15,9 @@ const orderColors:Record<string,string>={processing:"#1A8040",shipped:"#1A8040",
 
 export default async function MyOrdersPage() {
   const supabase = createAdminClient();
-  const { userId } = auth();
-  if (!userId) redirect("/sign-in");
+  const realId = auth().userId;
+  if (!realId) redirect("/sign-in");
+  const userId = getEffectiveUserId() ?? realId;
 
   const { data: orders } = await supabase
     .from("orders").select("*")

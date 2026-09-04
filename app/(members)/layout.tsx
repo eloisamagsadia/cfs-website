@@ -3,6 +3,7 @@ import MembersSidebar from "@/components/members/Sidebar";
 import ToastNotifications from "@/components/shared/ToastNotifications";
 import MobileNav from "@/components/members/MobileNav";
 import AnnouncementBanner from "@/components/shared/AnnouncementBanner";
+import ImpersonationBanner from "@/components/shared/ImpersonationBanner";
 import { loadActiveAnnouncement } from "@/lib/site-announcement";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { sendWelcomeEmail } from "@/lib/emails/welcome";
@@ -37,6 +38,7 @@ export default async function MembersLayout({ children }: { children: React.Reac
   return (
     <div style={{ display:"flex", flexDirection:"column", minHeight:"100vh", background:"#F7FAF5" }}>
       <Navbar/>
+      <ImpersonationBanner/>
       {ann && <AnnouncementBanner text={ann.text} color={ann.color} ctaLabel={ann.ctaLabel} ctaUrl={ann.ctaUrl} />}
       <div style={{ flex:1, maxWidth:"1280px", margin:"0 auto", width:"100%", padding:"24px 16px 90px", display:"flex", gap:"28px" }}>
         <div className="desktop-sidebar">

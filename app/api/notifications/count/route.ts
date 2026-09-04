@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getEffectiveUserId } from "@/lib/effective-user";
 
 export async function GET(req: NextRequest) {
   const { userId } = auth();
@@ -8,7 +9,7 @@ export async function GET(req: NextRequest) {
   const db = createAdminClient();
   const { count } = await (db.from("notifications") as any)
     .select("*", { count: "exact", head: true })
-    .eq("user_id", userId)
+    .eq("user_id", getEffectiveUserId() ?? userId)
     .eq("is_read", false);
   return NextResponse.json({ count: count ?? 0 });
 }

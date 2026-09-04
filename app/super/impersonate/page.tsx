@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { IconUser, IconWarning, IconLightning } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
@@ -16,18 +16,15 @@ type Member = {
 };
 
 export default function ImpersonatePage() {
-  const { signOut } = useClerk();
+  const router = useRouter();
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [q, setQ] = useState("");
-  const [busy, setBusy] = useState<string | null>(null);
+  const [error, setError]     = useState("");
+  const [q, setQ]             = useState("");
+  const [busy, setBusy]       = useState<string | null>(null);
   const [confirmTarget, setConfirmTarget] = useState<Member | null>(null);
-  const [reason, setReason] = useState("");
-  const [issuedUrl, setIssuedUrl]         = useState<string | null>(null);
-  const [issuedFor, setIssuedFor]         = useState<string | null>(null);
-  const [issuedExpiresAt, setIssuedExpiresAt] = useState<number | null>(null);
-  const [copied, setCopied]               = useState(false);
+  const [reason, setReason]   = useState("");
+  const [activeStatus, setActiveStatus] = useState<{ active: boolean; target_label?: string | null } | null>(null);
 
   async function load() {
     setLoading(true); setError("");
@@ -40,7 +37,15 @@ export default function ImpersonatePage() {
     finally { setLoading(false); }
   }
 
-  useEffect(() => { load(); }, []);
+  async function loadStatus() {
+    try {
+      const r = await fetch("/api/super/impersonate", { cache: "no-store" });
+      const d = await r.json();
+      setActiveStatus(d);
+    } catch {}
+  }
+
+  useEffect(() => { load(); loadStatus(); }, []);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -63,35 +68,21 @@ export default function ImpersonatePage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Impersonation failed");
-      // Build the URL client-side from window.location.origin so it can't
-      // pick up stray characters from env vars.
-      const fullUrl = `${window.location.origin}/sign-in?__clerk_ticket=${data.sign_in_token}`;
-      setIssuedUrl(fullUrl);
-      setIssuedFor(data.target_label ?? confirmTarget.display_name ?? confirmTarget.id);
-      setIssuedExpiresAt(Date.now() + ((data.expires_in_seconds ?? 300) * 1000));
       setConfirmTarget(null);
       setReason("");
-      setCopied(false);
+      // Land on the members dashboard, which now reads the effective user
+      router.push("/members");
+      router.refresh();
     } catch (e: any) { setError(e.message); }
     finally { setBusy(null); }
   }
 
-  async function copyLink() {
-    if (!issuedUrl) return;
+  async function stop() {
     try {
-      await navigator.clipboard.writeText(issuedUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
+      await fetch("/api/super/impersonate", { method: "DELETE" });
+      setActiveStatus({ active: false });
+      router.refresh();
     } catch {}
-  }
-
-  // Sign out of our own session, then land on the ticket URL. The
-  // callback fires after Clerk clears the cookie, so the ticket takes
-  // effect in a clean session state.
-  async function swapSession() {
-    if (!issuedUrl) return;
-    const target = issuedUrl;
-    await signOut(() => { window.location.href = target; });
   }
 
   return (
@@ -99,14 +90,27 @@ export default function ImpersonatePage() {
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#156530", letterSpacing: "3px", margin: 0 }}>SIGN IN AS…</h1>
         <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: "4px 0 0" }}>
-          Generate a one-time sign-in link for a target member. Click <strong>SIGN IN AS NOW</strong> to swap into their session in this tab (you'll sign back in as yourself when done), or <strong>COPY LINK</strong> and paste into an incognito window if you want to keep your admin session alive. Every use is audit-logged.
+          Enter a member's view without leaving your admin session. Your identity stays intact — the switch is a signed cookie the server uses to swap the effective user on member pages. Every use is audit-logged.
         </p>
       </div>
+
+      {activeStatus?.active && (
+        <div style={{ background: "#FFF3D6", border: "1.5px solid #F0D889", borderRadius: 12, padding: "12px 16px", display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <IconWarning size={16} color="#7A5A0F" />
+          <div style={{ flex: 1, fontFamily: B, fontSize: 12, color: "#7A5A0F", lineHeight: 1.5, minWidth: 200 }}>
+            You are currently viewing the site as <strong>{activeStatus.target_label ?? "another member"}</strong>. All member pages will show their data.
+          </div>
+          <button onClick={stop}
+            style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#ffffff", background: "#8A1E27", border: "none", borderRadius: 8, padding: "8px 14px", cursor: "pointer", letterSpacing: 1.2 }}>
+            END SESSION
+          </button>
+        </div>
+      )}
 
       <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: "12px", padding: "14px 16px", display: "flex", gap: "10px", alignItems: "flex-start" }}>
         <IconWarning size={16} color="#7A5A0F" />
         <div style={{ fontFamily: B, fontSize: "12px", color: "#7A5A0F", lineHeight: 1.6 }}>
-          <strong>Security note:</strong> This creates a real signed-in session as another user. Only use for support/debugging. Any action taken in that session is billed to the target member — record a reason so the audit trail is meaningful.
+          <strong>Security note:</strong> Impersonation lasts 4 hours max, then auto-expires. Any write action taken during this session is logged with your name as the actor, not the target's. Only use for support/debugging.
         </div>
       </div>
 
@@ -143,14 +147,13 @@ export default function ImpersonatePage() {
         </div>
       )}
 
-      {/* Confirmation modal */}
       {confirmTarget && (
         <div onClick={() => setConfirmTarget(null)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,42,30,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
           <div onClick={e => e.stopPropagation()} style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "16px", padding: "22px", maxWidth: "440px", width: "100%", display: "flex", flexDirection: "column", gap: "14px" }}>
             <div>
               <h2 style={{ fontFamily: R, fontSize: "1.1rem", color: "#1B3A2D", letterSpacing: "2px", margin: 0 }}>SIGN IN AS {(confirmTarget.display_name ?? "USER").toUpperCase()}?</h2>
               <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: "6px 0 0", lineHeight: 1.5 }}>
-                Opens a signed-in session as this user in a new tab. The action is logged to <code>audit_log</code>.
+                Member pages will render as if you were them. Your admin session stays alive — click END SESSION to switch back.
               </p>
             </div>
             <div>
@@ -163,47 +166,6 @@ export default function ImpersonatePage() {
               <button onClick={impersonate} disabled={busy === confirmTarget.id}
                 style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: "#156530", border: "1.5px solid #156530", borderRadius: "10px", padding: "10px 16px", cursor: busy === confirmTarget.id ? "wait" : "pointer", letterSpacing: "1.2px", display: "inline-flex", alignItems: "center", gap: "6px" }}>
                 <IconLightning size={11} color="#ffffff" /> {busy === confirmTarget.id ? "OPENING…" : "SIGN IN AS"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Issued-link modal: shown after the endpoint returns the ticket URL */}
-      {issuedUrl && (
-        <div onClick={() => setIssuedUrl(null)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,42,30,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "16px", padding: "22px", maxWidth: "540px", width: "100%", display: "flex", flexDirection: "column", gap: "14px" }}>
-            <div>
-              <h2 style={{ fontFamily: R, fontSize: "1.1rem", color: "#1B3A2D", letterSpacing: "2px", margin: 0 }}>SIGN-IN LINK READY</h2>
-              <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: "6px 0 0", lineHeight: 1.5 }}>
-                One-time link for <strong>{issuedFor}</strong>. Expires in ~5 minutes.
-              </p>
-            </div>
-
-            <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: 12, padding: "12px 14px", display: "flex", gap: 10, alignItems: "flex-start" }}>
-              <IconWarning size={14} color="#7A5A0F" />
-              <div style={{ fontFamily: B, fontSize: 12, color: "#7A5A0F", lineHeight: 1.55 }}>
-                <strong>This replaces your admin session.</strong> Clicking below signs you out and signs you in as <strong>{issuedFor}</strong> in this same tab. When you're done debugging, sign out of that account and back in as yourself.
-                <div style={{ marginTop: 6, color: "#5A7A60" }}>Prefer to keep your admin session alive? <strong>COPY LINK</strong> and paste it into an incognito window instead.</div>
-              </div>
-            </div>
-
-            <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: 10, padding: "10px 12px", fontFamily: "monospace", fontSize: 11, color: "#1B3A2D", wordBreak: "break-all", lineHeight: 1.5 }}>
-              {issuedUrl}
-            </div>
-
-            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
-              <button onClick={() => setIssuedUrl(null)}
-                style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#5A7A60", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
-                CANCEL
-              </button>
-              <button onClick={copyLink}
-                style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: copied ? "#ffffff" : "#5A7A60", background: copied ? "#156530" : "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
-                {copied ? "✓ COPIED" : "COPY LINK"}
-              </button>
-              <button onClick={swapSession}
-                style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: "#156530", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px", display: "inline-flex", alignItems: "center", gap: 5 }}>
-                <IconLightning size={11} color="#ffffff" /> SIGN IN AS NOW
               </button>
             </div>
           </div>

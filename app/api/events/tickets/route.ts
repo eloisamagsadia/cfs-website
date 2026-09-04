@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getEffectiveUserId } from "@/lib/effective-user";
 import { checkAndAwardBadges } from "@/lib/badges";
 import { sendEventTicket, sendEventTicketBundle } from "@/lib/email";
 import { logAudit } from "@/lib/audit";
@@ -31,7 +32,9 @@ export async function GET(req: NextRequest) {
     .order("created_at", { ascending: false });
 
   if (my === "true") {
-    query = query.eq("user_id", userId);
+    // Honor impersonation: show the target's tickets, not the admin's
+    const effective = getEffectiveUserId() ?? userId;
+    query = query.eq("user_id", effective);
   } else if (event_id) {
     if (!["admin", "super_admin"].includes(role ?? "")) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     query = query.eq("event_id", event_id);

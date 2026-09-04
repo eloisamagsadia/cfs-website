@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getEffectiveUserId } from "@/lib/effective-user";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { IconHeart } from "@/components/shared/Icons";
@@ -34,8 +35,9 @@ function fmt(n: number) {
 }
 
 export default async function MyDonationsPage() {
-  const { userId } = auth();
-  if (!userId) redirect("/sign-in");
+  const realId = auth().userId;
+  if (!realId) redirect("/sign-in");
+  const userId = getEffectiveUserId() ?? realId;
 
   const supabase = createAdminClient();
   const { data: donations } = await supabase

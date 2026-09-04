@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getEffectiveUserId } from "@/lib/effective-user";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -13,8 +14,9 @@ const S = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 export default async function DashboardPage() {
-  const { userId } = auth();
-  if (!userId) redirect("/sign-in");
+  const realId = auth().userId;
+  if (!realId) redirect("/sign-in");
+  const userId = getEffectiveUserId() ?? realId;
 
   const supabase = createAdminClient();
   const { data: profileRaw } = await (((supabase.from("profiles") as any) as any) as any).select("*").eq("id", userId).single();
