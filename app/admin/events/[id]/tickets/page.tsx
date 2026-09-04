@@ -201,6 +201,9 @@ export default function EventTicketsPage() {
             style={{ ...btnPrimary, background: "#B78A1F" }}>
             <IconSparkle size={11} color="#FFFFFF" /> COMP TICKET
           </button>
+          <Link href={`/admin/events/${event_id}/transactions`} style={{ ...btnPrimary, textDecoration: "none", background: "#1B3A2D" }}>
+            TRANSACTIONS
+          </Link>
           <Link href="/admin/check-in" style={{ ...btnPrimary, textDecoration: "none" }}>
             <IconCamera size={11} color="#FFFFFF" /> CHECK-IN SCANNER
           </Link>

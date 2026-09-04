@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { IconTicket, IconHeart, IconPackage } from "@/components/shared/Icons";
 
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
@@ -13,9 +13,9 @@ const CONFIG: Record<string, { icon: React.ReactNode; headline: string; body: st
   ticket: {
     icon: <IconTicket size={40} color="#1A8040" />,
     headline: "You're going!",
-    body: "Your ticket has been confirmed. Check your tickets in the members area.",
-    cta: "VIEW MY TICKETS",
-    href: "/members/events",
+    body: "Your ticket has been confirmed. Opening your ticket + receipt now.",
+    cta: "OPEN MY TICKET & RECEIPT",
+    href: "/members/tickets",
   },
   donation: {
     icon: <IconHeart size={40} color="#1A8040" />,
@@ -37,7 +37,34 @@ function SuccessContent() {
   const params = useSearchParams();
   const router = useRouter();
   const type = params.get("type") ?? "order";
-  const config = CONFIG[type] ?? CONFIG.order;
+  const ref  = params.get("ref");
+  const baseConfig = CONFIG[type] ?? CONFIG.order;
+
+  // If this is a ticket purchase, resolve the PayMongo reference to the
+  // buyer's actual ticket id and jump straight to /members/tickets/[id]
+  // (which shows the ticket + full receipt below it). Falls back to the
+  // tickets list if the lookup fails.
+  const [resolvedHref, setResolvedHref] = useState<string>(baseConfig.href);
+  useEffect(() => {
+    if (type !== "ticket" || !ref) return;
+    let cancelled = false;
+    fetch(`/api/members/ticket-from-ref?ref=${encodeURIComponent(ref)}`)
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => {
+        if (cancelled) return;
+        if (d?.ticket_id) {
+          const dest = `/members/tickets/${d.ticket_id}`;
+          setResolvedHref(dest);
+          // Auto-jump after 2.5s so buyers who don't click still land on
+          // the receipt (webhook may take a moment; we give it a buffer).
+          setTimeout(() => { if (!cancelled) router.push(dest); }, 2500);
+        }
+      })
+      .catch(() => { /* keep fallback href */ });
+    return () => { cancelled = true; };
+  }, [type, ref, router]);
+
+  const config = { ...baseConfig, href: resolvedHref };
 
   return (
     <div style={{ minHeight: "100vh", background: C.paper, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
