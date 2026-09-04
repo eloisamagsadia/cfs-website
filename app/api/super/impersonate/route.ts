@@ -57,6 +57,13 @@ export async function POST(req: NextRequest) {
     });
   } catch {}
 
-  const signInUrl = `/sign-in?__clerk_ticket=${token.token}`;
+  // Return an ABSOLUTE URL so ops can copy-paste it into an incognito
+  // window. Same-tab (or same-browser new tab) will just keep the ops
+  // user's own session because Clerk cookies are shared per-origin —
+  // the ticket is ignored when a session already exists.
+  const origin  = process.env.NEXT_PUBLIC_SITE_URL
+               ?? req.headers.get("origin")
+               ?? `https://${req.headers.get("host") ?? "coletfs.com"}`;
+  const signInUrl = `${origin.replace(/\/$/, "")}/sign-in?__clerk_ticket=${token.token}`;
   return NextResponse.json({ sign_in_url: signInUrl, expires_in_seconds: 300, target_label: targetLabel });
 }

@@ -22,6 +22,10 @@ export default function ImpersonatePage() {
   const [busy, setBusy] = useState<string | null>(null);
   const [confirmTarget, setConfirmTarget] = useState<Member | null>(null);
   const [reason, setReason] = useState("");
+  const [issuedUrl, setIssuedUrl]         = useState<string | null>(null);
+  const [issuedFor, setIssuedFor]         = useState<string | null>(null);
+  const [issuedExpiresAt, setIssuedExpiresAt] = useState<number | null>(null);
+  const [copied, setCopied]               = useState(false);
 
   async function load() {
     setLoading(true); setError("");
@@ -57,12 +61,26 @@ export default function ImpersonatePage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Impersonation failed");
-      // Open in a new tab so the super admin's original session stays alive elsewhere
-      window.open(data.sign_in_url, "_blank", "noopener,noreferrer");
+      // Show the URL for copy-paste into an incognito window. Opening in a
+      // same-browser new tab wouldn't work — Clerk session cookies are shared
+      // per-origin, so the target session gets rejected in favor of ours.
+      setIssuedUrl(data.sign_in_url);
+      setIssuedFor(data.target_label ?? confirmTarget.display_name ?? confirmTarget.id);
+      setIssuedExpiresAt(Date.now() + ((data.expires_in_seconds ?? 300) * 1000));
       setConfirmTarget(null);
       setReason("");
+      setCopied(false);
     } catch (e: any) { setError(e.message); }
     finally { setBusy(null); }
+  }
+
+  async function copyLink() {
+    if (!issuedUrl) return;
+    try {
+      await navigator.clipboard.writeText(issuedUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {}
   }
 
   return (
@@ -70,7 +88,7 @@ export default function ImpersonatePage() {
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#156530", letterSpacing: "3px", margin: 0 }}>SIGN IN AS…</h1>
         <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: "4px 0 0" }}>
-          Open a target member&apos;s session (new tab) to reproduce their issue. Every use is written to the audit log.
+          Generate a one-time sign-in link for a target member. Open it in an <strong>incognito / private window</strong> — same-browser tabs share your Clerk cookie, so the ticket only takes effect in a fresh session. Every use is written to the audit log.
         </p>
       </div>
 
@@ -134,6 +152,42 @@ export default function ImpersonatePage() {
               <button onClick={impersonate} disabled={busy === confirmTarget.id}
                 style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: "#156530", border: "1.5px solid #156530", borderRadius: "10px", padding: "10px 16px", cursor: busy === confirmTarget.id ? "wait" : "pointer", letterSpacing: "1.2px", display: "inline-flex", alignItems: "center", gap: "6px" }}>
                 <IconLightning size={11} color="#ffffff" /> {busy === confirmTarget.id ? "OPENING…" : "SIGN IN AS"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Issued-link modal: shown after the endpoint returns the ticket URL */}
+      {issuedUrl && (
+        <div onClick={() => setIssuedUrl(null)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,42,30,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "16px", padding: "22px", maxWidth: "540px", width: "100%", display: "flex", flexDirection: "column", gap: "14px" }}>
+            <div>
+              <h2 style={{ fontFamily: R, fontSize: "1.1rem", color: "#1B3A2D", letterSpacing: "2px", margin: 0 }}>SIGN-IN LINK READY</h2>
+              <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: "6px 0 0", lineHeight: 1.5 }}>
+                One-time link for <strong>{issuedFor}</strong>. Expires in ~5 minutes.
+              </p>
+            </div>
+
+            <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: 12, padding: "12px 14px", display: "flex", gap: 10, alignItems: "flex-start" }}>
+              <IconWarning size={14} color="#7A5A0F" />
+              <div style={{ fontFamily: B, fontSize: 12, color: "#7A5A0F", lineHeight: 1.55 }}>
+                Open this in an <strong>incognito / private window</strong>. Opening it in this browser session will bounce you back to your own account because your Clerk cookie takes precedence.
+              </div>
+            </div>
+
+            <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: 10, padding: "10px 12px", fontFamily: "monospace", fontSize: 11, color: "#1B3A2D", wordBreak: "break-all", lineHeight: 1.5 }}>
+              {issuedUrl}
+            </div>
+
+            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
+              <button onClick={() => setIssuedUrl(null)}
+                style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#5A7A60", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
+                DONE
+              </button>
+              <button onClick={copyLink}
+                style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: copied ? "#156530" : "#1A8040", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
+                {copied ? "✓ COPIED" : "COPY LINK"}
               </button>
             </div>
           </div>
