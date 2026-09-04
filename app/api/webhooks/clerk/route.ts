@@ -78,12 +78,12 @@ export async function POST(req: Request) {
 
   // Session lifecycle → login / logout audit trail
   if (evt.type === "session.created") {
-    const { user_id, id, client_id, last_active_at, latest_activity } = evt.data as any;
+    const { user_id, id, last_active_at, latest_activity } = evt.data as any;
     if (user_id) logAudit({ userId: user_id, action: "login", target_type: "session", target_id: id ?? null });
 
     // Branded sign-in alert (replaces Clerk's default "New device signed in" email).
     // Disable Clerk's built-in template in the dashboard to avoid double sends.
-    if (user_id) {
+    if (user_id && id) {
       try {
         const u = await clerkClient.users.getUser(user_id);
         const email = u.emailAddresses?.[0]?.emailAddress;
@@ -92,16 +92,47 @@ export async function POST(req: Request) {
                     || u.username
                     || email.split("@")[0]
                     || "there";
-          const la  = latest_activity ?? {};
-          const dev = [la.browser_name, la.device_type && `on ${la.device_type}`].filter(Boolean).join(" ") || null;
-          const loc = [la.city, la.country].filter(Boolean).join(", ") || null;
+
+          // The session.created webhook payload doesn't include latest_activity
+          // because the session was just created and no request has been logged
+          // yet. Wait a moment and fetch fresh, then pull activity from the API
+          // response (SDK returns camelCase; the webhook body is snake_case, so
+          // we try both). One retry covers the race where activity is still
+          // empty on first fetch.
+          const getActivity = async (attempt = 0): Promise<any> => {
+            try {
+              const s: any = await clerkClient.sessions.getSession(id);
+              const la = s?.latestActivity ?? s?.latest_activity ?? null;
+              if (la && (la.ip_address || la.ipAddress || la.city || la.country || la.browser_name || la.browserName)) return la;
+              if (attempt < 1) {
+                await new Promise(r => setTimeout(r, 1500));
+                return getActivity(attempt + 1);
+              }
+              return la ?? {};
+            } catch {
+              return {};
+            }
+          };
+          const laFresh = await getActivity();
+          const la = { ...(latest_activity ?? {}), ...laFresh };
+
+          const browser  = la.browserName  ?? la.browser_name  ?? null;
+          const device   = la.deviceType   ?? la.device_type   ?? null;
+          const ip       = la.ipAddress    ?? la.ip_address    ?? null;
+          const city     = la.city ?? null;
+          const country  = la.country ?? null;
+          const isMobile = la.isMobile ?? la.is_mobile ?? false;
+
+          const dev = [browser, device && `on ${device}`].filter(Boolean).join(" ") || null;
+          const loc = [city, country].filter(Boolean).join(", ") || null;
+
           await sendSessionAlertEmail({
             email,
             name,
-            ip:         la.ip_address ?? null,
+            ip,
             device:     dev,
             location:   loc,
-            signInType: la.is_mobile ? "Mobile" : "Web",
+            signInType: isMobile ? "Mobile" : "Web",
             when:       last_active_at ? new Date(last_active_at) : new Date(),
           });
         }
