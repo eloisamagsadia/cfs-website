@@ -46,7 +46,7 @@ const sections: { label: string; items: SectionItem[] }[] = [
       { label: "Command Center",  href: "/super",              icon: icons.command, exact: true },
       { label: "Launch Day",      href: "/super/launch",       icon: icons.command },
       { label: "Analytics",       href: "/super/analytics",    icon: icons.analytics },
-      { label: "System Health",   href: "/super/system-health",icon: icons.health },
+      { label: "System Health",   href: "/super/system-health",icon: icons.health, owner: true },
     ]
   },
   {

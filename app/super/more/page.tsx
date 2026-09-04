@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
+import { isOwner as checkOwner } from "@/lib/hidden-admins";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -30,14 +32,15 @@ const icons: Record<string, React.ReactNode> = {
   member:     svg(<><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>),
 };
 
-const sections: { label: string; color: string; items: { label: string; href: string; icon: React.ReactNode }[] }[] = [
+type MoreItem = { label: string; href: string; icon: React.ReactNode; owner?: boolean };
+const sections: { label: string; color: string; items: MoreItem[] }[] = [
   {
     label: "COMMAND",
     color: "#156530",
     items: [
       { label: "Command Center", href: "/super",              icon: icons.command },
       { label: "Analytics",      href: "/super/analytics",    icon: icons.analytics },
-      { label: "System Health",  href: "/super/system-health",icon: icons.health },
+      { label: "System Health",  href: "/super/system-health",icon: icons.health, owner: true },
     ],
   },
   {
@@ -97,6 +100,9 @@ const sections: { label: string; color: string; items: { label: string; href: st
 ];
 
 export default function SuperMorePage() {
+  const { user } = useUser();
+  const isOwner = checkOwner(user?.id);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       <div>
@@ -104,7 +110,10 @@ export default function SuperMorePage() {
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Every super-admin tool</p>
       </div>
 
-      {sections.map(section => (
+      {sections
+        .map(s => ({ ...s, items: s.items.filter(i => !i.owner || isOwner) }))
+        .filter(s => s.items.length > 0)
+        .map(section => (
         <div key={section.label}>
           <div style={{ fontFamily: R, fontSize: "10px", color: "#5A7A60", letterSpacing: "2px", marginBottom: "10px" }}>{section.label}</div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>

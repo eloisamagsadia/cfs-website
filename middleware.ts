@@ -1,5 +1,6 @@
 import { authMiddleware } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
+import { isOwner } from "@/lib/hidden-admins";
 
 export default authMiddleware({
   publicRoutes: [
@@ -85,6 +86,14 @@ export default authMiddleware({
       if (role !== "super_admin") {
         const url = req.nextUrl.clone();
         url.pathname = "/members";
+        return NextResponse.redirect(url);
+      }
+      // /super/system-health is owner-only. Even super_admins who aren't
+      // the hidden owner get bounced back to /super so they never see the
+      // diagnostics page (uptime, env leaks, DB stats).
+      if (pathname.startsWith("/super/system-health") && !isOwner(userId)) {
+        const url = req.nextUrl.clone();
+        url.pathname = "/super";
         return NextResponse.redirect(url);
       }
     }
