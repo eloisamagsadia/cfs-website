@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import { useClerk } from "@clerk/nextjs";
 import { IconUser, IconWarning, IconLightning } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
@@ -15,6 +16,7 @@ type Member = {
 };
 
 export default function ImpersonatePage() {
+  const { signOut } = useClerk();
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -83,12 +85,21 @@ export default function ImpersonatePage() {
     } catch {}
   }
 
+  // Sign out of our own session, then land on the ticket URL. The
+  // callback fires after Clerk clears the cookie, so the ticket takes
+  // effect in a clean session state.
+  async function swapSession() {
+    if (!issuedUrl) return;
+    const target = issuedUrl;
+    await signOut(() => { window.location.href = target; });
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#156530", letterSpacing: "3px", margin: 0 }}>SIGN IN AS…</h1>
         <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: "4px 0 0" }}>
-          Generate a one-time sign-in link for a target member. Open it in an <strong>incognito / private window</strong> — same-browser tabs share your Clerk cookie, so the ticket only takes effect in a fresh session. Every use is written to the audit log.
+          Generate a one-time sign-in link for a target member. Click <strong>SIGN IN AS NOW</strong> to swap into their session in this tab (you'll sign back in as yourself when done), or <strong>COPY LINK</strong> and paste into an incognito window if you want to keep your admin session alive. Every use is audit-logged.
         </p>
       </div>
 
@@ -172,7 +183,8 @@ export default function ImpersonatePage() {
             <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: 12, padding: "12px 14px", display: "flex", gap: 10, alignItems: "flex-start" }}>
               <IconWarning size={14} color="#7A5A0F" />
               <div style={{ fontFamily: B, fontSize: 12, color: "#7A5A0F", lineHeight: 1.55 }}>
-                Open this in an <strong>incognito / private window</strong>. Opening it in this browser session will bounce you back to your own account because your Clerk cookie takes precedence.
+                <strong>This replaces your admin session.</strong> Clicking below signs you out and signs you in as <strong>{issuedFor}</strong> in this same tab. When you're done debugging, sign out of that account and back in as yourself.
+                <div style={{ marginTop: 6, color: "#5A7A60" }}>Prefer to keep your admin session alive? <strong>COPY LINK</strong> and paste it into an incognito window instead.</div>
               </div>
             </div>
 
@@ -183,11 +195,15 @@ export default function ImpersonatePage() {
             <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
               <button onClick={() => setIssuedUrl(null)}
                 style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#5A7A60", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
-                DONE
+                CANCEL
               </button>
               <button onClick={copyLink}
-                style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: copied ? "#156530" : "#1A8040", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
+                style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: copied ? "#ffffff" : "#5A7A60", background: copied ? "#156530" : "#F2F7F2", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
                 {copied ? "✓ COPIED" : "COPY LINK"}
+              </button>
+              <button onClick={swapSession}
+                style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: "#156530", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px", display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <IconLightning size={11} color="#ffffff" /> SIGN IN AS NOW
               </button>
             </div>
           </div>
