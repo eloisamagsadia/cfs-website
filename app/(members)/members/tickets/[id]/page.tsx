@@ -29,6 +29,7 @@ export default function TicketPage() {
   const [ticket, setTicket] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [template, setTemplate] = useState<any>(null);
+  const [receipt, setReceipt] = useState<any>(null);
   const ticketRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,6 +40,13 @@ export default function TicketPage() {
         setTicket(found ?? null);
         setLoading(false);
       });
+    // Receipt is fetched separately so the ticket card can render fast
+    // while receipt data hydrates. Non-blocking — if it errors, we just
+    // hide the receipt block.
+    fetch(`/api/members/receipt?ticket_id=${id}`)
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => setReceipt(d ?? null))
+      .catch(() => setReceipt(null));
   }, [id]);
 
   if (loading) return (
@@ -187,6 +195,85 @@ export default function TicketPage() {
           <span style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", lineHeight: 1.5 }}>
             Take a screenshot of this ticket to save it offline. Present the QR code at the event.
           </span>
+        </div>
+      )}
+
+      {/* Official receipt — always shown so members have proof of purchase
+          even if the confirmation email didn't arrive (Resend daily cap,
+          spam folder, typo'd address). Renders differently for paid vs
+          free vs comp tickets. */}
+      {receipt && (
+        <div style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "14px", padding: "18px 20px", boxShadow: "0 4px 12px rgba(15,42,30,0.04)" }}>
+          <div style={{ textAlign: "center", paddingBottom: "12px", borderBottom: "1px dashed #DDE8DD" }}>
+            <div style={{ fontFamily: S, fontSize: "12px", letterSpacing: "3px", color: "#1B3A2D", fontWeight: 700 }}>OFFICIAL RECEIPT</div>
+            <div style={{ fontFamily: "'Courier New',monospace", fontSize: "11px", color: "#7A8E7A", marginTop: "4px", letterSpacing: "1px" }}>
+              REF #{(receipt.payment?.reference ?? receipt.ticket.ticket_number ?? receipt.ticket.id).slice(0, 20).toUpperCase()}
+            </div>
+          </div>
+
+          <table style={{ width: "100%", marginTop: "12px", fontFamily: "'Courier New',monospace", color: "#1B3A2D", borderCollapse: "collapse" }}>
+            <tbody>
+              <tr>
+                <td style={{ padding: "4px 0", fontSize: "12px" }}>{receipt.tier.name}{receipt.ticket.bundle_size > 1 ? ` × ${receipt.ticket.bundle_size}` : ""}</td>
+                <td style={{ textAlign: "right", padding: "4px 0", fontSize: "12px" }}>
+                  {receipt.tier.unit_price > 0
+                    ? `₱${(receipt.tier.unit_price * receipt.ticket.bundle_size).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`
+                    : "FREE"}
+                </td>
+              </tr>
+              {receipt.payment && receipt.payment.fee > 0 && (
+                <tr>
+                  <td style={{ padding: "2px 0", fontSize: "11px", color: "#7A8E7A" }}>Payment processing fee</td>
+                  <td style={{ textAlign: "right", padding: "2px 0", fontSize: "11px", color: "#7A8E7A" }}>
+                    ₱{receipt.payment.fee.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+                  </td>
+                </tr>
+              )}
+              <tr><td colSpan={2} style={{ borderTop: "1px dashed #DDE8DD", paddingTop: "8px" }}></td></tr>
+              <tr>
+                <td style={{ fontWeight: 700, fontSize: "14px", letterSpacing: "1px" }}>{receipt.payment ? "TOTAL PAID" : "TOTAL"}</td>
+                <td style={{ textAlign: "right", fontWeight: 700, fontSize: "14px", color: "#1A8040" }}>
+                  {receipt.payment
+                    ? `₱${receipt.payment.amount_paid.toLocaleString("en-PH", { minimumFractionDigits: 2 })}`
+                    : (receipt.tier.unit_price > 0
+                        ? `₱${(receipt.tier.unit_price * receipt.ticket.bundle_size).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`
+                        : "FREE")}
+                </td>
+              </tr>
+              {receipt.payment && (
+                <>
+                  <tr>
+                    <td style={{ paddingTop: "10px", color: "#7A8E7A", fontSize: "10px", letterSpacing: "1.5px" }}>METHOD</td>
+                    <td style={{ textAlign: "right", paddingTop: "10px", color: "#7A8E7A", fontSize: "10px", letterSpacing: "1px" }}>
+                      {(receipt.payment.method ?? "ONLINE").toString().toUpperCase().replace(/_/g, " ")}
+                    </td>
+                  </tr>
+                  {receipt.payment.paid_at && (
+                    <tr>
+                      <td style={{ color: "#7A8E7A", fontSize: "10px", letterSpacing: "1.5px" }}>PAID ON</td>
+                      <td style={{ textAlign: "right", color: "#7A8E7A", fontSize: "10px" }}>
+                        {new Date(receipt.payment.paid_at).toLocaleString("en-PH", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Manila" })}
+                      </td>
+                    </tr>
+                  )}
+                </>
+              )}
+              {receipt.ticket.is_comp && (
+                <tr>
+                  <td colSpan={2} style={{ paddingTop: "10px", textAlign: "center" }}>
+                    <span style={{ display: "inline-block", background: "#FFF3D6", border: "1px solid #F0D889", color: "#7A5A0F", fontSize: "10px", fontFamily: "'Courier New',monospace", letterSpacing: "1px", padding: "3px 10px", borderRadius: "999px" }}>
+                      COMPLIMENTARY · ISSUED BY CFS ADMIN
+                    </span>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+
+          <div style={{ textAlign: "center", marginTop: "14px", paddingTop: "12px", borderTop: "1px dashed #DDE8DD", fontFamily: B, fontSize: "10px", color: "#7A8E7A", letterSpacing: "0.5px", lineHeight: 1.6 }}>
+            Keep this receipt in your account as proof of purchase.<br />
+            If you didn&apos;t receive an email confirmation, this page is your record.
+          </div>
         </div>
       )}
     </div>
