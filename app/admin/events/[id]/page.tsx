@@ -5,7 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import Image from "next/image";
 import {
   IconCalendar, IconPin, IconUsers, IconTag, IconTicket, IconEdit,
-  IconEye, IconEyeOff, IconCheck, IconDownload,
+  IconEye, IconEyeOff, IconCheck, IconDownload, IconLock,
 } from "@/components/shared/Icons";
 import EventVisibilityToggle from "@/components/admin/EventVisibilityToggle";
 import EventRegistrationToggle from "@/components/admin/EventRegistrationToggle";
@@ -137,7 +137,7 @@ export default async function AdminEventDetailPage({ params }: { params: { id: s
               const label = gate.reason === "manual" ? "REG LOCKED" : "REG AUTO-CLOSED";
               return (
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#8A1E27", background: "#FFE8EC", border: "1px solid #F1C0C6", borderRadius: 999, padding: "3px 10px", letterSpacing: 1.5 }}>
-                  🔒 {label}
+                  <IconLock size={11} color="#8A1E27" /> {label}
                 </span>
               );
             })()}

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { IconTicket, IconCheck } from "@/components/shared/Icons";
+import { IconTicket, IconCheck, IconClock } from "@/components/shared/Icons";
 import { calculateFee, type PaymentMethod } from "@/lib/paymongo";
 import WaitlistButton from "@/components/public/WaitlistButton";
 import { evaluateRegistrationGate } from "@/lib/event-registration";
@@ -216,7 +216,7 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         const soon = ms < 24 * 3600 * 1000;
         return (
           <div style={{ background: soon ? "#FFE8EC" : "#FFF3D6", border: `1.5px solid ${soon ? "#F1C0C6" : "#F0D889"}`, borderRadius: 8, padding: "7px 12px", display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 12 }}>⏳</span>
+            <IconClock size={13} color={soon ? "#8A1E27" : "#7A5A0F"} />
             <span style={{ fontFamily: B, fontSize: 12, color: soon ? "#8A1E27" : "#7A5A0F" }}>
               Registration closes in <strong>{label}</strong>
             </span>
