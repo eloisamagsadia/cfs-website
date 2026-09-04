@@ -119,10 +119,15 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
   };
 
   // Can caller change this member's role?
-  // Role changes are super_admin only across the board — regular admins
-  // don't see the role dropdown at all (matches the tightened API gate).
-  function canChangeRole(_target: any) {
-    return isSuperAdmin;
+  //   super_admin → can change anyone (server still rejects granting super_admin
+  //                 unless caller is the site owner)
+  //   admin       → can only change targets whose current role is moderator/
+  //                 sponsor/member (never other admins or super_admins), and
+  //                 can only grant moderator/sponsor/member per the API gate
+  function canChangeRole(target: any) {
+    if (isSuperAdmin) return true;
+    if (callerRole !== "admin") return false;
+    return ["moderator", "sponsor", "member"].includes(target?.role ?? "member");
   }
 
   return (
