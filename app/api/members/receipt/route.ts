@@ -19,11 +19,17 @@ export async function GET(req: NextRequest) {
 
   // Load ticket scoped to caller so nobody can peek at someone else's receipt.
   const { data: ticket } = await (admin.from("event_tickets") as any)
-    .select("id, ticket_number, status, payment_status, tier_id, bundle_id, event_id, created_at, qr_data, event_tiers:tier_id(name, price), events:event_id(title, date, location)")
+    .select("id, ticket_number, status, payment_status, tier_id, bundle_id, event_id, created_at, qr_data, event_tiers:tier_id(name, price), events:event_id(title, date, location, map_url)")
     .eq("id", ticketId)
     .eq("user_id", userId)
     .maybeSingle();
   if (!ticket) return NextResponse.json({ error: "Ticket not found" }, { status: 404 });
+
+  // Buyer info for the receipt header (name/email printed on the receipt).
+  const { data: buyer } = await (admin.from("profiles") as any)
+    .select("display_name, email")
+    .eq("id", userId)
+    .maybeSingle();
 
   // Payment transaction — reference_id is bundle_id for new bundle purchases,
   // ticket.id for legacy solo purchases. Try bundle_id first.
@@ -45,14 +51,19 @@ export async function GET(req: NextRequest) {
     txn = data ?? null;
   }
 
-  // Count all tickets sharing this bundle so a bundle receipt can say
-  // "4 tickets purchased" not just "1".
+  // Fetch all sibling tickets in the bundle so the receipt can list every
+  // ticket number (buyer usually needs to distribute them to their guests).
+  let bundleTicketNumbers: string[] = [(ticket as any).ticket_number];
   let bundleCount = 1;
   if ((ticket as any).bundle_id) {
-    const { count } = await (admin.from("event_tickets") as any)
-      .select("id", { count: "exact", head: true })
-      .eq("bundle_id", (ticket as any).bundle_id);
-    bundleCount = count ?? 1;
+    const { data: siblings } = await (admin.from("event_tickets") as any)
+      .select("ticket_number, created_at")
+      .eq("bundle_id", (ticket as any).bundle_id)
+      .order("created_at", { ascending: true });
+    if (siblings && siblings.length > 0) {
+      bundleTicketNumbers = (siblings as any[]).map(s => s.ticket_number).filter(Boolean);
+      bundleCount = siblings.length;
+    }
   }
 
   const tier = (ticket as any).event_tiers as any;
@@ -62,7 +73,14 @@ export async function GET(req: NextRequest) {
   const amountPaid = txn?.amount != null ? Number(txn.amount) : (perTicketPrice > 0 ? bundleTotal : 0);
   const fee = amountPaid > 0 && bundleTotal > 0 ? Math.max(0, +(amountPaid - bundleTotal).toFixed(2)) : 0;
 
+  const qr = (ticket as any).qr_data ?? {};
+  const isComp = qr?.comp_source === "admin_manual";
+
   return NextResponse.json({
+    buyer: {
+      name: (buyer as any)?.display_name ?? qr?.member_name ?? null,
+      email: (buyer as any)?.email ?? qr?.member_email ?? null,
+    },
     ticket: {
       id: (ticket as any).id,
       ticket_number: (ticket as any).ticket_number,
@@ -70,8 +88,10 @@ export async function GET(req: NextRequest) {
       payment_status: (ticket as any).payment_status,
       bundle_id: (ticket as any).bundle_id,
       bundle_size: bundleCount,
+      bundle_ticket_numbers: bundleTicketNumbers,
       created_at: (ticket as any).created_at,
-      is_comp: (ticket as any)?.qr_data?.comp_source === "admin_manual",
+      is_comp: isComp,
+      comp_note: isComp ? (qr?.comp_note ?? null) : null,
     },
     event: {
       title: event?.title ?? null,
