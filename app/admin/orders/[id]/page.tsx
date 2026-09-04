@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkDetailLoading } from "@/components/shared/Skeleton";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -89,7 +89,7 @@ export default function AdminOrderDetailPage() {
   };
 
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+      <SkDetailLoading />
     </div>
   if (!order) return <div style={{ fontFamily: R, color: "#CC3344", padding: "40px" }}>Order not found.</div>;
 

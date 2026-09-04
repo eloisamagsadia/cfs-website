@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkListLoading } from "@/components/shared/Skeleton";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -235,7 +235,7 @@ export default function EventTicketsPage() {
       {/* Tickets list */}
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-          <SkeletonPage />
+          <SkListLoading />
         </div>
       ) : filtered.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A60", letterSpacing: "2px" }}>

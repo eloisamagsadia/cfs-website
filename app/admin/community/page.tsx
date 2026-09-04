@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkListLoading } from "@/components/shared/Skeleton";
 import { useState, useEffect, useMemo } from "react";
 import { IconPin, IconMessage, IconHeart, IconPhoto, IconVideo, IconX } from "@/components/shared/Icons";
 import StatBar from "@/components/shared/StatBar";
@@ -140,7 +140,7 @@ export default function AdminCommunityPage() {
 
         {loading ? (
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-            <SkeletonPage />
+            <SkListLoading />
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>

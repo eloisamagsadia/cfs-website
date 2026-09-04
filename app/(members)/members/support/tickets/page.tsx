@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkListLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IconTicket } from "@/components/shared/Icons";
@@ -68,7 +68,7 @@ export default function MyTicketsPage() {
 
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-          <SkeletonPage /></div>
+          <SkListLoading /></div>
       ) : tickets.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center" }}>
           <div style={{ marginBottom: "12px" }}><IconTicket size={32} color="#DDE8DD" /></div>

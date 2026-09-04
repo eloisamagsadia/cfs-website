@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkFormLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
 import { IconCheck, IconWrench, IconSparkle, IconMegaphone } from "@/components/shared/Icons";
 
@@ -64,7 +64,7 @@ export default function SettingsPage() {
     if (data.settings) setSettings(data.settings);
   }
 
-if (!settings) return <div style={{ padding: "8px 0" }}><SkeletonPage /></div>;
+if (!settings) return <div style={{ padding: "8px 0" }}><SkFormLoading /></div>;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px", maxWidth: "720px" }}>

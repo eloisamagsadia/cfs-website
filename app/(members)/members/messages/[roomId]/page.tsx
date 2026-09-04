@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkChatLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useUser } from "@clerk/nextjs";
@@ -331,7 +331,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
 
   if (loading) return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage /></div>
+      <SkChatLoading /></div>
   );
 
   return (

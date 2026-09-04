@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkDetailLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
 import { IconUsers, IconSparkle, IconShield, IconWrench, IconMessage, IconTicket, IconStar, IconChart, IconMegaphone, IconX, IconLightning, IconSkull, IconCheck, IconWarning, IconClipboard } from "@/components/shared/Icons";
 import { createClient } from "@/lib/supabase/client";
@@ -175,7 +175,7 @@ export default function SuperAdminPage() {
 
   if (loading) return (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+      <SkDetailLoading />
     </div>
   );
 

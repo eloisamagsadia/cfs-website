@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkListLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
@@ -33,7 +33,7 @@ export default function MyActivityPage() {
 
   if (loading) return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage /></div>
+      <SkListLoading /></div>
   );
 
   return (

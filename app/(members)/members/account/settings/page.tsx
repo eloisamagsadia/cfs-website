@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkFormLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 
@@ -81,7 +81,7 @@ export default function SettingsPage() {
 
   if (!isLoaded || loading) return (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+      <SkFormLoading />
     </div>
   );
 

@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkGridLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
 import { IconCheck, IconX, IconTrash, IconMusic, IconPhoto, IconVideo, IconLink, IconMegaphone, IconUsers } from "@/components/shared/Icons";
 
@@ -64,7 +64,7 @@ export default function AdminFanSubmissionsPage() {
 
       {loading ? (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+      <SkGridLoading />
     </div>
       ) : submissions.length === 0 ? (
         <div style={{ textAlign: "center", padding: "48px", fontFamily: R, color: "#5A7A60", letterSpacing: "1px" }}>NO {filter.toUpperCase()} SUBMISSIONS</div>

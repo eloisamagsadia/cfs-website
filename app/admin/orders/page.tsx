@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkListLoading } from "@/components/shared/Skeleton";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -164,7 +164,7 @@ export default function AdminOrdersPage() {
       {/* Orders list */}
       {loading ? (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+      <SkListLoading />
     </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>

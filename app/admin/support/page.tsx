@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkListLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
 import { IconCheck, IconX } from "@/components/shared/Icons";
 
@@ -121,7 +121,7 @@ export default function AdminSupportPage() {
       {/* Table */}
       {loading ? (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-          <SkeletonPage /></div>
+          <SkListLoading /></div>
       ) : (
         <div className="table-scroll" style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
           {/* Table header */}

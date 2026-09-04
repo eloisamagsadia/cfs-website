@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkGridLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState, useRef } from "react";
 import { IconEdit, IconTrash, IconVideo, IconPhoto, IconStar, IconUpload, IconSparkle } from "@/components/shared/Icons";
 
@@ -213,7 +213,7 @@ export default function AdminExclusivePage() {
       {/* Content grid */}
       {loading ? (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+      <SkGridLoading />
     </div>
       ) : filtered.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center" }}>

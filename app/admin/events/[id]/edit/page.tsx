@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkFormLoading } from "@/components/shared/Skeleton";
 import { toISOWithPHT, toPHTInputString } from "@/lib/date";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -85,7 +85,7 @@ export default function AdminEventEditPage() {
 
   if (loading) return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+      <SkFormLoading />
     </div>
   );
 

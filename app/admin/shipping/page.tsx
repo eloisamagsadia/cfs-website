@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkListLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
 import { IconCheck } from "@/components/shared/Icons";
 
@@ -59,7 +59,7 @@ export default function AdminShippingPage() {
 
       {loading ? (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+      <SkListLoading />
     </div>
       ) : (
         <div className="stack-md" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>

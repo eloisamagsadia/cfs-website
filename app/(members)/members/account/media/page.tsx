@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkGridLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IconTrash } from "@/components/shared/Icons";
@@ -112,7 +112,7 @@ export default function MediaLibraryPage() {
 
       {loading ? (
 <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+      <SkGridLoading />
     </div>
       ) : totalFiles === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "60px 24px", textAlign: "center" }}>

@@ -1,5 +1,5 @@
 "use client";
-import SkeletonPage from "@/components/shared/SkeletonPage";
+import { SkFormLoading } from "@/components/shared/Skeleton";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { IconTrash } from "@/components/shared/Icons";
@@ -57,7 +57,7 @@ export default function AdminProjectEditPage() {
 
   if (loading) return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px" }}>
-      <SkeletonPage />
+      <SkFormLoading />
     </div>
   );
 
