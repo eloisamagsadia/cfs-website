@@ -46,7 +46,7 @@ export default function PublicSupportPage() {
         <div style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "14px", padding: "20px 22px", display: "flex", flexDirection: "column", gap: "10px" }}>
           <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "2px" }}>OTHER WAYS TO REACH US</div>
           <p style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", margin: 0, lineHeight: 1.7 }}>
-            DM us on social — <strong>@coletfansuporta</strong> — or email <a href="mailto:hello@coletfs.com" style={{ color: "#1A8040", fontWeight: 600, textDecoration: "none" }}>hello@coletfs.com</a>. Signed-in members get faster replies through the ticket system above.
+            DM us on social — <strong>@coletfansuporta</strong>. For anything urgent or account-related, please use the ticket system above — signed-in members get the fastest reply and we can look up your account and orders directly.
           </p>
         </div>
 

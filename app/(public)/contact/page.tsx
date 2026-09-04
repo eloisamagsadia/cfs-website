@@ -94,7 +94,7 @@ export default function ContactPage() {
         )}
 
         <div style={{ textAlign: "center" as const, fontFamily: B, fontSize: 12, color: "#7A8E7A" }}>
-          Prefer email? Reach us directly at <a href="mailto:hello@coletfansuporta.com" style={{ color: "#1A8040" }}>hello@coletfansuporta.com</a>.
+          Need faster help or have an account issue? Open a ticket at <a href="/support" style={{ color: "#1A8040", fontWeight: 600 }}>coletfs.com/support</a>.
         </div>
       </div>
     </div>

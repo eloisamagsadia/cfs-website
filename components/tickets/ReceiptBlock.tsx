@@ -179,7 +179,10 @@ export default function ReceiptBlock({ receipt, showPrintButton = true }: { rece
           <div style={{ color: "#5A7A60", fontWeight: 600, marginBottom: "4px" }}>All ticket sales are final and non-refundable.</div>
           Keep this receipt as proof of purchase. If you didn&apos;t receive an email confirmation, this page is your record.
           <div style={{ marginTop: "8px" }}>
-            Questions? <a href="mailto:hello@coletfs.com" style={{ color: "#1A8040", textDecoration: "none" }}>hello@coletfs.com</a> · <a href="https://twitter.com/coletfansuporta" target="_blank" rel="noopener noreferrer" style={{ color: "#1A8040", textDecoration: "none" }}>@coletfansuporta</a>
+            Need help? <a href="/support" style={{ color: "#1A8040", textDecoration: "none", fontWeight: 600 }}>Open a support ticket at coletfs.com/support</a>
+          </div>
+          <div style={{ marginTop: "4px" }}>
+            or DM us on <a href="https://twitter.com/coletfansuporta" target="_blank" rel="noopener noreferrer" style={{ color: "#1A8040", textDecoration: "none" }}>@coletfansuporta</a>
           </div>
         </div>
       </div>

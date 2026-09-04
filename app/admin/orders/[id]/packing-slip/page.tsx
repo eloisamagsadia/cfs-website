@@ -64,7 +64,7 @@ export default function PackingSlipPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, paddingBottom: 18, borderBottom: "2px solid #1B3A2D" }}>
           <div>
             <div style={{ fontFamily: R, fontSize: "1.5rem", color: "#1B3A2D", letterSpacing: 3 }}>COLET FAN SUPORTA</div>
-            <div style={{ fontFamily: B, fontSize: 12, color: "#5A7A60", marginTop: 2 }}>coletfansuporta.com · hello@coletfansuporta.com</div>
+            <div style={{ fontFamily: B, fontSize: 12, color: "#5A7A60", marginTop: 2 }}>coletfs.com · Support: coletfs.com/support</div>
           </div>
           <div style={{ textAlign: "right" as const }}>
             <div style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#7A5A0F", background: "#FFF3D6", borderRadius: 6, padding: "3px 10px", letterSpacing: 1.3, display: "inline-block" }}>PACKING SLIP</div>
@@ -181,7 +181,7 @@ export default function PackingSlipPage() {
         </div>
 
         <div style={{ textAlign: "center" as const, fontFamily: B, fontSize: 11, color: "#5A7A60", paddingTop: 16, borderTop: "1px solid #E4EDE4" }}>
-          Thank you for supporting Bini Colet 💚 · Questions? hello@coletfansuporta.com
+          Thank you for supporting Bini Colet 💚 · Questions? coletfs.com/support
         </div>
       </div>
     </>

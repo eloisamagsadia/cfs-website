@@ -44,10 +44,10 @@ function FailedContent() {
         </button>
 
         <a
-          href="mailto:support@coletfs.com"
+          href="/support"
           style={{ display: "block", fontFamily: B, fontSize: "13px", color: C.muted, textAlign: "center", textDecoration: "none", padding: "12px", border: `1px solid ${C.border}`, borderRadius: "10px" }}
         >
-          Contact support
+          Open a support ticket
         </a>
       </div>
     </div>
