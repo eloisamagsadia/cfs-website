@@ -6,7 +6,7 @@ const authHeader = `Basic ${Buffer.from(`${SECRET_KEY}:`).toString("base64")}`;
 
 // ─── TYPES ────────────────────────────────────────────────────────────────────
 
-export type PaymentType = "order" | "registration" | "donation";
+export type PaymentType = "order" | "registration" | "donation" | "ticket";
 
 export interface CreatePaymentLinkOptions {
   amount: number;           // in centavos (PHP cents) — e.g. ₱500 = 50000

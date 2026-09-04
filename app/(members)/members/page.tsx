@@ -25,12 +25,35 @@ export default async function DashboardPage() {
     { count: ordersCount },
     { count: badgesCount },
     { count: notifCount },
+    { data: pendingTickets },
   ] = await Promise.all([
     (((supabase.from("event_registrations") as any) as any) as any).select("*", { count:"exact", head:true }).eq("user_id", userId),
     (((supabase.from("orders") as any) as any) as any).select("*", { count:"exact", head:true }).eq("user_id", userId),
     (((supabase.from("user_badges") as any) as any) as any).select("*", { count:"exact", head:true }).eq("user_id", userId),
     (((supabase.from("notifications") as any) as any) as any).select("*", { count:"exact", head:true }).eq("user_id", userId).eq("is_read", false),
+    (((supabase.from("event_tickets") as any) as any) as any)
+      .select("id, bundle_id, events:event_id(title)")
+      .eq("user_id", userId)
+      .eq("status", "pending_payment")
+      .order("created_at", { ascending: false }),
   ]);
+
+  // Group pending tickets by bundle so a Bundle of Four shows as one
+  // payment obligation, not four. Pick the first ticket id to link to.
+  const pendingByBundle = new Map<string, { ticket_id: string; event_title: string; size: number }>();
+  for (const t of (pendingTickets ?? []) as any[]) {
+    const key = t.bundle_id ?? t.id;
+    if (pendingByBundle.has(key)) {
+      pendingByBundle.get(key)!.size += 1;
+    } else {
+      pendingByBundle.set(key, {
+        ticket_id: t.id,
+        event_title: (t.events as any)?.title ?? "your event",
+        size: 1,
+      });
+    }
+  }
+  const pendingList = Array.from(pendingByBundle.values());
 
   const stats = [
     { label:"MY EVENTS",     value: eventsCount ?? 0, color:"#1A8040", bg:"#FFFFFF", border:"#DDE8DD", href:"/members/events" },
@@ -48,6 +71,32 @@ export default async function DashboardPage() {
 
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:"28px" }}>
+      {pendingList.length > 0 && (
+        <div style={{ background:"#FFF3D6", border:"1.5px solid #E5B547", borderLeft:"6px solid #B0731A", borderRadius:"10px", padding:"14px 18px", display:"flex", flexDirection:"column", gap:8 }}>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:12, flexWrap:"wrap" }}>
+            <div>
+              <div style={{ fontFamily:R, fontSize:"11px", color:"#8A6212", letterSpacing:"2px", marginBottom:2 }}>⚠ AWAITING PAYMENT</div>
+              <div style={{ fontFamily:B, fontSize:"13px", color:"#7A5A0F" }}>
+                You have {pendingList.length === 1 ? "a ticket" : `${pendingList.length} tickets`} on hold. Complete payment to activate.
+              </div>
+            </div>
+          </div>
+          <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+            {pendingList.slice(0, 3).map(p => (
+              <Link key={p.ticket_id} href={`/members/tickets/${p.ticket_id}`}
+                style={{ background:"#FFFFFF", border:"1px solid #F0D889", borderRadius:8, padding:"10px 12px", fontFamily:B, fontSize:12, color:"#1B3A2D", textDecoration:"none", display:"flex", justifyContent:"space-between", alignItems:"center", gap:12 }}>
+                <span>{p.event_title}{p.size > 1 ? ` — ${p.size} tickets` : ""}</span>
+                <span style={{ fontFamily:R, fontSize:10, color:"#B0731A", letterSpacing:1.5 }}>COMPLETE →</span>
+              </Link>
+            ))}
+            {pendingList.length > 3 && (
+              <Link href="/members/tickets" style={{ fontFamily:B, fontSize:11, color:"#8A6212", textAlign:"center", textDecoration:"none" }}>
+                + {pendingList.length - 3} more pending
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
       <div style={{ background:"#FFFFFF", border:"2px solid #DDE8DD", borderRadius:"12px", padding:"24px 28px", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(circle,rgba(60,206,42,0.08) 1.5px,transparent 1.5px)", backgroundSize:"18px 18px" }}/>
         <div style={{ position:"relative", zIndex:1 }}>

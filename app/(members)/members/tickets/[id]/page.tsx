@@ -199,11 +199,7 @@ export default function TicketPage() {
               )}
             </div>
           ) : ticket.status === "pending_payment" ? (
-            <div style={{ padding: "24px", textAlign: "center" }}>
-              <div style={{ marginBottom: "8px" }}><IconLightning size={36} color="#156530" /></div>
-              <div style={{ fontFamily: R, fontSize: "13px", color: "#156530", letterSpacing: "2px" }}>AWAITING PAYMENT</div>
-              <div style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", marginTop: "6px" }}>Complete payment to activate your ticket</div>
-            </div>
+            <PendingPaymentBlock ticketId={ticket.id} />
           ) : null}
         </div>
 
@@ -231,6 +227,87 @@ export default function TicketPage() {
           spam folder, typo'd address). Component includes Print button
           and its own print stylesheet. */}
       {receipt && <ReceiptBlock receipt={receipt as any} />}
+    </div>
+  );
+}
+
+// Pending-payment block: fetches the saved PayMongo checkout URL for
+// this ticket and gives the buyer a big "COMPLETE PAYMENT" button so
+// they can resume the payment session they abandoned earlier. If the
+// original link is likely expired (~24h), offers to regenerate it.
+function PendingPaymentBlock({ ticketId }: { ticketId: string }) {
+  const [info, setInfo] = useState<{ checkout_url: string | null; link_maybe_expired: boolean; amount: number } | null>(null);
+  const [regenerating, setRegenerating] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch("/api/members/pending-payments")
+      .then(r => (r.ok ? r.json() : { pending: [] }))
+      .then((d: any) => {
+        const match = (d.pending ?? []).find((p: any) => p.ticket_id === ticketId);
+        if (match) setInfo({ checkout_url: match.checkout_url, link_maybe_expired: !!match.link_maybe_expired, amount: Number(match.amount ?? 0) });
+      })
+      .catch(() => {});
+  }, [ticketId]);
+
+  async function regenerate() {
+    setRegenerating(true); setError("");
+    try {
+      const res = await fetch("/api/members/regenerate-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ticket_id: ticketId }),
+      });
+      const d = await res.json();
+      if (!res.ok || !d.checkout_url) throw new Error(d.error ?? "Could not regenerate link");
+      window.location.href = d.checkout_url;
+    } catch (e: any) {
+      setError(e.message ?? "Something went wrong");
+      setRegenerating(false);
+    }
+  }
+
+  const R = "var(--font-righteous,'Righteous',sans-serif)";
+  const B = "var(--font-barlow,'Barlow',sans-serif)";
+
+  return (
+    <div style={{ padding: "20px 24px 24px", textAlign: "center", display: "flex", flexDirection: "column", gap: 12 }}>
+      <div>
+        <div style={{ fontFamily: R, fontSize: "13px", color: "#B0731A", letterSpacing: "2px" }}>AWAITING PAYMENT</div>
+        <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", marginTop: "6px" }}>
+          Your ticket is being held while we wait for payment. Complete it below to activate.
+        </div>
+      </div>
+
+      {info?.checkout_url && !info.link_maybe_expired && (
+        <a href={info.checkout_url} style={{ display: "block", background: "#1A8040", color: "#FFFFFF", padding: "14px 20px", borderRadius: 10, fontFamily: R, fontSize: 13, letterSpacing: 1.5, textDecoration: "none" }}>
+          COMPLETE PAYMENT{info.amount ? ` — ₱${info.amount.toLocaleString("en-PH", { minimumFractionDigits: 2 })}` : ""}
+        </a>
+      )}
+
+      {info?.checkout_url && info.link_maybe_expired && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ fontFamily: B, fontSize: 12, color: "#B0731A", background: "#FFF3D6", border: "1px solid #F0D889", borderRadius: 8, padding: "8px 12px" }}>
+            Your original payment link is more than 24 hours old and may have expired. Regenerate a fresh link below.
+          </div>
+          <a href={info.checkout_url} style={{ background: "#F7FAF5", color: "#4A7C59", padding: "10px 14px", borderRadius: 10, fontFamily: B, fontSize: 12, textDecoration: "none", border: "1px solid #DDE8DD" }}>
+            Try old link anyway
+          </a>
+          <button onClick={regenerate} disabled={regenerating}
+            style={{ background: "#1A8040", color: "#FFFFFF", padding: "12px 20px", borderRadius: 10, fontFamily: R, fontSize: 13, letterSpacing: 1.5, border: "none", cursor: regenerating ? "wait" : "pointer" }}>
+            {regenerating ? "GENERATING…" : "REGENERATE PAYMENT LINK"}
+          </button>
+        </div>
+      )}
+
+      {info && !info.checkout_url && (
+        <button onClick={regenerate} disabled={regenerating}
+          style={{ background: "#1A8040", color: "#FFFFFF", padding: "12px 20px", borderRadius: 10, fontFamily: R, fontSize: 13, letterSpacing: 1.5, border: "none", cursor: regenerating ? "wait" : "pointer" }}>
+          {regenerating ? "GENERATING…" : "GET PAYMENT LINK"}
+        </button>
+      )}
+
+      {error && <div style={{ fontFamily: B, fontSize: 12, color: "#CC3344" }}>{error}</div>}
     </div>
   );
 }
