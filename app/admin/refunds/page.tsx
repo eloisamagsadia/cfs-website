@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { IconWarning, IconCheck, IconCart, IconHeart, IconTicket, IconTrash } from "@/components/shared/Icons";
+import { IconWarning, IconCheck, IconCart, IconHeart, IconTicket, IconTrash, IconLightning } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -106,6 +106,30 @@ export default function AdminRefundsPage() {
       const d = await r.json();
       if (!r.ok) throw new Error(d.error);
       setStatus(msg);
+      load();
+    } catch (e: any) { setError(e.message); }
+    finally { setWorking(null); }
+  }
+
+  async function processViaPayMongo(r: any) {
+    const msg = `PROCESS THIS REFUND VIA PAYMONGO?\n\n` +
+                `Amount: ₱${Number(r.amount).toLocaleString("en-PH", { minimumFractionDigits: 2 })}\n` +
+                `Entity: ${r.entity_type} · ${r.entity_id.slice(0, 8)}\n\n` +
+                `This calls PayMongo's Refunds API and sends the money back to the original payment method. ` +
+                `This cannot be undone. Only proceed if you're sure.`;
+    if (!confirm(msg)) return;
+    setWorking(r.id); setError(""); setStatus("");
+    try {
+      const res = await fetch("/api/admin/refunds/paymongo/process", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refund_id: r.id, reason: "requested_by_customer" }),
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      setStatus(d.status === "completed"
+        ? `PayMongo confirmed the refund immediately. Marked completed.`
+        : `PayMongo accepted the request. Waiting for confirmation webhook.`);
       load();
     } catch (e: any) { setError(e.message); }
     finally { setWorking(null); }
@@ -239,6 +263,11 @@ export default function AdminRefundsPage() {
                 <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "flex-end" }}>
                   {r.status === "pending" && (
                     <>
+                      <button onClick={() => processViaPayMongo(r)} disabled={working === r.id}
+                        title="Call PayMongo Refunds API and send the money back to the original payment method. Irreversible."
+                        style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: "8px", padding: "7px 12px", cursor: "pointer", letterSpacing: "1.2px", display: "inline-flex", alignItems: "center", gap: 5 }}>
+                        <IconLightning size={10} color="#ffffff" /> PROCESS VIA PAYMONGO
+                      </button>
                       <button onClick={() => patch(r.id, { status: "processing" }, "Marked processing.")} disabled={working === r.id}
                         style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#1E4A7A", background: "#E4EEF8", border: "1.5px solid transparent", borderRadius: "8px", padding: "7px 12px", cursor: "pointer", letterSpacing: "1.2px" }}>
                         MARK PROCESSING

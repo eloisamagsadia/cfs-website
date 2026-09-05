@@ -16,14 +16,78 @@ export async function POST(req: NextRequest) {
   const eventData = payload.data?.attributes?.data;
   if (!eventType || !eventData) return NextResponse.json({ received: true });
 
+  const supabase = createAdminClient();
+
+  // ─── Refund events ────────────────────────────────────────────────
+  // Fired after we call POST /v1/refunds from the admin. Keyed by the
+  // refund id (ref_xxx) which we stored in refunds.paymongo_ref.
+  if (eventType === "refund.updated" || eventType === "refund.succeeded" || eventType === "refund.failed") {
+    const refundId = eventData.id as string | undefined;
+    const attrs    = eventData.attributes ?? {};
+    const pmStatus = attrs.status as "pending" | "succeeded" | "failed" | undefined;
+    if (!refundId || !pmStatus) return NextResponse.json({ received: true });
+
+    const { data: row } = await (supabase.from("refunds") as any)
+      .select("id, status, entity_type, entity_id, note")
+      .eq("paymongo_ref", refundId)
+      .maybeSingle();
+    if (!row) return NextResponse.json({ received: true, refund_id: refundId, matched: false });
+
+    // Idempotent — already-final status, don't rewrite
+    if (row.status === "completed" || row.status === "failed") return NextResponse.json({ received: true, refund_id: refundId, idempotent: true });
+
+    if (pmStatus === "succeeded") {
+      const patch: any = { status: "completed", processed_at: new Date().toISOString() };
+      await (supabase.from("refunds") as any).update(patch).eq("id", row.id);
+
+      // Same downstream sync as the admin PATCH handler — mirror it so
+      // webhook-completed refunds behave identically to manually-marked ones.
+      if (row.entity_type === "order") {
+        await (supabase.from("orders") as any).update({ payment_status: "refunded" }).eq("id", row.entity_id);
+      } else if (row.entity_type === "donation") {
+        await (supabase.from("donations") as any).update({ status: "refunded" }).eq("id", row.entity_id);
+      } else if (row.entity_type === "event_registration") {
+        const byBundle = await (supabase.from("event_tickets") as any)
+          .update({ status: "cancelled", payment_status: "refunded" })
+          .eq("bundle_id", row.entity_id).select("id");
+        if (!byBundle.data?.length) {
+          await (supabase.from("event_tickets") as any)
+            .update({ status: "cancelled", payment_status: "refunded" })
+            .eq("id", row.entity_id);
+        }
+      } else if (row.entity_type === "event_ticket") {
+        const note  = String(row?.note ?? "");
+        const match = note.match(/\[tier_change_target:([0-9a-f-]{36})\]/i);
+        if (match) {
+          // Tier downgrade — swap the tier, don't cancel
+          await (supabase.from("event_tickets") as any).update({ tier_id: match[1] }).eq("id", row.entity_id);
+        } else {
+          await (supabase.from("event_tickets") as any)
+            .update({ status: "cancelled", payment_status: "refunded" })
+            .eq("id", row.entity_id);
+        }
+      }
+    } else if (pmStatus === "failed") {
+      const reason = attrs.failure_reason ?? attrs.reason ?? "unknown";
+      await (supabase.from("refunds") as any)
+        .update({
+          status: "failed",
+          note:   `${row.note ?? ""}\n[paymongo_failed:${new Date().toISOString()}] ${reason}`,
+        })
+        .eq("id", row.id);
+    }
+    // pmStatus === "pending" — stay in processing, nothing to update
+
+    return NextResponse.json({ received: true, refund_id: refundId, pm_status: pmStatus });
+  }
+
+  // ─── Payment/link events ──────────────────────────────────────────
   // PayMongo does not forward custom metadata from links to webhook events.
   // Instead, look up the payment_transactions row by payment_link_id to get reference_id + type.
   // For link.* events, the link ID is eventData.id.
   // For payment.* events, the link ID is in eventData.attributes.source.id.
   const linkId = eventData.id ?? eventData.attributes?.source?.id;
   if (!linkId) return NextResponse.json({ received: true });
-
-  const supabase = createAdminClient();
 
   const { data: txn } = await (supabase.from("payment_transactions") as any)
     .select("reference_id, type, status")

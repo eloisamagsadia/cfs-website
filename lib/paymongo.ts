@@ -112,6 +112,74 @@ export async function verifyWebhookSignature(
   }
 }
 
+// ─── REFUNDS ──────────────────────────────────────────────────────────────────
+
+export type RefundReason = "duplicate" | "fraudulent" | "requested_by_customer" | "others";
+
+export interface PayMongoRefund {
+  id:     string;                                   // "ref_..."
+  status: "pending" | "succeeded" | "failed";
+  amount: number;                                   // in centavos
+  payment_id: string;                               // the original "pay_..." id
+  reason:     RefundReason;
+  notes?:     string | null;
+}
+
+/**
+ * Create a refund via PayMongo. Amount is in pesos and gets converted
+ * to centavos here (single-precision math trap avoided).
+ *
+ * Throws on network errors or non-2xx responses; caller should catch,
+ * inspect e.message for the PayMongo error text, and surface it.
+ *
+ * Docs: https://developers.paymongo.com/reference/create-a-refund
+ */
+export async function createRefund(input: {
+  amount:     number;         // pesos
+  payment_id: string;
+  reason:     RefundReason;
+  notes?:     string;
+}): Promise<PayMongoRefund> {
+  const body = {
+    data: {
+      attributes: {
+        amount:     tocentavos(input.amount),
+        payment_id: input.payment_id,
+        reason:     input.reason,
+        notes:      input.notes ?? undefined,
+      },
+    },
+  };
+
+  const res = await fetch(`${PAYMONGO_BASE}/refunds`, {
+    method:  "POST",
+    headers: {
+      Authorization:  authHeader,
+      "Content-Type": "application/json",
+      Accept:         "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  const json: any = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const detail = json?.errors?.[0]?.detail
+                ?? json?.errors?.[0]?.title
+                ?? `PayMongo refund failed (${res.status})`;
+    throw new Error(detail);
+  }
+
+  const attrs = json?.data?.attributes ?? {};
+  return {
+    id:         String(json?.data?.id ?? ""),
+    status:     attrs.status as PayMongoRefund["status"],
+    amount:     Number(attrs.amount ?? 0),
+    payment_id: String(attrs.payment_id ?? input.payment_id),
+    reason:     (attrs.reason ?? input.reason) as RefundReason,
+    notes:      attrs.notes ?? null,
+  };
+}
+
 // ─── PESO HELPERS ─────────────────────────────────────────────────────────────
 
 /** Convert PHP pesos to centavos for PayMongo */
