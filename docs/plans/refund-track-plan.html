@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Refund / Upgrade / Downgrade — Roadmap</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --bg:        #FAF6EE;
+    --paper:    #FFFFFF;
+    --ink:       #1B3A2D;
+    --sub:       #5A7A60;
+    --muted:     #7A8E7A;
+    --green:     #156530;
+    --green2:    #1A8040;
+    --gold:      #B78A1F;
+    --amber:     #7A5A0F;
+    --red:       #8A1E27;
+    --line:      #DDE8DD;
+    --chip:      #E8F0E4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 40px 20px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+  .page {
+    max-width: 820px; margin: 0 auto;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 40px 44px 48px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  }
+
+  /* Wordmark + green stripe (matches other emails/slips) */
+  .stripe { height: 6px; background: linear-gradient(90deg,#156530 0%,#1A8040 50%,#4ACB6E 100%); border-radius: 3px; margin-bottom: 20px; }
+  .brand { text-align: center; letter-spacing: 4px; font-family: Georgia, "Times New Roman", serif; font-size: 22px; color: var(--ink); }
+  .subbrand { text-align: center; font-size: 11px; letter-spacing: 3px; color: var(--sub); text-transform: uppercase; margin: 6px 0 30px; }
+
+  h1 { font-family: Georgia, "Times New Roman", serif; font-size: 28px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.01em; }
+  h2 { font-family: Georgia, "Times New Roman", serif; font-size: 20px; margin: 32px 0 4px; letter-spacing: -0.005em; }
+  h3 { font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sub); margin: 22px 0 8px; }
+
+  .lede { color: var(--sub); font-size: 15px; margin: 0 0 4px; }
+  p  { font-size: 14px; margin: 6px 0; }
+  ul { padding-left: 20px; font-size: 14px; margin: 6px 0; }
+  li { margin: 3px 0; }
+  code {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    background: #F2F7F2; padding: 2px 6px; border-radius: 4px;
+    color: var(--green);
+  }
+  strong { color: var(--ink); }
+  em { color: var(--sub); font-style: normal; }
+
+  /* status chip */
+  .chip {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    letter-spacing: 1.5px; padding: 3px 8px; border-radius: 6px;
+    vertical-align: 2px;
+  }
+  .chip.done    { background: #E8F0E4; color: #156530; }
+  .chip.next    { background: #FFF3D6; color: #7A5A0F; }
+  .chip.later   { background: #F0F0F0; color: #5A7A60; }
+  .chip.blocked { background: #FFE8EC; color: #8A1E27; }
+
+  /* card + step numbering */
+  .card {
+    background: #FAFCF9; border: 1px solid var(--line);
+    border-left: 4px solid var(--green2);
+    border-radius: 10px;
+    padding: 14px 18px; margin: 12px 0;
+  }
+  .card.blocker { border-left-color: var(--red); }
+  .card.later   { border-left-color: var(--muted); }
+  .card h2 { margin-top: 0; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .grid .col {
+    background: #F7FAF5; border: 1px dashed #C7D6BE; border-radius: 8px;
+    padding: 10px 14px; font-size: 13px;
+  }
+  .grid .col .k {
+    font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--sub); margin-bottom: 3px;
+  }
+
+  hr { border: none; border-top: 1px dashed var(--line); margin: 30px 0; }
+
+  /* flow diagram (ascii) */
+  pre.flow {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px; line-height: 1.55;
+    background: #FAFCF9; border: 1px solid var(--line);
+    border-radius: 8px; padding: 14px 16px; overflow: auto;
+    color: var(--ink);
+  }
+
+  .footer {
+    margin-top: 40px; padding-top: 18px;
+    border-top: 1px solid var(--line);
+    text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase;
+  }
+
+  /* print rules */
+  @media print {
+    body { background: #ffffff; padding: 0; }
+    .page { box-shadow: none; border: none; margin: 0; padding: 20px 24px; max-width: 100%; border-radius: 0; }
+    .no-print { display: none; }
+    h2 { page-break-after: avoid; }
+    .card, .grid { page-break-inside: avoid; }
+    @page { size: A4 portrait; margin: 14mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="no-print" style="max-width:820px;margin:0 auto 12px;font-size:12px;color:#5A7A60;text-align:right;font-family:-apple-system,Helvetica,Arial,sans-serif;">
+  <strong>To save as PDF:</strong> Cmd-P (or Ctrl-P) → Destination: <em>Save as PDF</em> → Save.
+</div>
+
+<div class="page">
+
+  <div class="stripe"></div>
+  <div class="brand">COLET FAN SUPORTA</div>
+  <div class="subbrand">Roadmap · Refund / Upgrade / Downgrade Track</div>
+
+  <h1>Refund, Upgrade &amp; Downgrade — Plan</h1>
+  <p class="lede">Everything already shipped, what's next, and how each piece composes with the ones we already have. Ordered by leverage: we finish the payment-side loop before adding notifications and adjacent workflows.</p>
+
+  <div class="grid">
+    <div class="col"><div class="k">Owner</div>Colet Fan Suporta engineering</div>
+    <div class="col"><div class="k">As of</div>September 2026</div>
+    <div class="col"><div class="k">Payments</div>PayMongo (QR Ph active; Refunds API status: <strong>to verify</strong>)</div>
+    <div class="col"><div class="k">Emails</div>Resend (delivered/opened/bounced tracking live)</div>
+  </div>
+
+  <hr/>
+
+  <h3>Where we are today</h3>
+
+  <div class="card">
+    <h2>0 · Shipped foundation <span class="chip done">DONE</span></h2>
+    <ul>
+      <li><strong>Refunds table &amp; admin queue</strong> — <code>/admin/refunds</code>, per-row PENDING → COMPLETED workflow, audit-logged.</li>
+      <li><strong>Tier change API</strong> — <code>POST /api/events/tier-change</code> handles three cases:
+        <ul>
+          <li>Same price → instant swap</li>
+          <li>Upgrade → PayMongo checkout for delta only</li>
+          <li>Downgrade → pending refund row with <code>[tier_change_target:UUID]</code> marker</li>
+        </ul>
+      </li>
+      <li><strong>Member self-service UI</strong> — <code>TierChangeBlock</code> on <code>/members/tickets/[id]</code>. Guards for owner, active ticket, non-bundle, ≥12h before event, tier slot availability.</li>
+      <li><strong>Webhook handles <code>tier_upgrade</code> type</strong> — on payment success, swaps <code>event_tickets.tier_id</code> using metadata.</li>
+      <li><strong>Refund completion → tier swap</strong> — when admin marks a downgrade refund complete, the marker in <code>note</code> triggers a tier update instead of a cancel.</li>
+      <li><strong>Waitlist auto-promote helper</strong> — <code>promoteNextWaitlist(eventId, n)</code> ready to reuse.</li>
+    </ul>
+  </div>
+
+  <hr/>
+
+  <h3>What ships next, in order</h3>
+
+  <div class="card blocker">
+    <h2>1 · PayMongo auto-refund <span class="chip next">NEXT</span></h2>
+    <p><em>Closes the whole downgrade loop end-to-end.</em></p>
+    <p><strong>Goal:</strong> One click on any pending refund row → we call PayMongo's Refunds API → webhook confirms → we mark completed → downstream side-effects fire (tier swap / ticket cancel / etc.). No more bouncing to PayMongo's dashboard.</p>
+
+    <p><strong>Blocker to verify first:</strong> is your PayMongo account's <code>/v1/refunds</code> endpoint enabled? QR Ph refunds especially can be gated. Email PayMongo support before build:</p>
+    <pre class="flow">Subject: Enable Refunds API for our account
+Merchant ID: [your PayMongo merchant id]
+Please enable the /v1/refunds endpoint for our account,
+including QR Ph payment sources. We need to process
+refunds programmatically from our admin dashboard.</pre>
+
+    <p><strong>Files to build (~half a day once enabled):</strong></p>
+    <ul>
+      <li><code>POST /api/admin/refunds/paymongo/process</code> — reads refund row, calls PayMongo API, stores <code>paymongo_refund_id</code>, moves status to <code>processing</code></li>
+      <li>Webhook handler for <code>refund.succeeded</code> / <code>refund.failed</code> → marks refund <code>completed</code> or <code>failed</code></li>
+      <li><strong>PROCESS VIA PAYMONGO</strong> button on <code>/admin/refunds</code> row (pending only, hard confirm)</li>
+    </ul>
+
+    <p><strong>Behavior:</strong></p>
+    <ul>
+      <li>Original charge older than 180 days → button disabled, tooltip explains</li>
+      <li>Amount validation — can only refund up to original charge</li>
+      <li>Partial refunds supported (already how downgrades are amounts)</li>
+      <li>PayMongo failure → row moves to <code>failed</code> with reason, admin gets notified</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>2 · Ticket cancel flow <span class="chip next">NEXT</span></h2>
+    <p><em>Reuses everything from step 1. Answers the "pag ni-cancel yung ticket" question.</em></p>
+    <p><strong>Goal:</strong> Wrap ticket cancellation in one admin action that does everything correctly.</p>
+
+    <p><strong>Currently:</strong> 5 steps across 3 places. Cancel in DB → refund via PayMongo dashboard → log at <code>/admin/refunds</code> → email member manually → hope the seat gets used again.</p>
+
+    <p><strong>After:</strong> One CANCEL button on the ticket. Backend does all of this:</p>
+    <ol>
+      <li>Sets ticket status = <code>cancelled</code>, payment_status = <code>refunded</code></li>
+      <li>Auto-refunds via step 1's endpoint (if PayMongo enabled)</li>
+      <li>Auto-promotes the next waitlist entry using <code>promoteNextWaitlist(eventId, 1)</code></li>
+      <li>Sends the member a branded cancellation email (via existing shell pattern)</li>
+      <li>Frees the capacity count so registration re-opens if it was full</li>
+    </ol>
+
+    <p><strong>Files to build:</strong></p>
+    <ul>
+      <li><code>POST /api/admin/events/tickets/cancel</code> orchestrator</li>
+      <li><code>lib/emails/ticket-cancelled.ts</code> shell (same branding as event-ticket)</li>
+      <li>CANCEL button on <code>/admin/events/[id]/tickets</code> per row</li>
+    </ul>
+  </div>
+
+  <div class="card later">
+    <h2>3 · Member notifications on refund lifecycle <span class="chip next">NEXT</span></h2>
+    <p><em>Slots in naturally alongside 1 &amp; 2. Zero new plumbing — reuses the Resend + in-app notifications infra we already have.</em></p>
+
+    <p><strong>Missing today:</strong> Member submits a downgrade request, then hears nothing until they check back.</p>
+
+    <p><strong>Events to wire:</strong></p>
+    <ul>
+      <li><em>Refund created (queued)</em> → in-app notif "Your refund request is being processed" + optional email</li>
+      <li><em>Refund succeeded</em> → in-app + email "Your ₱X refund has been sent to your original payment method. Expect it in 3–5 business days."</li>
+      <li><em>Refund failed</em> → in-app + email "We couldn't process your refund automatically. Our team will follow up within 24h."</li>
+      <li><em>Tier upgrade paid</em> → in-app "Your ticket has been upgraded to [Tier]. New QR is ready."</li>
+    </ul>
+
+    <p><strong>Uses:</strong> Existing <code>notifications</code> table, existing <code>lib/emails/*</code> shells, PayMongo refund webhook from step 1.</p>
+  </div>
+
+  <div class="card later">
+    <h2>4 · Refund performance / reconciliation panel <span class="chip later">POLISH</span></h2>
+    <p><em>Small quality-of-life. Only worth it once volume warrants.</em></p>
+
+    <p><strong>On <code>/admin/refunds</code>:</strong></p>
+    <ul>
+      <li>Header tiles: TOTAL REFUNDED THIS MONTH · PENDING · FAILED NEEDS FOLLOWUP</li>
+      <li>Amber "stale" flag on any refund row that's been <code>pending</code> for &gt; 7 days</li>
+      <li>Reason breakdown pie (tier downgrade / cancellation / order / donation)</li>
+      <li>CSV export for accounting reconciliation</li>
+    </ul>
+  </div>
+
+  <hr/>
+
+  <h3>Flow: current vs. after step 1 + 2</h3>
+
+  <p><strong>Now — tier downgrade (5 manual actions):</strong></p>
+  <pre class="flow">Member REQUEST → refund row queued (pending)
+                ↓
+Admin opens PayMongo dashboard →
+        finds original payment →
+        clicks refund → confirms amount →
+                ↓
+Admin returns to /admin/refunds →
+        pastes PayMongo refund ID → marks completed →
+                ↓
+Ticket tier_id auto-swaps via the [tier_change_target] marker.</pre>
+
+  <p><strong>After step 1 — tier downgrade (1 click):</strong></p>
+  <pre class="flow">Member REQUEST → refund row queued (pending)
+                ↓
+Admin clicks PROCESS VIA PAYMONGO on the row →
+        hard confirm dialog → we call PayMongo /v1/refunds →
+        row moves to "processing" → PayMongo webhook fires
+                ↓
+Row moves to "completed" → ticket tier_id auto-swaps →
+Member gets email + in-app notif "Your refund has been sent."</pre>
+
+  <p><strong>After step 2 — ticket cancel (1 click):</strong></p>
+  <pre class="flow">Admin clicks CANCEL on a ticket row →
+        confirm dialog → orchestrator fires:
+                ↓
+    - ticket status = cancelled
+    - PayMongo refund initiated (via step 1)
+    - promoteNextWaitlist(eventId, 1) → next in line notified
+    - member gets branded cancellation email
+    - capacity count updated
+                ↓
+Refund webhook eventually confirms → refund row completed.</pre>
+
+  <hr/>
+
+  <h3>Not in this track (parked)</h3>
+  <ul>
+    <li><strong>Vouchers / store credit</strong> — alternative to real refunds for downgrades. Fan-friendly, big feature. Revisit if PayMongo refunds are unreliable.</li>
+    <li><strong>Refund analytics for finance</strong> — dashboards, cohort views. Step 4 is the MVP; deeper reporting waits until you have volume.</li>
+    <li><strong>Programmable "no refund" windows</strong> — e.g. no refunds &lt; 48h before an event. Simple flag on <code>events</code>, but not a real problem until we see abuse.</li>
+    <li><strong>Refund fee reconciliation</strong> — PayMongo takes a cut on original charge; who eats it on refund? Answer once volume matters.</li>
+  </ul>
+
+  <hr/>
+
+  <h3>Dependencies &amp; migrations</h3>
+  <ul>
+    <li><code>supabase/migrations/20260905_refunds_event_ticket.sql</code> — widens the <code>refunds.entity_type</code> CHECK to allow <code>'event_ticket'</code>. <strong>Not yet applied on remote.</strong> Blocks the downgrade path only; upgrades and same-price swaps work without it.</li>
+    <li>PayMongo Refunds API must be enabled on the merchant account before step 1 goes live in production. Email support to confirm.</li>
+    <li>Nothing else outstanding.</li>
+  </ul>
+
+  <div class="footer">
+    Colet Fan Suporta · Internal roadmap · Confidential
+  </div>
+</div>
+
+</body>
+</html>
