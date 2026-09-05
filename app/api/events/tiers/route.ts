@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { enrichTiersWithRemaining } from "@/lib/event-tier-slots";
+import { enrichTiersWithRemaining, getTierRemaining } from "@/lib/event-tier-slots";
 
 const db = () => createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -50,7 +50,11 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ tier });
+  // Overlay live remaining so the client doesn't paint the stale
+  // stored slots_remaining column (fresh insert usually matches
+  // capacity but do it anyway for parity with PATCH).
+  const remaining = await getTierRemaining(db(), event_id, (tier as any).id);
+  return NextResponse.json({ tier: { ...(tier as any), slots_remaining: remaining } });
 }
 
 export async function PATCH(req: NextRequest) {
@@ -66,7 +70,8 @@ export async function PATCH(req: NextRequest) {
     updates.bundle_size = Math.max(1, Math.min(20, Number(updates.bundle_size ?? 1) || 1));
   }
 
-  const { data: tier, error } = await db()
+  const client = db();
+  const { data: tier, error } = await client
     .from("event_tiers")
     .update(updates)
     .eq("id", id)
@@ -74,7 +79,12 @@ export async function PATCH(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ tier });
+  // The stored slots_remaining column doesn't get touched by capacity
+  // edits (it isn't decremented on register either — that's why we
+  // moved to live compute). Overlay the live value so the tier editor
+  // stops showing "10/5" after capacity changes from 10 to 5.
+  const remaining = await getTierRemaining(client, (tier as any).event_id, (tier as any).id);
+  return NextResponse.json({ tier: { ...(tier as any), slots_remaining: remaining } });
 }
 
 export async function DELETE(req: NextRequest) {
