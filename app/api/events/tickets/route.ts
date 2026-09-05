@@ -3,6 +3,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getEffectiveUserId } from "@/lib/effective-user";
 import { evaluateRegistrationGate } from "@/lib/event-registration";
+import { getTierRemaining } from "@/lib/event-tier-slots";
 import { checkAndAwardBadges } from "@/lib/badges";
 import { sendEventTicket, sendEventTicketBundle } from "@/lib/email";
 import { logAudit } from "@/lib/audit";
@@ -106,11 +107,14 @@ export async function POST(req: NextRequest) {
     if (!data) return NextResponse.json({ error: "Tier not found" }, { status: 404 });
     if (!data.is_active) return NextResponse.json({ error: "This tier is no longer available" }, { status: 400 });
     const need = Math.max(1, Math.min(20, Number((data as any).bundle_size ?? 1) || 1));
-    if (data.slots_remaining !== null && data.slots_remaining < need) {
+    // Live compute — event_tiers.slots_remaining is unused (was never wired to
+    // decrement). Real remaining = capacity − active_tickets_on_this_tier.
+    const remaining = await getTierRemaining(supabase, (data as any).event_id, tier_id);
+    if (remaining !== null && remaining < need) {
       return NextResponse.json({
-        error: data.slots_remaining <= 0
+        error: remaining <= 0
           ? "This tier is sold out"
-          : `Only ${data.slots_remaining} slot${data.slots_remaining === 1 ? "" : "s"} left in this tier — not enough for a bundle of ${need}.`,
+          : `Only ${remaining} slot${remaining === 1 ? "" : "s"} left in this tier — not enough for a bundle of ${need}.`,
       }, { status: 400 });
     }
     tier = data;

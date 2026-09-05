@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { enrichTiersWithRemaining } from "@/lib/event-tier-slots";
 
 const db = () => createAdminClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,14 +12,16 @@ export async function GET(req: NextRequest) {
   const event_id = new URL(req.url).searchParams.get("event_id");
   if (!event_id) return NextResponse.json({ error: "Missing event_id" }, { status: 400 });
 
-  const { data: tiers, error } = await db()
+  const client = db();
+  const { data: tiers, error } = await client
     .from("event_tiers")
     .select("*")
     .eq("event_id", event_id)
     .order("price", { ascending: true });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ tiers: tiers ?? [] });
+  const enriched = await enrichTiersWithRemaining(client, event_id, (tiers ?? []) as any[]);
+  return NextResponse.json({ tiers: enriched });
 }
 
 export async function POST(req: NextRequest) {

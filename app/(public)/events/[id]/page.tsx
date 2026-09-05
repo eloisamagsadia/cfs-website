@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import EventRegisterButton from "@/components/public/EventRegisterButton";
+import { enrichTiersWithRemaining } from "@/lib/event-tier-slots";
 import type { Metadata } from "next";
 import { IconCalendar, IconPin, IconUsers, IconTicket, IconSparkle, IconTag, IconClipboard, IconStar, IconCheck } from "@/components/shared/Icons";
 import EventShareRow from "@/components/public/EventShareRow";
@@ -54,7 +55,9 @@ export default async function EventDetailPage({ params }: { params: { id: string
 
   if (!event) notFound();
 
-  const { data: tiers } = await (supabase as any).from("event_tiers").select("*").eq("event_id", params.id).eq("is_active", true).order("price", { ascending: true });
+  const { data: tiersRaw } = await (supabase as any).from("event_tiers").select("*").eq("event_id", params.id).eq("is_active", true).order("price", { ascending: true });
+  // Overlay live per-tier remaining count; stored slots_remaining is not decremented anywhere.
+  const tiers = await enrichTiersWithRemaining(supabase, params.id, (tiersRaw ?? []) as any[]);
 
   let isRegistered = false;
   let existingTicketId: string | null = null;

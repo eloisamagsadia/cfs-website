@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getTierRemaining } from "@/lib/event-tier-slots";
 import { logAudit } from "@/lib/audit";
 import { randomUUID } from "crypto";
 
@@ -67,13 +68,17 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Tier slot gate — respects the tier's own capacity via slots_remaining
-  if (tier && tier.slots_remaining !== null && tier.slots_remaining < bundleSize) {
-    return NextResponse.json({
-      error: tier.slots_remaining <= 0
-        ? "This tier is sold out"
-        : `Only ${tier.slots_remaining} slot${tier.slots_remaining === 1 ? "" : "s"} left in this tier — not enough for ${bundleSize}.`,
-    }, { status: 400 });
+  // Tier slot gate — live compute from event_tickets (the stored
+  // slots_remaining column is unused).
+  if (tier) {
+    const remaining = await getTierRemaining(admin, event_id, tier.id);
+    if (remaining !== null && remaining < bundleSize) {
+      return NextResponse.json({
+        error: remaining <= 0
+          ? "This tier is sold out"
+          : `Only ${remaining} slot${remaining === 1 ? "" : "s"} left in this tier — not enough for ${bundleSize}.`,
+      }, { status: 400 });
+    }
   }
 
   const bundle_id = randomUUID();

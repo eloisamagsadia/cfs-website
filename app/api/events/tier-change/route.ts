@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getEffectiveUserId } from "@/lib/effective-user";
 import { calculateFee } from "@/lib/paymongo";
+import { getTierRemainingMap } from "@/lib/event-tier-slots";
 import { logAudit } from "@/lib/audit";
 
 /**
@@ -45,11 +46,19 @@ async function loadContext(ticketId: string, userId: string) {
 
   const { data: tiers } = await (admin as any)
     .from("event_tiers")
-    .select("id, name, price, color, slots_remaining, is_active, bundle_size")
+    .select("id, name, price, color, capacity, is_active, bundle_size")
     .eq("event_id", t.event_id)
     .order("price");
 
-  return { ticket: t, event, tiers: (tiers ?? []) as any[], admin };
+  // Overlay live remaining count. event_tiers.slots_remaining exists but is
+  // never decremented anywhere — trust the live compute, not the stored value.
+  const remainingMap = await getTierRemainingMap(admin, t.event_id);
+  const tiersEnriched = ((tiers ?? []) as any[]).map(x => ({
+    ...x,
+    slots_remaining: x.id in remainingMap ? remainingMap[x.id] : (x.capacity ?? null),
+  }));
+
+  return { ticket: t, event, tiers: tiersEnriched, admin };
 }
 
 export async function GET(req: NextRequest) {
