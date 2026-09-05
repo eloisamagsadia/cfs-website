@@ -20,7 +20,12 @@ import { logAudit } from "@/lib/audit";
  *   - ticket must be owned by caller, status=active
  *   - event must be > 12h away, not cancelled, not past
  *   - target tier must belong to same event, have slots_remaining > 0 (unless null=∞)
- *   - bundle_size compatibility (can't change tier if it's a bundle head/child — MVP)
+ *
+ * Bundle members are allowed to self-serve tier-change: the delta is
+ * computed against LIST prices only (current tier price → target tier
+ * price), so the group discount from the original bundle purchase is
+ * treated as a one-time thing and doesn't carry over to the new tier.
+ * The other members of the bundle are untouched.
  */
 const MIN_HOURS_BEFORE_EVENT = 12;
 
@@ -34,7 +39,6 @@ async function loadContext(ticketId: string, userId: string) {
   if (!t) return { error: { status: 404, msg: "Ticket not found" } };
   if (t.user_id !== userId) return { error: { status: 403, msg: "Not your ticket" } };
   if (t.status !== "active") return { error: { status: 400, msg: "Only active tickets can change tier" } };
-  if (t.bundle_id) return { error: { status: 400, msg: "Bundle tickets can't be changed self-serve. Contact support." } };
 
   const { data: event } = await (admin as any).from("events").select("id, title, date, status").eq("id", t.event_id).maybeSingle();
   if (!event) return { error: { status: 404, msg: "Event not found" } };
