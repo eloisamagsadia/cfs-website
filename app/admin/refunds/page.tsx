@@ -7,8 +7,14 @@ const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
-type EntityKind = "order" | "donation" | "event_registration";
+type EntityKind = "order" | "donation" | "event_registration" | "event_ticket";
 type Status     = "pending" | "processing" | "completed" | "failed" | "cancelled";
+
+interface MemberHit    { id: string; display_name: string | null; email: string | null; avatar_url: string | null }
+interface TicketHit    { id: string; ticket_number: string | null; amount: number; event_title: string; created_at: string }
+interface OrderHit     { id: string; total: number; created_at: string }
+interface DonationHit  { id: string; amount: number; message: string | null; created_at: string }
+interface Refundable   { tickets: TicketHit[]; orders: OrderHit[]; donations: DonationHit[] }
 
 interface Refund {
   id: string;
@@ -31,6 +37,7 @@ const ENTITY_META: Record<EntityKind, { label: string; icon: React.ReactNode; hr
   order:               { label: "ORDER",       icon: <IconCart size={12} color="#7A5A0F" />,   href: (id) => `/admin/orders/${id}` },
   donation:            { label: "DONATION",    icon: <IconHeart size={12} color="#B78A1F" />,  href: (id) => `/admin/donations` },
   event_registration:  { label: "EVENT REG",   icon: <IconTicket size={12} color="#156530" />, href: (id) => `/admin/events` },
+  event_ticket:        { label: "TICKET",      icon: <IconTicket size={12} color="#1A8040" />, href: (id) => `/admin/events` },
 };
 
 const STATUS_META: Record<Status, { color: string; bg: string; label: string }> = {
@@ -68,6 +75,69 @@ export default function AdminRefundsPage() {
   const [working, setWorking] = useState<string | null>(null);
   const [newForm, setNewForm] = useState({ entity_type: "order" as EntityKind, entity_id: "", user_id: "", amount: "", reason: "", note: "" });
   const [showNew, setShowNew] = useState(false);
+
+  // NEW REFUND picker state — search a member, then pick one of their
+  // paid tickets/orders/donations. Never asks the admin for a UUID.
+  const [memberQ,       setMemberQ]       = useState("");
+  const [memberHits,    setMemberHits]    = useState<MemberHit[]>([]);
+  const [memberSearching, setMemberSearching] = useState(false);
+  const [picked,        setPicked]        = useState<MemberHit | null>(null);
+  const [refundable,    setRefundable]    = useState<Refundable | null>(null);
+  const [refundableLoading, setRefundableLoading] = useState(false);
+  const [pickedEntity,  setPickedEntity]  = useState<{ kind: EntityKind; label: string } | null>(null);
+
+  // Debounced member search
+  useEffect(() => {
+    if (!showNew) return;
+    if (picked) return;                 // pause search once a member is locked in
+    const q = memberQ.trim();
+    if (q.length < 2) { setMemberHits([]); return; }
+    setMemberSearching(true);
+    const t = setTimeout(async () => {
+      try {
+        const r = await fetch(`/api/admin/search?q=${encodeURIComponent(q)}`);
+        const d = await r.json();
+        setMemberHits((d?.members ?? []).slice(0, 8));
+      } catch {}
+      finally { setMemberSearching(false); }
+    }, 220);
+    return () => clearTimeout(t);
+  }, [memberQ, showNew, picked]);
+
+  // When a member is picked, pull their refundable purchases
+  useEffect(() => {
+    if (!picked) { setRefundable(null); setPickedEntity(null); return; }
+    setRefundableLoading(true);
+    fetch(`/api/admin/refunds/refundable?user_id=${picked.id}`)
+      .then(r => r.json())
+      .then(d => setRefundable({ tickets: d.tickets ?? [], orders: d.orders ?? [], donations: d.donations ?? [] }))
+      .catch(() => setRefundable({ tickets: [], orders: [], donations: [] }))
+      .finally(() => setRefundableLoading(false));
+  }, [picked]);
+
+  function resetNewForm() {
+    setNewForm({ entity_type: "order", entity_id: "", user_id: "", amount: "", reason: "", note: "" });
+    setMemberQ(""); setMemberHits([]); setPicked(null); setRefundable(null); setPickedEntity(null);
+  }
+
+  function selectMember(m: MemberHit) {
+    setPicked(m);
+    setNewForm(p => ({ ...p, user_id: m.id, entity_id: "", amount: "" }));
+    setMemberHits([]);
+  }
+
+  function selectTicket(t: TicketHit) {
+    setPickedEntity({ kind: "event_ticket", label: `${t.event_title} · #${t.ticket_number ?? t.id.slice(0, 8)}` });
+    setNewForm(p => ({ ...p, entity_type: "event_ticket", entity_id: t.id, amount: String(t.amount) }));
+  }
+  function selectOrder(o: OrderHit) {
+    setPickedEntity({ kind: "order", label: `Order #${o.id.slice(0, 8)}` });
+    setNewForm(p => ({ ...p, entity_type: "order", entity_id: o.id, amount: String(o.total) }));
+  }
+  function selectDonation(d: DonationHit) {
+    setPickedEntity({ kind: "donation", label: `Donation #${d.id.slice(0, 8)}` });
+    setNewForm(p => ({ ...p, entity_type: "donation", entity_id: d.id, amount: String(d.amount) }));
+  }
 
   async function load() {
     setLoading(true); setError("");
@@ -170,7 +240,7 @@ export default function AdminRefundsPage() {
       const d = await r.json();
       if (!r.ok) throw new Error(d.error);
       setStatus("Refund created (pending).");
-      setNewForm({ entity_type: "order", entity_id: "", user_id: "", amount: "", reason: "", note: "" });
+      resetNewForm();
       setShowNew(false);
       load();
     } catch (e: any) { setError(e.message); }
@@ -191,33 +261,127 @@ export default function AdminRefundsPage() {
             style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1A8040", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px" }}>
             <IconChart size={12} color="#1A8040" /> PERFORMANCE
           </Link>
-          <button onClick={() => setShowNew(v => !v)}
+          <button onClick={() => { setShowNew(v => { if (v) resetNewForm(); return !v; }); }}
             style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: showNew ? "#5A5A5A" : "#1A8040", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
             {showNew ? "CLOSE" : "NEW REFUND"}
           </button>
         </div>
       </div>
 
-      {/* New refund form */}
+      {/* New refund form — picker flow (no UUIDs to type) */}
       {showNew && (
-        <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: "14px", padding: "18px 20px", display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: "14px", padding: "18px 20px", display: "flex", flexDirection: "column", gap: "14px" }}>
           <div style={{ fontFamily: R, fontSize: "12px", color: "#7A5A0F", letterSpacing: "2px" }}>NEW REFUND</div>
-          <div style={{ display: "grid", gridTemplateColumns: "160px 1fr 1fr", gap: "10px" }}>
-            <select value={newForm.entity_type} onChange={e => setNewForm(p => ({ ...p, entity_type: e.target.value as EntityKind }))} style={inp}>
-              <option value="order">Order</option>
-              <option value="donation">Donation</option>
-              <option value="event_registration">Event Reg</option>
-            </select>
-            <input value={newForm.entity_id} onChange={e => setNewForm(p => ({ ...p, entity_id: e.target.value }))} placeholder="Entity ID (UUID)" style={inp} />
-            <input value={newForm.amount}    onChange={e => setNewForm(p => ({ ...p, amount:   e.target.value }))} placeholder="Amount (PHP)"   type="number" min="0" step="0.01" style={inp} />
+
+          {/* Step 1 — pick the member */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#7A5A0F", letterSpacing: "1.4px" }}>1 · MEMBER</div>
+            {picked ? (
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "8px 12px" }}>
+                {picked.avatar_url
+                  ? <img src={picked.avatar_url} alt="" style={{ width: "28px", height: "28px", borderRadius: "999px", objectFit: "cover" }} />
+                  : <div style={{ width: "28px", height: "28px", borderRadius: "999px", background: "#E8F0E4", color: "#1A8040", fontFamily: SG, fontWeight: 700, fontSize: "12px", display: "flex", alignItems: "center", justifyContent: "center" }}>{(picked.display_name ?? picked.email ?? "?")[0]?.toUpperCase()}</div>
+                }
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", fontWeight: 600 }}>{picked.display_name ?? "—"}</div>
+                  <div style={{ fontFamily: B, fontSize: "11px", color: "#7A8E7A", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{picked.email ?? picked.id}</div>
+                </div>
+                <button onClick={resetNewForm} style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#5A5A5A", background: "#F0F0F0", border: "none", borderRadius: "8px", padding: "6px 10px", cursor: "pointer", letterSpacing: "1.2px" }}>CHANGE</button>
+              </div>
+            ) : (
+              <>
+                <input value={memberQ} onChange={e => setMemberQ(e.target.value)} placeholder="Search by name or email…" style={inp} autoFocus />
+                {memberSearching && <div style={{ fontFamily: B, fontSize: "11px", color: "#7A8E7A" }}>Searching…</div>}
+                {memberHits.length > 0 && (
+                  <div style={{ background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", overflow: "hidden" }}>
+                    {memberHits.map(m => (
+                      <button key={m.id} onClick={() => selectMember(m)}
+                        style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%", padding: "8px 12px", background: "transparent", border: "none", borderBottom: "1px solid #F0F5F0", cursor: "pointer", textAlign: "left" as const }}
+                        onMouseEnter={e => e.currentTarget.style.background = "#F8FCF8"} onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                        {m.avatar_url
+                          ? <img src={m.avatar_url} alt="" style={{ width: "26px", height: "26px", borderRadius: "999px", objectFit: "cover" }} />
+                          : <div style={{ width: "26px", height: "26px", borderRadius: "999px", background: "#E8F0E4", color: "#1A8040", fontFamily: SG, fontWeight: 700, fontSize: "11px", display: "flex", alignItems: "center", justifyContent: "center" }}>{(m.display_name ?? m.email ?? "?")[0]?.toUpperCase()}</div>
+                        }
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", fontWeight: 600 }}>{m.display_name ?? "—"}</div>
+                          <div style={{ fontFamily: B, fontSize: "10px", color: "#7A8E7A", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{m.email ?? m.id}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </div>
-          <input value={newForm.user_id} onChange={e => setNewForm(p => ({ ...p, user_id: e.target.value }))} placeholder="User ID (optional)" style={inp} />
-          <input value={newForm.reason}  onChange={e => setNewForm(p => ({ ...p, reason: e.target.value }))}  placeholder="Reason (customer-facing)" style={inp} />
-          <textarea value={newForm.note} onChange={e => setNewForm(p => ({ ...p, note:   e.target.value }))}  placeholder="Internal note (optional)" rows={2} style={{ ...inp, resize: "vertical" as const }} />
-          <button onClick={createNew} disabled={working === "__new__"}
-            style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px", alignSelf: "flex-start" }}>
-            {working === "__new__" ? "CREATING…" : "CREATE REFUND"}
-          </button>
+
+          {/* Step 2 — pick the purchase to refund */}
+          {picked && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#7A5A0F", letterSpacing: "1.4px" }}>2 · WHAT'S BEING REFUNDED</div>
+              {refundableLoading ? (
+                <div style={{ fontFamily: B, fontSize: "12px", color: "#7A8E7A" }}>Loading their purchases…</div>
+              ) : refundable && (refundable.tickets.length + refundable.orders.length + refundable.donations.length) === 0 ? (
+                <div style={{ background: "#ffffff", border: "1.5px dashed #DDE8DD", borderRadius: "10px", padding: "14px", fontFamily: B, fontSize: "12px", color: "#7A8E7A", textAlign: "center" as const }}>
+                  This member has no paid tickets, orders, or donations on record.
+                </div>
+              ) : refundable && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {refundable.tickets.length > 0 && (
+                    <PickerGroup label={`Tickets (${refundable.tickets.length})`} accent="#1A8040" icon={<IconTicket size={11} color="#1A8040" />}>
+                      {refundable.tickets.map(t => {
+                        const active = pickedEntity?.kind === "event_ticket" && newForm.entity_id === t.id;
+                        return (
+                          <PickerRow key={t.id} active={active} onClick={() => selectTicket(t)}
+                            title={t.event_title} sub={`#${t.ticket_number ?? t.id.slice(0, 8)} · ${new Date(t.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric" })}`}
+                            amount={t.amount} accent="#1A8040" />
+                        );
+                      })}
+                    </PickerGroup>
+                  )}
+                  {refundable.orders.length > 0 && (
+                    <PickerGroup label={`Orders (${refundable.orders.length})`} accent="#7A5A0F" icon={<IconCart size={11} color="#7A5A0F" />}>
+                      {refundable.orders.map(o => {
+                        const active = pickedEntity?.kind === "order" && newForm.entity_id === o.id;
+                        return (
+                          <PickerRow key={o.id} active={active} onClick={() => selectOrder(o)}
+                            title={`Order #${o.id.slice(0, 8)}`} sub={new Date(o.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric" })}
+                            amount={o.total} accent="#7A5A0F" />
+                        );
+                      })}
+                    </PickerGroup>
+                  )}
+                  {refundable.donations.length > 0 && (
+                    <PickerGroup label={`Donations (${refundable.donations.length})`} accent="#B78A1F" icon={<IconHeart size={11} color="#B78A1F" />}>
+                      {refundable.donations.map(d => {
+                        const active = pickedEntity?.kind === "donation" && newForm.entity_id === d.id;
+                        return (
+                          <PickerRow key={d.id} active={active} onClick={() => selectDonation(d)}
+                            title={`Donation #${d.id.slice(0, 8)}`} sub={d.message ? `"${d.message.slice(0, 40)}${d.message.length > 40 ? "…" : ""}"` : new Date(d.created_at).toLocaleDateString("en-PH", { month: "short", day: "numeric" })}
+                            amount={d.amount} accent="#B78A1F" />
+                        );
+                      })}
+                    </PickerGroup>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Step 3 — amount, reason, note (only after a purchase is picked) */}
+          {picked && pickedEntity && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#7A5A0F", letterSpacing: "1.4px" }}>3 · DETAILS</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 200px", gap: "10px" }}>
+                <input value={newForm.reason} onChange={e => setNewForm(p => ({ ...p, reason: e.target.value }))} placeholder="Reason (customer-facing) — required" style={inp} />
+                <input value={newForm.amount} onChange={e => setNewForm(p => ({ ...p, amount: e.target.value }))} placeholder="Amount (PHP)" type="number" min="0" step="0.01" style={inp} />
+              </div>
+              <textarea value={newForm.note} onChange={e => setNewForm(p => ({ ...p, note: e.target.value }))} placeholder="Internal note (optional)" rows={2} style={{ ...inp, resize: "vertical" as const }} />
+              <button onClick={createNew} disabled={working === "__new__"}
+                style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px", alignSelf: "flex-start" }}>
+                {working === "__new__" ? "CREATING…" : "CREATE REFUND"}
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -311,5 +475,38 @@ export default function AdminRefundsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function PickerGroup({ label, accent, icon, children }: { label: string; accent: string; icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "10px", overflow: "hidden" }}>
+      <div style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: accent, letterSpacing: "1.4px", padding: "6px 10px", background: `${accent}0F`, borderBottom: `1px solid ${accent}22`, display: "flex", alignItems: "center", gap: "6px" }}>
+        {icon} {label.toUpperCase()}
+      </div>
+      <div>{children}</div>
+    </div>
+  );
+}
+
+function PickerRow({ active, onClick, title, sub, amount, accent }: { active: boolean; onClick: () => void; title: string; sub: string; amount: number; accent: string }) {
+  return (
+    <button onClick={onClick} type="button"
+      style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", width: "100%",
+        padding: "9px 12px", border: "none", borderBottom: "1px solid #F0F5F0",
+        background: active ? `${accent}18` : "transparent",
+        cursor: "pointer", textAlign: "left" as const,
+      }}
+      onMouseEnter={e => { if (!active) e.currentTarget.style.background = "#F8FCF8"; }}
+      onMouseLeave={e => { if (!active) e.currentTarget.style.background = "transparent"; }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{title}</div>
+        <div style={{ fontFamily: B, fontSize: "10px", color: "#7A8E7A", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{sub}</div>
+      </div>
+      <div style={{ fontFamily: SG, fontSize: "12px", fontWeight: 700, color: accent, whiteSpace: "nowrap" }}>
+        ₱{Number(amount).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+      </div>
+    </button>
   );
 }
