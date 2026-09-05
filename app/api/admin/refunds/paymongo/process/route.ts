@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createRefund, type RefundReason } from "@/lib/paymongo";
 import { logAudit } from "@/lib/audit";
+import { notifyRefundOutcome } from "@/lib/refund-notifications";
 
 /**
  * Auto-refund via PayMongo API.
@@ -121,6 +122,13 @@ export async function POST(req: NextRequest) {
 
   const { error: uErr } = await (admin as any).from("refunds").update(patch).eq("id", refund.id);
   if (uErr) return NextResponse.json({ error: uErr.message }, { status: 500 });
+
+  // Sync-succeeded case: PayMongo returned "succeeded" immediately, so
+  // we jumped straight past processing → completed. Fire the member
+  // notif here since the webhook may never see a transition.
+  if (nextStatus === "completed") {
+    try { await notifyRefundOutcome(admin as any, { ...refund, paymongo_ref: pmRefund.id } as any, "succeeded"); } catch {}
+  }
 
   await logAudit({
     userId,

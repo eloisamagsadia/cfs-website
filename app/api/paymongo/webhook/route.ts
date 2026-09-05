@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyWebhookSignature } from "@/lib/paymongo";
 import { sendDonationReceipt, sendEventTicket, sendEventTicketBundle } from "@/lib/email";
+import { notifyRefundOutcome } from "@/lib/refund-notifications";
 import { clerkClient } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
     if (!refundId || !pmStatus) return NextResponse.json({ received: true });
 
     const { data: row } = await (supabase.from("refunds") as any)
-      .select("id, status, entity_type, entity_id, note")
+      .select("id, status, entity_type, entity_id, note, user_id, amount, reason, paymongo_ref")
       .eq("paymongo_ref", refundId)
       .maybeSingle();
     if (!row) return NextResponse.json({ received: true, refund_id: refundId, matched: false });
@@ -46,6 +47,9 @@ export async function POST(req: NextRequest) {
     if (pmStatus === "succeeded") {
       const patch: any = { status: "completed", processed_at: new Date().toISOString() };
       await (supabase.from("refunds") as any).update(patch).eq("id", row.id);
+
+      // Fire the member-facing "refund sent" notif + email
+      try { await notifyRefundOutcome(supabase as any, row as any, "succeeded"); } catch {}
 
       // Same downstream sync as the admin PATCH handler — mirror it so
       // webhook-completed refunds behave identically to manually-marked ones.
@@ -75,13 +79,15 @@ export async function POST(req: NextRequest) {
         }
       }
     } else if (pmStatus === "failed") {
-      const reason = attrs.failure_reason ?? attrs.reason ?? "unknown";
+      const reason  = attrs.failure_reason ?? attrs.reason ?? "unknown";
+      const newNote = `${row.note ?? ""}\n[paymongo_failed:${new Date().toISOString()}] ${reason}`;
       await (supabase.from("refunds") as any)
-        .update({
-          status: "failed",
-          note:   `${row.note ?? ""}\n[paymongo_failed:${new Date().toISOString()}] ${reason}`,
-        })
+        .update({ status: "failed", note: newNote })
         .eq("id", row.id);
+
+      // notifyRefundOutcome parses the reason from row.note, so pass the
+      // updated note through here.
+      try { await notifyRefundOutcome(supabase as any, { ...row, note: newNote } as any, "failed"); } catch {}
     }
     // pmStatus === "pending" — stay in processing, nothing to update
 
@@ -245,6 +251,31 @@ export async function POST(req: NextRequest) {
       const newTierId = (txnRow?.metadata as any)?.new_tier_id;
       if (newTierId) {
         await (supabase.from("event_tickets") as any).update({ tier_id: newTierId }).eq("id", reference);
+
+        // Drop a "your upgrade is confirmed" in-app notif. Best-effort;
+        // we don't want a Supabase hiccup to fail the webhook.
+        try {
+          const { data: ticket } = await (supabase.from("event_tickets") as any)
+            .select("user_id, event_id, ticket_number")
+            .eq("id", reference)
+            .maybeSingle();
+          const { data: tier } = await (supabase.from("event_ticket_tiers") as any)
+            .select("name")
+            .eq("id", newTierId)
+            .maybeSingle();
+          if (ticket?.user_id) {
+            await (supabase.from("notifications") as any).insert({
+              user_id: ticket.user_id,
+              type:    "tier_upgrade_completed",
+              title:   "Ticket upgraded",
+              message: tier?.name
+                ? `Your ticket is now on the ${tier.name} tier. Check your ticket wallet for the updated pass.`
+                : "Your ticket upgrade has been applied. Check your ticket wallet for the updated pass.",
+              link:    `/members/tickets`,
+              is_read: false,
+            });
+          }
+        } catch {}
       }
     }
   }

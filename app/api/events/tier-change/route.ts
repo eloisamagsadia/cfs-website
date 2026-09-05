@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getEffectiveUserId } from "@/lib/effective-user";
 import { calculateFee } from "@/lib/paymongo";
 import { getTierRemainingMap } from "@/lib/event-tier-slots";
+import { notifyRefundOutcome } from "@/lib/refund-notifications";
 import { logAudit } from "@/lib/audit";
 
 /**
@@ -176,6 +177,9 @@ export async function POST(req: NextRequest) {
     })
     .select().single();
   if (rErr) return NextResponse.json({ error: rErr.message }, { status: 500 });
+
+  // Drop the "your refund request is being processed" in-app notif (silent email)
+  await notifyRefundOutcome(ctx.admin, refund as any, "queued");
 
   await logAudit({ userId, action: "tier_change_downgrade_requested", target_type: "event_ticket", target_id: ticket_id, details: { from: ctx.ticket.tier_id, to: new_tier_id, refund_id: (refund as any).id, refund_amount: refundAmount } });
   return NextResponse.json({ direction: "downgrade", pending_refund_id: (refund as any).id, refund_amount: refundAmount });

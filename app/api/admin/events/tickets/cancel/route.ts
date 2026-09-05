@@ -3,6 +3,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { promoteNextWaitlist } from "@/lib/waitlist-promote";
 import { sendTicketCancelledEmail } from "@/lib/emails/ticket-cancelled";
+import { notifyRefundOutcome } from "@/lib/refund-notifications";
 import { logAudit } from "@/lib/audit";
 
 /**
@@ -93,10 +94,13 @@ export async function POST(req: NextRequest) {
         requested_by: actor.userId,
         status:      "pending",
       })
-      .select("id")
+      .select("*")
       .single();
     if (!rErr && refund) {
       refundRowId = (refund as any).id;
+
+      // Silent "we got your refund request" in-app notif (no email on queued).
+      try { await notifyRefundOutcome(admin as any, refund as any, "queued"); } catch {}
 
       // Fire the PayMongo auto-process only if the caller is super_admin
       // (that endpoint is super-only) and only if the PayMongo API is

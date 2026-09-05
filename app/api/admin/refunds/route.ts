@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
+import { notifyRefundOutcome } from "@/lib/refund-notifications";
 
 // Refunds are financial actions — restricted to super_admin only.
 // Regular admins never see the Refunds nav entry (gated in the sidebar
@@ -53,6 +54,9 @@ export async function POST(req: NextRequest) {
     .select()
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Silent "we got your refund request" in-app notif for the member.
+  try { await notifyRefundOutcome(admin as any, data as any, "queued"); } catch {}
 
   await logAudit({ userId, action: "create_refund", target_type: "refund", target_id: (data as any).id, details: { entity_type, entity_id, amount, reason }, req });
   return NextResponse.json({ refund: data });
@@ -121,6 +125,15 @@ export async function PATCH(req: NextRequest) {
         .update({ status: "cancelled", payment_status: "refunded" })
         .eq("id", ref);
     }
+  }
+
+  // Member-facing lifecycle notif on terminal transitions.
+  // Idempotent via audit_log tag inside notifyRefundOutcome, so it's
+  // safe if the webhook already fired for the same row.
+  if (status === "completed") {
+    try { await notifyRefundOutcome(admin as any, data as any, "succeeded"); } catch {}
+  } else if (status === "failed") {
+    try { await notifyRefundOutcome(admin as any, data as any, "failed"); } catch {}
   }
 
   await logAudit({ userId, action: "update_refund", target_type: "refund", target_id: id, details: patch, req });
