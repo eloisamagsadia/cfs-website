@@ -44,9 +44,11 @@ export default function EventTicketsPage() {
   const [compSuccess, setCompSuccess] = useState("");
 
   // Cancel confirmation + type-to-confirm phrase for bundles
-  const [confirmCancel, setConfirmCancel] = useState<{ id: string; bundle_id: string | null; label: string; buyer: string; bundleSize: number } | null>(null);
+  const [confirmCancel, setConfirmCancel] = useState<{ id: string; bundle_id: string | null; label: string; buyer: string; bundleSize: number; wasPaid: boolean; refundAmount: number } | null>(null);
   const [confirmPhrase, setConfirmPhrase] = useState("");
   const [cancelBusy, setCancelBusy] = useState(false);
+  const [wantRefund, setWantRefund]   = useState(true);
+  const [wantPromote, setWantPromote] = useState(true);
 
   // Undo toast state — shown for 30s after a successful cancel with
   // enough context to restore the exact ticket(s) via PATCH.
@@ -127,6 +129,41 @@ export default function EventTicketsPage() {
     }
     setCancelBusy(true);
     try {
+      // Route through the orchestrator when the ticket was paid AND
+      // ops opted to refund. Bundles + the refund-off path still use
+      // the existing comp DELETE with its 30s undo window.
+      if (confirmCancel.wasPaid && wantRefund && !confirmCancel.bundle_id) {
+        const res = await fetch("/api/admin/events/tickets/cancel", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ticket_id: confirmCancel.id,
+            refund: true,
+            promote_waitlist: wantPromote,
+            notify_member: true,
+            refund_amount: confirmCancel.refundAmount,
+            reason: null,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? "Cancel failed");
+        await loadTickets();
+        // No undo — a real PayMongo refund has already been queued
+        setConfirmCancel(null);
+        setConfirmPhrase("");
+        alert(
+          `Cancelled. ${data.refund?.auto_processed
+            ? `PayMongo refund submitted (${data.refund.refund_id?.slice(0, 8)}).`
+            : data.refund?.auto_error
+              ? `Refund row created but PayMongo auto-process failed: ${data.refund.auto_error}. Handle it manually in /admin/refunds.`
+              : `Refund row created — process it in /admin/refunds when ready.`}${
+            data.waitlist_promoted ? ` Waitlist member notified.` : ""
+          }${data.emailed ? " Member emailed." : ""}`
+        );
+        return;
+      }
+
+      // Non-refund path (unpaid, ops opted out, or bundle) → existing DELETE + undo
       const url = confirmCancel.bundle_id
         ? `/api/admin/events/tickets/comp?bundle_id=${confirmCancel.bundle_id}`
         : `/api/admin/events/tickets/comp?id=${confirmCancel.id}`;
@@ -146,8 +183,8 @@ export default function EventTicketsPage() {
       }
       setConfirmCancel(null);
       setConfirmPhrase("");
-    } catch {
-      alert("Could not cancel. Try again.");
+    } catch (e: any) {
+      alert(e?.message ?? "Could not cancel. Try again.");
     } finally {
       setCancelBusy(false);
     }
@@ -288,7 +325,22 @@ export default function EventTicketsPage() {
                   </span>
                   {canCancel && (
                     <button
-                      onClick={() => { setConfirmPhrase(""); setConfirmCancel({ id: ticket.id, bundle_id: bundleSize > 1 ? ticket.bundle_id : null, label: `${ticket.profiles?.display_name ?? "member"} · ${ticket.event_tiers?.name ?? "ticket"}${bundleSize > 1 ? ` (bundle of ${bundleSize})` : ""}`, buyer: ticket.profiles?.display_name ?? "member", bundleSize }); }}
+                      onClick={() => {
+                        const wasPaid = ticket.payment_status === "paid" && !!ticket.payment_id;
+                        const perTicketPrice = Number(ticket.event_tiers?.price ?? 0);
+                        setConfirmPhrase("");
+                        setWantRefund(wasPaid);
+                        setWantPromote(true);
+                        setConfirmCancel({
+                          id: ticket.id,
+                          bundle_id: bundleSize > 1 ? ticket.bundle_id : null,
+                          label: `${ticket.profiles?.display_name ?? "member"} · ${ticket.event_tiers?.name ?? "ticket"}${bundleSize > 1 ? ` (bundle of ${bundleSize})` : ""}`,
+                          buyer: ticket.profiles?.display_name ?? "member",
+                          bundleSize,
+                          wasPaid,
+                          refundAmount: perTicketPrice,
+                        });
+                      }}
                       title="Cancel this ticket"
                       style={{ background: "transparent", border: "1px solid #DDE8DD", borderRadius: "6px", padding: "5px 8px", cursor: "pointer", color: "#CC3344" }}>
                       <IconTrash size={12} color="#CC3344" />
@@ -394,8 +446,36 @@ export default function EventTicketsPage() {
                 {isBundle && " — all tickets in the bundle will be cancelled together."}
               </p>
               <p style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", margin: 0, lineHeight: 1.5 }}>
-                The buyer will be emailed. You&apos;ll have a 30-second UNDO window after this.
+                The buyer will be emailed. {wantRefund && confirmCancel.wasPaid && !confirmCancel.bundle_id
+                  ? "PayMongo refund fires immediately — no undo window."
+                  : "You'll have a 30-second UNDO window after this."}
               </p>
+
+              {/* Auto-refund + auto-promote toggles */}
+              {!isBundle && confirmCancel.wasPaid && (
+                <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: 10, padding: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: 8, cursor: "pointer" }}>
+                    <input type="checkbox" checked={wantRefund} onChange={e => setWantRefund(e.target.checked)} style={{ marginTop: 3 }} />
+                    <div>
+                      <div style={{ fontFamily: B, fontSize: 12, color: "#1B3A2D", fontWeight: 600 }}>
+                        Auto-refund ₱{Number(confirmCancel.refundAmount).toLocaleString("en-PH", { minimumFractionDigits: 2 })} via PayMongo
+                      </div>
+                      <div style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A" }}>
+                        Calls PayMongo's Refunds API. Irreversible. Uncheck to skip — a manual refund row will be queued instead.
+                      </div>
+                    </div>
+                  </label>
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: 8, cursor: "pointer" }}>
+                    <input type="checkbox" checked={wantPromote} onChange={e => setWantPromote(e.target.checked)} style={{ marginTop: 3 }} />
+                    <div>
+                      <div style={{ fontFamily: B, fontSize: 12, color: "#1B3A2D", fontWeight: 600 }}>Notify next waitlist member</div>
+                      <div style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A" }}>
+                        Promotes the oldest waiting entry and sends them the "a spot opened up" notification.
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              )}
               {isBundle && (
                 <div>
                   <label style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#CC3344", letterSpacing: "1.5px", display: "block", marginBottom: "6px" }}>
