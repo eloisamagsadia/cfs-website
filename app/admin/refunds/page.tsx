@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { IconWarning, IconCheck, IconCart, IconHeart, IconTicket, IconTrash, IconLightning } from "@/components/shared/Icons";
+import { IconWarning, IconCheck, IconCart, IconHeart, IconTicket, IconTrash, IconLightning, IconChart } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -186,10 +186,16 @@ export default function AdminRefundsPage() {
           <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#1B3A2D", letterSpacing: "3px", marginBottom: "4px" }}>REFUNDS</h1>
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Track order and donation refunds. This only records the workflow — actual money movement happens in the PayMongo dashboard.</p>
         </div>
-        <button onClick={() => setShowNew(v => !v)}
-          style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: showNew ? "#5A5A5A" : "#1A8040", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
-          {showNew ? "CLOSE" : "NEW REFUND"}
-        </button>
+        <div style={{ display: "flex", gap: "8px" }}>
+          <Link href="/admin/refunds/performance"
+            style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1A8040", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+            <IconChart size={12} color="#1A8040" /> PERFORMANCE
+          </Link>
+          <button onClick={() => setShowNew(v => !v)}
+            style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: showNew ? "#5A5A5A" : "#1A8040", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
+            {showNew ? "CLOSE" : "NEW REFUND"}
+          </button>
+        </div>
       </div>
 
       {/* New refund form */}
