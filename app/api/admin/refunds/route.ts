@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
   const { entity_type, entity_id, amount, reason, note, user_id } = body ?? {};
   if (!entity_type || !entity_id || !reason || amount == null)
     return NextResponse.json({ error: "entity_type, entity_id, amount, reason are required" }, { status: 400 });
-  if (!["order", "donation", "event_registration"].includes(entity_type))
+  if (!["order", "donation", "event_registration", "event_ticket"].includes(entity_type))
     return NextResponse.json({ error: "Invalid entity_type" }, { status: 400 });
 
   const admin = createAdminClient();
@@ -99,6 +99,24 @@ export async function PATCH(req: NextRequest) {
       .eq("bundle_id", ref)
       .select("id");
     if (!byBundle.data?.length) {
+      await (admin as any).from("event_tickets")
+        .update({ status: "cancelled", payment_status: "refunded" })
+        .eq("id", ref);
+    }
+  }
+  // event_ticket = single-ticket refund. If the note carries the
+  // [tier_change_target:UUID] marker, this is a tier downgrade →
+  // swap the tier_id instead of cancelling. Otherwise treat as a
+  // cancel-and-refund like the legacy handler above.
+  if (status === "completed" && (data as any)?.entity_type === "event_ticket") {
+    const ref  = (data as any).entity_id;
+    const note = String((data as any)?.note ?? "");
+    const match = note.match(/\[tier_change_target:([0-9a-f-]{36})\]/i);
+    if (match) {
+      await (admin as any).from("event_tickets")
+        .update({ tier_id: match[1] })
+        .eq("id", ref);
+    } else {
       await (admin as any).from("event_tickets")
         .update({ status: "cancelled", payment_status: "refunded" })
         .eq("id", ref);

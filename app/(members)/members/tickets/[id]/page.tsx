@@ -6,6 +6,7 @@ import Link from "next/link";
 import QRCode from "react-qr-code";
 import { IconTicket, IconCheck, IconLightning } from "@/components/shared/Icons";
 import ReceiptBlock from "@/components/tickets/ReceiptBlock";
+import TierChangeBlock from "@/components/members/TierChangeBlock";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -221,6 +222,9 @@ export default function TicketPage() {
           </span>
         </div>
       )}
+
+      {/* Change tier (self-serve). Only rendered while the ticket is active. */}
+      {ticket.status === "active" && <TierChangeBlock ticketId={ticket.id} />}
 
       {/* Official receipt — always shown so members have proof of purchase
           even if the confirmation email didn't arrive (Resend daily cap,

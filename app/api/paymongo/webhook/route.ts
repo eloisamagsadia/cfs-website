@@ -161,6 +161,21 @@ export async function POST(req: NextRequest) {
         .update({ payment_status: "paid", paymongo_ref: eventData.id, order_status: "processing" })
         .eq("id", reference);
     }
+
+    if (type === "tier_upgrade") {
+      // reference_id = ticket id. metadata carries new_tier_id.
+      // payment_transactions row was created via /api/paymongo/create-link with the
+      // metadata forwarded, but re-read it just to be sure we have the target tier.
+      const { data: txnRow } = await (supabase.from("payment_transactions") as any)
+        .select("metadata")
+        .eq("reference_id", reference)
+        .eq("type", "tier_upgrade")
+        .maybeSingle();
+      const newTierId = (txnRow?.metadata as any)?.new_tier_id;
+      if (newTierId) {
+        await (supabase.from("event_tickets") as any).update({ tier_id: newTierId }).eq("id", reference);
+      }
+    }
   }
 
   if (eventType === "payment.failed" || eventType === "link.payment.failed") {
