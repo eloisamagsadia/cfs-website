@@ -21,10 +21,17 @@ export async function POST(req: NextRequest) {
   // ─── Refund events ────────────────────────────────────────────────
   // Fired after we call POST /v1/refunds from the admin. Keyed by the
   // refund id (ref_xxx) which we stored in refunds.paymongo_ref.
-  if (eventType === "refund.updated" || eventType === "refund.succeeded" || eventType === "refund.failed") {
+  //
+  // PayMongo event names on our webhook:
+  //   payment.refund.updated  → status transitions (pending / succeeded / failed)
+  //   payment.refunded        → convenience "payment is fully refunded" signal (treat as succeeded)
+  if (eventType === "payment.refund.updated" || eventType === "payment.refunded") {
     const refundId = eventData.id as string | undefined;
     const attrs    = eventData.attributes ?? {};
-    const pmStatus = attrs.status as "pending" | "succeeded" | "failed" | undefined;
+    // payment.refunded doesn't carry a refund status — treat it as succeeded.
+    const pmStatus = (eventType === "payment.refunded"
+      ? "succeeded"
+      : attrs.status) as "pending" | "succeeded" | "failed" | undefined;
     if (!refundId || !pmStatus) return NextResponse.json({ received: true });
 
     const { data: row } = await (supabase.from("refunds") as any)
