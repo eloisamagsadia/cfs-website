@@ -61,11 +61,42 @@ export default async function EventDetailPage({ params }: { params: { id: string
 
   let isRegistered = false;
   let existingTicketId: string | null = null;
+  // Signal for the expired-checkout toast — set when the user's most
+  // recent ticket for this event was auto-cancelled by the pending
+  // cleanup cron (status=cancelled, payment_status=failed) and it's
+  // recent enough (< 7 days) that they may be returning to retry.
+  let expiredCheckout = false;
   if (user) {
-    const { data: regs } = await (supabase as any).from("event_tickets").select("id").eq("event_id", params.id).eq("user_id", userId).order("created_at", { ascending: true }).limit(1);
+    // Only "live" statuses count as being registered. A cancelled or
+    // failed prior attempt does NOT block a fresh purchase — matches
+    // the /api/events/tickets gate.
+    const { data: regs } = await (supabase as any)
+      .from("event_tickets")
+      .select("id")
+      .eq("event_id", params.id)
+      .eq("user_id", userId)
+      .in("status", ["active", "used", "pending_payment"])
+      .order("created_at", { ascending: true })
+      .limit(1);
     const reg = regs?.[0];
     isRegistered = !!reg;
     existingTicketId = reg?.id ?? null;
+
+    // Separately: did the auto-cleanup cron sweep a prior pending
+    // ticket in the last 7 days? If so, show the toast.
+    if (!isRegistered) {
+      const sevenDaysAgo = new Date(Date.now() - 7 * 86400_000).toISOString();
+      const { data: sweptRows } = await (supabase as any)
+        .from("event_tickets")
+        .select("id")
+        .eq("event_id", params.id)
+        .eq("user_id", userId)
+        .eq("status", "cancelled")
+        .eq("payment_status", "failed")
+        .gte("updated_at", sevenDaysAgo)
+        .limit(1);
+      expiredCheckout = (sweptRows?.length ?? 0) > 0;
+    }
   }
 
   // Tier-aware price: when tiers exist they are the source of truth. Fall
@@ -408,7 +439,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
               </div>
 
               {!isPast && event.status !== "cancelled" ? (
-                <EventRegisterButton event={event} isLoggedIn={!!user} isRegistered={isRegistered} isFull={isFull} tiers={tiers ?? []} existingTicketId={existingTicketId} isSponsor={isSponsor} />
+                <EventRegisterButton event={event} isLoggedIn={!!user} isRegistered={isRegistered} isFull={isFull} tiers={tiers ?? []} existingTicketId={existingTicketId} isSponsor={isSponsor} expiredCheckout={expiredCheckout} />
               ) : (
                 <div style={{ background: C.cream, border: `1px dashed ${C.hair}`, borderRadius: "12px", padding: "16px", textAlign: "center", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: C.muted, letterSpacing: "2px" }}>
                   {event.status === "cancelled" ? "EVENT CANCELLED" : "EVENT HAS ENDED"}

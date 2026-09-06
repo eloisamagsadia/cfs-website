@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { IconTicket, IconCheck, IconClock } from "@/components/shared/Icons";
 import { calculateFee, type PaymentMethod } from "@/lib/paymongo";
 import WaitlistButton from "@/components/public/WaitlistButton";
@@ -19,13 +20,29 @@ interface EventRegisterButtonProps {
   tiers?: any[];
   existingTicketId?: string | null;
   isSponsor?: boolean;
+  expiredCheckout?: boolean;
 }
 
-export default function EventRegisterButton({ event, isLoggedIn, isRegistered, isFull, tiers = [], existingTicketId = null, isSponsor = false }: EventRegisterButtonProps) {
+export default function EventRegisterButton({ event, isLoggedIn, isRegistered, isFull, tiers = [], existingTicketId = null, isSponsor = false, expiredCheckout = false }: EventRegisterButtonProps) {
   const [loading, setLoading] = useState(false);
   const [registered, setRegistered] = useState(isRegistered);
   const [ticketId, setTicketId] = useState<string | null>(existingTicketId);
   const [error, setError] = useState("");
+
+  // If the user's prior checkout was auto-cancelled by the 24h sweep,
+  // tell them once on load so they aren't surprised the page looks
+  // fresh. Sonner de-dupes on the same id so a re-mount won't re-fire.
+  useEffect(() => {
+    if (!expiredCheckout) return;
+    toast(
+      "Your earlier checkout for this event expired.",
+      {
+        id: `expired-checkout-${event?.id}`,
+        description: "Slots are still open — you can start over.",
+        duration: 7000,
+      },
+    );
+  }, [expiredCheckout, event?.id]);
   const [selectedTier, setSelectedTier] = useState<any>(tiers[0] ?? null);
   const [method] = useState<PaymentMethod>("qrph");
   const [termsAccepted, setTermsAccepted] = useState(false);

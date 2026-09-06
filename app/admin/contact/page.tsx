@@ -271,48 +271,77 @@ export default function ContactAdminPage() {
                   </button>
                 </div>
 
-                {isOpen && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {/* Original message from the guest */}
-                    <div style={{ background: "#F7FAF5", border: "1px solid #E4EDE4", borderRadius: 10, padding: "12px 14px", fontFamily: B, fontSize: 13, color: "#1B3A2D", lineHeight: 1.6, whiteSpace: "pre-wrap" as const }}>
-                      <div style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#5A7A60", letterSpacing: 1.5, marginBottom: 6 }}>MESSAGE · {stamp(m.created_at)}</div>
-                      {m.message}
-                    </div>
+                {isOpen && (() => {
+                  // Build the full timeline: original guest message first,
+                  // then every reply in order. Then group consecutive
+                  // entries from the same sender so the author header +
+                  // avatar only render once per run (like Gmail threads).
+                  const threadReplies: ReplyEntry[] = Array.isArray(m.replies) && m.replies.length > 0
+                    ? m.replies
+                    : (m.reply_note
+                        ? [{ body: m.reply_note, sent_at: m.handled_at ?? m.created_at, sent_by: m.handled_by, sent_by_name: null, from: "admin" }]
+                        : []);
+                  type Entry = { role: "original" | "guest" | "admin"; name: string; body: string; sent_at: string; subject?: string | null };
+                  const timeline: Entry[] = [
+                    { role: "original", name: m.name, body: m.message, sent_at: m.created_at },
+                    ...threadReplies.map<Entry>(r => ({
+                      role: r.from === "guest" ? "guest" : "admin",
+                      name: r.sent_by_name ?? (r.from === "guest" ? m.name : "CFS admin"),
+                      body: r.from === "guest" ? cleanGuestBody(r.body) : r.body,
+                      sent_at: r.sent_at,
+                      subject: r.subject ?? null,
+                    })),
+                  ];
+                  const initial = (name: string) => (name?.trim()?.[0] ?? "?").toUpperCase();
 
-                    {/* Conversation history — admin replies (green, left border)
-                        and guest replies via inbound webhook (blue, right border)
-                        interleaved oldest-first. */}
-                    {(() => {
-                      const thread: ReplyEntry[] = Array.isArray(m.replies) && m.replies.length > 0
-                        ? m.replies
-                        : (m.reply_note
-                            ? [{ body: m.reply_note, sent_at: m.handled_at ?? m.created_at, sent_by: m.handled_by, sent_by_name: null, from: "admin" }]
-                            : []);
-                      if (thread.length === 0) return null;
-                      return thread.map((r, i) => {
-                        const isGuest = r.from === "guest";
-                        const bg     = isGuest ? "#EEF3FA" : "#E8F0E4";
-                        const border = isGuest ? "#B7C7D9" : "#B7D8B7";
-                        const accent = isGuest ? "#1E4A7A" : "#1A8040";
-                        const label  = isGuest
-                          ? `FROM GUEST · ${r.sent_by_name ?? m.name}`
-                          : `REPLY ${thread.length > 1 ? `${i + 1}/${thread.length}` : ""} · ${r.sent_by_name ?? "CFS admin"}`;
+                  return (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 4, paddingTop: 12, borderTop: "1px dashed #DDE8DD" }}>
+                      {timeline.map((e, i) => {
+                        const prev = i > 0 ? timeline[i - 1] : null;
+                        const groupedWithPrev = !!prev && prev.role === e.role && prev.name === e.name;
+                        const isGuest = e.role === "guest";
+                        const isOriginal = e.role === "original";
+                        // Colour palette per role: original + guest share the
+                        // paper/blue accent (they are the SAME person on
+                        // different rails); admin uses the CFS forest green.
+                        const accent = isOriginal || isGuest ? "#1E4A7A" : "#1A8040";
+                        const softBg = isOriginal || isGuest ? "#F5F8FC" : "#F4F9F4";
+                        const roleLabel = isOriginal ? "MESSAGE" : isGuest ? "FROM GUEST" : "CFS REPLY";
                         return (
-                          <div key={i} style={{ background: bg, border: `1px solid ${border}`, borderLeft: isGuest ? undefined : `3px solid ${accent}`, borderRight: isGuest ? `3px solid ${accent}` : undefined, borderRadius: 10, padding: "12px 14px", fontFamily: B, fontSize: 13, color: "#1B3A2D", lineHeight: 1.6, whiteSpace: "pre-wrap" as const, marginLeft: isGuest ? 24 : 0, marginRight: isGuest ? 0 : 24 }}>
-                            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 6 }}>
-                              <span style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: accent, letterSpacing: 1.5 }}>{label}</span>
-                              <span style={{ fontFamily: B, fontSize: 11, color: "#5A7A60" }}>{stamp(r.sent_at)}</span>
+                          <div key={i} style={{ display: "grid", gridTemplateColumns: "36px 1fr", gap: 12, padding: groupedWithPrev ? "2px 0 4px 0" : "10px 0 4px 0" }}>
+                            {/* Avatar column — hidden on grouped entries so the run reads as one voice */}
+                            <div style={{ position: "relative" }}>
+                              {!groupedWithPrev && (
+                                <div style={{ width: 32, height: 32, borderRadius: "50%", background: accent, color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: R, fontSize: 13, letterSpacing: 0.5 }}>
+                                  {initial(e.name)}
+                                </div>
+                              )}
                             </div>
-                            {isGuest && r.subject && (
-                              <div style={{ fontFamily: B, fontSize: 11, color: "#5A7A60", fontStyle: "italic", marginBottom: 6 }}>Subject: {r.subject}</div>
-                            )}
-                            {isGuest ? cleanGuestBody(r.body) : r.body}
+
+                            <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
+                              {!groupedWithPrev && (
+                                <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
+                                  <span style={{ fontFamily: R, fontSize: 11, color: accent, letterSpacing: 1.5 }}>{roleLabel}</span>
+                                  <span style={{ fontFamily: B, fontSize: 12, color: "#1B3A2D", fontWeight: 600 }}>{e.name}</span>
+                                  <span style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A", marginLeft: "auto" }}>{stamp(e.sent_at)}</span>
+                                </div>
+                              )}
+                              {isGuest && e.subject && !groupedWithPrev && (
+                                <div style={{ fontFamily: B, fontSize: 11, color: "#5A7A60", fontStyle: "italic" }}>Subject: {e.subject}</div>
+                              )}
+                              <div style={{ background: softBg, borderLeft: `2px solid ${accent}`, borderRadius: "0 8px 8px 0", padding: "10px 12px", fontFamily: B, fontSize: 13, color: "#1B3A2D", lineHeight: 1.6, whiteSpace: "pre-wrap" as const }}>
+                                {e.body}
+                              </div>
+                              {groupedWithPrev && (
+                                <div style={{ fontFamily: B, fontSize: 10, color: "#7A8E7A", alignSelf: "flex-end" }}>{stamp(e.sent_at)}</div>
+                              )}
+                            </div>
                           </div>
                         );
-                      });
-                    })()}
-                  </div>
-                )}
+                      })}
+                    </div>
+                  );
+                })()}
 
                 {/* Inline reply composer — sends via Resend without leaving admin. */}
                 {replyingId === m.id && (
