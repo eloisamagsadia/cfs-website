@@ -166,13 +166,24 @@ export default async function HomePage() {
 
             {/* Framed "next event" card — anchored to the right/top so it
                 stays the primary visual weight on this side */}
-            {nextEvent ? (
+            {nextEvent ? (() => {
+              // Smart-split "Prefix | Title" so the card doesn't wrap to 5
+              // lines when the admin encodes context in the title.
+              const t: string = nextEvent.title ?? "";
+              const [pre, ...rest] = t.split(" | ");
+              const hasPrefix = rest.length > 0;
+              const eyebrow = hasPrefix ? pre.trim() : null;
+              const mainTitle = hasPrefix ? rest.join(" | ").trim() : t;
+              return (
               <Link href={`/events/${nextEvent.id}`} className="scrap-frame btn-fx" style={{ position: "absolute", top: "80px", right: "2%", width: "300px", transform: "rotate(2.5deg)", textDecoration: "none", display: "block", zIndex: 1, borderRadius: 4 }}>
                 <div className="scrap-frame-inner" style={{ padding: "14px 14px 16px" }}>
                   <div style={{ display: "inline-block", background: "#1A8040", color: "#ffffff", fontFamily: SG, fontSize: "9px", fontWeight: 700, letterSpacing: "1.5px", padding: "3px 10px", borderRadius: "999px", marginBottom: "10px" }}>
                     NEXT UP
                   </div>
-                  <div style={{ fontFamily: S, fontSize: "20px", color: "#1B3A2D", lineHeight: 1.15, marginBottom: "10px" }}>{nextEvent.title}</div>
+                  {eyebrow && (
+                    <div style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#1A8040", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "4px" }}>{eyebrow}</div>
+                  )}
+                  <div style={{ fontFamily: S, fontSize: "18px", color: "#1B3A2D", lineHeight: 1.2, marginBottom: "10px" }}>{mainTitle}</div>
                   <div style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", display: "flex", flexDirection: "column", gap: "4px" }}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
                       <IconCalendar size={11} color="#7A5A0F" />
@@ -192,7 +203,8 @@ export default async function HomePage() {
                   </div>
                 </div>
               </Link>
-            ) : (
+              );
+            })() : (
               <div className="scrap-frame" style={{ position: "absolute", top: "80px", right: "2%", width: "260px", transform: "rotate(2.5deg)", zIndex: 1, borderRadius: 4 }}>
                 <div className="scrap-frame-inner" style={{ padding: "22px 18px", textAlign: "center" }}>
                   <div className="scrap-note" style={{ fontSize: "18px", color: "#0F2A1E" }}>Next event coming soon ✦</div>
@@ -245,15 +257,28 @@ export default async function HomePage() {
             .hero-cta-row > a { flex: 1 1 100%; justify-content: center; }
           }
           @media (max-width: 560px) {
-            .hero-collage { height: 320px !important; }
-            .hero-collage .hero-polaroid { width: 128px !important; left: 4% !important; }
-            .hero-collage .scrap-frame { width: 230px !important; right: 4% !important; top: 60px !important; max-width: calc(100vw - 60px) !important; }
+            .hero-collage { height: 340px !important; }
+            /* Center the framed card and untilt it slightly so the wood
+               border doesn't spill past the container. */
+            .hero-collage .scrap-frame {
+              width: 260px !important;
+              max-width: calc(100vw - 80px) !important;
+              left: 50% !important;
+              right: auto !important;
+              top: 12px !important;
+              transform: translateX(-50%) rotate(1deg) !important;
+            }
+            /* Polaroid tucks into the bottom-left corner below the card. */
+            .hero-collage .hero-polaroid {
+              width: 112px !important;
+              left: 6% !important;
+              bottom: 0 !important;
+            }
           }
           @media (max-width: 380px) {
-            section > .hero-grid { padding: 0 !important; }
-            .hero-collage { height: 300px !important; }
-            .hero-collage .hero-polaroid { width: 108px !important; }
-            .hero-collage .scrap-frame { width: 200px !important; top: 40px !important; }
+            .hero-collage { height: 320px !important; }
+            .hero-collage .scrap-frame { width: 230px !important; }
+            .hero-collage .hero-polaroid { width: 96px !important; }
           }
         `}</style>
       </section>
