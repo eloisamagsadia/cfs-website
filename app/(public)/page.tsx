@@ -77,67 +77,21 @@ export default async function HomePage() {
 
       {/* ── HERO ── watercolor branding banner is the star. The artwork
           already contains the wordmark + characters, so no h1 competes
-          with it. Corner scrapbook decorations sit in safe zones; a
-          marquee ticker + live countdown + CTAs sit below. */}
+          with it. Copy + CTAs + proof pills sit below in a clean strip. */}
       <section className="home-hero" style={{ position: "relative", padding: "0 0 24px" }}>
-        {/* Full-bleed watercolor banner, with corner decorations layered
-            in the outer corners so they never cover the wordmark. */}
-        <div className="hero-banner" style={{ position: "relative", width: "100%", aspectRatio: "1710 / 604", overflow: "hidden" }}>
+        {/* Full-bleed watercolor banner. Container aspect-ratio is
+            deliberately shorter than the source (1710:604) so cover +
+            "center top" crops the bottom ~13% — that hides the social
+            icons and "COLETFANSUPORTA" text baked into the artwork. */}
+        <div className="hero-banner" style={{ position: "relative", width: "100%", aspectRatio: "1710 / 525", overflow: "hidden" }}>
           <Image
             src="https://media.coletfs.com/products/user_3F9O7q2MyuHGi78PSxQJR4ix5gI/u5mQXqE-UVCyWNbDnUFJZ.webp"
             alt="Colet Fan Suporta"
             fill
             sizes="100vw"
             priority
-            style={{ objectFit: "cover", objectPosition: "center" }}
+            style={{ objectFit: "cover", objectPosition: "center top" }}
           />
-
-          {/* Drifting sparkle stickers — random-ish positions in the
-              corners so they never hover over the wordmark or characters.
-              Each ✦ has its own duration/delay so they feel organic. */}
-          <span aria-hidden="true" className="hero-spark" style={{ top: "12%", left: "6%", animationDelay: "0s" }}>✦</span>
-          <span aria-hidden="true" className="hero-spark" style={{ top: "68%", left: "14%", animationDelay: "-2.4s", fontSize: "18px" }}>✦</span>
-          <span aria-hidden="true" className="hero-spark" style={{ top: "22%", right: "10%", animationDelay: "-1.1s", color: "#E85D75" }}>✦</span>
-          <span aria-hidden="true" className="hero-spark" style={{ top: "74%", right: "8%", animationDelay: "-3.3s", fontSize: "22px" }}>✦</span>
-          <span aria-hidden="true" className="hero-spark" style={{ top: "48%", left: "3%", animationDelay: "-1.8s", fontSize: "14px", color: "#F0C48A" }}>✦</span>
-
-          {/* Washi tape corner tag — pinned top-right, angled like it's
-              taping the banner to the page */}
-          <div className="hero-washi-corner" aria-hidden="true">
-            <span className="scrap-tape scrap-tape-pink">cocacolets hangout</span>
-          </div>
-
-          {/* Tilted polaroid peeking from bottom-left corner. Small so
-              it doesn't compete with the artwork. */}
-          <div className="hero-polaroid-corner scrap-polaroid scrap-polaroid-tilt-left" aria-hidden="true">
-            <div className="scrap-polaroid-photo" style={{ borderRadius: 2, padding: 0, overflow: "hidden", position: "relative" }}>
-              <Image
-                src="https://media.coletfs.com/products/user_3F9O7q2MyuHGi78PSxQJR4ix5gI/aYpvBMfbTeGqhSMPr4dpD.webp"
-                alt=""
-                fill
-                sizes="128px"
-                style={{ objectFit: "cover" }}
-              />
-            </div>
-            <div className="scrap-polaroid-caption">colet ✦</div>
-          </div>
-        </div>
-
-        {/* Marquee ticker just under the banner — infinite loop of
-            community facts. Pure CSS, no JS. */}
-        <div className="hero-marquee" aria-hidden="true">
-          <div className="hero-marquee-track">
-            {Array.from({ length: 2 }).map((_, dupIndex) => (
-              <div key={dupIndex} className="hero-marquee-group">
-                <span className="hero-marquee-item">✦ {(memberCount ?? 0).toLocaleString()} Cocacolets strong</span>
-                <span className="hero-marquee-item">✦ {upcomingCount} upcoming event{upcomingCount === 1 ? "" : "s"}</span>
-                <span className="hero-marquee-item">✦ para kay Colet, buong araw</span>
-                <span className="hero-marquee-item">✦ live from the Philippines</span>
-                <span className="hero-marquee-item">✦ EST. 2026</span>
-                <span className="hero-marquee-item">✦ join the fam →</span>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Copy strip — sits below the artwork so nothing overlaps the
@@ -192,55 +146,6 @@ export default async function HomePage() {
           }
           .hero-pulse { animation: hero-pulse 1.8s ease-out infinite; }
 
-          /* Drifting sparkle stickers */
-          @keyframes hero-spark-drift {
-            0%,100% { transform: translate3d(0,0,0) rotate(0deg); opacity: 0.55; }
-            50%     { transform: translate3d(4px,-8px,0) rotate(18deg); opacity: 1; }
-          }
-          .hero-spark {
-            position: absolute; z-index: 2;
-            font-family: var(--font-caveat, cursive);
-            font-size: 20px; color: #ffffff;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.25);
-            animation: hero-spark-drift 4.5s ease-in-out infinite;
-            pointer-events: none;
-          }
-
-          /* Corner scrapbook decorations */
-          .hero-washi-corner {
-            position: absolute; top: 14px; right: 22px; z-index: 3;
-            transform: rotate(6deg);
-            transform-origin: top right;
-          }
-          .hero-polaroid-corner {
-            position: absolute; bottom: 14px; left: 22px; z-index: 3;
-            width: 118px;
-            transition: transform 0.25s ease;
-          }
-          .hero-polaroid-corner:hover { transform: rotate(-1deg) translateY(-4px); }
-
-          /* Marquee ticker */
-          @keyframes hero-marquee-scroll {
-            from { transform: translateX(0); }
-            to   { transform: translateX(-50%); }
-          }
-          .hero-marquee {
-            background: #1B3A2D; color: #F5F7EC;
-            overflow: hidden; position: relative;
-            border-top: 1px solid #0F2A1E; border-bottom: 1px solid #0F2A1E;
-          }
-          .hero-marquee-track {
-            display: flex; width: max-content;
-            animation: hero-marquee-scroll 32s linear infinite;
-          }
-          .hero-marquee:hover .hero-marquee-track { animation-play-state: paused; }
-          .hero-marquee-group { display: flex; flex-shrink: 0; }
-          .hero-marquee-item {
-            font-family: ${SG}; font-size: 12px; font-weight: 700;
-            letter-spacing: 2px; text-transform: uppercase;
-            padding: 12px 24px; white-space: nowrap;
-          }
-
           /* Scroll cue */
           @keyframes hero-scroll-bounce {
             0%,100% { transform: translateY(0); }
@@ -256,17 +161,12 @@ export default async function HomePage() {
 
           @media (prefers-reduced-motion: reduce) {
             .hero-pulse,
-            .hero-spark,
-            .hero-marquee-track,
             .hero-scroll-cue { animation: none !important; }
           }
           /* On tall/narrow phones, the wide banner shrinks to a short
              strip. Bump min-height so the wordmark stays legible. */
           @media (max-width: 640px) {
-            .hero-banner { min-height: 220px; }
-            .hero-polaroid-corner { width: 88px; bottom: 10px; left: 10px; }
-            .hero-washi-corner { top: 10px; right: 10px; }
-            .hero-marquee-item { padding: 10px 16px; font-size: 11px; letter-spacing: 1.5px; }
+            .hero-banner { min-height: 200px; }
           }
           /* Buttons stack full-width on phones so both CTAs feel equally
              tappable and the row breaks cleanly */
