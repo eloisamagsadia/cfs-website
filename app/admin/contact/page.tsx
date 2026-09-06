@@ -57,6 +57,42 @@ function stamp(iso?: string | null) {
   return new Date(iso).toLocaleString("en-PH", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" });
 }
 
+// Strip quoted replies + email signatures at render time so historic
+// guest entries (stored before the webhook-side strip existed) also
+// render clean. Belt-and-suspenders: applied only to guest replies.
+function cleanGuestBody(s: string): string {
+  if (!s) return "";
+  // Cut at Gmail-style "On <date> ... wrote:" (may span multiple lines).
+  const cutters: RegExp[] = [
+    /\bOn\b[\s\S]{1,300}?\bwrote:\s*$/im,
+    /^\s*-{2,}\s*Original Message\s*-{2,}$/im,
+    /^\s*From:\s+.+$/im,
+    /^\s*_{5,}\s*$/m,
+    /^>\s.*$/m,                                                   // first quoted line
+  ];
+  let cut = s.length;
+  for (const rx of cutters) {
+    const m = s.match(rx);
+    if (m && m.index != null && m.index < cut) cut = m.index;
+  }
+  let body = s.slice(0, cut);
+
+  // Strip trailing signature block.
+  const sigCutters: RegExp[] = [
+    /^-- \s*$/m,
+    /^\s*(Mobile|Phone|Cell|Tel|Email|Web|Website)\s*:\s*.+$/im,
+    /^\s*Sent from my (iPhone|iPad|Android|Samsung|Mobile).*$/im,
+    // *Name*\n*JOB TITLE* pattern (Gmail default signature markup)
+    /^\*[^*\n]+\*\s*\n\s*\*[A-Z ]+\*\s*$/m,
+  ];
+  let sigCut = body.length;
+  for (const rx of sigCutters) {
+    const m = body.match(rx);
+    if (m && m.index != null && m.index < sigCut) sigCut = m.index;
+  }
+  return body.slice(0, sigCut).trim();
+}
+
 export default function ContactAdminPage() {
   const router       = useRouter();
   const searchParams = useSearchParams();
@@ -270,7 +306,7 @@ export default function ContactAdminPage() {
                             {isGuest && r.subject && (
                               <div style={{ fontFamily: B, fontSize: 11, color: "#5A7A60", fontStyle: "italic", marginBottom: 6 }}>Subject: {r.subject}</div>
                             )}
-                            {r.body}
+                            {isGuest ? cleanGuestBody(r.body) : r.body}
                           </div>
                         );
                       });
