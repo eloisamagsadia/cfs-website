@@ -257,28 +257,37 @@ export default async function HomePage() {
             .hero-cta-row > a { flex: 1 1 100%; justify-content: center; }
           }
           @media (max-width: 560px) {
-            .hero-collage { height: 340px !important; }
-            /* Center the framed card and untilt it slightly so the wood
-               border doesn't spill past the container. */
-            .hero-collage .scrap-frame {
-              width: 260px !important;
-              max-width: calc(100vw - 80px) !important;
-              left: 50% !important;
-              right: auto !important;
-              top: 12px !important;
-              transform: translateX(-50%) rotate(1deg) !important;
+            .hero-collage {
+              height: auto !important;
+              min-height: 320px !important;
+              max-width: 100% !important;
+              display: flex !important;
+              justify-content: center;
+              align-items: center;
+              padding-top: 8px !important;
+              padding-bottom: 8px !important;
             }
-            /* Polaroid tucks into the bottom-left corner below the card. */
-            .hero-collage .hero-polaroid {
-              width: 112px !important;
-              left: 6% !important;
-              bottom: 0 !important;
+            /* Framed card owns the mobile hero — center it, untilt slightly
+               so the wood border can't clip. */
+            .hero-collage .scrap-frame {
+              position: static !important;
+              width: 100% !important;
+              max-width: 320px !important;
+              transform: rotate(1deg) !important;
+            }
+            /* Polaroid + washi tape decorations hide on mobile — they were
+               positioned for the desktop right-anchored card layout and
+               would collide with the now-centered card. Hero still has
+               the framed NEXT UP card as the primary visual moment. */
+            .hero-collage .hero-polaroid,
+            .hero-collage > div:nth-child(3),
+            .hero-collage > svg,
+            .hero-collage > div[aria-hidden="true"] {
+              display: none !important;
             }
           }
           @media (max-width: 380px) {
-            .hero-collage { height: 320px !important; }
-            .hero-collage .scrap-frame { width: 230px !important; }
-            .hero-collage .hero-polaroid { width: 96px !important; }
+            .hero-collage .scrap-frame { max-width: 280px !important; }
           }
         `}</style>
       </section>
