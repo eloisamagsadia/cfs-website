@@ -54,6 +54,12 @@ export default function ContactAdminPage() {
   const [search, setSearch]   = useState("");
   const [busy, setBusy]       = useState<string | null>(null);
   const [open, setOpen]       = useState<Set<string>>(new Set());
+  // Message pending in the delete-confirm modal. Replaces window.confirm().
+  const [pendingDelete, setPendingDelete] = useState<Msg | null>(null);
+  // Inline reply composer: which message is being replied to + the draft body.
+  const [replyingId, setReplyingId] = useState<string | null>(null);
+  const [replyBody,  setReplyBody]  = useState("");
+  const [sending,    setSending]    = useState(false);
 
   async function load() {
     setLoading(true); setError("");
@@ -96,17 +102,45 @@ export default function ContactAdminPage() {
     finally { setBusy(null); }
   }
 
-  async function remove(m: Msg) {
-    if (!confirm(`Delete message from ${m.name}? This can't be undone.`)) return;
+  async function confirmRemove() {
+    if (!pendingDelete) return;
+    const m = pendingDelete;
     setBusy(m.id); setError(""); setStatus("");
     try {
       const r = await fetch(`/api/admin/contact?id=${m.id}`, { method: "DELETE" });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error);
       setStatus("Deleted.");
+      setPendingDelete(null);
       load();
     } catch (e: any) { setError(e.message); }
     finally { setBusy(null); }
+  }
+
+  function openReply(m: Msg) {
+    setReplyingId(m.id);
+    setReplyBody("");
+    // Auto-expand the message body so the admin sees what they're replying to.
+    setOpen(prev => { const c = new Set(prev); c.add(m.id); return c; });
+  }
+
+  async function sendReply(m: Msg) {
+    if (replyBody.trim().length < 2) { setError("Type a reply first."); return; }
+    setSending(true); setError(""); setStatus("");
+    try {
+      const r = await fetch("/api/admin/contact/reply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: m.id, body: replyBody.trim() }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error);
+      setStatus(`Reply sent to ${m.email}.`);
+      setReplyingId(null);
+      setReplyBody("");
+      load();
+    } catch (e: any) { setError(e.message); }
+    finally { setSending(false); }
   }
 
   function toggle(id: string) {
