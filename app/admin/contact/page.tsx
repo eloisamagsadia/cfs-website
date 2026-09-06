@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { IconCheck, IconTrash, IconWarning, IconMail } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
@@ -57,14 +58,27 @@ function stamp(iso?: string | null) {
 }
 
 export default function ContactAdminPage() {
+  const router       = useRouter();
+  const searchParams = useSearchParams();
+  // Filter is persisted in the URL (?filter=all) so refresh keeps the
+  // current tab. Default "new" only applies on cold entry with no query.
+  const urlFilter = (searchParams.get("filter") ?? "new") as Status | "all";
+
   const [msgs, setMsgs]       = useState<Msg[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError]     = useState("");
   const [status, setStatus]   = useState("");
-  const [filter, setFilter]   = useState<Status | "all">("new");
+  const [filter, setFilterState] = useState<Status | "all">(urlFilter);
   const [search, setSearch]   = useState("");
   const [busy, setBusy]       = useState<string | null>(null);
   const [open, setOpen]       = useState<Set<string>>(new Set());
+  const setFilter = (f: Status | "all") => {
+    setFilterState(f);
+    const q = new URLSearchParams(Array.from(searchParams.entries()));
+    if (f === "new") q.delete("filter"); else q.set("filter", f);
+    router.replace(`/admin/contact${q.toString() ? `?${q.toString()}` : ""}`);
+  };
   // Message pending in the delete-confirm modal. Replaces window.confirm().
   const [pendingDelete, setPendingDelete] = useState<Msg | null>(null);
   // Inline reply composer: which message is being replied to + the draft body.
@@ -72,17 +86,18 @@ export default function ContactAdminPage() {
   const [replyBody,  setReplyBody]  = useState("");
   const [sending,    setSending]    = useState(false);
 
-  async function load() {
-    setLoading(true); setError("");
+  async function load(silent = false) {
+    if (silent) setRefreshing(true); else setLoading(true);
+    setError("");
     try {
-      const r = await fetch(`/api/admin/contact?status=${filter}`);
+      const r = await fetch(`/api/admin/contact?status=${filter}`, { cache: "no-store" });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error);
       setMsgs(d.messages ?? []);
     } catch (e: any) { setError(e.message); }
-    finally { setLoading(false); }
+    finally { setLoading(false); setRefreshing(false); }
   }
-  useEffect(() => { load(); }, [filter]);
+  useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [filter]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { all: msgs.length, new: 0, replied: 0, archived: 0, spam: 0 };
@@ -174,6 +189,12 @@ export default function ContactAdminPage() {
             {f.toUpperCase()}{f !== "all" && counts[f] !== undefined && ` (${counts[f]})`}
           </button>
         ))}
+        <button onClick={() => load(true)} disabled={refreshing || loading}
+          title="Reload messages (fetch any new guest replies)"
+          style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#156530", background: "#E8F0E4", border: "1.5px solid #B7D8B7", borderRadius: 999, padding: "6px 12px", cursor: refreshing ? "wait" : "pointer", letterSpacing: 1.2, display: "inline-flex", alignItems: "center", gap: 6 }}>
+          <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: refreshing ? "#B0731A" : "#1A8040" }} />
+          {refreshing ? "SYNCING…" : "REFRESH"}
+        </button>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search name / email / message…"
           style={{ background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: 10, padding: "9px 14px", color: "#1B3A2D", fontFamily: B, fontSize: 13, outline: "none", flex: 1, minWidth: 220 }} />
       </div>
