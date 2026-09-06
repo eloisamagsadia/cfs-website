@@ -318,16 +318,28 @@ export default function ContactAdminPage() {
                       <IconCheck size={11} color="#156530" /> MARK REPLIED
                     </button>
                   )}
-                  {m.status !== "archived" && (
+                  {m.status !== "archived" && m.status !== "spam" && (
                     <button onClick={() => patch(m.id, "archived", "Archived.")} disabled={busy === m.id}
                       style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#5A5A5A", background: "#F0F0F0", border: "1.5px solid transparent", borderRadius: 8, padding: "7px 12px", cursor: "pointer", letterSpacing: 1.2 }}>
                       ARCHIVE
                     </button>
                   )}
-                  {m.status !== "spam" && (
+                  {m.status === "archived" && (
+                    <button onClick={() => patch(m.id, "new", "Unarchived — back in NEW.")} disabled={busy === m.id}
+                      style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#156530", background: "#E8F0E4", border: "1.5px solid #B7D8B7", borderRadius: 8, padding: "7px 12px", cursor: "pointer", letterSpacing: 1.2 }}>
+                      UNARCHIVE
+                    </button>
+                  )}
+                  {m.status !== "spam" && m.status !== "archived" && (
                     <button onClick={() => patch(m.id, "spam", "Marked spam.")} disabled={busy === m.id}
                       style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#8A1E27", background: "#FFE8EC", border: "1.5px solid transparent", borderRadius: 8, padding: "7px 12px", cursor: "pointer", letterSpacing: 1.2 }}>
                       SPAM
+                    </button>
+                  )}
+                  {m.status === "spam" && (
+                    <button onClick={() => patch(m.id, "new", "Not spam — moved back to NEW.")} disabled={busy === m.id}
+                      style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#156530", background: "#E8F0E4", border: "1.5px solid #B7D8B7", borderRadius: 8, padding: "7px 12px", cursor: "pointer", letterSpacing: 1.2 }}>
+                      NOT SPAM
                     </button>
                   )}
                   <button onClick={() => setPendingDelete(m)} disabled={busy === m.id}

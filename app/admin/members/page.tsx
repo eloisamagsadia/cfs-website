@@ -31,9 +31,17 @@ export default async function AdminMembersPage() {
     countMap[p.user_id] = (countMap[p.user_id] ?? 0) + 1;
   });
 
-  // Hide owner-tier hidden admins from every non-owner viewer. Owners
-  // still see themselves in the list so they can verify their entry.
-  const visible = filterHiddenFromList((members ?? []) as any[], userId);
+  // Two-layer visibility:
+  //   1. Hidden owner (System) → never shown to non-owners
+  //   2. Rank hierarchy → viewers only see members at or below their
+  //      own tier (so admins don't see super_admins, mods don't see
+  //      admins, etc.). Owner override always sees everyone.
+  const RANK: Record<string, number> = { member: 1, sponsor: 2, moderator: 3, admin: 4, super_admin: 5 };
+  const callerRank = RANK[callerRole] ?? 0;
+  const afterHidden = filterHiddenFromList((members ?? []) as any[], userId);
+  const visible     = callerIsOwner
+    ? afterHidden
+    : afterHidden.filter((m: any) => (RANK[m.role ?? "member"] ?? 1) <= callerRank);
   const enriched = visible.map((m: any) => ({
     ...m,
     post_count: countMap[m.id] ?? 0,
