@@ -242,10 +242,17 @@ export default async function HomePage() {
             /* CTA tile is layout-only — never inherit the tile padding
                that just added 44px of empty space around the buttons. */
             .bento-cta { padding: 4px 0 0 !important; }
+            /* Inner flex row: prevent buttons from stretching vertically
+               (default align-items: stretch was making them full-tile-tall) */
+            .bento-cta > div { align-items: center !important; }
             .bento-cta > div > a {
-              padding: 11px 22px !important;
-              font-size: 12px !important;
-              letter-spacing: 1.3px !important;
+              padding: 10px 20px !important;
+              font-size: 11px !important;
+              letter-spacing: 1.2px !important;
+              min-height: 0 !important;
+              height: auto !important;
+              align-self: center !important;
+              flex: 0 0 auto !important;
             }
           }
 
