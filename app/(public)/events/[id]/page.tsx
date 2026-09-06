@@ -106,6 +106,19 @@ export default async function EventDetailPage({ params }: { params: { id: string
   const statusChip = statusColors[event.status] ?? { bg: "#7A8E7A", fg: "#ffffff" };
   const pct = event.capacity ? Math.min(((regCount ?? 0) / event.capacity) * 100, 100) : 0;
 
+  // Split "General Sale | Dancing in the Rain: OPM …" style titles
+  // into an eyebrow prefix + a shorter display title. Keeps admin free
+  // to encode context in the title without breaking the layout.
+  const titleParts = (() => {
+    const t: string = event.title ?? "";
+    // Prefer ` | ` split; falls back to first `:` when neither has a `|`.
+    if (t.includes(" | ")) {
+      const [pre, ...rest] = t.split(" | ");
+      return { eyebrow: pre.trim(), main: rest.join(" | ").trim() };
+    }
+    return { eyebrow: null as string | null, main: t };
+  })();
+
   const dateWeekday = eventDate.toLocaleDateString("en-PH", { weekday: "long", timeZone: "Asia/Manila" });
   const dateShort   = eventDate.toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric", timeZone: "Asia/Manila" });
   const dateMonth   = eventDate.toLocaleDateString("en-PH", { month: "short", timeZone: "Asia/Manila" }).toUpperCase();
@@ -183,8 +196,13 @@ export default async function EventDetailPage({ params }: { params: { id: string
                 )}
               </div>
 
-              <h1 className="evd-title" style={{ fontFamily: S, fontSize: "clamp(2.2rem, 4.6vw, 3.6rem)", color: "#1B3A2D", lineHeight: 1.05, margin: "0 0 12px", letterSpacing: "-0.5px" }}>
-                {event.title}
+              {titleParts.eyebrow && (
+                <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#1A8040", letterSpacing: "2.5px", textTransform: "uppercase", marginBottom: "10px" }}>
+                  {titleParts.eyebrow}
+                </div>
+              )}
+              <h1 className="evd-title" style={{ fontFamily: S, fontSize: "clamp(2rem, 4.2vw, 3.2rem)", color: "#1B3A2D", lineHeight: 1.1, margin: "0 0 12px", letterSpacing: "-0.5px" }}>
+                {titleParts.main}
               </h1>
 
               {countdown && (

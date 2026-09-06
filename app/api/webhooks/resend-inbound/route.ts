@@ -17,8 +17,12 @@ import { logAudit } from "@/lib/audit";
 //
 // Public route — /api/webhooks(.*) is already in middleware.ts publicRoutes.
 export async function POST(req: NextRequest) {
+  // Accept any of these env names so the Worker and Vercel can use
+  // whichever fits their side (CFS_INBOUND_SECRET is the Worker's,
+  // CFS_INBOUND_WEBHOOK_SECRET is the recommended Vercel name).
   const secret =
     process.env.CFS_INBOUND_WEBHOOK_SECRET ??
+    process.env.CFS_INBOUND_SECRET ??
     process.env.RESEND_INBOUND_WEBHOOK_SECRET ??
     null;
 
