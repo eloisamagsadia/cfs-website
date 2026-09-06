@@ -192,7 +192,7 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
                 Medium's post-open state where the origin is always visible */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px 10px 20px", borderBottom: "1px solid #F2F2F2", background: "#FFFFFF", flexShrink: 0 }}>
               <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 12, color: "#6B6B6B", letterSpacing: "0.02em" }}>
-                Letters from Colet · Medium
+                letters from colet · Medium
               </span>
               <button onClick={close} aria-label="Close"
                 style={{ background: "transparent", border: "none", borderRadius: "50%", width: 34, height: 34, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#6B6B6B" }}
@@ -213,13 +213,13 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
                     {open.title}
                   </h1>
 
-                  {/* Author byline row — avatar + name + date, Medium
-                      convention */}
+                  {/* Author byline row — matches how Colet's Medium
+                      profile presents her (name is lowercase). */}
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #A8D3B4, #4A7C59)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontWeight: 700, fontSize: 15, flexShrink: 0 }}>C</div>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", background: "linear-gradient(135deg, #A8D3B4, #4A7C59)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontWeight: 700, fontSize: 15, flexShrink: 0 }}>c</div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                       <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 14, color: "#242424", fontWeight: 500 }}>
-                        Letters from Colet
+                        letters from colet
                       </span>
                       {open.pubDate && (
                         <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 13, color: "#6B6B6B" }}>
@@ -240,18 +240,21 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
                 {/* Body */}
                 <div className="letter-body" dangerouslySetInnerHTML={{ __html: sanitize(stripLeadingImage(open.content, open.thumbnail)) }} />
 
-                {/* Footer — subtle Medium-style attribution */}
-                <footer style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid #E6E6E6", display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #A8D3B4, #4A7C59)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontWeight: 700, fontSize: 16, flexShrink: 0 }}>C</div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                      <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 14, color: "#242424", fontWeight: 600 }}>Written by Colet</span>
-                      <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 13, color: "#6B6B6B" }}>Letters from Colet on Medium</span>
+                {/* Footer — Medium-style author card with real bio */}
+                <footer style={{ marginTop: 48, paddingTop: 28, borderTop: "1px solid #E6E6E6", display: "flex", flexDirection: "column", gap: 16 }}>
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+                    <div style={{ width: 48, height: 48, borderRadius: "50%", overflow: "hidden", background: "linear-gradient(135deg, #A8D3B4, #4A7C59)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontWeight: 700, fontSize: 18, flexShrink: 0 }}>c</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 11, color: "#6B6B6B", letterSpacing: "0.05em", textTransform: "uppercase" }}>Written by</div>
+                      <div style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 16, color: "#242424", fontWeight: 700, lineHeight: 1.2 }}>letters from colet</div>
+                      <p style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 14, color: "#6B6B6B", lineHeight: 1.5, margin: "4px 0 0" }}>
+                        wala akong ipong pera, eyebags lang at unsaid thoughts madami.
+                      </p>
                     </div>
                   </div>
                   <a href={open.link} target="_blank" rel="noopener noreferrer"
-                    style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 13, fontWeight: 500, color: "#FFFFFF", background: "#242424", border: "none", borderRadius: 999, padding: "8px 18px", textDecoration: "none" }}>
-                    Read on Medium
+                    style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 13, fontWeight: 500, color: "#FFFFFF", background: "#1A8917", border: "none", borderRadius: 999, padding: "8px 18px", textDecoration: "none" }}>
+                    Read on Medium ↗
                   </a>
                 </footer>
               </article>
