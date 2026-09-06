@@ -281,7 +281,35 @@ export default async function HomePage() {
               </div>
               <div className="home-event-featured-media" style={{ aspectRatio: "4 / 3", background: C.mist, position: "relative", overflow: "hidden" }}>
                 {ev.banner_url ? (
-                  <img src={ev.banner_url} alt={ev.title} style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center", padding: "8px" }} />
+                  <>
+                    {/* Blurred copy of the banner fills the media area so
+                        the mint frame disappears and the sharp banner
+                        feels like part of a poster. */}
+                    <img
+                      src={ev.banner_url}
+                      alt=""
+                      aria-hidden="true"
+                      style={{
+                        position: "absolute", inset: 0,
+                        width: "100%", height: "100%",
+                        objectFit: "cover", objectPosition: "center",
+                        filter: "blur(24px) saturate(1.15)",
+                        transform: "scale(1.15)",
+                      }}
+                    />
+                    {/* Soft dark scrim so the sharp banner reads against
+                        any bright blurred backdrop. */}
+                    <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "rgba(15,42,30,0.10)" }} />
+                    <img
+                      src={ev.banner_url}
+                      alt={ev.title}
+                      style={{
+                        position: "relative",
+                        width: "100%", height: "100%",
+                        objectFit: "contain", objectPosition: "center",
+                      }}
+                    />
+                  </>
                 ) : (
                   <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <IconCalendar size={48} color="#B7CDB7" />
