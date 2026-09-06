@@ -108,18 +108,19 @@ export default async function EventsPage() {
         <div className="scrap-glow" />
         <div className="scrap-glow" style={{ top: "auto", bottom: "-100px", left: "auto", right: "-100px", background: "radial-gradient(circle, rgba(184, 230, 193, 0.35), transparent 65%)" }} />
 
-        {/* Polaroid + washi note pinned in the top corner — scrapbook accent */}
-        <div className="evl-hero-polaroid" style={{ position: "absolute", top: "24px", right: "28px", zIndex: 4, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
-          <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(6deg)" }}>para kay colet ✦</span>
-          <div className="scrap-polaroid scrap-polaroid-tilt-right" style={{ width: "128px", borderRadius: 2 }}>
-            <div className="scrap-polaroid-photo" style={{ borderRadius: 2, padding: 0, overflow: "hidden", position: "relative" }}>
-              <Image src={COLET_PHOTO} alt="Colet" fill sizes="128px" style={{ objectFit: "cover" }} />
-            </div>
-            <div className="scrap-polaroid-caption">the ace ♥</div>
-          </div>
-        </div>
-
         <div className="evl-hero-grid" style={{ position: "relative", maxWidth: "1240px", margin: "0 auto", padding: "64px 48px", display: "grid", gridTemplateColumns: "1fr 0.9fr", gap: "48px", alignItems: "center" }}>
+
+          {/* Polaroid + washi note pinned inside the container, not the
+              viewport — prevents clipping and stays anchored to layout. */}
+          <div className="evl-hero-polaroid" style={{ position: "absolute", top: "-20px", right: "28px", zIndex: 4, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
+            <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(6deg)" }}>para kay colet ✦</span>
+            <div className="scrap-polaroid scrap-polaroid-tilt-right" style={{ width: "112px", borderRadius: 2 }}>
+              <div className="scrap-polaroid-photo" style={{ borderRadius: 2, padding: 0, overflow: "hidden", position: "relative" }}>
+                <Image src={COLET_PHOTO} alt="Colet" fill sizes="112px" style={{ objectFit: "cover" }} />
+              </div>
+              <div className="scrap-polaroid-caption">the ace ♥</div>
+            </div>
+          </div>
 
           {/* Left: intro + stats */}
           <div>
@@ -155,55 +156,64 @@ export default async function EventsPage() {
           </div>
 
           {/* Right: featured next event card OR CTA */}
-          {next ? (
-            <Link href={`/events/${next.id}`} style={{ textDecoration: "none", display: "block" }}>
-              <div style={{ background: C.deep, borderRadius: "20px", overflow: "hidden", boxShadow: "0 20px 60px rgba(15,42,30,0.25), 0 0 0 1px rgba(255,255,255,0.06)", position: "relative", transition: "transform 0.2s", cursor: "pointer" }}>
+          {next ? (() => {
+            // Smart-split the title so long "Prefix | Title" strings
+            // render as eyebrow + clean h2 instead of one crushed line.
+            const t: string = next.title ?? "";
+            const [pre, ...rest] = t.split(" | ");
+            const hasPrefix = rest.length > 0;
+            const eyebrow = hasPrefix ? pre.trim() : null;
+            const mainTitle = hasPrefix ? rest.join(" | ").trim() : t;
+            return (
+            <Link href={`/events/${next.id}`} className="btn-fx" style={{ textDecoration: "none", display: "block" }}>
+              <div style={{ background: "#FFFFFF", borderRadius: "20px", overflow: "hidden", boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 12px 32px rgba(15,42,30,0.10)", border: "1px solid #DDE8DD", position: "relative", transition: "transform 0.2s, box-shadow 0.2s", cursor: "pointer" }}>
                 {/* Banner */}
-                <div style={{ position: "relative", aspectRatio: "16/9", background: C.forest }}>
+                <div style={{ position: "relative", aspectRatio: "16/9", background: "#E8F0E4" }}>
                   {next.banner_url ? (
                     <Image src={next.banner_url} alt={next.title} fill sizes="(max-width: 768px) 100vw, 800px" priority style={{ objectFit: "cover" }} />
                   ) : (
-                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(135deg, ${C.forest}, ${C.deep})` }}>
-                      <IconCalendar size={54} color="rgba(255,255,255,0.25)" />
+                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #E8F0E4 0%, #C7E1CE 100%)" }}>
+                      <IconCalendar size={54} color="#4A7C59" />
                     </div>
                   )}
-                  {/* Top-fade + bottom-fade overlays so the pills + info panel stay readable over busy artwork */}
-                  <div style={{ position: "absolute", inset: 0, pointerEvents: "none", background: "linear-gradient(180deg, rgba(15,42,30,0.72) 0%, rgba(15,42,30,0.32) 22%, transparent 45%, transparent 60%, rgba(15,42,30,0.55) 100%)" }} />
-                  {/* Overlay chip */}
-                  <div style={{ position: "absolute", top: "16px", left: "16px", display: "flex", gap: "6px", zIndex: 2 }}>
-                    <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: "#1A8040", borderRadius: "999px", padding: "5px 12px", letterSpacing: "1.5px", boxShadow: "0 2px 10px rgba(0,0,0,0.35)" }}>NEXT UP</span>
+                  {/* Chip row on top of banner */}
+                  <div style={{ position: "absolute", top: "14px", left: "14px", display: "flex", gap: "6px", zIndex: 2 }}>
+                    <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: "#1A8040", borderRadius: "999px", padding: "5px 12px", letterSpacing: "1.5px", boxShadow: "0 2px 8px rgba(15,42,30,0.30)" }}>NEXT UP</span>
                     {countdown && (
-                      <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: "rgba(15,42,30,0.85)", border: "1px solid rgba(74,203,110,0.55)", borderRadius: "999px", padding: "5px 12px", letterSpacing: "1.5px", backdropFilter: "blur(6px)", boxShadow: "0 2px 10px rgba(0,0,0,0.35)" }}>
+                      <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#1B3A2D", background: "rgba(255,255,255,0.96)", borderRadius: "999px", padding: "5px 12px", letterSpacing: "1.5px", boxShadow: "0 2px 8px rgba(15,42,30,0.20)" }}>
                         {countdown}
                       </span>
                     )}
                   </div>
                   {/* Date badge */}
-                  <div style={{ position: "absolute", top: "16px", right: "16px", background: "rgba(255,255,255,0.98)", borderRadius: "12px", padding: "10px 14px", textAlign: "center", minWidth: "62px", boxShadow: "0 8px 20px rgba(0,0,0,0.35)", zIndex: 2 }}>
+                  <div style={{ position: "absolute", top: "14px", right: "14px", background: "rgba(255,255,255,0.98)", borderRadius: "12px", padding: "9px 13px", textAlign: "center", minWidth: "60px", boxShadow: "0 4px 14px rgba(15,42,30,0.25)", zIndex: 2 }}>
                     <div style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: C.sage, letterSpacing: "1.5px" }}>
                       {nextDate!.toLocaleDateString("en-PH", { month: "short", timeZone: "Asia/Manila" }).toUpperCase()}
                     </div>
-                    <div style={{ fontFamily: S, fontSize: "24px", color: C.forest, lineHeight: 1 }}>
+                    <div style={{ fontFamily: S, fontSize: "24px", color: "#1B3A2D", lineHeight: 1 }}>
                       {nextDate!.toLocaleDateString("en-PH", { day: "numeric", timeZone: "Asia/Manila" })}
                     </div>
                   </div>
                 </div>
 
                 {/* Info */}
-                <div style={{ padding: "20px 22px 22px" }}>
-                  <h2 style={{ fontFamily: S, fontSize: "22px", color: "#ffffff", lineHeight: 1.15, margin: "0 0 12px", letterSpacing: "-0.3px" }}>{next.title}</h2>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.7)" }}>
+                <div style={{ padding: "18px 22px 20px" }}>
+                  {eyebrow && (
+                    <div style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#1A8040", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "6px" }}>{eyebrow}</div>
+                  )}
+                  <h2 style={{ fontFamily: S, fontSize: "22px", color: "#1B3A2D", lineHeight: 1.15, margin: "0 0 10px", letterSpacing: "-0.3px" }}>{mainTitle}</h2>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "6px", fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                      <IconCalendar size={12} color="rgba(255,255,255,0.55)" />
+                      <IconCalendar size={12} color="#7A8E7A" />
                       {nextDate!.toLocaleDateString("en-PH", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "Asia/Manila" })} · {nextDate!.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" })}
                     </span>
                     {next.location && (
                       <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                        <IconPin size={12} color="rgba(255,255,255,0.55)" /> {next.location}
+                        <IconPin size={12} color="#7A8E7A" /> {next.location}
                       </span>
                     )}
                   </div>
-                  <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ marginTop: "14px", paddingTop: "12px", borderTop: "1px dashed #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     {(() => {
                       const hasTiers = next.tier_min !== null && next.tier_min !== undefined;
                       const min = hasTiers ? Number(next.tier_min) : Number(next.price ?? 0);
@@ -215,19 +225,20 @@ export default async function EventsPage() {
                           ? `FROM ₱${min.toLocaleString()}`
                           : `₱${min.toLocaleString()}`;
                       return (
-                        <span style={{ fontFamily: S, fontSize: "20px", color: isFree ? "#ffffff" : "#4ACB6E" }}>
+                        <span style={{ fontFamily: S, fontSize: "20px", color: isFree ? "#4A7C59" : "#1A8040" }}>
                           {label}
                         </span>
                       );
                     })()}
-                    <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#4ACB6E", letterSpacing: "1.5px", display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                      <IconTicket size={11} color="#4ACB6E" /> BOOK NOW →
+                    <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1A8040", letterSpacing: "1.5px", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                      <IconTicket size={11} color="#1A8040" /> BOOK NOW →
                     </span>
                   </div>
                 </div>
               </div>
             </Link>
-          ) : (
+            );
+          })() : (
             /* No upcoming events — decorative placeholder */
             <div style={{ background: "#ffffff", borderRadius: "20px", border: `1.5px dashed ${C.border}`, padding: "48px 32px", textAlign: "center" }}>
               <div style={{ width: "72px", height: "72px", borderRadius: "50%", background: C.mist, display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}>
