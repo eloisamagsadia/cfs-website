@@ -193,7 +193,75 @@ export default async function HomePage() {
               Follow us on socials — we&apos;ll announce the next drop soon.
             </p>
           </div>
-        ) : (
+        ) : upcoming.length === 1 ? (() => {
+          // Featured layout for the single-event case — grid leaves too
+          // much dead space when a lone card sits at 280px minimum. This
+          // horizontal card fills the section like a hero.
+          const ev = upcoming[0];
+          const date = new Date(ev.date);
+          const hasTiers = ev.tier_min !== null && ev.tier_min !== undefined;
+          const min = hasTiers ? Number(ev.tier_min) : Number(ev.price ?? 0);
+          const max = hasTiers ? Number(ev.tier_max) : min;
+          const isFree = min === 0 && (!hasTiers || max === 0);
+          const priceLabel = isFree ? "FREE" : hasTiers && min !== max ? `FROM ₱${min.toLocaleString()}` : `₱${min.toLocaleString()}`;
+          const t: string = ev.title ?? "";
+          const [pre, ...rest] = t.split(" | ");
+          const hasPrefix = rest.length > 0;
+          const eyebrow = hasPrefix ? pre.trim() : null;
+          const mainTitle = hasPrefix ? rest.join(" | ").trim() : t;
+          return (
+            <Link href={`/events/${ev.id}`} className="home-event-featured" style={{ textDecoration: "none", display: "grid", gridTemplateColumns: "1.05fr 1fr", background: "#ffffff", border: "2px solid #1A8040", borderRadius: "18px", overflow: "hidden", boxShadow: "0 12px 32px rgba(26,128,64,0.14)", transition: "transform 0.15s, box-shadow 0.15s", position: "relative" }}>
+              <div style={{ position: "absolute", top: "16px", right: "16px", zIndex: 2, background: "#1A8040", color: "#ffffff", fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px", padding: "5px 12px", borderRadius: "999px", boxShadow: "0 2px 8px rgba(26,128,64,0.4)" }}>
+                NEXT UP
+              </div>
+              <div className="home-event-featured-media" style={{ aspectRatio: "4 / 3", background: C.mist, position: "relative", overflow: "hidden" }}>
+                {ev.banner_url ? (
+                  <img src={ev.banner_url} alt={ev.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <IconCalendar size={48} color="#B7CDB7" />
+                  </div>
+                )}
+                <div style={{ position: "absolute", top: "16px", left: "16px", background: "rgba(255,255,255,0.96)", borderRadius: "10px", padding: "8px 14px", textAlign: "center", minWidth: "56px", boxShadow: "0 2px 8px rgba(0,0,0,0.10)" }}>
+                  <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.sage, letterSpacing: "2px" }}>
+                    {date.toLocaleDateString("en-PH", { month: "short", timeZone: "Asia/Manila" }).toUpperCase()}
+                  </div>
+                  <div style={{ fontFamily: S, fontSize: "26px", color: C.forest, lineHeight: 1 }}>
+                    {date.toLocaleDateString("en-PH", { day: "numeric", timeZone: "Asia/Manila" })}
+                  </div>
+                </div>
+              </div>
+              <div style={{ padding: "36px 40px", display: "flex", flexDirection: "column", gap: "16px", justifyContent: "center" }}>
+                {eyebrow && (
+                  <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.green, letterSpacing: "2.5px", textTransform: "uppercase" }}>{eyebrow}</div>
+                )}
+                <div style={{ fontFamily: S, fontSize: "clamp(1.6rem, 3vw, 2.2rem)", color: C.forest, lineHeight: 1.15 }}>
+                  {mainTitle}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontFamily: B, fontSize: "14px", color: C.forest }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <IconCalendar size={14} color="#4A7C59" />
+                    <span>{date.toLocaleDateString("en-PH", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "Asia/Manila" })} · {date.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" })}</span>
+                  </div>
+                  {ev.location && (
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <IconPin size={14} color="#4A7C59" />
+                      <span>{ev.location}</span>
+                    </div>
+                  )}
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px", paddingTop: "18px", borderTop: `1px dashed ${C.border}` }}>
+                  <span style={{ fontFamily: S, fontSize: "22px", color: isFree ? C.sage : C.green }}>
+                    {priceLabel}
+                  </span>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "12px", fontWeight: 700, color: "#ffffff", background: "#1A8040", padding: "10px 20px", borderRadius: "10px", letterSpacing: "1.5px", boxShadow: "0 4px 12px rgba(26,128,64,0.25)" }}>
+                    <IconTicket size={12} color="#ffffff" /> BOOK YOUR SLOT →
+                  </span>
+                </div>
+              </div>
+            </Link>
+          );
+        })() : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
             {upcoming.map((ev, i) => {
               const date = new Date(ev.date);
@@ -266,6 +334,12 @@ export default async function HomePage() {
 
         <style>{`
           .home-event-card:hover { transform: translateY(-2px); border-color: #1A8040 !important; }
+          .home-event-featured:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(26,128,64,0.20) !important; }
+          @media (max-width: 820px) {
+            .home-event-featured { grid-template-columns: 1fr !important; }
+            .home-event-featured-media { aspect-ratio: 16/9 !important; }
+            .home-event-featured > div:last-child { padding: 24px 22px !important; }
+          }
         `}</style>
       </section>
 
