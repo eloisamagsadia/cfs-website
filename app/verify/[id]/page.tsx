@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import CheckInButton from "./CheckInButton";
@@ -54,13 +55,18 @@ export default async function VerifyTicketPage({ params }: { params: { id: strin
   const canSeeAttendee = isStaff || isOwner;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#FAF6EE", padding: "32px 16px", fontFamily: B }}>
-      <div style={{ maxWidth: "480px", margin: "0 auto" }}>
+    <div className="scrap-paper" style={{ minHeight: "100vh", padding: "36px 16px 48px", fontFamily: B, position: "relative", overflow: "hidden" }}>
+      <div className="scrap-glow" />
+      <div className="scrap-glow scrap-glow-pink" style={{ top: "auto", bottom: "-100px", left: "auto", right: "-80px" }} />
+
+      <div style={{ maxWidth: "480px", margin: "0 auto", position: "relative" }}>
 
         {/* Brand */}
-        <Link href="/" style={{ display: "block", textAlign: "center", textDecoration: "none", marginBottom: "20px" }}>
-          <div style={{ fontFamily: S, fontSize: "22px", fontWeight: 700, letterSpacing: "4px", color: "#1B3A2D" }}>CFS</div>
-          <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#5A7A60", marginTop: "2px" }}>TICKET VERIFICATION</div>
+        <Link href="/" style={{ display: "block", textAlign: "center", textDecoration: "none", marginBottom: "14px" }}>
+          <div style={{ marginBottom: "6px" }}>
+            <span className="scrap-tape scrap-tape-mint">ticket check</span>
+          </div>
+          <div style={{ fontFamily: S, fontSize: "22px", color: "#1B3A2D", lineHeight: 1 }}>Colet Fan Suporta</div>
         </Link>
 
         {!ticket ? (
@@ -81,11 +87,11 @@ export default async function VerifyTicketPage({ params }: { params: { id: strin
 
               {/* Banner or gradient */}
               {ev?.banner_url ? (
-                <div style={{ width: "100%", height: "180px", overflow: "hidden" }}>
-                  <img src={ev.banner_url} alt={ev.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <div style={{ position: "relative", width: "100%", height: "180px", overflow: "hidden" }}>
+                  <Image src={ev.banner_url} alt={ev.title} fill sizes="480px" priority style={{ objectFit: "cover" }} />
                 </div>
               ) : (
-                <div style={{ height: "12px", background: "linear-gradient(90deg,#1A8040 0%,#F5C82A 55%,#E88C4A 100%)" }} />
+                <div style={{ height: "12px", background: "linear-gradient(90deg,#1A8040 0%,#4ACB6E 55%,#E5B547 100%)" }} />
               )}
 
               {/* Status pill + event */}
@@ -118,9 +124,9 @@ export default async function VerifyTicketPage({ params }: { params: { id: strin
               {canSeeAttendee && ticket.profiles && (
                 <div style={{ padding: "8px 24px 16px" }}>
                   <div style={{ background: "#F7FAF5", border: "1px solid #E4EDE4", borderRadius: "12px", padding: "12px 14px", display: "flex", alignItems: "center", gap: "12px" }}>
-                    <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "#E8F0E4", border: "1.5px solid #DDE8DD", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "#E8F0E4", border: "1.5px solid #DDE8DD", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, position: "relative" }}>
                       {ticket.profiles.avatar_url
-                        ? <img src={ticket.profiles.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        ? <Image src={ticket.profiles.avatar_url} alt="" fill sizes="44px" style={{ objectFit: "cover" }} />
                         : <span style={{ fontFamily: R, fontSize: "16px", color: "#1A8040" }}>{(ticket.profiles.display_name ?? "M")[0].toUpperCase()}</span>}
                     </div>
                     <div style={{ minWidth: 0, flex: 1 }}>
@@ -146,7 +152,7 @@ export default async function VerifyTicketPage({ params }: { params: { id: strin
               {/* Action zone */}
               <div style={{ padding: "0 24px 24px" }}>
                 {!userId ? (
-                  <Link href={`/sign-in?redirect_url=/verify/${encodeURIComponent(raw)}`} style={{ display: "block", textAlign: "center", background: "#1A8040", color: "#FFFFFF", textDecoration: "none", fontFamily: SG, fontSize: "12px", fontWeight: 700, letterSpacing: "1.5px", padding: "13px", borderRadius: "10px", boxShadow: "0 4px 12px rgba(26,128,64,0.25)" }}>
+                  <Link href={`/sign-in?redirect_url=/verify/${encodeURIComponent(raw)}`} className="btn-fx btn-fx-primary" style={{ display: "block", textAlign: "center", background: "#1A8040", color: "#FFFFFF", textDecoration: "none", fontFamily: SG, fontSize: "12px", fontWeight: 700, letterSpacing: "1.5px", padding: "13px", borderRadius: "10px" }}>
                     SIGN IN AS STAFF TO CHECK IN
                   </Link>
                 ) : !isStaff ? (
@@ -167,7 +173,8 @@ export default async function VerifyTicketPage({ params }: { params: { id: strin
         })()}
 
         {/* Footer */}
-        <div style={{ textAlign: "center", marginTop: "20px", fontSize: "11px", color: "#7A8E7A", lineHeight: 1.7 }}>
+        <div style={{ textAlign: "center", marginTop: "20px", fontSize: "11px", color: "#5A7A60", lineHeight: 1.7 }}>
+          <span className="scrap-note" style={{ fontSize: "16px", color: "#4A7C59", display: "block", marginBottom: "4px" }}>salamat ✦</span>
           <Link href="/" style={{ color: "#1A8040", textDecoration: "none" }}>coletfs.com</Link> · @coletfansuporta
         </div>
       </div>

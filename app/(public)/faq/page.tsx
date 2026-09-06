@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
+const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 
 interface Faq {
   id: string;
@@ -65,14 +66,24 @@ export default function PublicFaqPage() {
   }
 
   return (
-    <div style={{ background: "#FAF6EE", minHeight: "100vh", padding: "56px 20px" }}>
-      <div style={{ maxWidth: "820px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div className="scrap-paper" style={{ minHeight: "100vh", padding: "56px 20px 64px", position: "relative", overflow: "hidden" }}>
+      <div className="scrap-glow" />
+      <div className="scrap-glow scrap-glow-warm" style={{ top: "auto", bottom: "-140px", left: "auto", right: "-80px" }} />
+
+      <div style={{ maxWidth: "820px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "24px", position: "relative" }}>
 
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1A8040", letterSpacing: "3px" }}>SUPPORT CENTER</div>
-          <h1 style={{ fontFamily: R, fontSize: "2.4rem", color: "#1B3A2D", letterSpacing: "4px", margin: "8px 0 6px" }}>FAQ</h1>
-          <p style={{ fontFamily: B, fontSize: "14px", color: "#4A7C59", maxWidth: "520px", margin: "0 auto" }}>
-            Common questions from members. Can't find your answer? <a href="/support" style={{ color: "#1A8040", fontWeight: 600 }}>Reach out</a> and we'll help.
+          <div style={{ marginBottom: "18px" }}>
+            <span className="scrap-tape scrap-tape-mint">help desk</span>
+          </div>
+          <h1 style={{ fontFamily: S, fontSize: "clamp(2.4rem, 5vw, 3.4rem)", color: "#1B3A2D", letterSpacing: "-0.5px", margin: "0 0 8px", lineHeight: 1.05 }}>
+            Questions?
+          </h1>
+          <p className="scrap-note" style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.6rem)", color: "#4A7C59", margin: "0 0 14px", lineHeight: 1.1 }}>
+            we've got you ✦
+          </p>
+          <p style={{ fontFamily: B, fontSize: "14px", color: "#1B3A2D", maxWidth: "520px", margin: "0 auto", lineHeight: 1.7 }}>
+            Common stuff kaFAMs ask. Can't find your answer? <a href="/support" style={{ color: "#1A8040", fontWeight: 600 }}>Reach out</a> and we'll help.
           </p>
         </div>
 
@@ -99,9 +110,13 @@ export default function PublicFaqPage() {
         )}
 
         {loading ? (
-          <div style={{ padding: "48px", textAlign: "center", fontFamily: SG, letterSpacing: "2px", color: "#7A8E7A" }}>LOADING…</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {[0, 1, 2, 3].map(i => (
+              <div key={i} className="sk" style={{ height: "56px", borderRadius: "12px" }} />
+            ))}
+          </div>
         ) : filtered.length === 0 ? (
-          <div style={{ background: "#ffffff", border: "1.5px dashed #DDE8DD", borderRadius: "14px", padding: "56px 24px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#7A8E7A" }}>
+          <div style={{ background: "#ffffff", border: "1.5px dashed #DDE8DD", borderRadius: "14px", padding: "56px 24px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>
             No FAQs match your search. Try a different keyword or <a href="/support" style={{ color: "#1A8040" }}>contact support</a>.
           </div>
         ) : (
@@ -129,8 +144,11 @@ export default function PublicFaqPage() {
           ))
         )}
 
-        <div style={{ textAlign: "center", padding: "24px 0", fontFamily: B, fontSize: "12px", color: "#7A8E7A" }}>
-          Still stuck? <a href="/support" style={{ color: "#1A8040", fontWeight: 600 }}>Message support</a> and we'll get back within a business day.
+        <div style={{ textAlign: "center", padding: "24px 0 8px" }}>
+          <span className="scrap-note" style={{ fontSize: "20px", color: "#4A7C59", display: "block", marginBottom: "6px" }}>still stuck?</span>
+          <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>
+            <a href="/support" style={{ color: "#1A8040", fontWeight: 600 }}>Message support</a> and we'll get back within a business day.
+          </span>
         </div>
       </div>
     </div>
