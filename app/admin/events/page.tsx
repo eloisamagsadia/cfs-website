@@ -27,7 +27,27 @@ export default async function AdminEventsPage() {
     .select("*")
     .order("date", { ascending: false });
 
-  const list = events ?? [];
+  const rawList = (events ?? []) as any[];
+
+  // Load real registered counts per event from event_tickets. Only
+  // active + used count — pending_payment holds shouldn't inflate the
+  // "X registered" number an admin uses to gauge attendance. Older
+  // code read event.event_registrations.length from a join that was
+  // never actually selected, so every card showed 0.
+  const eventIds = rawList.map(e => e.id);
+  const regCountByEvent: Record<string, number> = {};
+  if (eventIds.length) {
+    const { data: ticketRows } = await (admin as any)
+      .from("event_tickets")
+      .select("event_id, status")
+      .in("event_id", eventIds)
+      .in("status", ["active", "used"]);
+    for (const row of (ticketRows ?? []) as any[]) {
+      if (!row?.event_id) continue;
+      regCountByEvent[row.event_id] = (regCountByEvent[row.event_id] ?? 0) + 1;
+    }
+  }
+  const list = rawList.map(e => ({ ...e, __reg_count: regCountByEvent[e.id] ?? 0 }));
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -62,7 +82,7 @@ export default async function AdminEventsPage() {
         {list.map((event: any) => {
           const status = STATUS_META[event.status] ?? STATUS_META.completed;
           const d = new Date(event.date);
-          const regCount = event.event_registrations?.length ?? 0;
+          const regCount = event.__reg_count ?? 0;
           const capacity = event.capacity ?? 0;
 
           const isHidden = !!event.is_hidden;
