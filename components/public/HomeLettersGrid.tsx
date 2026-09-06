@@ -66,7 +66,7 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
 
   return (
     <>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
+      <div className="letters-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
         {letters.map((letter) => (
           <button key={letter.link}
             onClick={() => setOpen(letter)}
@@ -97,6 +97,11 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
 
       <style>{`
         .letter-card:hover { transform: translateY(-2px); border-color: #1A8040 !important; }
+        /* Below the 280px minmax threshold, the grid would push cards
+           past the viewport. Force 1 column so cards fit narrow phones. */
+        @media (max-width: 520px) {
+          .letters-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+        }
         /* Medium-style reading typography — serif body, large size, generous line-height,
            near-black text on white. Scoped to .letter-body so it never leaks into the
            rest of the site's sans-serif layout. */

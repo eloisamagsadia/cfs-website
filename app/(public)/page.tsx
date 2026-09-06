@@ -257,14 +257,25 @@ export default async function HomePage() {
               gap: 10px !important;
             }
             .bento-tile { padding: 18px 16px !important; border-radius: 14px !important; }
+            /* Members number scales down so 5-digit member counts don't
+               dominate the phone viewport. */
+            .bento-members > div:nth-of-type(2) { font-size: 3.2rem !important; }
             .bento-cta > div { flex-direction: column; }
-            .bento-cta > div > a { flex: 1 1 100%; justify-content: center; }
+            .bento-cta > div > a { flex: 1 1 100%; justify-content: center; padding: 12px 22px !important; }
+          }
+          @media (max-width: 380px) {
+            .hero-bento-wrap { padding: 20px 12px 0 !important; }
+            .bento-tile { padding: 16px 14px !important; }
+            /* Tighter typography for iPhone SE-class phones */
+            .bento-mission .scrap-note { font-size: 1.7rem !important; }
+            .bento-members > div:nth-of-type(2) { font-size: 2.8rem !important; }
+            .bento-vibe > div:first-child { font-size: 1.5rem !important; }
           }
         `}</style>
       </section>
 
       {/* ── UPCOMING EVENTS ── */}
-      <section id="upcoming-events" style={{ maxWidth: "1100px", margin: "0 auto", padding: "24px 24px 48px", scrollMarginTop: "16px" }}>
+      <section id="upcoming-events" className="home-events-section" style={{ maxWidth: "1100px", margin: "0 auto", padding: "24px 24px 48px", scrollMarginTop: "16px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "28px" }}>
           <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.sage, letterSpacing: "3px" }}>UPCOMING EVENTS</span>
           <div style={{ flex: 1, height: "1px", background: C.border }} />
@@ -377,7 +388,7 @@ export default async function HomePage() {
             </Link>
           );
         })() : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
+          <div className="home-events-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
             {upcoming.map((ev, i) => {
               const date = new Date(ev.date);
               const isNext = i === 0;
@@ -455,6 +466,16 @@ export default async function HomePage() {
             .home-event-featured-media { aspect-ratio: 16/9 !important; }
             .home-event-featured > div:last-child { padding: 24px 22px !important; }
           }
+          /* Phone — tighten section padding, drop grid min so single card
+             never overflows a narrow viewport, tighten featured card */
+          @media (max-width: 520px) {
+            .home-events-section { padding: 16px 16px 32px !important; }
+            .home-events-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .home-event-featured > div:last-child { padding: 20px 18px !important; gap: 12px !important; }
+            .home-event-featured > div:last-child > div:nth-of-type(2) { font-size: 1.35rem !important; }
+            .home-event-featured > div:last-child a,
+            .home-event-featured > div:last-child span:last-child { font-size: 11px !important; padding: 9px 16px !important; letter-spacing: 1.2px !important; }
+          }
         `}</style>
       </section>
 
@@ -462,7 +483,7 @@ export default async function HomePage() {
           from the Medium feed. Only renders when the RSS returns
           at least one item. */}
       {letters.length > 0 && (
-        <section style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px 96px" }}>
+        <section className="home-letters-section" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px 96px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "28px" }}>
             <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.sage, letterSpacing: "3px" }}>LETTERS FROM COLET</span>
             <div style={{ flex: 1, height: "1px", background: C.border }} />
@@ -472,6 +493,12 @@ export default async function HomePage() {
           </div>
 
           <HomeLettersGrid letters={letters} />
+          <style>{`
+            @media (max-width: 520px) {
+              .home-letters-section { padding: 0 16px 56px !important; }
+              .home-letters-section > div:first-child { margin-bottom: 18px !important; }
+            }
+          `}</style>
         </section>
       )}
     </div>
