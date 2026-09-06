@@ -1004,3 +1004,39 @@ header [class*="avatar"] { border-color: #DDE8DD !important; }
     gap: 10px !important;
   }
 }
+
+/* ─── Button microinteractions ────────────────────────────────────────
+   Add class="btn-fx" (optionally with .btn-fx-primary or .btn-fx-ghost)
+   to any button or Link to get a consistent hover-lift, press-down, and
+   subtle shadow transition. Uses the same easing as the rest of the
+   site's card hovers so it feels part of the family. Respects users
+   who set prefers-reduced-motion. */
+.btn-fx {
+  transition:
+    transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.18s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    filter 0.15s ease;
+  will-change: transform;
+  transform: translateZ(0);
+}
+.btn-fx:hover { transform: translateY(-1.5px); }
+.btn-fx:active { transform: translateY(0.5px) scale(0.985); transition-duration: 0.08s; }
+.btn-fx:focus-visible { outline: 2px solid #1A8040; outline-offset: 2px; }
+
+/* Primary variant: solid green with lift + deeper shadow on hover. */
+.btn-fx-primary { box-shadow: 0 2px 6px rgba(26,128,64,0.18); }
+.btn-fx-primary:hover { box-shadow: 0 6px 16px rgba(26,128,64,0.28); filter: brightness(1.02); }
+.btn-fx-primary:active { box-shadow: 0 2px 6px rgba(26,128,64,0.18); filter: brightness(0.98); }
+
+/* Ghost variant: subtle border tint on hover. */
+.btn-fx-ghost:hover { background-color: #F2F7F2; border-color: #1A8040; color: #1A8040; }
+
+/* Danger variant. */
+.btn-fx-danger:hover { background-color: #FFE8EC; border-color: #CC3344; color: #CC3344; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-fx, .btn-fx:hover, .btn-fx:active { transform: none !important; transition: background-color 0.15s ease, color 0.15s ease; }
+}

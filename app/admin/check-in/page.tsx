@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { IconCamera, IconCheck, IconWarning, IconX } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -54,7 +55,7 @@ export default function CheckInPage() {
       );
       setScanning(true);
     } catch {
-      alert("Camera access denied. Please use manual entry.");
+      toast.error("Camera access denied. Please use manual entry.");
     }
   }
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, DM_Serif_Display, Barlow } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
 import PageViewTracker from "@/components/shared/PageViewTracker";
 import MaintenanceGate from "@/components/shared/MaintenanceGate";
 import "./globals.css";
@@ -50,6 +51,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               own header/footer chrome. */}
           <MaintenanceGate>{children}</MaintenanceGate>
           <PageViewTracker />
+          <Toaster
+            position="top-right"
+            richColors
+            closeButton
+            expand={false}
+            duration={4000}
+            toastOptions={{
+              style: {
+                fontFamily: "var(--font-space-grotesk,'Space Grotesk',sans-serif)",
+                fontSize: "13px",
+                borderRadius: "12px",
+              },
+            }}
+          />
         </body>
       </html>
     </ClerkProvider>

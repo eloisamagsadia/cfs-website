@@ -1,6 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { IconEye, IconEyeOff } from "@/components/shared/Icons";
 
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
@@ -26,7 +27,7 @@ export default function EventVisibilityToggle({ id, initialHidden }: { id: strin
       startTransition(() => router.refresh());
     } catch {
       setHidden(!next);
-      alert("Failed to update visibility. Please try again.");
+      toast.error("Failed to update visibility. Please try again.");
     } finally {
       setBusy(false);
     }

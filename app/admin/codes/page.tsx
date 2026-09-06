@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { IconSparkle, IconCheck, IconTrash } from "@/components/shared/Icons";
 const R="var(--font-righteous,'Righteous',sans-serif)";
 const B="var(--font-barlow,'Barlow',sans-serif)";
@@ -34,7 +35,7 @@ export default function AdminCodesPage() {
       setForm({code:"",discount_type:"percent",discount_value:"10",max_uses:"",expires_at:"",product_ids:[]});
       await loadCodes();
     } catch (e: any) {
-      alert(e?.message ?? "Failed to save code. Try again.");
+      toast.error(e?.message ?? "Failed to save code. Try again.");
     } finally {
       setSaving(false);
     }
@@ -45,7 +46,7 @@ export default function AdminCodesPage() {
       if (!res.ok) throw new Error();
       await loadCodes();
     } catch {
-      alert("Could not toggle. Try again.");
+      toast.error("Could not toggle. Try again.");
     }
   }
   async function deleteCode(id: string){
@@ -55,7 +56,7 @@ export default function AdminCodesPage() {
       if (!res.ok) throw new Error();
       await loadCodes();
     } catch {
-      alert("Delete failed. Try again.");
+      toast.error("Delete failed. Try again.");
     }
   }
   function getStatus(c: any){

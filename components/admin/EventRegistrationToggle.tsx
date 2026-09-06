@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { IconLock, IconUnlock, IconRotate } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
@@ -50,7 +51,7 @@ export default function EventRegistrationToggle({
       else clearUndo();
     } catch {
       setClosed(prev);
-      alert("Failed to update registration status.");
+      toast.error("Failed to update registration status.");
     } finally {
       setBusy(false);
     }

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { IconLink, IconWarning } from "@/components/shared/Icons";
+import { SkGridLoading } from "@/components/shared/Skeleton";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -66,7 +67,7 @@ export default function EventFanWall({ eventId }: { eventId: string }) {
       </div>
 
       {loading ? (
-        <div style={{ fontFamily: R, fontSize: "12px", color: "#5A7A60", letterSpacing: "1px", textAlign: "center", padding: "24px" }}>LOADING...</div>
+        <SkGridLoading cards={6} />
       ) : submissions.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "32px", textAlign: "center", marginBottom: "24px" }}>
           <div style={{ fontFamily: R, fontSize: "13px", color: "#5A7A60", letterSpacing: "1px" }}>NO FAN POSTS YET</div>

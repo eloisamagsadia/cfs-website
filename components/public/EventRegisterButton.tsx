@@ -354,11 +354,9 @@ export default function EventRegisterButton({ event, isLoggedIn, isRegistered, i
         const paidLabel = qty > 1 ? `PAY ₱${fmt(total)} FOR ${qty} TICKETS →` : `PAY ₱${fmt(total)} →`;
         return (
           <button onClick={handleRegister} disabled={disabled}
-            style={{ position: "relative", display: "block", width: "100%", background: "transparent", border: "none", padding: 0, cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.6 : 1 }}>
-            <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "8px" }} />
-            <span style={{ position: "relative", display: "block", fontFamily: R, fontSize: "15px", background: loading ? "#E8F5E9" : "#1A8040", color: loading ? "#4A7C59" : "#ffffff", padding: "14px", border: "2px solid #1B3A2D", borderRadius: "8px", textAlign: "center", letterSpacing: "2px" }}>
-              {loading ? "LOADING..." : !isLoggedIn ? "LOGIN TO REGISTER" : basePrice ? paidLabel : freeLabel}
-            </span>
+            className={disabled ? "" : "btn-fx btn-fx-primary"}
+            style={{ display: "block", width: "100%", fontFamily: R, fontSize: "15px", background: loading ? "#E8F5E9" : "#1A8040", color: loading ? "#4A7C59" : "#ffffff", padding: "14px", border: "2px solid #1B3A2D", borderRadius: "8px", textAlign: "center", letterSpacing: "2px", cursor: disabled ? "not-allowed" : "pointer", opacity: disabled ? 0.6 : 1 }}>
+            {loading ? "LOADING..." : !isLoggedIn ? "LOGIN TO REGISTER" : basePrice ? paidLabel : freeLabel}
           </button>
         );
       })()}

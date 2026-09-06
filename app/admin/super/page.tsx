@@ -1,6 +1,7 @@
 "use client";
 import { SkDetailLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { IconUsers, IconSparkle, IconShield, IconWrench, IconMessage, IconTicket, IconStar, IconChart, IconMegaphone, IconX, IconLightning, IconSkull, IconCheck, IconWarning, IconClipboard } from "@/components/shared/Icons";
 import { createClient } from "@/lib/supabase/client";
 
@@ -144,7 +145,7 @@ export default function SuperAdminPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reset_image_counts: true }),
     });
-    alert("Done! All image post counts reset.");
+    toast.success("Done! All image post counts reset.");
   }
 
   async function exportMembers() {

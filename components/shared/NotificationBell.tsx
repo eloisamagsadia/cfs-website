@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { IconBell } from "@/components/shared/Icons";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { SkRow } from "@/components/shared/Skeleton";
 
 const R = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -181,7 +182,11 @@ export default function NotificationBell({ initialCount, userId }: { initialCoun
           {/* List */}
           <div style={{ maxHeight: "400px", overflowY: "auto" }}>
             {loading ? (
-              <div style={{ padding: "32px", textAlign: "center", fontFamily: B, fontSize: "12px", color: "#7A8E7A" }}>Loading...</div>
+              <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
+                <SkRow avatarSize="32px" />
+                <SkRow avatarSize="32px" />
+                <SkRow avatarSize="32px" />
+              </div>
             ) : notifications.length === 0 ? (
               <div style={{ padding: "32px", textAlign: "center" }}>
                 <div style={{ marginBottom: "8px" }}><IconBell size={32} color="#DDE8DD" /></div>

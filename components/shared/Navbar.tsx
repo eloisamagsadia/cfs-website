@@ -95,7 +95,7 @@ export default async function Navbar() {
                   SIGN IN
                 </Link>
                 <Link href="/sign-up" style={{ textDecoration: "none" }}>
-                  <div style={{ fontFamily: R, fontSize: "11px", background: "#1B3A2D", color: "#fff", padding: "8px 20px", borderRadius: "6px", letterSpacing: "1px", fontWeight: "700" }}>
+                  <div className="btn-fx btn-fx-primary" style={{ fontFamily: R, fontSize: "11px", background: "#1B3A2D", color: "#fff", padding: "8px 20px", borderRadius: "6px", letterSpacing: "1px", fontWeight: "700" }}>
                     JOIN ✦
                   </div>
                 </Link>

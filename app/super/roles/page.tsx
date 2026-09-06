@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { SkListLoading } from "@/components/shared/Skeleton";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -98,7 +99,7 @@ export default function RolesPage() {
         </div>
 
         {loading ? (
-          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>Loading...</div>
+          <SkListLoading rows={5} />
         ) : filtered.length === 0 ? (
           <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>No members found</div>
         ) : filtered.map((m, i) => (

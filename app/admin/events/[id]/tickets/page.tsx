@@ -3,6 +3,7 @@ import { SkListLoading } from "@/components/shared/Skeleton";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 import { IconCamera, IconCheck, IconTrash, IconSparkle, IconX } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -151,14 +152,15 @@ export default function EventTicketsPage() {
         // No undo — a real PayMongo refund has already been queued
         setConfirmCancel(null);
         setConfirmPhrase("");
-        alert(
+        toast.success(
           `Cancelled. ${data.refund?.auto_processed
             ? `PayMongo refund submitted (${data.refund.refund_id?.slice(0, 8)}).`
             : data.refund?.auto_error
               ? `Refund row created but PayMongo auto-process failed: ${data.refund.auto_error}. Handle it manually in /admin/refunds.`
               : `Refund row created — process it in /admin/refunds when ready.`}${
             data.waitlist_promoted ? ` Waitlist member notified.` : ""
-          }${data.emailed ? " Member emailed." : ""}`
+          }${data.emailed ? " Member emailed." : ""}`,
+          { duration: 8000 },
         );
         return;
       }
@@ -184,7 +186,7 @@ export default function EventTicketsPage() {
       setConfirmCancel(null);
       setConfirmPhrase("");
     } catch (e: any) {
-      alert(e?.message ?? "Could not cancel. Try again.");
+      toast.error(e?.message ?? "Could not cancel. Try again.");
     } finally {
       setCancelBusy(false);
     }
@@ -203,7 +205,7 @@ export default function EventTicketsPage() {
       await loadTickets();
       setUndoToast(null);
     } catch {
-      alert("Undo failed. The ticket stayed cancelled.");
+      toast.error("Undo failed. The ticket stayed cancelled.");
     } finally {
       setUndoBusy(false);
     }

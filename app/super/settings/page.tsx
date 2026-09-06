@@ -1,6 +1,7 @@
 "use client";
 import { SkFormLoading } from "@/components/shared/Skeleton";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { IconCheck, IconWrench, IconSparkle, IconMegaphone } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -46,7 +47,7 @@ export default function SettingsPage() {
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch {
-      alert("Could not save settings. Try again.");
+      toast.error("Could not save settings. Try again.");
     } finally {
       setSaving(false);
     }

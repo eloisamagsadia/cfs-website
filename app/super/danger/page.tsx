@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -10,7 +11,7 @@ export default function DangerPage() {
   async function resetImageCounts() {
     if (!confirm("Reset ALL members image post counts to 0? This cannot be undone.")) return;
     await fetch("/api/super/site-settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ reset_image_counts: true }) });
-    alert("Done! All image post counts reset.");
+    toast.success("Done! All image post counts reset.");
   }
 
   async function exportMembers() {

@@ -50,6 +50,7 @@
     "recharts": "^3.8.1",
     "resend": "^3.5.0",
     "sharp": "^0.34.5",
+    "sonner": "^2.0.8",
     "svix": "^1.93.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",

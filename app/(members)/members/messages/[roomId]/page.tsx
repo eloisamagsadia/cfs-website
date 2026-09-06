@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
+import { toast } from "sonner";
 import { IconX, IconCamera, IconUsers, IconSparkle } from "@/components/shared/Icons";
 
 // Emoji picker + its data are ~400KB combined; lazy-load so they only
@@ -193,7 +194,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
         if (!res.ok) throw new Error();
         setReplyTo(null);
       } catch {
-        alert("Failed to send image. Please try again.");
+        toast.error("Failed to send image. Please try again.");
       }
     }
     if (imgInputRef.current) imgInputRef.current.value = "";
@@ -282,7 +283,7 @@ export default function ChatRoomPage({ params }: { params: { roomId: string } })
       // Restore the user's draft so they can retry.
       setInput(content);
       setReplyTo(savedReplyTo);
-      alert("Could not send. Try again.");
+      toast.error("Could not send. Try again.");
     } finally {
       setSending(false);
     }

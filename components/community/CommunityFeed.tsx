@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/client";
 import CreatePost from "./CreatePost";
 import PostCard from "./PostCard";
 import { IconMessage } from "@/components/shared/Icons";
+import { SkListLoading } from "@/components/shared/Skeleton";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 
@@ -199,7 +200,7 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
       )}
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "48px 24px", fontFamily: R, color: "#5A7A60", letterSpacing: "2px", fontSize: "12px" }}>LOADING...</div>
+        <SkListLoading rows={5} withTrailing={false} />
       ) : posts.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "16px", padding: "48px 24px", textAlign: "center" }}>
           <div style={{ marginBottom: "12px" }}><IconMessage size={36} color="#DDE8DD" /></div>

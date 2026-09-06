@@ -3,6 +3,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { IconTrash, IconX, IconCheck, IconFile, IconUpload } from "@/components/shared/Icons";
 import StatBar from "@/components/shared/StatBar";
+import { SkGridLoading } from "@/components/shared/Skeleton";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -323,7 +324,7 @@ export default function AdminMediaPage() {
 
       {/* Content */}
       {loading ? (
-        <div style={s.empty}>LOADING...</div>
+        <SkGridLoading cards={8} />
       ) : filtered.length === 0 ? (
         <div style={s.empty}>NO FILES FOUND</div>
       ) : view === "grid" ? (

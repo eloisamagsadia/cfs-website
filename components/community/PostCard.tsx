@@ -8,6 +8,7 @@ import ReactionBar from "./ReactionBar";
 import VideoEmbed from "./VideoEmbed";
 import { createClient } from "@/lib/supabase/client";
 import { IconShield, IconLightning, IconWrench, IconStar, IconPin, IconX, IconTrash, IconVideo, IconPhoto } from "@/components/shared/Icons";
+import { SkLine, SkCircle } from "@/components/shared/Skeleton";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -408,7 +409,17 @@ export default function PostCard({ post, currentUserId, onDelete }: PostCardProp
       {showComments && (
         <div style={{ borderTop: "1px solid #DDE8DD", padding: "10px 16px 12px" }}>
           {loadingComments ? (
-            <div style={{ fontFamily: B, fontSize: "12px", color: "#3A5A30" }}>Loading...</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "4px 0" }}>
+              {[0, 1].map(i => (
+                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                  <SkCircle size="28px" />
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                    <SkLine h="11px" w="30%" />
+                    <SkLine h="12px" w="90%" />
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <>
               {previewComments.map((comment: any) => (

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
@@ -45,7 +46,7 @@ export default function LoginPage() {
     });
 
     if (error) { setError(error.message); setLoading(false); return; }
-    alert("Magic link sent! Check your email.");
+    toast.success("Magic link sent! Check your email.");
     setLoading(false);
   }
 

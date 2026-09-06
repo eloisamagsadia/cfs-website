@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { SkListLoading } from "@/components/shared/Skeleton";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -100,7 +101,7 @@ export default function AdminDonationsPage() {
 
       {/* Table */}
       {loading ? (
-        <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: B, color: "#5A7A60" }}>Loading...</div>
+        <SkListLoading rows={6} />
       ) : filtered.length === 0 ? (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "48px", textAlign: "center", fontFamily: R, color: "#5A7A60" }}>
           NO DONATIONS {filter !== "all" ? `WITH STATUS "${filter.toUpperCase()}"` : "YET"}

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { IconX, IconCheck, IconMessage, IconUsers } from "@/components/shared/Icons";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
@@ -53,7 +54,7 @@ export default function MessagesPage() {
       setGroupName("");
       router.push(`/members/messages/${data.room.id}`);
     } catch (e: any) {
-      alert(e?.message ?? "Could not create the room. Try again.");
+      toast.error(e?.message ?? "Could not create the room. Try again.");
     } finally {
       setCreating(false);
     }
