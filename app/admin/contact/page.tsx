@@ -253,12 +253,29 @@ export default function ContactAdminPage() {
             return (
               <div key={m.id} style={{ background: "#ffffff", border: `1px solid ${m.status === "new" ? "#F0D889" : "#DDE8DD"}`, borderRadius: 14, padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
 
-                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                  <span style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: meta.color, background: meta.bg, borderRadius: 6, padding: "3px 8px", letterSpacing: 1.2 }}>{meta.label}</span>
-                  <span style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: TOPIC_COLOR[m.topic] ?? "#5A7A60", background: `${TOPIC_COLOR[m.topic] ?? "#5A7A60"}18`, borderRadius: 6, padding: "3px 8px", letterSpacing: 1.2 }}>{m.topic.toUpperCase()}</span>
-                  {m.user_id && <span style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#156530", background: "#E8F0E4", borderRadius: 6, padding: "3px 8px", letterSpacing: 1.2 }}>MEMBER</span>}
-                  <span style={{ marginLeft: "auto", fontFamily: B, fontSize: 11, color: "#7A8E7A" }}>{stamp(m.created_at)}</span>
-                </div>
+                {(() => {
+                  // Detect: is the most recent activity a guest reply? If so,
+                  // show a "GUEST REPLIED" chip so admin knows why it's NEW
+                  // (the webhook flips REPLIED → NEW on any inbound reply).
+                  const thread = Array.isArray(m.replies) ? m.replies : [];
+                  const lastEntry = thread[thread.length - 1];
+                  const lastFromGuest = !!lastEntry && lastEntry.from === "guest";
+                  const lastGuestAt = lastFromGuest ? lastEntry?.sent_at : null;
+                  return (
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <span style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: meta.color, background: meta.bg, borderRadius: 6, padding: "3px 8px", letterSpacing: 1.2 }}>{meta.label}</span>
+                      {lastFromGuest && (
+                        <span title={`Guest replied ${stamp(lastGuestAt)}`} style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#1E4A7A", background: "#EEF3FA", border: "1px solid #B7C7D9", borderRadius: 6, padding: "3px 8px", letterSpacing: 1.2, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                          <span style={{ display: "inline-block", width: 5, height: 5, borderRadius: "50%", background: "#1E4A7A" }} />
+                          GUEST REPLIED
+                        </span>
+                      )}
+                      <span style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: TOPIC_COLOR[m.topic] ?? "#5A7A60", background: `${TOPIC_COLOR[m.topic] ?? "#5A7A60"}18`, borderRadius: 6, padding: "3px 8px", letterSpacing: 1.2 }}>{m.topic.toUpperCase()}</span>
+                      {m.user_id && <span style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#156530", background: "#E8F0E4", borderRadius: 6, padding: "3px 8px", letterSpacing: 1.2 }}>MEMBER</span>}
+                      <span style={{ marginLeft: "auto", fontFamily: B, fontSize: 11, color: "#7A8E7A" }}>{stamp(m.created_at)}</span>
+                    </div>
+                  );
+                })()}
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8, alignItems: "center" }}>
                   <div>
