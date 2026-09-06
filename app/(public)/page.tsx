@@ -229,7 +229,7 @@ export default async function HomePage() {
             </div>
 
             {/* Small washi note — floats above the polaroid */}
-            <div style={{ position: "absolute", top: "40px", left: "18%", zIndex: 3 }}>
+            <div className="hero-washi-note" style={{ position: "absolute", top: "40px", left: "18%", zIndex: 3 }}>
               <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(-8deg)" }}>cocacolets hangout</span>
             </div>
           </div>
@@ -280,8 +280,7 @@ export default async function HomePage() {
                would collide with the now-centered card. Hero still has
                the framed NEXT UP card as the primary visual moment. */
             .hero-collage .hero-polaroid,
-            .hero-collage > div:nth-child(3),
-            .hero-collage > svg,
+            .hero-collage .hero-washi-note,
             .hero-collage > div[aria-hidden="true"] {
               display: none !important;
             }
