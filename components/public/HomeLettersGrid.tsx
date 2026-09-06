@@ -27,6 +27,22 @@ function sanitize(html: string): string {
     .replace(/href\s*=\s*'javascript:[^']*'/gi, "href='#'");
 }
 
+/** Medium repeats the thumbnail as the first <img> inside the content
+ *  body. When we already render it as a hero above the title, remove
+ *  the duplicate from the content so readers don't see the same image
+ *  twice back-to-back. */
+function stripLeadingImage(html: string, thumbnailUrl: string | null): string {
+  if (!thumbnailUrl) return html;
+  // Match the first <img> tag (possibly wrapped in <figure> or <p>)
+  // whose src equals the thumbnail. Only strips ONE occurrence.
+  const escUrl = thumbnailUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // Strip <figure>...<img src="thumb">...</figure> or a bare leading <img src="thumb">
+  return html
+    .replace(new RegExp(`^\\s*<figure[^>]*>[\\s\\S]*?<img[^>]+src="${escUrl}"[\\s\\S]*?<\\/figure>`, "i"), "")
+    .replace(new RegExp(`^\\s*<p[^>]*>\\s*<img[^>]+src="${escUrl}"[^>]*>\\s*<\\/p>`, "i"), "")
+    .replace(new RegExp(`^\\s*<img[^>]+src="${escUrl}"[^>]*>`, "i"), "");
+}
+
 export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
   const [open, setOpen] = useState<Letter | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -172,7 +188,7 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
                   )}
                 </div>
 
-                <div className="letter-body" dangerouslySetInnerHTML={{ __html: sanitize(open.content) }} />
+                <div className="letter-body" dangerouslySetInnerHTML={{ __html: sanitize(stripLeadingImage(open.content, open.thumbnail)) }} />
 
                 <div style={{ marginTop: 32, paddingTop: 20, borderTop: "1px dashed #DDE8DD", display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
                   <span className="scrap-note" style={{ fontSize: 20, color: "#4A7C59", lineHeight: 1 }}>salamat ✦</span>
