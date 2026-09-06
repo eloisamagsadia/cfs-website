@@ -216,7 +216,7 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
                   {/* Author byline row — matches how Colet's Medium
                       profile presents her (name is lowercase). */}
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", background: "linear-gradient(135deg, #A8D3B4, #4A7C59)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontWeight: 700, fontSize: 15, flexShrink: 0 }}>c</div>
+                    <img src="https://cdn-images-1.medium.com/fit/c/150/150/1*OKtnsFxtdnvoBrTZ_8o1Nw@2x.jpeg" alt="letters from colet" width={40} height={40} style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
                     <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
                       <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 14, color: "#242424", fontWeight: 500 }}>
                         letters from colet
@@ -243,7 +243,7 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
                 {/* Footer — Medium-style author card with real bio */}
                 <footer style={{ marginTop: 48, paddingTop: 28, borderTop: "1px solid #E6E6E6", display: "flex", flexDirection: "column", gap: 16 }}>
                   <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                    <div style={{ width: 48, height: 48, borderRadius: "50%", overflow: "hidden", background: "linear-gradient(135deg, #A8D3B4, #4A7C59)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontWeight: 700, fontSize: 18, flexShrink: 0 }}>c</div>
+                    <img src="https://cdn-images-1.medium.com/fit/c/150/150/1*OKtnsFxtdnvoBrTZ_8o1Nw@2x.jpeg" alt="letters from colet" width={48} height={48} style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
                     <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1, minWidth: 0 }}>
                       <div style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 11, color: "#6B6B6B", letterSpacing: "0.05em", textTransform: "uppercase" }}>Written by</div>
                       <div style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 16, color: "#242424", fontWeight: 700, lineHeight: 1.2 }}>letters from colet</div>

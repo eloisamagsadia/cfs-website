@@ -117,7 +117,7 @@ export default async function HomePage() {
             </p>
 
             {/* CTA row */}
-            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "22px" }}>
+            <div className="hero-cta-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "22px" }}>
               <Link href="/events" className="btn-fx btn-fx-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: "#1B3A2D", color: "#ffffff", padding: "13px 26px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
                 <IconCalendar size={14} color="#ffffff" /> SEE ALL EVENTS
               </Link>
@@ -236,7 +236,13 @@ export default async function HomePage() {
           }
           @media (max-width: 900px) {
             .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center; }
+            .hero-cta-row { justify-content: center; }
             .hero-collage { height: 360px !important; max-width: 520px; margin: 0 auto; }
+          }
+          /* Buttons stack full-width on phones so both CTAs feel equally
+             tappable and the row breaks cleanly */
+          @media (max-width: 560px) {
+            .hero-cta-row > a { flex: 1 1 100%; justify-content: center; }
           }
           @media (max-width: 560px) {
             .hero-collage { height: 320px !important; }
