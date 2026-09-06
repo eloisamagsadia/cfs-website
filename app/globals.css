@@ -1013,25 +1013,30 @@ header [class*="avatar"] { border-color: #DDE8DD !important; }
    img src and .scrap-paper background. */
 
 .scrap-paper {
-  background-color: #FAF6EE;
+  /* Green-cream base to match CFS branding — subtle green wash instead
+     of yellow-brown. Warm but on-brand. */
+  background-color: #F5F7EC;
   background-image:
-    radial-gradient(circle at 20% 15%, rgba(255, 230, 170, 0.35), transparent 45%),
-    radial-gradient(circle at 80% 85%, rgba(170, 210, 190, 0.25), transparent 50%),
-    repeating-linear-gradient(0deg, rgba(120, 90, 40, 0.025) 0 1px, transparent 1px 3px);
+    radial-gradient(circle at 20% 15%, rgba(184, 226, 178, 0.30), transparent 45%),
+    radial-gradient(circle at 80% 85%, rgba(220, 240, 200, 0.30), transparent 50%),
+    repeating-linear-gradient(0deg, rgba(26, 128, 64, 0.02) 0 1px, transparent 1px 3px);
 }
 
-/* Warm ambient light — pin to top-left corner of a section for cozy
-   lamp-glow effect. Position absolute, pointer-events none. */
+/* Ambient light — pin to a section corner for cozy lamp-glow effect.
+   Position absolute, pointer-events none. Two green-tinted defaults
+   so it feels on-brand instead of yellow. */
 .scrap-glow {
   position: absolute;
   top: -80px;
   left: -80px;
   width: 480px;
   height: 480px;
-  background: radial-gradient(circle, rgba(255, 210, 130, 0.35), transparent 65%);
+  background: radial-gradient(circle, rgba(74, 203, 110, 0.22), transparent 65%);
   pointer-events: none;
   filter: blur(20px);
 }
+.scrap-glow-warm { background: radial-gradient(circle, rgba(255, 210, 130, 0.28), transparent 65%); }
+.scrap-glow-pink { background: radial-gradient(circle, rgba(240, 180, 200, 0.28), transparent 65%); }
 
 /* Frame — like a picture frame on a wall. Warm wood-toned border. */
 .scrap-frame {
@@ -1052,11 +1057,11 @@ header [class*="avatar"] { border-color: #DDE8DD !important; }
 /* Polaroid — white padded frame with the "photo" area. Add
    .scrap-polaroid-tilt-left / -right for signature lean. */
 .scrap-polaroid {
-  background: #FFFDF7;
+  background: #FFFFFF;
   padding: 10px 10px 42px;
   box-shadow:
-    0 1px 2px rgba(0,0,0,0.06),
-    0 8px 24px rgba(60, 40, 15, 0.15);
+    0 1px 2px rgba(15,42,30,0.06),
+    0 8px 24px rgba(15, 42, 30, 0.18);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .scrap-polaroid-tilt-left  { transform: rotate(-3deg); }
@@ -1064,16 +1069,18 @@ header [class*="avatar"] { border-color: #DDE8DD !important; }
 .scrap-polaroid:hover      { transform: rotate(0) scale(1.02); }
 .scrap-polaroid-photo {
   aspect-ratio: 1 / 1;
-  background: linear-gradient(135deg, #E8D9B5, #C7A874);
+  /* Green gradient so the placeholder reads as on-brand. Real photo
+     replaces this once uploaded. */
+  background: linear-gradient(135deg, #A8D3B4, #4A7C59);
   display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.85);
   font-family: var(--font-caveat, cursive);
   font-size: 42px;
 }
 .scrap-polaroid-caption {
   font-family: var(--font-caveat, cursive);
   font-size: 18px;
-  color: #5A4020;
+  color: #1B3A2D;
   text-align: center;
   padding-top: 10px;
   line-height: 1;
@@ -1096,10 +1103,12 @@ header [class*="avatar"] { border-color: #DDE8DD !important; }
 .scrap-tape-pink  { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px), #F8BFC8; color: #8A2E45; }
 .scrap-tape-blue  { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px), #B7DCF0; color: #1E4A6E; }
 
-/* Handwritten note — hand-cut paper feel for callouts. */
+/* Handwritten note — hand-cut paper feel for callouts. Default is
+   forest green so it stays on-brand; override color inline for
+   warmer accent moments. */
 .scrap-note {
   font-family: var(--font-caveat, cursive);
-  color: #3A2A0F;
+  color: #1B3A2D;
   line-height: 1.15;
 }
 

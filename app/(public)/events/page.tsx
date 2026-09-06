@@ -100,7 +100,7 @@ export default async function EventsPage() {
       `}</style>
 
       {/* ── HERO ── warm scrapbook header */}
-      <section style={{ position: "relative", overflow: "hidden", borderBottom: "1px dashed #E4D8C4" }}>
+      <section style={{ position: "relative", overflow: "hidden", borderBottom: "1px dashed #DDE8DD" }}>
         {/* Warm lamp glow */}
         <div className="scrap-glow" />
         <div className="scrap-glow" style={{ top: "auto", bottom: "-100px", left: "auto", right: "-100px", background: "radial-gradient(circle, rgba(184, 230, 193, 0.35), transparent 65%)" }} />
@@ -116,11 +116,11 @@ export default async function EventsPage() {
             <h1 className="evl-hero-title" style={{ fontFamily: S, fontSize: "clamp(2.6rem, 5vw, 4rem)", color: "#1B3A2D", lineHeight: 1.02, letterSpacing: "-1px", margin: "0 0 12px" }}>
               We Show Up.
             </h1>
-            <p className="scrap-note" style={{ fontSize: "clamp(1.6rem, 4vw, 2.4rem)", color: "#8B5E1F", margin: "0 0 20px", lineHeight: 1.1 }}>
+            <p className="scrap-note" style={{ fontSize: "clamp(1.6rem, 4vw, 2.4rem)", color: "#4A7C59", margin: "0 0 20px", lineHeight: 1.1 }}>
               Together ✦
             </p>
 
-            <p style={{ fontFamily: B, fontSize: "15px", color: "#5A4020", lineHeight: 1.8, maxWidth: "440px", margin: "0 0 28px" }}>
+            <p style={{ fontFamily: B, fontSize: "15px", color: "#1B3A2D", lineHeight: 1.8, maxWidth: "440px", margin: "0 0 28px" }}>
               Cup-sleeve events, meet-ups, and CFS-produced fan gatherings. Book your slot, show your card at the door, and pull up.
             </p>
 

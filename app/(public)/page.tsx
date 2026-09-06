@@ -89,11 +89,11 @@ export default async function HomePage() {
               Colet Fan Suporta
             </h1>
 
-            <p className="scrap-note" style={{ fontSize: "clamp(1.5rem, 3.4vw, 2rem)", color: "#8B5E1F", margin: "0 0 20px", lineHeight: 1.15 }}>
+            <p className="scrap-note" style={{ fontSize: "clamp(1.5rem, 3.4vw, 2rem)", color: "#4A7C59", margin: "0 0 20px", lineHeight: 1.15 }}>
               The Ace is on her way — and we&apos;re here for her.
             </p>
 
-            <p style={{ fontFamily: B, fontSize: "15px", color: "#5A4020", maxWidth: "480px", margin: "0 0 28px", lineHeight: 1.75 }}>
+            <p style={{ fontFamily: B, fontSize: "15px", color: "#1B3A2D", maxWidth: "480px", margin: "0 0 28px", lineHeight: 1.75 }}>
               A community for Iu-ers — where we buy tickets together, throw fan events, and cheer Colet on. Come hang out.
             </p>
 
@@ -102,23 +102,23 @@ export default async function HomePage() {
               <Link href="/events" className="btn-fx btn-fx-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: "#1B3A2D", color: "#ffffff", padding: "13px 26px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
                 <IconCalendar size={14} color="#ffffff" /> SEE ALL EVENTS
               </Link>
-              <Link href="/sign-up" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #E4D8C4", padding: "12px 24px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
+              <Link href="/sign-up" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #DDE8DD", padding: "12px 24px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
                 <IconHeart size={14} color="#1B3A2D" /> JOIN THE FAM ✦
               </Link>
             </div>
 
             {/* Proof pills */}
-            <div style={{ display: "flex", gap: "18px", flexWrap: "wrap", alignItems: "center", fontFamily: B, fontSize: "12px", color: "#5A4020" }}>
+            <div style={{ display: "flex", gap: "18px", flexWrap: "wrap", alignItems: "center", fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>
               <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                <IconUsers size={12} color="#8B5E1F" />
-                <strong style={{ color: "#3A2A0F" }}>{(memberCount ?? 0).toLocaleString()}</strong> members strong
+                <IconUsers size={12} color="#4A7C59" />
+                <strong style={{ color: "#0F2A1E" }}>{(memberCount ?? 0).toLocaleString()}</strong> members strong
               </span>
               <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                <IconCalendar size={12} color="#8B5E1F" />
-                <strong style={{ color: "#3A2A0F" }}>{upcomingCount}</strong> upcoming event{upcomingCount === 1 ? "" : "s"}
+                <IconCalendar size={12} color="#4A7C59" />
+                <strong style={{ color: "#0F2A1E" }}>{upcomingCount}</strong> upcoming event{upcomingCount === 1 ? "" : "s"}
               </span>
               {nextEvent && nextDaysAway !== null && (
-                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFF3D6", border: "1px solid #F0C48A", padding: "3px 10px", borderRadius: "999px", color: "#8B5E1F" }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFF3D6", border: "1px solid #F0C48A", padding: "3px 10px", borderRadius: "999px", color: "#4A7C59" }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#1A8040" }} />
                   Next event in <strong>{nextDaysAway === 0 ? "today" : `${nextDaysAway} day${nextDaysAway === 1 ? "" : "s"}`}</strong>
                 </span>
@@ -147,7 +147,7 @@ export default async function HomePage() {
                     NEXT UP
                   </div>
                   <div style={{ fontFamily: S, fontSize: "20px", color: "#1B3A2D", lineHeight: 1.15, marginBottom: "10px" }}>{nextEvent.title}</div>
-                  <div style={{ fontFamily: B, fontSize: "12px", color: "#5A4020", display: "flex", flexDirection: "column", gap: "4px" }}>
+                  <div style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", display: "flex", flexDirection: "column", gap: "4px" }}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
                       <IconCalendar size={11} color="#7A5A0F" />
                       {new Date(nextEvent.date).toLocaleDateString("en-PH", { weekday: "short", month: "short", day: "numeric", timeZone: "Asia/Manila" })}
@@ -160,7 +160,7 @@ export default async function HomePage() {
                       </span>
                     )}
                   </div>
-                  <div style={{ marginTop: "12px", paddingTop: "10px", borderTop: "1px dashed #E4D8C4", display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1A8040", letterSpacing: "1px" }}>
+                  <div style={{ marginTop: "12px", paddingTop: "10px", borderTop: "1px dashed #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1A8040", letterSpacing: "1px" }}>
                     <span>BOOK YOUR SLOT</span>
                     <IconTicket size={12} color="#1A8040" />
                   </div>
@@ -169,7 +169,7 @@ export default async function HomePage() {
             ) : (
               <div className="scrap-frame" style={{ position: "absolute", top: "90px", right: "6%", width: "260px", transform: "rotate(2.5deg)", zIndex: 1, borderRadius: 4 }}>
                 <div className="scrap-frame-inner" style={{ padding: "22px 18px", textAlign: "center" }}>
-                  <div className="scrap-note" style={{ fontSize: "18px", color: "#3A2A0F" }}>Next event coming soon ✦</div>
+                  <div className="scrap-note" style={{ fontSize: "18px", color: "#0F2A1E" }}>Next event coming soon ✦</div>
                 </div>
               </div>
             )}

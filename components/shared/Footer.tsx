@@ -57,7 +57,7 @@ const linkGroups: { title: string; items: { label: string; href: string }[] }[] 
 
 export default function Footer() {
   return (
-    <footer className="scrap-paper" style={{ position: "relative", borderTop: "1px dashed #E4D8C4" }}>
+    <footer className="scrap-paper" style={{ position: "relative", borderTop: "1px dashed #DDE8DD" }}>
       {/* soft warm-lamp glow in the corner */}
       <div className="scrap-glow" style={{ top: "-40px", left: "50%", transform: "translateX(-50%)", width: "700px", height: "300px", background: "radial-gradient(ellipse, rgba(255, 210, 130, 0.28), transparent 60%)" }} />
 
@@ -74,10 +74,10 @@ export default function Footer() {
             <h2 style={{ fontFamily: S, fontSize: "clamp(2rem, 5vw, 2.8rem)", color: "#1B3A2D", margin: "0 0 8px", lineHeight: 1.05 }}>
               Colet Fan Suporta
             </h2>
-            <p className="scrap-note" style={{ fontSize: "20px", color: "#8B5E1F", margin: "0 0 14px", lineHeight: 1.15 }}>
+            <p className="scrap-note" style={{ fontSize: "20px", color: "#4A7C59", margin: "0 0 14px", lineHeight: 1.15 }}>
               @coletfansuporta
             </p>
-            <p style={{ fontFamily: B, fontSize: "13px", color: "#5A4020", margin: 0, lineHeight: 1.7, maxWidth: "420px" }}>
+            <p style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", margin: 0, lineHeight: 1.7, maxWidth: "420px" }}>
               An Iu-ers home base. Buy tickets together, throw fan events, and cheer Colet on — from anywhere in the Philippines.
             </p>
           </div>
@@ -87,7 +87,7 @@ export default function Footer() {
             <div style={{ marginBottom: "10px" }}>
               <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(1.5deg)" }}>stay in the loop</span>
             </div>
-            <p className="scrap-note" style={{ fontSize: "18px", color: "#3A2A0F", margin: "0 0 14px", lineHeight: 1.25 }}>
+            <p className="scrap-note" style={{ fontSize: "18px", color: "#0F2A1E", margin: "0 0 14px", lineHeight: 1.25 }}>
               Get event drops + fan announcements straight to your inbox.
             </p>
             <NewsletterSignup source="footer" />
@@ -95,15 +95,15 @@ export default function Footer() {
         </div>
 
         {/* Middle row: link columns + socials */}
-        <div className="footer-mid" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr)) auto", gap: "32px", alignItems: "start", paddingTop: "32px", borderTop: "1px dashed #E4D8C4" }}>
+        <div className="footer-mid" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr)) auto", gap: "32px", alignItems: "start", paddingTop: "32px", borderTop: "1px dashed #DDE8DD" }}>
           {linkGroups.map(group => (
             <div key={group.title}>
-              <div className="scrap-note" style={{ fontSize: "18px", color: "#5A4020", marginBottom: "8px", lineHeight: 1 }}>
+              <div className="scrap-note" style={{ fontSize: "18px", color: "#1B3A2D", marginBottom: "8px", lineHeight: 1 }}>
                 {group.title}
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 {group.items.map(({ label, href }) => (
-                  <Link key={href} href={href} className="footer-link" style={{ fontFamily: B, fontSize: "13px", color: "#3A2A0F", textDecoration: "none", transition: "color 0.15s" }}>
+                  <Link key={href} href={href} className="footer-link" style={{ fontFamily: B, fontSize: "13px", color: "#0F2A1E", textDecoration: "none", transition: "color 0.15s" }}>
                     {label}
                   </Link>
                 ))}
@@ -113,7 +113,7 @@ export default function Footer() {
 
           {/* Socials — pinned right */}
           <div>
-            <div className="scrap-note" style={{ fontSize: "18px", color: "#5A4020", marginBottom: "10px", lineHeight: 1 }}>
+            <div className="scrap-note" style={{ fontSize: "18px", color: "#1B3A2D", marginBottom: "10px", lineHeight: 1 }}>
               Follow
             </div>
             <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
@@ -121,8 +121,8 @@ export default function Footer() {
                 <a key={label} href={href} aria-label={label} target="_blank" rel="noopener noreferrer" className="footer-social btn-fx" style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
                   width: 38, height: 38, borderRadius: "50%",
-                  background: "#FFFFFF", border: "1.5px solid #E4D8C4",
-                  color: "#5A4020", boxShadow: "0 2px 6px rgba(80,50,20,0.08)",
+                  background: "#FFFFFF", border: "1.5px solid #DDE8DD",
+                  color: "#1B3A2D", boxShadow: "0 2px 6px rgba(15,42,30,0.08)",
                 }}>
                   {icon}
                 </a>
@@ -132,11 +132,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom: signed-note copyright */}
-        <div style={{ marginTop: "36px", paddingTop: "20px", borderTop: "1px dashed #E4D8C4", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
-          <span style={{ fontFamily: B, fontSize: "12px", color: "#7A6540" }}>
+        <div style={{ marginTop: "36px", paddingTop: "20px", borderTop: "1px dashed #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
+          <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>
             © {new Date().getFullYear()} Colet Fan Suporta ✦ Built by Iu-ers, for Iu-ers.
           </span>
-          <span className="scrap-note" style={{ fontSize: "18px", color: "#8B5E1F", transform: "rotate(-2deg)" }}>
+          <span className="scrap-note" style={{ fontSize: "18px", color: "#4A7C59", transform: "rotate(-2deg)" }}>
             para kay Colet 🌱
           </span>
         </div>
