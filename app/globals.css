@@ -1092,22 +1092,41 @@ header [class*="avatar"] { border-color: #DDE8DD !important; }
   line-height: 1;
 }
 
-/* Washi tape — rotated pill with soft pastel and translucent edges. */
+/* Washi tape — realistic translucent tape with torn short ends,
+   subtle diagonal stripes, soft sheen, and a diffuse shadow like
+   tape sitting flush on paper. */
 .scrap-tape {
+  position: relative;
   display: inline-block;
   font-family: var(--font-caveat, cursive);
   font-size: 15px;
   font-weight: 600;
-  padding: 4px 20px;
-  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px), #FFD98A;
+  padding: 5px 22px;
   color: #8B5E1F;
   transform: rotate(-2deg);
-  box-shadow: 0 2px 8px rgba(80, 50, 20, 0.15);
   letter-spacing: 0.5px;
+  line-height: 1.25;
+  /* Base color + a soft top-to-bottom sheen + faint diagonal texture */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,0.05) 100%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.20) 0 4px, transparent 4px 11px),
+    #FFD98A;
+  /* Very soft, wide shadow like real tape lifting a millimeter off paper */
+  box-shadow:
+    0 1px 1px rgba(60,40,10,0.06),
+    0 3px 10px rgba(60,40,10,0.10);
+  /* Torn/uneven short ends only — top/bottom stay clean edges as real
+     tape would. Mask path traces the tape outline with jagged L+R sides. */
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'><path d='M4 2 L6 0 L196 0 L198 2 L196 5 L199 8 L196 12 L200 16 L197 20 L200 24 L196 28 L199 32 L197 36 L200 40 L4 40 L2 38 L4 34 L1 30 L3 26 L0 22 L3 18 L0 14 L4 10 L1 6 Z' fill='black'/></svg>");
+          mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'><path d='M4 2 L6 0 L196 0 L198 2 L196 5 L199 8 L196 12 L200 16 L197 20 L200 24 L196 28 L199 32 L197 36 L200 40 L4 40 L2 38 L4 34 L1 30 L3 26 L0 22 L3 18 L0 14 L4 10 L1 6 Z' fill='black'/></svg>");
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
 }
-.scrap-tape-mint  { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px), #B8E6C1; color: #1E5A2E; }
-.scrap-tape-pink  { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px), #F8BFC8; color: #8A2E45; }
-.scrap-tape-blue  { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px), #B7DCF0; color: #1E4A6E; }
+.scrap-tape-mint  { background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,0.05) 100%), repeating-linear-gradient(45deg, rgba(255,255,255,0.22) 0 4px, transparent 4px 11px), #B8E6C1; color: #1E5A2E; }
+.scrap-tape-pink  { background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,0.05) 100%), repeating-linear-gradient(45deg, rgba(255,255,255,0.22) 0 4px, transparent 4px 11px), #F8BFC8; color: #8A2E45; }
+.scrap-tape-blue  { background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,0.05) 100%), repeating-linear-gradient(45deg, rgba(255,255,255,0.22) 0 4px, transparent 4px 11px), #B7DCF0; color: #1E4A6E; }
 
 /* Handwritten note — hand-cut paper feel for callouts. Default is
    forest green so it stays on-brand; override color inline for
