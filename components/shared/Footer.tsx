@@ -61,7 +61,7 @@ export default function Footer() {
       {/* soft warm-lamp glow in the corner */}
       <div className="scrap-glow" style={{ top: "-40px", left: "50%", transform: "translateX(-50%)", width: "700px", height: "300px", background: "radial-gradient(ellipse, rgba(255, 210, 130, 0.28), transparent 60%)" }} />
 
-      <div style={{ position: "relative", maxWidth: "1180px", margin: "0 auto", padding: "56px 28px 28px" }}>
+      <div className="footer-root" style={{ position: "relative", maxWidth: "1180px", margin: "0 auto", padding: "56px 28px 28px" }}>
 
         {/* Top row: brand + tagline + newsletter */}
         <div className="footer-top" style={{ display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: "48px", alignItems: "start", marginBottom: "44px" }}>
@@ -147,11 +147,16 @@ export default function Footer() {
         .footer-link:hover { color: #1A8040 !important; }
         .footer-social:hover { color: #1A8040 !important; border-color: #1A8040 !important; }
         @media (max-width: 820px) {
-          .footer-top { grid-template-columns: 1fr !important; gap: 32px !important; }
-          .footer-mid { grid-template-columns: 1fr 1fr !important; gap: 24px !important; }
+          .footer-root      { padding: 40px 24px 24px !important; }
+          .footer-top       { grid-template-columns: 1fr !important; gap: 24px !important; margin-bottom: 28px !important; }
+          .footer-mid       { grid-template-columns: 1fr 1fr !important; gap: 20px 16px !important; padding-top: 24px !important; }
+          .footer-mid > div { min-width: 0; }
         }
+        /* Two-column link stack even on small phones so the footer doesn't
+           become a mile-long vertical list. Follow (socials) spans the row. */
         @media (max-width: 480px) {
-          .footer-mid { grid-template-columns: 1fr !important; }
+          .footer-mid { grid-template-columns: 1fr 1fr !important; }
+          .footer-mid > div:last-child { grid-column: span 2; }
         }
       `}</style>
     </footer>
