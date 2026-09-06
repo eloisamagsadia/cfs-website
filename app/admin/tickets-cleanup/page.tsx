@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { IconTicket, IconWarning, IconTrash } from "@/components/shared/Icons";
+import { IconTicket, IconWarning, IconTrash, IconClock, IconLightning } from "@/components/shared/Icons";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -97,6 +97,29 @@ export default function PendingCleanupPage() {
         </div>
       </div>
 
+      {/* Why-is-it-pending explainer */}
+      <div style={{ background: "#FFFDF4", border: "1.5px solid #F0D889", borderRadius: "12px", padding: "14px 18px", display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#7A5A0F", letterSpacing: "1.5px" }}>
+          <IconWarning size={12} color="#7A5A0F" /> WHY A TICKET IS PENDING PAYMENT
+        </div>
+        <div style={{ fontFamily: B, fontSize: "12px", color: "#4A3A0F", lineHeight: 1.55 }}>
+          A ticket lands here the moment we generate a PayMongo checkout link but before we see a paid webhook. Common causes:
+        </div>
+        <div style={{ display: "grid", gap: "8px" }}>
+          <ReasonRow icon={<IconClock size={14} color="#B78A1F" />} title="Unexpected checkout close"
+            body="Member closed the browser tab or hit back before completing payment. Most common cause — the link may still be usable if they return." />
+          <ReasonRow icon={<IconWarning size={14} color="#CC3344" />} title="Payment attempted but declined"
+            body="Card was rejected, GCash balance too low, QR Ph timed out, etc. The link stays open for retries until PayMongo expires it." />
+          <ReasonRow icon={<IconLightning size={14} color="#B78A1F" />} title="Waiting on PayMongo webhook"
+            body="Rare: member paid successfully but the confirmation event hasn't reached us yet. Usually resolves within seconds — if a ticket is < 5 min old, don't cancel yet." />
+          <ReasonRow icon={<IconTicket size={14} color="#7A5A0F" />} title="Slot held during checkout"
+            body="Even without payment, this row counts against tier capacity so a member finishing checkout isn't blocked mid-flow. Auto-cleanup after 24h releases the hold." />
+        </div>
+        <div style={{ fontFamily: B, fontSize: "11px", color: "#7A5A0F", fontStyle: "italic", borderTop: "1px solid #F0D889", paddingTop: "8px", marginTop: "2px" }}>
+          Rule of thumb: rows older than 24h are safe to cancel. Fresh rows (&lt; 5 min) are almost always in-flight — hold off.
+        </div>
+      </div>
+
       {error && <div style={{ background: "#FFE8EC", border: "1.5px solid #CC3344", borderRadius: "10px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#CC3344" }}>{error}</div>}
       {status && <div style={{ background: "#E8F0E4", border: "1.5px solid #1A8040", borderRadius: "10px", padding: "10px 14px", fontFamily: B, fontSize: "13px", color: "#156530" }}>{status}</div>}
 
@@ -170,6 +193,18 @@ export default function PendingCleanupPage() {
             })}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function ReasonRow({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
+  return (
+    <div style={{ display: "flex", gap: "10px", alignItems: "flex-start", background: "#ffffff", border: "1px solid #F0D889", borderRadius: "10px", padding: "10px 12px" }}>
+      <span style={{ flexShrink: 0, marginTop: "2px" }}>{icon}</span>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", letterSpacing: "0.4px", marginBottom: "3px" }}>{title}</div>
+        <div style={{ fontFamily: B, fontSize: "12px", color: "#4A5A4A", lineHeight: 1.45 }}>{body}</div>
       </div>
     </div>
   );
