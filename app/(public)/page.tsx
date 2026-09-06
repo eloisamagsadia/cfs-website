@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { IconCalendar, IconPin, IconTicket, IconUsers, IconHeart } from "@/components/shared/Icons";
+import { IconCalendar, IconPin, IconTicket, IconUsers, IconHeart, IconMail } from "@/components/shared/Icons";
 import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
+import { getLatestColetLetter, LETTERS_MEDIUM_URL } from "@/lib/letters";
 
 export const revalidate = 300;
 
@@ -31,7 +32,7 @@ const C = {
 
 export default async function HomePage() {
   const supabase = createAdminClient();
-  const [{ data: rawEvents }, { count: memberCount }] = await Promise.all([
+  const [{ data: rawEvents }, { count: memberCount }, latestLetter] = await Promise.all([
     (supabase.from("events") as any)
       .select("id, title, date, banner_url, location, price, capacity")
       .eq("status", "upcoming")
@@ -39,6 +40,7 @@ export default async function HomePage() {
       .order("date", { ascending: true })
       .limit(6),
     supabase.from("profiles").select("*", { count: "exact", head: true }),
+    getLatestColetLetter(),
   ]);
 
   const homeEventIds = (rawEvents ?? []).map((e: any) => e.id);
@@ -233,6 +235,64 @@ export default async function HomePage() {
           }
         `}</style>
       </section>
+
+      {/* ── LETTER FROM COLET ── most recent post from the Medium
+          feed, styled as a paper letter pinned to the wall. Only
+          renders when the RSS feed returned something. */}
+      {latestLetter && (
+        <section style={{ maxWidth: "1100px", margin: "0 auto", padding: "16px 24px 24px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "20px" }}>
+            <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.sage, letterSpacing: "3px" }}>LETTER FROM COLET</span>
+            <div style={{ flex: 1, height: "1px", background: C.border }} />
+            <a href={LETTERS_MEDIUM_URL} target="_blank" rel="noopener noreferrer" style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.green, letterSpacing: "2px", textDecoration: "none" }}>
+              READ ALL →
+            </a>
+          </div>
+
+          <a href={latestLetter.link} target="_blank" rel="noopener noreferrer"
+            className="letter-card btn-fx"
+            style={{ display: "block", textDecoration: "none", position: "relative" }}>
+            {/* Washi tape peeking above the letter */}
+            <span className="scrap-tape scrap-tape-mint" style={{ position: "absolute", top: "-14px", left: "38px", transform: "rotate(-4deg)", zIndex: 3 }}>
+              new letter ✦
+            </span>
+
+            <div style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: "16px", padding: "34px 40px 30px", boxShadow: "0 1px 0 rgba(15,42,30,0.04), 0 12px 32px rgba(15,42,30,0.08)", display: "grid", gridTemplateColumns: latestLetter.thumbnail ? "1fr 200px" : "1fr", gap: "28px", alignItems: "center" }}>
+              <div>
+                <div className="scrap-note" style={{ fontSize: "22px", color: "#4A7C59", marginBottom: "6px", lineHeight: 1 }}>Dear Cocacolets ✦</div>
+                <h3 style={{ fontFamily: S, fontSize: "clamp(1.4rem, 2.6vw, 1.9rem)", color: "#1B3A2D", lineHeight: 1.2, margin: "0 0 10px" }}>
+                  {latestLetter.title}
+                </h3>
+                <p style={{ fontFamily: B, fontSize: "14px", color: "#1B3A2D", lineHeight: 1.75, margin: "0 0 14px" }}>
+                  {latestLetter.excerpt}
+                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: C.green, letterSpacing: "1.5px" }}>
+                  <span>READ THE FULL LETTER</span>
+                  <span style={{ display: "inline-block", transform: "translateX(0)", transition: "transform 0.15s" }}>→</span>
+                </div>
+                {latestLetter.pubDate && (
+                  <div style={{ marginTop: "10px", fontFamily: B, fontSize: "11px", color: "#7A8E7A" }}>
+                    Written {new Date(latestLetter.pubDate).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}
+                  </div>
+                )}
+              </div>
+
+              {latestLetter.thumbnail && (
+                <div style={{ position: "relative", width: "200px", height: "160px", borderRadius: "10px", overflow: "hidden", background: "#E8F0E4" }}>
+                  <Image src={latestLetter.thumbnail} alt="" fill sizes="200px" style={{ objectFit: "cover" }} />
+                </div>
+              )}
+            </div>
+          </a>
+
+          <style>{`
+            @media (max-width: 720px) {
+              .letter-card > div { grid-template-columns: 1fr !important; }
+              .letter-card > div > div:last-child { display: none; }
+            }
+          `}</style>
+        </section>
+      )}
 
       {/* ── UPCOMING EVENTS ── */}
       <section style={{ maxWidth: "1100px", margin: "0 auto", padding: "24px 24px 96px" }}>

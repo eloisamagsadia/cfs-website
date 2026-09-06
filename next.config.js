@@ -18,6 +18,8 @@ const nextConfig = {
       { protocol: "https", hostname: "img.clerk.com" },        // Clerk avatars
       { protocol: "https", hostname: "images.clerk.dev" },     // Clerk avatars (older domain)
       { protocol: "https", hostname: "api.qrserver.com" },     // QR codes in emails / verify page
+      { protocol: "https", hostname: "miro.medium.com" },      // Letter thumbnails from Medium
+      { protocol: "https", hostname: "cdn-images-1.medium.com" }, // Medium's other CDN
     ],
   },
 };
