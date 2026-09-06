@@ -144,8 +144,8 @@ export default function EventTransactionsPage() {
         <span>Abandoned = pending for &gt; 15 min without webhook.</span>
       </div>
 
-      {/* Filter tabs */}
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+      {/* Filter tabs + search */}
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
         {FILTERS.map(f => {
           const active = filter === f.key;
           const count = f.key === "all" ? s.total : (s as any)[f.key] ?? 0;
@@ -166,29 +166,40 @@ export default function EventTransactionsPage() {
             </button>
           );
         })}
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search name / email / tier / ref…"
+          style={{ flex: 1, minWidth: 220, background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 20, padding: "6px 14px", color: "#1B3A2D", fontFamily: B, fontSize: 12, outline: "none", boxSizing: "border-box" }}
+        />
       </div>
 
-      {/* Rows */}
-      {filtered.length === 0 ? (
-        <div style={{ background: "#FFFFFF", border: "1.5px dashed #DDE8DD", borderRadius: 12, padding: 32, textAlign: "center", fontFamily: B, color: "#5A7A60" }}>
-          No transactions match this filter.
+      {/* Table */}
+      <div style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: 12, overflow: "hidden" }}>
+        <div style={{ padding: "10px 14px", background: "#F7FAF5", borderBottom: "1px solid #EDF2ED", fontFamily: R, fontSize: 10, color: "#5A7A60", letterSpacing: 1.5, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>{filtered.length} · {filtered.length === data.transactions.length ? "SHOWING ALL" : `FILTERED FROM ${data.transactions.length}`}</span>
         </div>
-      ) : (
-        <div style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: 12, overflow: "hidden" }}>
-          {filtered.map((t, i) => <TxnRow key={t.ref} t={t} first={i === 0} />)}
-        </div>
-      )}
-      {/* Mobile stack: below 640px the 5-column grid gets cramped, collapse it. */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        @media (max-width: 640px) {
-          .sk-txn-row {
-            grid-template-columns: 3px 1fr auto !important;
-          }
-          .sk-txn-row > div:nth-child(3) { grid-column: 2; }
-          .sk-txn-row > div:nth-child(4) { grid-column: 2 / span 2; text-align: left !important; }
-          .sk-txn-row > div:nth-child(5) { grid-row: 1; grid-column: 3; }
-        }
-      ` }} />
+        {filtered.length === 0 ? (
+          <div style={{ padding: 32, textAlign: "center", fontFamily: B, color: "#5A7A60", fontSize: 13 }}>
+            No transactions match these filters.
+          </div>
+        ) : (
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: B }}>
+              <thead>
+                <tr style={{ background: "#FBFDFB" }}>
+                  {["BUYER","TIER","STARTED","PAID","AMOUNT","METHOD","STATUS"].map(h => (
+                    <th key={h} style={{ fontFamily: R, fontSize: 9, fontWeight: 400, color: "#5A7A60", letterSpacing: 1.5, textAlign: "left", padding: "8px 12px", borderBottom: "1px solid #EDF2ED", whiteSpace: "nowrap" }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(t => <TxnTableRow key={t.ref} t={t} />)}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -202,46 +213,38 @@ function SummaryCard({ label, value, color, small = false }: { label: string; va
   );
 }
 
-function TxnRow({ t, first = false }: { t: Txn; first?: boolean }) {
+function TxnTableRow({ t }: { t: Txn }) {
   const m = OUTCOME_META[t.outcome];
   const shortTime = (iso: string | null) => iso
     ? new Date(iso).toLocaleString("en-PH", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Manila" })
-    : null;
-  const startedStr = shortTime(t.created_at);
-  const paidStr    = shortTime(t.paid_at);
-  const methodStr  = (t.method ?? "—").toString().toUpperCase().replace(/_/g, " ");
-  const sizeStr    = t.bundle_size > 1 ? `× ${t.bundle_size}` : "";
+    : "—";
+  const methodStr = (t.method ?? "—").toString().toUpperCase().replace(/_/g, " ");
+  const sizeStr   = t.bundle_size > 1 ? ` × ${t.bundle_size}` : "";
   return (
-    <div className="sk-txn-row" style={{ background: "#FFFFFF", borderTop: first ? "none" : "1px solid #EDF2ED", padding: "10px 14px", display: "grid", gridTemplateColumns: "3px minmax(0, 2fr) minmax(0, 1.4fr) minmax(0, 1.2fr) auto", gap: 12, alignItems: "center" }}>
-      {/* Status stripe */}
-      <div style={{ alignSelf: "stretch", background: m.border, borderRadius: 2 }} />
-
+    <tr style={{ borderTop: "1px solid #F0F5F0" }}>
       {/* Buyer */}
-      <div style={{ minWidth: 0 }}>
-        <div style={{ fontFamily: B, fontSize: 13, color: "#1B3A2D", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.buyer.name ?? "—"}</div>
-        <div style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.buyer.email ?? "—"}</div>
-      </div>
-
-      {/* Tier + timing */}
-      <div style={{ minWidth: 0 }}>
-        <div style={{ fontFamily: B, fontSize: 12, color: "#1B3A2D" }}>{t.tier_name} {sizeStr && <span style={{ color: "#5A7A60" }}>{sizeStr}</span>}</div>
-        <div style={{ fontFamily: B, fontSize: 10.5, color: "#7A8E7A" }}>
-          {paidStr ? `Paid ${paidStr}` : startedStr ? `Started ${startedStr}` : ""}
-        </div>
-      </div>
-
-      {/* Amount + method */}
-      <div style={{ minWidth: 0, textAlign: "right" }}>
-        <div style={{ fontFamily: R, fontSize: 14, color: t.outcome === "paid" ? "#1A8040" : "#1B3A2D", letterSpacing: 0.3 }}>
-          ₱{t.amount.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
-        </div>
-        <div style={{ fontFamily: B, fontSize: 10, color: "#7A8E7A", letterSpacing: 1 }}>{methodStr}</div>
-      </div>
-
-      {/* Status pill */}
-      <div>
-        <span title={m.note} style={{ display: "inline-block", background: m.bg, color: m.color, border: `1px solid ${m.border}`, borderRadius: 20, padding: "3px 10px", fontFamily: R, fontSize: 10, letterSpacing: 1.5, whiteSpace: "nowrap" }}>{m.label}</span>
-      </div>
-    </div>
+      <td style={{ padding: "8px 12px", maxWidth: 200 }}>
+        <div style={{ fontSize: 12, color: "#1B3A2D", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.buyer.name ?? "—"}</div>
+        <div style={{ fontSize: 10, color: "#7A8E7A", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.buyer.email ?? "—"}</div>
+      </td>
+      {/* Tier */}
+      <td style={{ padding: "8px 12px", fontSize: 12, color: "#1B3A2D", whiteSpace: "nowrap" }}>
+        {t.tier_name}{sizeStr && <span style={{ color: "#5A7A60" }}>{sizeStr}</span>}
+      </td>
+      {/* Started */}
+      <td style={{ padding: "8px 12px", fontSize: 11, color: "#5A7A60", whiteSpace: "nowrap" }}>{shortTime(t.created_at)}</td>
+      {/* Paid */}
+      <td style={{ padding: "8px 12px", fontSize: 11, color: t.paid_at ? "#1A8040" : "#7A8E7A", whiteSpace: "nowrap" }}>{shortTime(t.paid_at)}</td>
+      {/* Amount */}
+      <td style={{ padding: "8px 12px", fontFamily: R, fontSize: 13, color: t.outcome === "paid" ? "#1A8040" : "#1B3A2D", whiteSpace: "nowrap", textAlign: "right" }}>
+        ₱{t.amount.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+      </td>
+      {/* Method */}
+      <td style={{ padding: "8px 12px", fontFamily: R, fontSize: 10, color: "#7A8E7A", letterSpacing: 1, whiteSpace: "nowrap" }}>{methodStr}</td>
+      {/* Status */}
+      <td style={{ padding: "8px 12px", whiteSpace: "nowrap" }}>
+        <span title={m.note} style={{ display: "inline-block", background: m.bg, color: m.color, border: `1px solid ${m.border}`, borderRadius: 20, padding: "2px 8px", fontFamily: R, fontSize: 9, letterSpacing: 1.4 }}>{m.label}</span>
+      </td>
+    </tr>
   );
 }
