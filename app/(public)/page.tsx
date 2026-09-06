@@ -280,7 +280,7 @@ export default async function HomePage() {
               </div>
               <div className="home-event-featured-media" style={{ aspectRatio: "4 / 3", background: C.mist, position: "relative", overflow: "hidden" }}>
                 {ev.banner_url ? (
-                  <img src={ev.banner_url} alt={ev.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <img src={ev.banner_url} alt={ev.title} style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center", padding: "8px" }} />
                 ) : (
                   <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <IconCalendar size={48} color="#B7CDB7" />
