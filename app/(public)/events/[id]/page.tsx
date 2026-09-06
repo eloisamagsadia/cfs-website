@@ -125,11 +125,11 @@ export default async function EventDetailPage({ params }: { params: { id: string
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: C.paper }}>
+    <div className="scrap-paper" style={{ minHeight: "100vh" }}>
       <style>{`
         @media (max-width: 960px) {
           .evd-hero-grid { grid-template-columns: 1fr !important; }
-          .evd-hero-banner { min-height: 240px !important; aspect-ratio: 16/9 !important; }
+          .evd-hero-frame { transform: rotate(0) !important; max-width: 100% !important; }
           .evd-shell { padding: 24px !important; }
           .evd-title { font-size: clamp(2rem, 7vw, 2.6rem) !important; }
           .evd-body-grid { grid-template-columns: 1fr !important; }
@@ -141,108 +141,107 @@ export default async function EventDetailPage({ params }: { params: { id: string
         }
       `}</style>
 
-      {/* ── HERO ─────────────────────────────────────────────── */}
-      <section style={{ background: C.forest, color: "#ffffff", position: "relative", overflow: "hidden" }}>
-        {/* Ambient gradient */}
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(1000px 500px at 20% -10%, rgba(26,128,64,0.25), transparent 60%), radial-gradient(800px 400px at 90% 110%, rgba(183,138,31,0.18), transparent 60%)" }} />
+      {/* ── HERO ── scrapbook: framed poster + warm paper */}
+      <section style={{ position: "relative", overflow: "hidden", borderBottom: "1px dashed #DDE8DD" }}>
+        <div className="scrap-glow" />
+        <div className="scrap-glow scrap-glow-warm" style={{ top: "auto", bottom: "-120px", left: "auto", right: "-100px" }} />
 
-        <div className="evd-shell" style={{ position: "relative", maxWidth: "1240px", margin: "0 auto", padding: "40px 48px 64px" }}>
-          <Link href="/events" style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "rgba(255,255,255,0.7)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", marginBottom: "32px", letterSpacing: "1.5px" }}>
+        <div className="evd-shell" style={{ position: "relative", maxWidth: "1240px", margin: "0 auto", padding: "36px 48px 64px" }}>
+          <Link href="/events" className="btn-fx" style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#4A7C59", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px", marginBottom: "28px", letterSpacing: "1.5px" }}>
             <svg width="6" height="10" viewBox="0 0 6 10"><path d="M5 1L1 5L5 9" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/></svg>
             BACK TO EVENTS
           </Link>
 
-          <div className="evd-hero-grid" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: "44px", alignItems: "center" }}>
+          <div className="evd-hero-grid" style={{ display: "grid", gridTemplateColumns: "1.05fr 1fr", gap: "48px", alignItems: "center" }}>
 
-            {/* Banner card (left) */}
-            <div className="evd-hero-banner" style={{ position: "relative", aspectRatio: "4/3", borderRadius: "20px", overflow: "hidden", background: C.deep, boxShadow: "0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06)" }}>
-              {event.banner_url ? (
-                <Image src={event.banner_url} alt={event.title} fill sizes="(max-width: 768px) 100vw, 720px" priority style={{ objectFit: "cover" }} />
-              ) : (
-                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(135deg, ${C.deep} 0%, ${C.forest} 100%)` }}>
-                  <IconCalendar size={64} color="rgba(255,255,255,0.28)" />
-                </div>
-              )}
-              {/* Date badge overlay */}
-              <div style={{ position: "absolute", top: "18px", left: "18px", background: "rgba(255,255,255,0.96)", borderRadius: "14px", padding: "10px 14px", minWidth: "68px", textAlign: "center", boxShadow: "0 8px 24px rgba(0,0,0,0.25)" }}>
-                <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.sage, letterSpacing: "2px" }}>{dateMonth}</div>
-                <div style={{ fontFamily: S, fontSize: "28px", color: C.forest, lineHeight: 1 }}>{dateDay}</div>
+            {/* Framed poster (left) — banner in a wood frame with slight tilt */}
+            <div className="evd-hero-frame scrap-frame" style={{ position: "relative", aspectRatio: "4/3", transform: "rotate(-1.2deg)", borderRadius: "6px", maxWidth: "560px" }}>
+              <div className="scrap-frame-inner" style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden" }}>
+                {event.banner_url ? (
+                  <Image src={event.banner_url} alt={event.title} fill sizes="(max-width: 768px) 100vw, 560px" priority style={{ objectFit: "cover" }} />
+                ) : (
+                  <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #E8F0E4 0%, #C7E1CE 100%)" }}>
+                    <IconCalendar size={64} color="#4A7C59" />
+                  </div>
+                )}
               </div>
+              {/* Washi tape corner accent */}
+              <span className="scrap-tape scrap-tape-pink" style={{ position: "absolute", top: "-16px", left: "-20px", transform: "rotate(-14deg)", zIndex: 3, fontSize: "13px", padding: "3px 16px" }}>
+                {dateMonth} {dateDay}
+              </span>
             </div>
 
             {/* Info column (right) */}
             <div>
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "22px" }}>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "10px", fontWeight: 700, color: statusChip.fg, background: statusChip.bg, borderRadius: "999px", padding: "5px 12px", letterSpacing: "1.5px" }}>
-                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "currentColor", opacity: 0.85 }} />
-                  {event.status.toUpperCase()}
-                </span>
+              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center", marginBottom: "22px" }}>
+                <span className="scrap-tape scrap-tape-mint" style={{ transform: "rotate(-2deg)" }}>{event.status.toLowerCase()}</span>
                 {event.is_members_only && (
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.gold, background: "rgba(183,138,31,0.16)", border: "1px solid rgba(183,138,31,0.4)", borderRadius: "999px", padding: "5px 12px", letterSpacing: "1.5px" }}>
-                    <IconSparkle size={10} color={C.gold} /> MEMBERS ONLY
-                  </span>
+                  <span className="scrap-tape" style={{ transform: "rotate(1.5deg)" }}>members only</span>
                 )}
                 {event.capacity && spotsLeft !== null && spotsLeft > 0 && spotsLeft <= 20 && (
-                  <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#F5C242", background: "rgba(245,194,66,0.16)", border: "1px solid rgba(245,194,66,0.4)", borderRadius: "999px", padding: "5px 12px", letterSpacing: "1.5px" }}>
-                    ONLY {spotsLeft} SPOT{spotsLeft === 1 ? "" : "S"} LEFT
-                  </span>
+                  <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(2deg)" }}>only {spotsLeft} spot{spotsLeft === 1 ? "" : "s"} left</span>
                 )}
               </div>
 
-              <h1 className="evd-title" style={{ fontFamily: S, fontSize: "clamp(2.2rem, 4.6vw, 3.6rem)", color: "#ffffff", lineHeight: 1.05, margin: "0 0 20px", letterSpacing: "-0.5px" }}>
+              <h1 className="evd-title" style={{ fontFamily: S, fontSize: "clamp(2.2rem, 4.6vw, 3.6rem)", color: "#1B3A2D", lineHeight: 1.05, margin: "0 0 12px", letterSpacing: "-0.5px" }}>
                 {event.title}
               </h1>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginBottom: "28px" }}>
+              {countdown && (
+                <p className="scrap-note" style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.7rem)", color: "#4A7C59", margin: "0 0 20px", lineHeight: 1.1 }}>
+                  {countdown} ✦
+                </p>
+              )}
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "24px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <IconCalendar size={16} color="#ffffff" />
+                  <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: "#FFFFFF", border: "1px solid #DDE8DD", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <IconCalendar size={15} color="#1A8040" />
                   </div>
                   <div>
-                    <div style={{ fontFamily: B, fontSize: "14px", color: "#ffffff", fontWeight: 600 }}>{dateWeekday}, {dateShort}</div>
-                    <div style={{ fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.55)" }}>{dateTime} · Manila time</div>
+                    <div style={{ fontFamily: B, fontSize: "14px", color: "#1B3A2D", fontWeight: 600 }}>{dateWeekday}, {dateShort}</div>
+                    <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>{dateTime} · Manila time</div>
                   </div>
                 </div>
                 {event.location && (
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                      <IconPin size={16} color="#ffffff" />
+                    <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: "#FFFFFF", border: "1px solid #DDE8DD", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <IconPin size={15} color="#1A8040" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: B, fontSize: "14px", color: "#ffffff", fontWeight: 600 }}>{event.location}</div>
+                      <div style={{ fontFamily: B, fontSize: "14px", color: "#1B3A2D", fontWeight: 600 }}>{event.location}</div>
                       {event.map_url && (
-                        <a href={event.map_url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.55)", textDecoration: "underline" }}>Open in maps</a>
+                        <a href={event.map_url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: B, fontSize: "12px", color: "#4A7C59", textDecoration: "underline" }}>Open in maps</a>
                       )}
                     </div>
                   </div>
                 )}
                 {SHOW_PUBLIC_CAPACITY ? (
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                      <IconUsers size={16} color="#ffffff" />
+                    <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: "#FFFFFF", border: "1px solid #DDE8DD", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <IconUsers size={15} color="#1A8040" />
                     </div>
                     <div>
-                      <div style={{ fontFamily: B, fontSize: "14px", color: "#ffffff", fontWeight: 600 }}>
+                      <div style={{ fontFamily: B, fontSize: "14px", color: "#1B3A2D", fontWeight: 600 }}>
                         {regCount ?? 0} registered{event.capacity ? ` / ${event.capacity}` : ""}
                       </div>
-                      <div style={{ fontFamily: B, fontSize: "12px", color: "rgba(255,255,255,0.55)" }}>
+                      <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>
                         {event.capacity ? (isFull ? "This event is fully booked" : `${spotsLeft} spots remaining`) : "Unlimited capacity"}
                       </div>
                     </div>
                   </div>
                 ) : (
                   isFull && (
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#CC334425", border: "1px solid #CC334480", borderRadius: "999px", padding: "6px 14px" }}>
-                      <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#ffcccc", letterSpacing: "1.5px" }}>FULLY BOOKED</span>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFE8EC", border: "1px solid #CC3344", borderRadius: "999px", padding: "6px 14px" }}>
+                      <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#CC3344", letterSpacing: "1.5px" }}>FULLY BOOKED</span>
                     </div>
                   )
                 )}
               </div>
 
-              {/* Availability bar — internal only */}
               {SHOW_PUBLIC_CAPACITY && event.capacity && (
                 <div style={{ marginBottom: "8px" }}>
-                  <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: "999px", height: "6px", overflow: "hidden" }}>
+                  <div style={{ background: "#E4EDE4", borderRadius: "999px", height: "6px", overflow: "hidden" }}>
                     <div style={{ height: "100%", width: `${pct}%`, background: isFull ? "#CC3344" : "linear-gradient(90deg, #1A8040, #4ACB6E)", borderRadius: "999px", transition: "width 0.5s" }} />
                   </div>
                 </div>
