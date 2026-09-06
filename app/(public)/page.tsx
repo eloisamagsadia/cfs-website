@@ -239,6 +239,14 @@ export default async function HomePage() {
               gap: 12px;
             }
             .bento-tile { padding: 22px 20px; border-radius: 16px; transform: none !important; }
+            /* CTA tile is layout-only — never inherit the tile padding
+               that just added 44px of empty space around the buttons. */
+            .bento-cta { padding: 4px 0 0 !important; }
+            .bento-cta > div > a {
+              padding: 11px 22px !important;
+              font-size: 12px !important;
+              letter-spacing: 1.3px !important;
+            }
           }
 
           /* Phone — full single-column stack, compact tiles */
@@ -260,8 +268,9 @@ export default async function HomePage() {
             /* Members number scales down so 5-digit member counts don't
                dominate the phone viewport. */
             .bento-members > div:nth-of-type(2) { font-size: 3.2rem !important; }
-            .bento-cta > div { flex-direction: column; }
-            .bento-cta > div > a { flex: 1 1 100%; justify-content: center; padding: 12px 22px !important; }
+            .bento-cta { padding: 0 !important; }
+            .bento-cta > div { flex-direction: column; gap: 10px !important; }
+            .bento-cta > div > a { flex: 1 1 100%; justify-content: center; padding: 12px 22px !important; font-size: 12px !important; }
           }
           @media (max-width: 380px) {
             .hero-bento-wrap { padding: 20px 12px 0 !important; }
