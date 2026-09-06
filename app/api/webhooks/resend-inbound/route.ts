@@ -154,19 +154,44 @@ function firstName(v: any): string | null {
 }
 function stripQuotedReply(s: string): string {
   if (!s) return "";
-  // Cut at common quote markers so we don't dupe the original thread.
-  const cutters = [
-    /^\s*On .+ wrote:\s*$/im,
-    /^\s*From:\s+.+$/im,
+
+  // First cut off anything after quoted-reply markers so the guest's
+  // actual message stands alone. Handles Gmail-style ("On <date> at
+  // <time> <name> wrote:") which may wrap across lines, plus the
+  // classic Outlook/AppleMail markers.
+  const cutters: RegExp[] = [
+    // Gmail: "On <date>, <name> wrote:" (may span multiple lines because
+    // Gmail wraps long timestamps). [\s\S] is our "true dotall" trick.
+    /\bOn\b[\s\S]{1,300}?\bwrote:\s*$/im,
     /^\s*-{2,}\s*Original Message\s*-{2,}$/im,
+    /^\s*From:\s+.+$/im,
     /^\s*_{5,}\s*$/m,
+    // A line whose contents are only "> ..." marks a quoted block start.
+    /^>\s.*$/m,
   ];
   let cut = s.length;
   for (const rx of cutters) {
     const m = s.match(rx);
     if (m && m.index != null && m.index < cut) cut = m.index;
   }
-  return s.slice(0, cut).trim();
+  let body = s.slice(0, cut);
+
+  // Now strip a trailing email signature block. Only cut at clear
+  // signature markers — never at closings like "Best," or "Regards,"
+  // since those are often part of the guest's actual message.
+  const sigCutters: RegExp[] = [
+    /^-- \s*$/m,                                                  // RFC sig delimiter
+    /^\s*(Mobile|Phone|Cell|Tel|Email|Web|Website)\s*:\s*.+$/im,  // "Mobile: ..." contact lines
+    /^\s*Sent from my (iPhone|iPad|Android|Samsung|Mobile).*$/im, // mobile sig
+  ];
+  let sigCut = body.length;
+  for (const rx of sigCutters) {
+    const m = body.match(rx);
+    if (m && m.index != null && m.index < sigCut) sigCut = m.index;
+  }
+  body = body.slice(0, sigCut);
+
+  return body.trim();
 }
 function htmlToText(html: string): string {
   return html
