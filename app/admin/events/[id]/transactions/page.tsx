@@ -54,6 +54,8 @@ export default function EventTransactionsPage() {
   const [lastFetched, setLastFetched] = useState<Date | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 10;
 
   async function load(silent = false) {
     if (!silent) setLoading(true); else setRefreshing(true);
@@ -89,6 +91,13 @@ export default function EventTransactionsPage() {
       );
     });
   }, [data, filter, search]);
+
+  // Reset to page 0 whenever the filter or search changes — otherwise
+  // a user on page 5 with a filter that yields 3 rows lands on empty.
+  useEffect(() => { setPage(0); }, [filter, search]);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const clampedPage = Math.min(page, totalPages - 1);
+  const pageRows = filtered.slice(clampedPage * PAGE_SIZE, clampedPage * PAGE_SIZE + PAGE_SIZE);
 
   if (loading) return <SkListLoading />;
   if (!data) return <div style={{ padding: 32, textAlign: "center", fontFamily: B, color: "#5A7A60" }}>Failed to load transactions.</div>;
@@ -178,26 +187,36 @@ export default function EventTransactionsPage() {
       <div style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: 12, overflow: "hidden" }}>
         <div style={{ padding: "10px 14px", background: "#F7FAF5", borderBottom: "1px solid #EDF2ED", fontFamily: R, fontSize: 10, color: "#5A7A60", letterSpacing: 1.5, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span>{filtered.length} · {filtered.length === data.transactions.length ? "SHOWING ALL" : `FILTERED FROM ${data.transactions.length}`}</span>
+          {filtered.length > 0 && (
+            <span style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A", letterSpacing: 0 }}>
+              {clampedPage * PAGE_SIZE + 1}–{Math.min(filtered.length, (clampedPage + 1) * PAGE_SIZE)} of {filtered.length}
+            </span>
+          )}
         </div>
         {filtered.length === 0 ? (
           <div style={{ padding: 32, textAlign: "center", fontFamily: B, color: "#5A7A60", fontSize: 13 }}>
             No transactions match these filters.
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: B }}>
-              <thead>
-                <tr style={{ background: "#FBFDFB" }}>
-                  {["BUYER","TIER","STARTED","PAID","AMOUNT","METHOD","STATUS"].map(h => (
-                    <th key={h} style={{ fontFamily: R, fontSize: 9, fontWeight: 400, color: "#5A7A60", letterSpacing: 1.5, textAlign: "left", padding: "8px 12px", borderBottom: "1px solid #EDF2ED", whiteSpace: "nowrap" }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map(t => <TxnTableRow key={t.ref} t={t} />)}
-              </tbody>
-            </table>
-          </div>
+          <>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: B }}>
+                <thead>
+                  <tr style={{ background: "#FBFDFB" }}>
+                    {["BUYER","TIER","STARTED","PAID","AMOUNT","METHOD","STATUS"].map(h => (
+                      <th key={h} style={{ fontFamily: R, fontSize: 9, fontWeight: 400, color: "#5A7A60", letterSpacing: 1.5, textAlign: "left", padding: "8px 12px", borderBottom: "1px solid #EDF2ED", whiteSpace: "nowrap" }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {pageRows.map(t => <TxnTableRow key={t.ref} t={t} />)}
+                </tbody>
+              </table>
+            </div>
+            {totalPages > 1 && (
+              <Pagination page={clampedPage} totalPages={totalPages} onChange={setPage} />
+            )}
+          </>
         )}
       </div>
     </div>
@@ -246,5 +265,60 @@ function TxnTableRow({ t }: { t: Txn }) {
         <span title={m.note} style={{ display: "inline-block", background: m.bg, color: m.color, border: `1px solid ${m.border}`, borderRadius: 20, padding: "2px 8px", fontFamily: R, fontSize: 9, letterSpacing: 1.4 }}>{m.label}</span>
       </td>
     </tr>
+  );
+}
+
+function Pagination({ page, totalPages, onChange }: { page: number; totalPages: number; onChange: (p: number) => void }) {
+  // Build compact window: first, prev range, current, next range, last.
+  const windowSize = 2;
+  const pages = new Set<number>();
+  pages.add(0);
+  pages.add(totalPages - 1);
+  for (let p = page - windowSize; p <= page + windowSize; p++) {
+    if (p >= 0 && p < totalPages) pages.add(p);
+  }
+  const sorted = Array.from(pages).sort((a, b) => a - b);
+  const nodes: React.ReactNode[] = [];
+  for (let i = 0; i < sorted.length; i++) {
+    const p = sorted[i];
+    if (i > 0 && p - sorted[i - 1] > 1) nodes.push(<span key={`gap-${p}`} style={{ fontFamily: B, fontSize: 12, color: "#7A8E7A", padding: "0 4px" }}>…</span>);
+    const active = p === page;
+    nodes.push(
+      <button
+        key={p}
+        onClick={() => onChange(p)}
+        style={{
+          fontFamily: R, fontSize: 10, letterSpacing: 1.2,
+          background: active ? "#1B3A2D" : "#FFFFFF",
+          color: active ? "#FFFFFF" : "#1B3A2D",
+          border: `1.5px solid ${active ? "#1B3A2D" : "#DDE8DD"}`,
+          borderRadius: 6, minWidth: 30, padding: "4px 8px", cursor: "pointer",
+        }}
+      >
+        {p + 1}
+      </button>
+    );
+  }
+  const canPrev = page > 0;
+  const canNext = page < totalPages - 1;
+  const navBtn = (label: string, disabled: boolean, onClick: () => void) => (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        fontFamily: R, fontSize: 10, letterSpacing: 1.4,
+        background: "#FFFFFF", color: disabled ? "#B7C4B7" : "#1B3A2D",
+        border: "1.5px solid #DDE8DD",
+        borderRadius: 6, padding: "4px 10px",
+        cursor: disabled ? "not-allowed" : "pointer",
+      }}
+    >{label}</button>
+  );
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 6, padding: "12px 14px", borderTop: "1px solid #EDF2ED", background: "#FBFDFB", flexWrap: "wrap" }}>
+      {navBtn("← PREV", !canPrev, () => onChange(page - 1))}
+      {nodes}
+      {navBtn("NEXT →", !canNext, () => onChange(page + 1))}
+    </div>
   );
 }
