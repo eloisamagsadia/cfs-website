@@ -1092,44 +1092,41 @@ header [class*="avatar"] { border-color: #DDE8DD !important; }
   line-height: 1;
 }
 
-/* Washi tape — realistic translucent tape with visibly torn short ends.
-   Uses drop-shadow (not box-shadow) so the shadow follows the masked
-   torn outline instead of a hidden rectangle. */
+/* Handwritten label with a hand-drawn squiggle underline. Replaces the
+   old washi-tape treatment. Each variant swaps the text color and the
+   squiggle stroke color; the SVG is inline as a background-image so it
+   stretches to whatever label width naturally. */
 .scrap-tape {
-  position: relative;
   display: inline-block;
   font-family: var(--font-caveat, cursive);
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 600;
-  padding: 6px 24px;
   color: #8B5E1F;
-  transform: rotate(-2deg);
-  letter-spacing: 0.5px;
-  line-height: 1.3;
-  /* Base color + soft vertical sheen + faint diagonal texture */
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,0.06) 100%),
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 3px, transparent 3px 9px),
-    #FFD98A;
-  /* Slight overall translucency to feel like real tape */
-  opacity: 0.94;
-  /* drop-shadow respects mask alpha — follows the torn outline */
-  filter:
-    drop-shadow(0 1px 1px rgba(60,40,10,0.10))
-    drop-shadow(0 3px 8px rgba(60,40,10,0.10));
-  /* Torn short ends — teeth ~6 units deep in a 100-unit viewBox so
-     they render as ~8-10px on typical tape widths. Top and bottom
-     stay clean, only the cut ends are jagged. */
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 30' preserveAspectRatio='none'%3E%3Cpath d='M4 2 L2 0 L6 1 L14 0 L94 0 L97 1 L96 3 L100 6 L96 10 L100 14 L94 18 L100 22 L96 26 L100 30 L86 30 L4 30 L1 28 L4 24 L0 20 L4 16 L0 12 L3 8 L0 4 Z' fill='black'/%3E%3C/svg%3E");
-          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 30' preserveAspectRatio='none'%3E%3Cpath d='M4 2 L2 0 L6 1 L14 0 L94 0 L97 1 L96 3 L100 6 L96 10 L100 14 L94 18 L100 22 L96 26 L100 30 L86 30 L4 30 L1 28 L4 24 L0 20 L4 16 L0 12 L3 8 L0 4 Z' fill='black'/%3E%3C/svg%3E");
-  -webkit-mask-size: 100% 100%;
-          mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-          mask-repeat: no-repeat;
+  padding: 0 4px 12px;
+  line-height: 1.15;
+  letter-spacing: 0.3px;
+  transform: rotate(-1deg);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 Q 25 1, 50 5 T 98 5' fill='none' stroke='%23E5B547' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center bottom 0 / 100% 8px;
+  /* Reset any leftover tape-era styles */
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
+  opacity: 1;
+  -webkit-mask-image: none;
+          mask-image: none;
 }
-.scrap-tape-mint  { background: linear-gradient(180deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,0.06) 100%), repeating-linear-gradient(45deg, rgba(255,255,255,0.20) 0 3px, transparent 3px 9px), #B8E6C1; color: #1E5A2E; }
-.scrap-tape-pink  { background: linear-gradient(180deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,0.06) 100%), repeating-linear-gradient(45deg, rgba(255,255,255,0.20) 0 3px, transparent 3px 9px), #F8BFC8; color: #8A2E45; }
-.scrap-tape-blue  { background: linear-gradient(180deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,0.06) 100%), repeating-linear-gradient(45deg, rgba(255,255,255,0.20) 0 3px, transparent 3px 9px), #B7DCF0; color: #1E4A6E; }
+.scrap-tape-mint {
+  color: #1E5A2E;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 Q 25 1, 50 5 T 98 5' fill='none' stroke='%231A8040' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center bottom 0 / 100% 8px;
+}
+.scrap-tape-pink {
+  color: #8A2E45;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 Q 25 1, 50 5 T 98 5' fill='none' stroke='%23E85D75' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center bottom 0 / 100% 8px;
+}
+.scrap-tape-blue {
+  color: #1E4A6E;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 Q 25 1, 50 5 T 98 5' fill='none' stroke='%232E7BB8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center bottom 0 / 100% 8px;
+}
 
 /* Handwritten note — hand-cut paper feel for callouts. Default is
    forest green so it stays on-brand; override color inline for
