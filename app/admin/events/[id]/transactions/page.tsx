@@ -53,6 +53,7 @@ export default function EventTransactionsPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [lastFetched, setLastFetched] = useState<Date | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [search, setSearch] = useState("");
 
   async function load(silent = false) {
     if (!silent) setLoading(true); else setRefreshing(true);
@@ -75,9 +76,19 @@ export default function EventTransactionsPage() {
 
   const filtered = useMemo(() => {
     if (!data) return [];
-    if (filter === "all") return data.transactions;
-    return data.transactions.filter(t => t.outcome === filter);
-  }, [data, filter]);
+    const q = search.trim().toLowerCase();
+    return data.transactions.filter(t => {
+      if (filter !== "all" && t.outcome !== filter) return false;
+      if (!q) return true;
+      return (
+        (t.buyer.name ?? "").toLowerCase().includes(q) ||
+        (t.buyer.email ?? "").toLowerCase().includes(q) ||
+        (t.tier_name ?? "").toLowerCase().includes(q) ||
+        (t.payment_link_id ?? "").toLowerCase().includes(q) ||
+        (t.ref ?? "").toLowerCase().includes(q)
+      );
+    });
+  }, [data, filter, search]);
 
   if (loading) return <SkListLoading />;
   if (!data) return <div style={{ padding: 32, textAlign: "center", fontFamily: B, color: "#5A7A60" }}>Failed to load transactions.</div>;
@@ -163,10 +174,21 @@ export default function EventTransactionsPage() {
           No transactions match this filter.
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {filtered.map(t => <TxnRow key={t.ref} t={t} />)}
+        <div style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: 12, overflow: "hidden" }}>
+          {filtered.map((t, i) => <TxnRow key={t.ref} t={t} first={i === 0} />)}
         </div>
       )}
+      {/* Mobile stack: below 640px the 5-column grid gets cramped, collapse it. */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media (max-width: 640px) {
+          .sk-txn-row {
+            grid-template-columns: 3px 1fr auto !important;
+          }
+          .sk-txn-row > div:nth-child(3) { grid-column: 2; }
+          .sk-txn-row > div:nth-child(4) { grid-column: 2 / span 2; text-align: left !important; }
+          .sk-txn-row > div:nth-child(5) { grid-row: 1; grid-column: 3; }
+        }
+      ` }} />
     </div>
   );
 }
@@ -180,33 +202,46 @@ function SummaryCard({ label, value, color, small = false }: { label: string; va
   );
 }
 
-function TxnRow({ t }: { t: Txn }) {
+function TxnRow({ t, first = false }: { t: Txn; first?: boolean }) {
   const m = OUTCOME_META[t.outcome];
-  const created = new Date(t.created_at);
-  const timeStr = created.toLocaleString("en-PH", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Manila" });
-  const paidStr = t.paid_at ? new Date(t.paid_at).toLocaleString("en-PH", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Manila" }) : null;
+  const shortTime = (iso: string | null) => iso
+    ? new Date(iso).toLocaleString("en-PH", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: true, timeZone: "Asia/Manila" })
+    : null;
+  const startedStr = shortTime(t.created_at);
+  const paidStr    = shortTime(t.paid_at);
+  const methodStr  = (t.method ?? "—").toString().toUpperCase().replace(/_/g, " ");
+  const sizeStr    = t.bundle_size > 1 ? `× ${t.bundle_size}` : "";
   return (
-    <div style={{ background: "#FFFFFF", border: `1.5px solid ${m.border}40`, borderLeft: `4px solid ${m.border}`, borderRadius: 10, padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
-        <div style={{ minWidth: 0, flex: 1 }}>
-          <div style={{ fontFamily: R, fontSize: 13, color: "#1B3A2D", letterSpacing: 0.5 }}>{t.buyer.name ?? "—"}</div>
-          <div style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A" }}>{t.buyer.email ?? "—"}</div>
-        </div>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontFamily: R, fontSize: 14, color: "#1B3A2D" }}>₱{t.amount.toLocaleString("en-PH", { minimumFractionDigits: 2 })}</div>
-          <div style={{ fontFamily: B, fontSize: 10, color: "#7A8E7A", letterSpacing: 1 }}>{(t.method ?? "—").toString().toUpperCase().replace(/_/g, " ")}</div>
-        </div>
-        <div>
-          <span style={{ display: "inline-block", background: m.bg, color: m.color, border: `1px solid ${m.border}`, borderRadius: 20, padding: "3px 10px", fontFamily: R, fontSize: 10, letterSpacing: 1.5 }}>{m.label}</span>
+    <div className="sk-txn-row" style={{ background: "#FFFFFF", borderTop: first ? "none" : "1px solid #EDF2ED", padding: "10px 14px", display: "grid", gridTemplateColumns: "3px minmax(0, 2fr) minmax(0, 1.4fr) minmax(0, 1.2fr) auto", gap: 12, alignItems: "center" }}>
+      {/* Status stripe */}
+      <div style={{ alignSelf: "stretch", background: m.border, borderRadius: 2 }} />
+
+      {/* Buyer */}
+      <div style={{ minWidth: 0 }}>
+        <div style={{ fontFamily: B, fontSize: 13, color: "#1B3A2D", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.buyer.name ?? "—"}</div>
+        <div style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.buyer.email ?? "—"}</div>
+      </div>
+
+      {/* Tier + timing */}
+      <div style={{ minWidth: 0 }}>
+        <div style={{ fontFamily: B, fontSize: 12, color: "#1B3A2D" }}>{t.tier_name} {sizeStr && <span style={{ color: "#5A7A60" }}>{sizeStr}</span>}</div>
+        <div style={{ fontFamily: B, fontSize: 10.5, color: "#7A8E7A" }}>
+          {paidStr ? `Paid ${paidStr}` : startedStr ? `Started ${startedStr}` : ""}
         </div>
       </div>
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", fontFamily: "'Courier New',monospace", fontSize: 11, color: "#5A7A60" }}>
-        <span>{t.bundle_size > 1 ? `Bundle × ${t.bundle_size}` : "Solo"} · {t.tier_name}</span>
-        <span>Started: {timeStr}</span>
-        {paidStr && <span style={{ color: "#1A8040" }}>Paid: {paidStr}</span>}
-        {t.payment_link_id && <span title="PayMongo link ID">Link: {t.payment_link_id.slice(0, 18)}…</span>}
+
+      {/* Amount + method */}
+      <div style={{ minWidth: 0, textAlign: "right" }}>
+        <div style={{ fontFamily: R, fontSize: 14, color: t.outcome === "paid" ? "#1A8040" : "#1B3A2D", letterSpacing: 0.3 }}>
+          ₱{t.amount.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+        </div>
+        <div style={{ fontFamily: B, fontSize: 10, color: "#7A8E7A", letterSpacing: 1 }}>{methodStr}</div>
       </div>
-      <div style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A", fontStyle: "italic" }}>{m.note}</div>
+
+      {/* Status pill */}
+      <div>
+        <span title={m.note} style={{ display: "inline-block", background: m.bg, color: m.color, border: `1px solid ${m.border}`, borderRadius: 20, padding: "3px 10px", fontFamily: R, fontSize: 10, letterSpacing: 1.5, whiteSpace: "nowrap" }}>{m.label}</span>
+      </div>
     </div>
   );
 }
