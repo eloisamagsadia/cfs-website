@@ -11,6 +11,12 @@ const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
 const ROLES = ["super_admin", "admin", "moderator", "sponsor", "member"];
 
+// Same hierarchy the server enforces on /api/admin/members/ban and
+// /api/super/members-role. Higher = more privileged. UI hides the
+// BAN button when the target is at or above the caller's rank so
+// nobody clicks and eats a 403.
+const RANK: Record<string, number> = { member: 1, sponsor: 2, moderator: 3, admin: 4, super_admin: 5 };
+
 const ROLE_COLORS: Record<string, string> = {
   super_admin: "#156530",
   admin: "#1A8040",
@@ -271,10 +277,12 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
                     ACTIVITY
                   </a>
                 )}
-                <button onClick={() => toggleBan(m)} disabled={isLoading}
-                  style={{ fontFamily: R, fontSize: "9px", color: m.is_banned ? "#1A8040" : "#CC3344", background: "transparent", border: `1px solid ${m.is_banned ? "#1A804040" : "#CC334440"}`, borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", opacity: isLoading ? 0.5 : 1 }}>
-                  {m.is_banned ? "UNBAN" : "BAN"}
-                </button>
+                {(callerIsOwner || (RANK[m.role ?? "member"] ?? 1) < (RANK[callerRole] ?? 0)) && (
+                  <button onClick={() => toggleBan(m)} disabled={isLoading}
+                    style={{ fontFamily: R, fontSize: "9px", color: m.is_banned ? "#1A8040" : "#CC3344", background: "transparent", border: `1px solid ${m.is_banned ? "#1A804040" : "#CC334440"}`, borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", opacity: isLoading ? 0.5 : 1 }}>
+                    {m.is_banned ? "UNBAN" : "BAN"}
+                  </button>
+                )}
               </div>
             </div>
           );
@@ -333,10 +341,12 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
                     ACTIVITY
                   </a>
                 )}
-                <button onClick={() => toggleBan(m)} disabled={isLoading}
-                  style={{ fontFamily: R, fontSize: "9px", color: m.is_banned ? "#1A8040" : "#CC3344", background: "transparent", border: `1px solid ${m.is_banned ? "#1A804040" : "#CC334440"}`, borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", opacity: isLoading ? 0.5 : 1 }}>
-                  {m.is_banned ? "UNBAN" : "BAN"}
-                </button>
+                {(callerIsOwner || (RANK[m.role ?? "member"] ?? 1) < (RANK[callerRole] ?? 0)) && (
+                  <button onClick={() => toggleBan(m)} disabled={isLoading}
+                    style={{ fontFamily: R, fontSize: "9px", color: m.is_banned ? "#1A8040" : "#CC3344", background: "transparent", border: `1px solid ${m.is_banned ? "#1A804040" : "#CC334440"}`, borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", opacity: isLoading ? 0.5 : 1 }}>
+                    {m.is_banned ? "UNBAN" : "BAN"}
+                  </button>
+                )}
               </div>
             </div>
           );

@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { auth } from "@clerk/nextjs/server";
-import { isOwner } from "@/lib/hidden-admins";
+import { isOwner, filterHiddenFromList } from "@/lib/hidden-admins";
 import type { Metadata } from "next";
 import AdminMembersClient from "./AdminMembersClient";
 export const revalidate = 30;
@@ -31,7 +31,10 @@ export default async function AdminMembersPage() {
     countMap[p.user_id] = (countMap[p.user_id] ?? 0) + 1;
   });
 
-  const enriched = (members ?? []).map((m: any) => ({
+  // Hide owner-tier hidden admins from every non-owner viewer. Owners
+  // still see themselves in the list so they can verify their entry.
+  const visible = filterHiddenFromList((members ?? []) as any[], userId);
+  const enriched = visible.map((m: any) => ({
     ...m,
     post_count: countMap[m.id] ?? 0,
   }));
