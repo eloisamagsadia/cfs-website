@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       to: msg.email,
       subject: `Re: your message to Colet Fan Suporta`,
       html,
-      replyTo: adminEmail ?? undefined,
+      reply_to: adminEmail ?? undefined,
     });
   } catch (e: any) {
     return NextResponse.json({ error: `Failed to send email: ${e.message ?? "unknown"}` }, { status: 502 });

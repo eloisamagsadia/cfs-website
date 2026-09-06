@@ -209,11 +209,44 @@ export default function ContactAdminPage() {
                   </div>
                 )}
 
+                {/* Inline reply composer — sends via Resend without leaving admin. */}
+                {replyingId === m.id && (
+                  <div style={{ background: "#FFFFFF", border: "1.5px solid #B7D8B7", borderRadius: 10, padding: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#156530", letterSpacing: 1.5 }}>REPLY TO {m.email}</div>
+                      <div style={{ fontFamily: B, fontSize: 11, color: "#7A8E7A" }}>Sends as CFS · your email in Reply-To</div>
+                    </div>
+                    <textarea
+                      value={replyBody}
+                      onChange={e => setReplyBody(e.target.value)}
+                      rows={5}
+                      placeholder={`Hi ${m.name}, thanks for reaching out…`}
+                      style={{ width: "100%", boxSizing: "border-box" as const, background: "#F7FAF5", border: "1.5px solid #DDE8DD", borderRadius: 8, padding: "10px 12px", fontFamily: B, fontSize: 13, color: "#1B3A2D", outline: "none", resize: "vertical" as const, minHeight: 100 }}
+                    />
+                    <div style={{ display: "flex", gap: 6, justifyContent: "flex-end" }}>
+                      <button onClick={() => { setReplyingId(null); setReplyBody(""); }} disabled={sending}
+                        style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#5A7A60", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: 8, padding: "7px 14px", cursor: "pointer", letterSpacing: 1.2 }}>
+                        CANCEL
+                      </button>
+                      <button onClick={() => sendReply(m)} disabled={sending || replyBody.trim().length < 2}
+                        style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#ffffff", background: sending || replyBody.trim().length < 2 ? "#B7A0A0" : "#1A8040", border: "none", borderRadius: 8, padding: "7px 14px", cursor: sending ? "wait" : replyBody.trim().length < 2 ? "not-allowed" : "pointer", letterSpacing: 1.2 }}>
+                        {sending ? "SENDING…" : "SEND REPLY"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                  {replyingId !== m.id && m.status !== "spam" && (
+                    <button onClick={() => openReply(m)} disabled={busy === m.id}
+                      style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: 8, padding: "7px 14px", cursor: "pointer", letterSpacing: 1.2, display: "inline-flex", alignItems: "center", gap: 5 }}>
+                      <IconMail size={11} color="#ffffff" /> REPLY
+                    </button>
+                  )}
                   {m.status !== "replied" && (
                     <button onClick={() => patch(m.id, "replied", "Marked replied.")} disabled={busy === m.id}
-                      style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#ffffff", background: "#1A8040", border: "none", borderRadius: 8, padding: "7px 14px", cursor: "pointer", letterSpacing: 1.2, display: "inline-flex", alignItems: "center", gap: 5 }}>
-                      <IconCheck size={11} color="#ffffff" /> MARK REPLIED
+                      style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#156530", background: "#E8F0E4", border: "1.5px solid transparent", borderRadius: 8, padding: "7px 12px", cursor: "pointer", letterSpacing: 1.2, display: "inline-flex", alignItems: "center", gap: 5 }}>
+                      <IconCheck size={11} color="#156530" /> MARK REPLIED
                     </button>
                   )}
                   {m.status !== "archived" && (
@@ -228,7 +261,7 @@ export default function ContactAdminPage() {
                       SPAM
                     </button>
                   )}
-                  <button onClick={() => remove(m)} disabled={busy === m.id}
+                  <button onClick={() => setPendingDelete(m)} disabled={busy === m.id}
                     style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#8A1E27", background: "transparent", border: "1.5px solid #F1C0C6", borderRadius: 8, padding: "7px 10px", cursor: "pointer", letterSpacing: 1.2, display: "inline-flex", alignItems: "center", gap: 4 }}>
                     <IconTrash size={10} color="#8A1E27" />
                   </button>
@@ -236,6 +269,36 @@ export default function ContactAdminPage() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Delete confirmation modal — replaces window.confirm(). */}
+      {pendingDelete && (
+        <div onClick={() => !busy && setPendingDelete(null)}
+          style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(15,42,30,0.55)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: 16, padding: 24, maxWidth: 420, width: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <IconWarning size={18} color="#CC3344" />
+              <h2 style={{ fontFamily: R, fontSize: "1.1rem", color: "#1B3A2D", letterSpacing: 2, margin: 0 }}>DELETE MESSAGE?</h2>
+            </div>
+            <p style={{ fontFamily: B, fontSize: 13, color: "#5A7A60", margin: 0, lineHeight: 1.5 }}>
+              This will permanently delete the message from <strong style={{ color: "#1B3A2D" }}>{pendingDelete.name}</strong> ({pendingDelete.email}). This can&apos;t be undone.
+            </p>
+            <div style={{ background: "#F7FAF5", border: "1px solid #E4EDE4", borderRadius: 8, padding: "10px 12px", fontFamily: B, fontSize: 12, color: "#5A7A60", lineHeight: 1.5, maxHeight: 120, overflow: "auto" as const, whiteSpace: "pre-wrap" as const }}>
+              {pendingDelete.message}
+            </div>
+            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+              <button onClick={() => setPendingDelete(null)} disabled={!!busy}
+                style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#5A7A60", background: "transparent", border: "1.5px solid #DDE8DD", borderRadius: 10, padding: "10px 16px", cursor: busy ? "wait" : "pointer", letterSpacing: 1.2 }}>
+                KEEP
+              </button>
+              <button onClick={confirmRemove} disabled={!!busy}
+                style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#ffffff", background: "#CC3344", border: "1.5px solid #CC3344", borderRadius: 10, padding: "10px 16px", cursor: busy ? "wait" : "pointer", letterSpacing: 1.2 }}>
+                {busy ? "DELETING…" : "YES, DELETE"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
