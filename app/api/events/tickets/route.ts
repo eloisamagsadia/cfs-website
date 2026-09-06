@@ -126,12 +126,17 @@ export async function POST(req: NextRequest) {
   // Get member profile
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", userId).single();
 
-  // Check already has ticket(s) for this event — one purchase per user, even for bundles
+  // Check already has ticket(s) for this event — one purchase per
+  // user, even for bundles. Only counts LIVE tickets: active + used +
+  // pending_payment. Cancelled or failed tickets don't block a retry —
+  // that was the auto-cleanup trap where members whose row got swept
+  // after 24h couldn't check out again.
   const { count: existingCount } = await (supabase as any)
     .from("event_tickets")
     .select("id", { count: "exact", head: true })
     .eq("event_id", event_id)
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .in("status", ["active", "used", "pending_payment"]);
   if ((existingCount ?? 0) > 0) return NextResponse.json({ error: "You already have a ticket for this event" }, { status: 409 });
 
   // Bundle size lives on the tier now (each tier decides its own quantity).
