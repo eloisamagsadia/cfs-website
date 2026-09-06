@@ -145,10 +145,12 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>{counts.total} registered members</p>
       </div>
 
-      {/* Stats */}
+      {/* Stats — the SUPER ADMIN chip only renders for super_admins,
+          since regular admins can't see super_admin members anymore
+          (server-side rank filter), so the count would always be 0. */}
       <StatBar items={[
         { label: "TOTAL",       value: counts.total,       color: "#1B3A2D",              active: filter === "all",         onClick: () => setFilter("all") },
-        { label: "SUPER ADMIN", value: counts.super_admin, color: ROLE_COLORS.super_admin, active: filter === "super_admin", onClick: () => setFilter("super_admin") },
+        ...(isSuperAdmin ? [{ label: "SUPER ADMIN", value: counts.super_admin, color: ROLE_COLORS.super_admin, active: filter === "super_admin", onClick: () => setFilter("super_admin") }] : []),
         { label: "ADMIN",       value: counts.admin,       color: ROLE_COLORS.admin,       active: filter === "admin",       onClick: () => setFilter("admin") },
         { label: "MOD",         value: counts.moderator,   color: ROLE_COLORS.moderator,   active: filter === "moderator",   onClick: () => setFilter("moderator") },
         { label: "SPONSOR",     value: counts.sponsor,     color: ROLE_COLORS.sponsor,     active: filter === "sponsor",     onClick: () => setFilter("sponsor") },
@@ -163,7 +165,7 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
           placeholder="Search by name or ID..."
           style={{ flex: 1, minWidth: "200px", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-          {["all", ...ROLES, "banned"].map(f => {
+          {["all", ...ROLES.filter(r => isSuperAdmin || r !== "super_admin"), "banned"].map(f => {
             const active = filter === f;
             const accent = f === "banned" ? "#CC3344" : (ROLE_COLORS[f] ?? "#1A8040");
             return (
