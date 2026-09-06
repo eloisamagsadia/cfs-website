@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { IconCalendar, IconPin, IconTicket, IconUsers, IconHeart, IconMail } from "@/components/shared/Icons";
+import { IconCalendar, IconPin, IconTicket, IconUsers, IconHeart } from "@/components/shared/Icons";
 import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
 import { getColetLetters, LETTERS_MEDIUM_URL } from "@/lib/letters";
+import HomeLettersGrid from "@/components/public/HomeLettersGrid";
 
 export const revalidate = 300;
 
@@ -345,41 +346,7 @@ export default async function HomePage() {
             </a>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
-            {letters.map((letter) => (
-              <a key={letter.link}
-                href={letter.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="letter-card btn-fx"
-                style={{ textDecoration: "none", display: "flex", flexDirection: "column", background: "#FFFFFF", border: `1px solid ${C.border}`, borderRadius: "16px", overflow: "hidden", boxShadow: "0 2px 12px rgba(15,42,30,0.05)", transition: "transform 0.15s, border-color 0.15s" }}>
-                {letter.thumbnail ? (
-                  <div style={{ position: "relative", aspectRatio: "16/9", background: C.mist }}>
-                    <Image src={letter.thumbnail} alt="" fill sizes="(max-width: 720px) 100vw, 360px" style={{ objectFit: "cover" }} />
-                  </div>
-                ) : (
-                  <div style={{ aspectRatio: "16/9", background: "linear-gradient(135deg, #E8F0E4 0%, #C7E1CE 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <IconMail size={30} color="#4A7C59" />
-                  </div>
-                )}
-                <div style={{ padding: "16px 20px 18px", display: "flex", flexDirection: "column", gap: "8px", flex: 1 }}>
-                  <div className="scrap-note" style={{ fontSize: "16px", color: "#4A7C59", lineHeight: 1 }}>Dear Cocacolets ✦</div>
-                  <div style={{ fontFamily: S, fontSize: "17px", color: C.forest, lineHeight: 1.25 }}>{letter.title}</div>
-                  <p style={{ fontFamily: B, fontSize: "12.5px", color: C.muted, lineHeight: 1.65, margin: 0 }}>{letter.excerpt}</p>
-                  <div style={{ marginTop: "auto", paddingTop: "10px", borderTop: `1px solid ${C.border}`, display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px" }}>
-                    <span style={{ color: C.muted }}>
-                      {letter.pubDate ? new Date(letter.pubDate).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" }) : ""}
-                    </span>
-                    <span style={{ color: C.green }}>READ →</span>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
-
-          <style>{`
-            .letter-card:hover { transform: translateY(-2px); border-color: #1A8040 !important; }
-          `}</style>
+          <HomeLettersGrid letters={letters} />
         </section>
       )}
     </div>
