@@ -78,7 +78,7 @@ export default function Footer() {
               @coletfansuporta
             </p>
             <p style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", margin: 0, lineHeight: 1.7, maxWidth: "420px" }}>
-              An Iu-ers home base. Buy tickets together, throw fan events, and cheer Colet on — from anywhere in the Philippines.
+              A Cocacolets home base. Buy tickets together, throw fan events, and cheer Colet on — from anywhere in the Philippines.
             </p>
           </div>
 
@@ -134,7 +134,7 @@ export default function Footer() {
         {/* Bottom: signed-note copyright */}
         <div style={{ marginTop: "36px", paddingTop: "20px", borderTop: "1px dashed #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
           <span style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60" }}>
-            © {new Date().getFullYear()} Colet Fan Suporta ✦ Built by Iu-ers, for Iu-ers.
+            © {new Date().getFullYear()} Colet Fan Suporta ✦ Built by Cocacolets, for Cocacolets.
           </span>
           <span className="scrap-note" style={{ fontSize: "18px", color: "#4A7C59", transform: "rotate(-2deg)" }}>
             para kay Colet 🌱

@@ -101,7 +101,7 @@ export default async function HomePage() {
             </p>
 
             <p style={{ fontFamily: B, fontSize: "15px", color: "#1B3A2D", maxWidth: "480px", margin: "0 0 28px", lineHeight: 1.75 }}>
-              A community for Iu-ers — where we buy tickets together, throw fan events, and cheer Colet on. Come hang out.
+              A community for Cocacolets — where we buy tickets together, throw fan events, and cheer Colet on. Come hang out.
             </p>
 
             {/* CTA row */}
@@ -205,7 +205,7 @@ export default async function HomePage() {
 
             {/* Small washi note — floats above the polaroid */}
             <div style={{ position: "absolute", top: "40px", left: "18%", zIndex: 3 }}>
-              <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(-8deg)" }}>iu-ers hangout</span>
+              <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(-8deg)" }}>cocacolets hangout</span>
             </div>
           </div>
         </div>

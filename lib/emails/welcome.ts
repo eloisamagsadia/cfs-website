@@ -73,14 +73,14 @@ export async function sendWelcomeEmail({ email, name }: { email: string; name: s
         </p>
         <p style="margin:0 0 20px;font-size:15px;color:#9DB88A;line-height:1.8;">
           You're officially part of the <strong style="color:#3CCE2A;">Colet Fan Suporta</strong> community —
-          the home of Iu-ers in the Philippines. We're so glad you're here! 🎉
+          the home of Cocacolets in the Philippines. We're so glad you're here! 🎉
         </p>
 
         <!-- What you can do -->
         <div style="background:#1A2614;border:1px solid #2C4820;border-radius:12px;padding:20px;margin-bottom:24px;">
           <p style="margin:0 0 14px;font-size:11px;color:#3CCE2A;letter-spacing:2px;font-weight:700;">WHAT YOU CAN DO</p>
           ${[
-            ["💬", "Community Feed", "Post, react, comment and connect with fellow Iu-ers"],
+            ["💬", "Community Feed", "Post, react, comment and connect with fellow Cocacolets"],
             ["🛍️", "Shop Merch", "Exclusive CFS merchandise for true fans"],
             ["📅", "Join Events", "Fan meetings, streaming parties and more"],
             ["⭐", "Earn Badges", "Get recognized for your fan contributions"],
