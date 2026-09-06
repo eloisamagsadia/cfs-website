@@ -6,6 +6,8 @@ import EventsBrowser from "@/components/public/EventsBrowser";
 import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
 import { IconCalendar, IconPin, IconTicket, IconUsers } from "@/components/shared/Icons";
 
+const COLET_PHOTO = "https://media.coletfs.com/products/user_3F9O7q2MyuHGi78PSxQJR4ix5gI/aYpvBMfbTeGqhSMPr4dpD.webp";
+
 export const metadata: Metadata = { title: "Events — CFS" };
 export const revalidate = 300;
 
@@ -96,6 +98,7 @@ export default async function EventsPage() {
           .evl-hero-grid { grid-template-columns: 1fr !important; padding: 40px 24px !important; }
           .evl-hero-title { font-size: clamp(2rem, 8vw, 2.6rem) !important; }
           .evl-hero-stats { justify-content: flex-start !important; }
+          .evl-hero-polaroid { display: none !important; }
         }
       `}</style>
 
@@ -104,6 +107,17 @@ export default async function EventsPage() {
         {/* Warm lamp glow */}
         <div className="scrap-glow" />
         <div className="scrap-glow" style={{ top: "auto", bottom: "-100px", left: "auto", right: "-100px", background: "radial-gradient(circle, rgba(184, 230, 193, 0.35), transparent 65%)" }} />
+
+        {/* Polaroid + washi note pinned in the top corner — scrapbook accent */}
+        <div className="evl-hero-polaroid" style={{ position: "absolute", top: "24px", right: "28px", zIndex: 4, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
+          <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(6deg)" }}>para kay colet ✦</span>
+          <div className="scrap-polaroid scrap-polaroid-tilt-right" style={{ width: "128px", borderRadius: 2 }}>
+            <div className="scrap-polaroid-photo" style={{ borderRadius: 2, padding: 0, overflow: "hidden", position: "relative" }}>
+              <Image src={COLET_PHOTO} alt="Colet" fill sizes="128px" style={{ objectFit: "cover" }} />
+            </div>
+            <div className="scrap-polaroid-caption">the ace ♥</div>
+          </div>
+        </div>
 
         <div className="evl-hero-grid" style={{ position: "relative", maxWidth: "1240px", margin: "0 auto", padding: "64px 48px", display: "grid", gridTemplateColumns: "1fr 0.9fr", gap: "48px", alignItems: "center" }}>
 
