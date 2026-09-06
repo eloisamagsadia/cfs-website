@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { IconCalendar, IconPin, IconTicket, IconUsers, IconHeart } from "@/components/shared/Icons";
 import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
@@ -130,7 +131,16 @@ export default async function HomePage() {
           <div className="hero-collage" style={{ position: "relative", height: "440px" }}>
             {/* Polaroid — top-left, tilted left */}
             <div className="scrap-polaroid scrap-polaroid-tilt-left" style={{ position: "absolute", top: "12px", left: "8%", width: "168px", zIndex: 2, borderRadius: 2 }}>
-              <div className="scrap-polaroid-photo" style={{ borderRadius: 2 }}>♥</div>
+              <div className="scrap-polaroid-photo" style={{ borderRadius: 2, padding: 0, overflow: "hidden", position: "relative" }}>
+                <Image
+                  src="https://media.coletfs.com/products/user_3F9O7q2MyuHGi78PSxQJR4ix5gI/aYpvBMfbTeGqhSMPr4dpD.webp"
+                  alt="Colet"
+                  fill
+                  sizes="168px"
+                  priority
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
               <div className="scrap-polaroid-caption">colet ✦</div>
             </div>
 
