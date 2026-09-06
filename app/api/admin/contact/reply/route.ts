@@ -45,6 +45,16 @@ export async function POST(req: NextRequest) {
   const FROM_NAME = process.env.RESEND_FROM_NAME  ?? "Colet Fan Suporta";
   const resend    = new Resend(process.env.RESEND_API_KEY);
 
+  // Tokenized Reply-To so guest replies land in Resend Inbound and can
+  // be routed back to this exact conversation. The webhook at
+  // /api/webhooks/resend-inbound parses the +<id> subaddress and appends
+  // the guest's reply to contact_messages.replies. Falls back to the
+  // admin's own email if the inbound domain isn't configured yet.
+  const INBOUND_DOMAIN  = process.env.RESEND_INBOUND_DOMAIN ?? null;
+  const INBOUND_LOCAL   = process.env.RESEND_INBOUND_LOCAL  ?? "replies";
+  const tokenReplyTo    = INBOUND_DOMAIN ? `${INBOUND_LOCAL}+${id}@${INBOUND_DOMAIN}` : null;
+  const finalReplyTo    = tokenReplyTo ?? adminEmail ?? undefined;
+
   const replyHtml = String(body)
     .split("\n")
     .map(line => `<p style="margin:0 0 12px;line-height:1.55;color:#1B3A2D;">${escapeHtml(line) || "&nbsp;"}</p>`)
@@ -86,7 +96,7 @@ export async function POST(req: NextRequest) {
       to: msg.email,
       subject: `Re: your message to Colet Fan Suporta`,
       html,
-      reply_to: adminEmail ?? undefined,
+      reply_to: finalReplyTo,
     });
   } catch (e: any) {
     return NextResponse.json({ error: `Failed to send email: ${e.message ?? "unknown"}` }, { status: 502 });
@@ -97,6 +107,7 @@ export async function POST(req: NextRequest) {
   // if the replies column hasn't been added yet (migration not run).
   const now = new Date().toISOString();
   const newReply = {
+    from:         "admin",       // distinguishes from inbound "guest" entries
     body,
     sent_at:      now,
     sent_by:      userId,
