@@ -2,6 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
 
+// GET returns a health check + which env vars are configured. Safe to
+// hit from a browser to verify the deployment picked up the right vars.
+// Never returns the actual secret value, only whether it's set.
+export async function GET() {
+  return NextResponse.json({
+    ok: true,
+    route: "resend-inbound",
+    env: {
+      RESEND_INBOUND_DOMAIN: process.env.RESEND_INBOUND_DOMAIN ?? null,
+      CFS_INBOUND_SECRET_set:          !!process.env.CFS_INBOUND_SECRET,
+      CFS_INBOUND_WEBHOOK_SECRET_set:  !!process.env.CFS_INBOUND_WEBHOOK_SECRET,
+      RESEND_INBOUND_WEBHOOK_SECRET_set: !!process.env.RESEND_INBOUND_WEBHOOK_SECRET,
+    },
+  });
+}
+
 // Receives inbound emails and appends them to a contact_messages thread.
 // Called by our Cloudflare Email Worker (see docs/inbound-worker.md).
 // When a guest replies to an admin's outgoing email, our outgoing Reply-To
@@ -26,13 +42,21 @@ export async function POST(req: NextRequest) {
     process.env.RESEND_INBOUND_WEBHOOK_SECRET ??
     null;
 
+  const shared = req.headers.get("x-cfs-inbound-secret");
+  console.log("[inbound] POST received", {
+    has_secret_env:    !!secret,
+    has_secret_header: !!shared,
+    secrets_match:     !!secret && shared === secret,
+    domain_env:        process.env.RESEND_INBOUND_DOMAIN ?? null,
+  });
+
   if (secret) {
-    const shared = req.headers.get("x-cfs-inbound-secret");
     if (shared !== secret) {
+      console.error("[inbound] Bad secret — Worker sent different value than Vercel env.");
       return NextResponse.json({ error: "Bad secret" }, { status: 401 });
     }
   } else {
-    console.warn("[inbound] CFS_INBOUND_WEBHOOK_SECRET not set — accepting all requests. Set it in prod.");
+    console.warn("[inbound] No secret env set in Vercel — accepting all requests. Set CFS_INBOUND_SECRET in prod.");
   }
 
   const body = await req.json().catch(() => null);
