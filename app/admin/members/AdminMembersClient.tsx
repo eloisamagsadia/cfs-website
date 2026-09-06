@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
 import { IconX, IconCheck, IconWarning } from "@/components/shared/Icons";
 import StatBar from "@/components/shared/StatBar";
 
@@ -37,7 +38,7 @@ function timeAgo(date: string) {
   return `${Math.floor(days / 365)}y ago`;
 }
 
-export default function AdminMembersClient({ members, callerRole }: { members: any[], callerRole: string }) {
+export default function AdminMembersClient({ members, callerRole, callerIsOwner = false }: { members: any[], callerRole: string, callerIsOwner?: boolean }) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
   const [tagFilter, setTagFilter] = useState<string>("");
@@ -88,7 +89,7 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
       if (newRole === "sponsor" && member.role !== "sponsor") setSponsorCount(p => p + 1);
       if (selectedMember?.id === member.id) setSelectedMember({ ...selectedMember, role: newRole });
     } else {
-      alert(data.error);
+      toast.error(data.error ?? "Role change failed");
     }
     setLoadingId(null);
   }
@@ -264,10 +265,12 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                     ))}
                   </select>
                 )}
-                <a href={`/admin/members/${m.id}/activity`} onClick={e => e.stopPropagation()} title="View member activity"
-                  style={{ fontFamily: R, fontSize: "9px", color: "#5A1E7A", background: "transparent", border: "1px solid #5A1E7A40", borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", textDecoration: "none" }}>
-                  ACTIVITY
-                </a>
+                {callerIsOwner && (
+                  <a href={`/admin/members/${m.id}/activity`} onClick={e => e.stopPropagation()} title="View member activity"
+                    style={{ fontFamily: R, fontSize: "9px", color: "#5A1E7A", background: "transparent", border: "1px solid #5A1E7A40", borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", textDecoration: "none" }}>
+                    ACTIVITY
+                  </a>
+                )}
                 <button onClick={() => toggleBan(m)} disabled={isLoading}
                   style={{ fontFamily: R, fontSize: "9px", color: m.is_banned ? "#1A8040" : "#CC3344", background: "transparent", border: `1px solid ${m.is_banned ? "#1A804040" : "#CC334440"}`, borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", opacity: isLoading ? 0.5 : 1 }}>
                   {m.is_banned ? "UNBAN" : "BAN"}
@@ -324,10 +327,12 @@ export default function AdminMembersClient({ members, callerRole }: { members: a
                     ))}
                   </select>
                 )}
-                <a href={`/admin/members/${m.id}/activity`} onClick={e => e.stopPropagation()} title="View member activity"
-                  style={{ fontFamily: R, fontSize: "9px", color: "#5A1E7A", background: "transparent", border: "1px solid #5A1E7A40", borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", textDecoration: "none" }}>
-                  ACTIVITY
-                </a>
+                {callerIsOwner && (
+                  <a href={`/admin/members/${m.id}/activity`} onClick={e => e.stopPropagation()} title="View member activity"
+                    style={{ fontFamily: R, fontSize: "9px", color: "#5A1E7A", background: "transparent", border: "1px solid #5A1E7A40", borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", textDecoration: "none" }}>
+                    ACTIVITY
+                  </a>
+                )}
                 <button onClick={() => toggleBan(m)} disabled={isLoading}
                   style={{ fontFamily: R, fontSize: "9px", color: m.is_banned ? "#1A8040" : "#CC3344", background: "transparent", border: `1px solid ${m.is_banned ? "#1A804040" : "#CC334440"}`, borderRadius: "4px", padding: "4px 8px", cursor: "pointer", letterSpacing: "1px", opacity: isLoading ? 0.5 : 1 }}>
                   {m.is_banned ? "UNBAN" : "BAN"}

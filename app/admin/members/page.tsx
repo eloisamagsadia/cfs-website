@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { auth } from "@clerk/nextjs/server";
+import { isOwner } from "@/lib/hidden-admins";
 import type { Metadata } from "next";
 import AdminMembersClient from "./AdminMembersClient";
 export const revalidate = 30;
@@ -9,8 +10,9 @@ export const revalidate = 30;
 export const metadata: Metadata = { title: "Manage Members" };
 
 export default async function AdminMembersPage() {
-  const { sessionClaims } = auth();
+  const { userId, sessionClaims } = auth();
   const callerRole = (sessionClaims?.metadata as any)?.role ?? "member";
+  const callerIsOwner = isOwner(userId);
   const admin = createAdminClient();
 
   const { data: members } = await admin
@@ -34,5 +36,5 @@ export default async function AdminMembersPage() {
     post_count: countMap[m.id] ?? 0,
   }));
 
-  return <AdminMembersClient members={enriched} callerRole={callerRole} />;
+  return <AdminMembersClient members={enriched} callerRole={callerRole} callerIsOwner={callerIsOwner} />;
 }

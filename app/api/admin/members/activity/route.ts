@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isOwner } from "@/lib/hidden-admins";
 
-async function requireAdmin() {
-  const { userId, sessionClaims } = auth();
+// Per-member activity feed is owner-only. Regular admins /
+// super_admins can still moderate, ban, edit roles, etc. from the
+// members list — this endpoint is the deep behavioral trace
+// (posts + comments + tickets + audit) and stays owner-only.
+async function requireOwner() {
+  const { userId } = auth();
   if (!userId) return null;
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (!["admin", "super_admin"].includes(role ?? "")) return null;
+  if (!isOwner(userId)) return null;
   return userId;
 }
 
@@ -18,8 +22,8 @@ interface Event { kind: string; at: string; title: string; detail?: string; href
  * one time-ordered stream.
  */
 export async function GET(req: NextRequest) {
-  const userId = await requireAdmin();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const userId = await requireOwner();
+  if (!userId) return NextResponse.json({ error: "Owner only" }, { status: 403 });
 
   const memberId = new URL(req.url).searchParams.get("id");
   if (!memberId) return NextResponse.json({ error: "id required" }, { status: 400 });
@@ -48,7 +52,15 @@ export async function GET(req: NextRequest) {
     (admin as any).from("community_reports").select("id, reason, status, post_id, comment_id, created_at").eq("reporter_id", memberId).order("created_at", { ascending: false }).limit(LIMIT),
     (admin as any).from("user_badges").select("id, earned_at, badges:badge_id(name)").eq("user_id", memberId).order("earned_at", { ascending: false }).limit(LIMIT),
     (admin as any).from("notifications").select("id, type, title, created_at").eq("user_id", memberId).order("created_at", { ascending: false }).limit(LIMIT),
-    (admin as any).from("audit_log").select("id, action, target_type, target_id, details, created_at").or(`user_id.eq.${memberId},target_id.eq.${memberId}`).order("created_at", { ascending: false }).limit(LIMIT),
+    // Impersonation is a super-admin action ABOUT the member, not
+    // something they did. Hide it from the per-member activity feed —
+    // it still shows up on /super/audit for accountability.
+    (admin as any).from("audit_log")
+      .select("id, action, target_type, target_id, details, created_at")
+      .or(`user_id.eq.${memberId},target_id.eq.${memberId}`)
+      .not("action", "in", "(impersonate_start,impersonate_stop,refund_member_notified:queued,refund_member_notified:succeeded,refund_member_notified:failed)")
+      .order("created_at", { ascending: false })
+      .limit(LIMIT),
   ]);
 
   const events: Event[] = [];
