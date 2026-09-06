@@ -8,6 +8,13 @@ const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
 type Status = "new" | "replied" | "archived" | "spam";
 
+interface ReplyEntry {
+  body: string;
+  sent_at: string;
+  sent_by: string | null;
+  sent_by_name: string | null;
+}
+
 interface Msg {
   id: string;
   name: string;
@@ -18,6 +25,7 @@ interface Msg {
   ip: string | null;
   user_id: string | null;
   reply_note: string | null;
+  replies: ReplyEntry[] | null;
   handled_by: string | null;
   handled_at: string | null;
   created_at: string;
@@ -204,8 +212,33 @@ export default function ContactAdminPage() {
                 </div>
 
                 {isOpen && (
-                  <div style={{ background: "#F7FAF5", border: "1px solid #E4EDE4", borderRadius: 10, padding: "12px 14px", fontFamily: B, fontSize: 13, color: "#1B3A2D", lineHeight: 1.6, whiteSpace: "pre-wrap" as const }}>
-                    {m.message}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {/* Original message from the guest */}
+                    <div style={{ background: "#F7FAF5", border: "1px solid #E4EDE4", borderRadius: 10, padding: "12px 14px", fontFamily: B, fontSize: 13, color: "#1B3A2D", lineHeight: 1.6, whiteSpace: "pre-wrap" as const }}>
+                      <div style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#5A7A60", letterSpacing: 1.5, marginBottom: 6 }}>MESSAGE · {stamp(m.created_at)}</div>
+                      {m.message}
+                    </div>
+
+                    {/* Conversation history — every reply an admin sent, oldest first */}
+                    {(() => {
+                      const thread: ReplyEntry[] = Array.isArray(m.replies) && m.replies.length > 0
+                        ? m.replies
+                        : (m.reply_note
+                            ? [{ body: m.reply_note, sent_at: m.handled_at ?? m.created_at, sent_by: m.handled_by, sent_by_name: null }]
+                            : []);
+                      if (thread.length === 0) return null;
+                      return thread.map((r, i) => (
+                        <div key={i} style={{ background: "#E8F0E4", border: "1px solid #B7D8B7", borderLeft: "3px solid #1A8040", borderRadius: 10, padding: "12px 14px", fontFamily: B, fontSize: 13, color: "#1B3A2D", lineHeight: 1.6, whiteSpace: "pre-wrap" as const }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 6 }}>
+                            <span style={{ fontFamily: SG, fontSize: 9, fontWeight: 700, color: "#156530", letterSpacing: 1.5 }}>
+                              REPLY {thread.length > 1 ? `${i + 1}/${thread.length}` : ""} · {r.sent_by_name ?? "CFS admin"}
+                            </span>
+                            <span style={{ fontFamily: B, fontSize: 11, color: "#5A7A60" }}>{stamp(r.sent_at)}</span>
+                          </div>
+                          {r.body}
+                        </div>
+                      ));
+                    })()}
                   </div>
                 )}
 

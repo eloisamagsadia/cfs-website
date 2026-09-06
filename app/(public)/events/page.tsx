@@ -89,7 +89,7 @@ export default async function EventsPage() {
     : null;
 
   return (
-    <div style={{ minHeight: "100vh", background: C.paper }}>
+    <div className="scrap-paper" style={{ minHeight: "100vh" }}>
       <RealtimeRefresh tables="events" />
       <style>{`
         @media (max-width: 900px) {
@@ -99,25 +99,28 @@ export default async function EventsPage() {
         }
       `}</style>
 
-      {/* ── HERO ── */}
-      <section style={{ position: "relative", overflow: "hidden", background: C.cream, borderBottom: `1px solid ${C.border}` }}>
-        {/* Ambient background */}
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(700px 500px at 15% 20%, rgba(26,128,64,0.10), transparent 60%), radial-gradient(600px 400px at 100% 100%, rgba(74,124,89,0.08), transparent 60%)" }} />
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle,rgba(44,72,32,0.04) 1.5px,transparent 1.5px)", backgroundSize: "22px 22px" }} />
+      {/* ── HERO ── warm scrapbook header */}
+      <section style={{ position: "relative", overflow: "hidden", borderBottom: "1px dashed #E4D8C4" }}>
+        {/* Warm lamp glow */}
+        <div className="scrap-glow" />
+        <div className="scrap-glow" style={{ top: "auto", bottom: "-100px", left: "auto", right: "-100px", background: "radial-gradient(circle, rgba(184, 230, 193, 0.35), transparent 65%)" }} />
 
-        <div className="evl-hero-grid" style={{ position: "relative", maxWidth: "1240px", margin: "0 auto", padding: "72px 48px", display: "grid", gridTemplateColumns: "1fr 0.9fr", gap: "48px", alignItems: "center" }}>
+        <div className="evl-hero-grid" style={{ position: "relative", maxWidth: "1240px", margin: "0 auto", padding: "64px 48px", display: "grid", gridTemplateColumns: "1fr 0.9fr", gap: "48px", alignItems: "center" }}>
 
           {/* Left: intro + stats */}
           <div>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "10px", fontWeight: 700, color: C.green, background: C.mist, border: `1px solid ${C.green}30`, borderRadius: "999px", padding: "5px 12px", letterSpacing: "2px", marginBottom: "24px" }}>
-              <IconCalendar size={11} color={C.green} /> EVENTS HUB
-            </span>
+            <div style={{ marginBottom: "20px" }}>
+              <span className="scrap-tape scrap-tape-mint">events hub</span>
+            </div>
 
-            <h1 className="evl-hero-title" style={{ fontFamily: S, fontSize: "clamp(2.6rem, 5vw, 4rem)", color: C.forest, lineHeight: 1.02, letterSpacing: "-1px", margin: "0 0 16px" }}>
-              We Show Up.<br /><em style={{ fontStyle: "italic", color: C.sage }}>Together.</em>
+            <h1 className="evl-hero-title" style={{ fontFamily: S, fontSize: "clamp(2.6rem, 5vw, 4rem)", color: "#1B3A2D", lineHeight: 1.02, letterSpacing: "-1px", margin: "0 0 12px" }}>
+              We Show Up.
             </h1>
+            <p className="scrap-note" style={{ fontSize: "clamp(1.6rem, 4vw, 2.4rem)", color: "#8B5E1F", margin: "0 0 20px", lineHeight: 1.1 }}>
+              Together ✦
+            </p>
 
-            <p style={{ fontFamily: B, fontSize: "15px", color: C.muted, lineHeight: 1.9, maxWidth: "440px", margin: "0 0 28px" }}>
+            <p style={{ fontFamily: B, fontSize: "15px", color: "#5A4020", lineHeight: 1.8, maxWidth: "440px", margin: "0 0 28px" }}>
               Cup-sleeve events, meet-ups, and CFS-produced fan gatherings. Book your slot, show your card at the door, and pull up.
             </p>
 

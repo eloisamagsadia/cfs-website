@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, DM_Serif_Display, Barlow } from "next/font/google";
+import { Space_Grotesk, DM_Serif_Display, Barlow, Caveat } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import PageViewTracker from "@/components/shared/PageViewTracker";
@@ -27,6 +27,14 @@ const barlow = Barlow({
   variable: "--font-barlow",
   display: "swap",
 });
+// Handwritten accent for scrapbook labels, memo notes, and signed
+// touches. Used sparingly — never for body copy.
+const caveat = Caveat({
+  weight: ["400","500","600","700"],
+  subsets: ["latin"],
+  variable: "--font-caveat",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: { default: "CFS Bini Colet — Colet Fan Suporta", template: "%s | CFS Bini Colet" },
@@ -38,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider>
       <html
         lang="en"
-        className={`${spaceGrotesk.variable} ${dmSerifDisplay.variable} ${barlow.variable}`}
+        className={`${spaceGrotesk.variable} ${dmSerifDisplay.variable} ${barlow.variable} ${caveat.variable}`}
         suppressHydrationWarning
       >
         <body

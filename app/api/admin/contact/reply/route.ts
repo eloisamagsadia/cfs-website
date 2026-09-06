@@ -92,15 +92,40 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `Failed to send email: ${e.message ?? "unknown"}` }, { status: 502 });
   }
 
-  // Record reply text + flip status
-  await (admin as any).from("contact_messages")
-    .update({
-      status:      "replied",
-      reply_note:  body,
-      handled_by:  userId,
-      handled_at:  new Date().toISOString(),
-    })
-    .eq("id", id);
+  // Append the reply to the JSONB thread so /admin/contact can render
+  // the full conversation history. Falls back to just updating reply_note
+  // if the replies column hasn't been added yet (migration not run).
+  const now = new Date().toISOString();
+  const newReply = {
+    body,
+    sent_at:      now,
+    sent_by:      userId,
+    sent_by_name: adminName,
+  };
+
+  // Load existing thread so we can append.
+  const { data: existing } = await (admin as any).from("contact_messages")
+    .select("replies")
+    .eq("id", id)
+    .maybeSingle();
+  const currentThread = Array.isArray((existing as any)?.replies) ? (existing as any).replies : [];
+  const nextThread = [...currentThread, newReply];
+
+  const updatePayload: Record<string, unknown> = {
+    status:     "replied",
+    reply_note: body,           // kept for backward compat
+    handled_by: userId,
+    handled_at: now,
+    replies:    nextThread,
+  };
+
+  let updErr = (await (admin as any).from("contact_messages").update(updatePayload).eq("id", id)).error;
+  if (updErr && /replies/i.test(String(updErr.message ?? ""))) {
+    // Column doesn't exist yet — retry without it.
+    delete updatePayload.replies;
+    updErr = (await (admin as any).from("contact_messages").update(updatePayload).eq("id", id)).error;
+  }
+  if (updErr) console.error("[contact/reply] update failed:", updErr);
 
   await logAudit({
     userId,

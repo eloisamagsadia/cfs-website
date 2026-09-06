@@ -1005,6 +1005,130 @@ header [class*="avatar"] { border-color: #DDE8DD !important; }
   }
 }
 
+/* ─── Scrapbook design system ─────────────────────────────────────────
+   Warm cream paper backgrounds, framed cards, washi tape labels,
+   polaroid frames, and handwritten memo accents. Applied on public
+   hero + footer + events. Fake-it-with-CSS baseline; when real
+   mascot/photo/wood assets land on the CDN, swap into .scrap-photo
+   img src and .scrap-paper background. */
+
+.scrap-paper {
+  background-color: #FAF6EE;
+  background-image:
+    radial-gradient(circle at 20% 15%, rgba(255, 230, 170, 0.35), transparent 45%),
+    radial-gradient(circle at 80% 85%, rgba(170, 210, 190, 0.25), transparent 50%),
+    repeating-linear-gradient(0deg, rgba(120, 90, 40, 0.025) 0 1px, transparent 1px 3px);
+}
+
+/* Warm ambient light — pin to top-left corner of a section for cozy
+   lamp-glow effect. Position absolute, pointer-events none. */
+.scrap-glow {
+  position: absolute;
+  top: -80px;
+  left: -80px;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(255, 210, 130, 0.35), transparent 65%);
+  pointer-events: none;
+  filter: blur(20px);
+}
+
+/* Frame — like a picture frame on a wall. Warm wood-toned border. */
+.scrap-frame {
+  background: #FFFFFF;
+  border: 10px solid;
+  border-image: linear-gradient(145deg, #C99B5B, #A97840 40%, #C99B5B 60%, #8B6538) 1;
+  padding: 6px;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.05),
+    0 8px 20px rgba(80, 50, 20, 0.18),
+    inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+.scrap-frame-inner {
+  background: #FFFFFF;
+  border: 1px solid #E4D8C4;
+}
+
+/* Polaroid — white padded frame with the "photo" area. Add
+   .scrap-polaroid-tilt-left / -right for signature lean. */
+.scrap-polaroid {
+  background: #FFFDF7;
+  padding: 10px 10px 42px;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.06),
+    0 8px 24px rgba(60, 40, 15, 0.15);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.scrap-polaroid-tilt-left  { transform: rotate(-3deg); }
+.scrap-polaroid-tilt-right { transform: rotate(2.5deg); }
+.scrap-polaroid:hover      { transform: rotate(0) scale(1.02); }
+.scrap-polaroid-photo {
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(135deg, #E8D9B5, #C7A874);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.7);
+  font-family: var(--font-caveat, cursive);
+  font-size: 42px;
+}
+.scrap-polaroid-caption {
+  font-family: var(--font-caveat, cursive);
+  font-size: 18px;
+  color: #5A4020;
+  text-align: center;
+  padding-top: 10px;
+  line-height: 1;
+}
+
+/* Washi tape — rotated pill with soft pastel and translucent edges. */
+.scrap-tape {
+  display: inline-block;
+  font-family: var(--font-caveat, cursive);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 4px 20px;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px), #FFD98A;
+  color: #8B5E1F;
+  transform: rotate(-2deg);
+  box-shadow: 0 2px 8px rgba(80, 50, 20, 0.15);
+  letter-spacing: 0.5px;
+}
+.scrap-tape-mint  { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px), #B8E6C1; color: #1E5A2E; }
+.scrap-tape-pink  { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px), #F8BFC8; color: #8A2E45; }
+.scrap-tape-blue  { background: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px), #B7DCF0; color: #1E4A6E; }
+
+/* Handwritten note — hand-cut paper feel for callouts. */
+.scrap-note {
+  font-family: var(--font-caveat, cursive);
+  color: #3A2A0F;
+  line-height: 1.15;
+}
+
+/* Multi-colored painted lettering — wrap each letter in a span with
+   .scrap-rainbow, cycle colors via nth-child. Use for a single word
+   headline accent, not full paragraphs. */
+.scrap-rainbow > span:nth-child(6n+1) { color: #E85D75; }
+.scrap-rainbow > span:nth-child(6n+2) { color: #E88C4A; }
+.scrap-rainbow > span:nth-child(6n+3) { color: #E5B547; }
+.scrap-rainbow > span:nth-child(6n+4) { color: #1A8040; }
+.scrap-rainbow > span:nth-child(6n+5) { color: #6B4A9E; }
+.scrap-rainbow > span:nth-child(6n)   { color: #2E7BB8; }
+
+/* Torn paper divider — jagged bottom edge for section transitions. */
+.scrap-torn-bottom {
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'><path d='M0 0 L100 0 L100 4 L90 6 L80 3 L70 6 L60 4 L50 7 L40 4 L30 6 L20 3 L10 5 L0 4 Z' fill='black'/></svg>");
+          mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'><path d='M0 0 L100 0 L100 4 L90 6 L80 3 L70 6 L60 4 L50 7 L40 4 L30 6 L20 3 L10 5 L0 4 Z' fill='black'/></svg>");
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrap-polaroid-tilt-left, .scrap-polaroid-tilt-right { transform: none !important; }
+  .scrap-polaroid:hover { transform: none !important; }
+  .scrap-tape { transform: none !important; }
+}
+
 /* ─── Button microinteractions ────────────────────────────────────────
    Add class="btn-fx" (optionally with .btn-fx-primary or .btn-fx-ghost)
    to any button or Link to get a consistent hover-lift, press-down, and
