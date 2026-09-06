@@ -75,6 +75,8 @@ export default function AdminRefundsPage() {
   const [working, setWorking] = useState<string | null>(null);
   const [newForm, setNewForm] = useState({ entity_type: "order" as EntityKind, entity_id: "", user_id: "", amount: "", reason: "", note: "" });
   const [showNew, setShowNew] = useState(false);
+  const [callerRole, setCallerRole] = useState<string>("");
+  const isSuper = callerRole === "super_admin";
 
   // NEW REFUND picker state — search a member, then pick one of their
   // paid tickets/orders/donations. Never asks the admin for a UUID.
@@ -146,6 +148,7 @@ export default function AdminRefundsPage() {
       const d = await r.json();
       if (!r.ok) throw new Error(d.error);
       setRefunds(d.refunds ?? []);
+      if (d.callerRole) setCallerRole(d.callerRole);
     } catch (e: any) { setError(e.message); }
     finally { setLoading(false); }
   }
@@ -257,14 +260,18 @@ export default function AdminRefundsPage() {
           <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>Track order and donation refunds. This only records the workflow — actual money movement happens in the PayMongo dashboard.</p>
         </div>
         <div style={{ display: "flex", gap: "8px" }}>
-          <Link href="/admin/refunds/performance"
-            style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1A8040", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px" }}>
-            <IconChart size={12} color="#1A8040" /> PERFORMANCE
-          </Link>
-          <button onClick={() => { setShowNew(v => { if (v) resetNewForm(); return !v; }); }}
-            style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: showNew ? "#5A5A5A" : "#1A8040", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
-            {showNew ? "CLOSE" : "NEW REFUND"}
-          </button>
+          {isSuper && (
+            <Link href="/admin/refunds/performance"
+              style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1A8040", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <IconChart size={12} color="#1A8040" /> PERFORMANCE
+            </Link>
+          )}
+          {isSuper && (
+            <button onClick={() => { setShowNew(v => { if (v) resetNewForm(); return !v; }); }}
+              style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#ffffff", background: showNew ? "#5A5A5A" : "#1A8040", border: "none", borderRadius: "10px", padding: "10px 16px", cursor: "pointer", letterSpacing: "1.2px" }}>
+              {showNew ? "CLOSE" : "NEW REFUND"}
+            </button>
+          )}
         </div>
       </div>
 
@@ -431,7 +438,10 @@ export default function AdminRefundsPage() {
                 </div>
 
                 <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "flex-end" }}>
-                  {r.status === "pending" && (
+                  {!isSuper && (r.status === "pending" || r.status === "processing") && (
+                    <span style={{ fontFamily: B, fontSize: "11px", color: "#7A8E7A", fontStyle: "italic" }}>Super admin action required</span>
+                  )}
+                  {isSuper && r.status === "pending" && (
                     <>
                       <button onClick={() => processViaPayMongo(r)} disabled={working === r.id}
                         title="Call PayMongo Refunds API and send the money back to the original payment method. Irreversible."
@@ -448,7 +458,7 @@ export default function AdminRefundsPage() {
                       </button>
                     </>
                   )}
-                  {(r.status === "pending" || r.status === "processing") && (
+                  {isSuper && (r.status === "pending" || r.status === "processing") && (
                     <button onClick={() => {
                       const ref = prompt("PayMongo refund reference (optional):", r.paymongo_ref ?? "");
                       if (ref === null) return;
@@ -458,16 +468,18 @@ export default function AdminRefundsPage() {
                       <IconCheck size={11} color="#ffffff" /> MARK COMPLETED
                     </button>
                   )}
-                  {(r.status === "pending" || r.status === "processing") && (
+                  {isSuper && (r.status === "pending" || r.status === "processing") && (
                     <button onClick={() => patch(r.id, { status: "failed" }, "Marked failed.")} disabled={working === r.id}
                       style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#8A1E27", background: "#FFE8EC", border: "1.5px solid transparent", borderRadius: "8px", padding: "7px 12px", cursor: "pointer", letterSpacing: "1.2px" }}>
                       MARK FAILED
                     </button>
                   )}
+                  {isSuper && (
                   <button onClick={() => remove(r.id)} disabled={working === r.id}
                     style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#8A1E27", background: "transparent", border: "1.5px solid #F1C0C6", borderRadius: "8px", padding: "7px 12px", cursor: "pointer", letterSpacing: "1.2px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
                     <IconTrash size={11} color="#8A1E27" /> DELETE
                   </button>
+                  )}
                 </div>
               </div>
             );

@@ -4,9 +4,17 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
 import { notifyRefundOutcome } from "@/lib/refund-notifications";
 
-// Refunds are financial actions — restricted to super_admin only.
-// Regular admins never see the Refunds nav entry (gated in the sidebar
-// + more page + command palette) and this API refuses their calls.
+// Refunds are financial actions. Reads (viewing the queue) are open to
+// both admin and super_admin so staff can see refund state. Writes
+// (create / patch / delete / auto-process via PayMongo) stay
+// super_admin only — those move real money.
+async function requireAdmin() {
+  const { userId, sessionClaims } = auth();
+  if (!userId) return null;
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  if (!["admin", "super_admin"].includes(role ?? "")) return null;
+  return userId;
+}
 async function requireSuper() {
   const { userId, sessionClaims } = auth();
   if (!userId) return null;
@@ -17,8 +25,11 @@ async function requireSuper() {
 
 // GET /api/admin/refunds?status=pending
 export async function GET(req: NextRequest) {
-  const userId = await requireSuper();
-  if (!userId) return NextResponse.json({ error: "Super admin only" }, { status: 403 });
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Admin only" }, { status: 403 });
+
+  const { sessionClaims } = auth();
+  const callerRole = (sessionClaims?.metadata as { role?: string })?.role ?? "";
 
   const status = new URL(req.url).searchParams.get("status");
   const admin  = createAdminClient();
@@ -32,7 +43,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await q;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ refunds: data ?? [] });
+  return NextResponse.json({ refunds: data ?? [], callerRole });
 }
 
 // POST /api/admin/refunds  { entity_type, entity_id, amount, reason, note?, user_id? }

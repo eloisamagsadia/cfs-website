@@ -54,7 +54,7 @@ const sections = [
       { label: "Shop",          href: "/admin/shop",                   icon: icons.shop },
       { label: "Orders",        href: "/admin/orders",                 icon: icons.orders },
       { label: "Donations",     href: "/admin/donations",              icon: icons.donations },
-      { label: "Refunds",       href: "/admin/refunds",                icon: icons.refunds, superOnly: true },
+      { label: "Refunds",       href: "/admin/refunds",                icon: icons.refunds },
       { label: "Members",       href: "/admin/members",                icon: icons.members },
       { label: "Member Tags",   href: "/admin/tags",                   icon: icons.codes },
     ]
