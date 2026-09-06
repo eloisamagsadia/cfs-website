@@ -103,100 +103,66 @@ export default async function HomePage() {
 
             {/* MISSION tile — cream paper, handwritten headline, spans 2 cols */}
             <div className="bento-tile bento-mission" style={{ background: "#F5F7EC", border: "1px dashed #C7D5C0" }}>
-              {/* Paper grain texture */}
-              <span aria-hidden="true" className="bento-grain" />
-              {/* Yellow tape corner peeling off */}
-              <span aria-hidden="true" className="bento-corner-tape" />
-              <span aria-hidden="true" style={{ position: "absolute", top: "16px", left: "84px", fontFamily: H, fontSize: "22px", color: "#E85D75", transform: "rotate(-10deg)" }}>✦</span>
-              <div className="scrap-note" style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", color: "#1B3A2D", lineHeight: 1.1, letterSpacing: "-0.5px", position: "relative" }}>
-                The Ace is on her way — and we&apos;re <span className="bento-underline">here for her</span>.
+              <div className="scrap-note" style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", color: "#1B3A2D", lineHeight: 1.1, letterSpacing: "-0.5px" }}>
+                The Ace is on her way — and we&apos;re here for her.
               </div>
-              <p style={{ fontFamily: B, fontSize: "13.5px", color: "#4A7C59", margin: "16px 0 0", lineHeight: 1.65, maxWidth: "460px", position: "relative" }}>
+              <p style={{ fontFamily: B, fontSize: "13.5px", color: "#4A7C59", margin: "14px 0 0", lineHeight: 1.65, maxWidth: "460px" }}>
                 A home base for Cocacolets — where we buy tickets together, throw fan events, and cheer Colet on. From anywhere in the Philippines.
               </p>
-              {/* Hand-drawn heart doodle in bottom-right */}
-              <svg aria-hidden="true" className="bento-doodle bento-doodle-heart" viewBox="0 0 32 28" width="36" height="32" fill="none" stroke="#E85D75" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M16 25 C 2 15, 2 4, 10 4 C 13 4, 15 6, 16 9 C 17 6, 19 4, 22 4 C 30 4, 30 15, 16 25 Z" />
-              </svg>
             </div>
 
             {/* MEMBERS tile — forest-green contrast, big cream number */}
             <div className="bento-tile bento-members" style={{ background: "#1B3A2D", color: "#F5F7EC" }}>
-              {/* Radial spotlight glow behind the number */}
-              <span aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 55%, rgba(74,203,110,0.22), transparent 55%)", pointerEvents: "none" }} />
-              {/* Faux inner stitched border */}
-              <span aria-hidden="true" style={{ position: "absolute", inset: "10px", border: "1px dashed rgba(183,205,183,0.28)", borderRadius: "12px", pointerEvents: "none" }} />
-              <div style={{ position: "relative", fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "2px", color: "#B7CDB7", marginBottom: "8px" }}>
+              <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "2px", color: "#B7CDB7", marginBottom: "8px" }}>
                 COCACOLETS STRONG
               </div>
-              <div style={{ position: "relative", fontFamily: S, fontSize: "clamp(3.2rem, 8vw, 5rem)", lineHeight: 0.95, letterSpacing: "-2px", color: "#F5F7EC", textShadow: "0 2px 20px rgba(74,203,110,0.35)" }}>
+              <div style={{ fontFamily: S, fontSize: "clamp(3.2rem, 8vw, 5rem)", lineHeight: 0.95, letterSpacing: "-2px", color: "#F5F7EC" }}>
                 {(memberCount ?? 0).toLocaleString()}
               </div>
-              <div style={{ position: "relative", display: "flex", marginTop: "auto", paddingTop: "16px", alignItems: "center", gap: "6px" }}>
+              <div style={{ display: "flex", marginTop: "auto", paddingTop: "14px", alignItems: "center", gap: "8px" }}>
                 <div style={{ display: "flex" }}>
-                  {[0,1,2,3,4].map(i => (
-                    <div key={i} aria-hidden="true" style={{ width: 24, height: 24, borderRadius: "50%", background: ["#4ACB6E","#F0C48A","#F8BFC8","#B7DCF0","#C4A6D6"][i], border: "2px solid #1B3A2D", marginLeft: i === 0 ? 0 : -8, boxShadow: "0 2px 4px rgba(0,0,0,0.15)" }} />
+                  {[0,1,2,3].map(i => (
+                    <div key={i} aria-hidden="true" style={{ width: 22, height: 22, borderRadius: "50%", background: ["#4ACB6E","#F0C48A","#F8BFC8","#B7DCF0"][i], border: "2px solid #1B3A2D", marginLeft: i === 0 ? 0 : -8 }} />
                   ))}
                 </div>
-                <span style={{ fontFamily: H, fontSize: "16px", color: "#B7CDB7", marginLeft: "8px", transform: "rotate(-2deg)", display: "inline-block" }}>
-                  &amp; counting ✦
+                <span style={{ fontFamily: B, fontSize: "11.5px", color: "#B7CDB7" }}>
+                  &amp; counting
                 </span>
               </div>
             </div>
 
             {/* VIBE tile — pink pastel, big handwritten mantra */}
             <div className="bento-tile bento-vibe" style={{ background: "#FDE9EC", border: "1px solid #F3C4CC" }}>
-              <span aria-hidden="true" className="bento-grain" />
-              {/* Floating drift sparkles */}
-              <span aria-hidden="true" className="bento-spark" style={{ top: "18%", right: "12%", animationDelay: "0s" }}>✦</span>
-              <span aria-hidden="true" className="bento-spark" style={{ top: "36%", right: "26%", fontSize: "14px", animationDelay: "-1.5s" }}>✦</span>
-              <span aria-hidden="true" className="bento-spark" style={{ top: "58%", right: "8%", fontSize: "18px", animationDelay: "-2.8s" }}>✦</span>
-              <div style={{ position: "relative", fontFamily: H, fontSize: "clamp(1.6rem, 3.6vw, 2.2rem)", color: "#8A2E45", lineHeight: 1.1 }}>
+              <div style={{ fontFamily: H, fontSize: "clamp(1.6rem, 3.6vw, 2.2rem)", color: "#8A2E45", lineHeight: 1.1 }}>
                 para kay Colet,<br />buong araw ✦
               </div>
-              <div style={{ position: "relative", fontFamily: SG, fontSize: "9.5px", fontWeight: 700, letterSpacing: "2px", color: "#B85268", marginTop: "auto", textTransform: "uppercase" }}>
+              <div style={{ fontFamily: SG, fontSize: "9.5px", fontWeight: 700, letterSpacing: "2px", color: "#B85268", marginTop: "auto", textTransform: "uppercase" }}>
                 — cocacolets mantra
               </div>
             </div>
 
             {/* COUNTDOWN tile — clickable if there's a next event, live countdown */}
             {nextEvent ? (
-              <Link href={`/events/${nextEvent.id}`} className="bento-tile bento-countdown bento-countdown-link" style={{ background: "#FFF3D6", border: "1px solid #F0C48A", textDecoration: "none", color: "inherit" }}>
-                <span aria-hidden="true" className="bento-grain" />
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", position: "relative" }}>
+              <Link href={`/events/${nextEvent.id}`} className="bento-tile bento-countdown" style={{ background: "#FFF3D6", border: "1px solid #F0C48A", textDecoration: "none", color: "inherit" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
                   <span aria-hidden="true" className="hero-pulse" style={{ width: 8, height: 8, borderRadius: "50%", background: "#1A8040", display: "inline-block" }} />
                   <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px", color: "#8B5E1F" }}>
                     NEXT EVENT IN
                   </span>
                 </div>
-                <div style={{ position: "relative" }}>
-                  <HomeCountdown target={nextEvent.date} variant="bento" />
-                </div>
-                <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "14px", gap: "10px" }}>
-                  <span style={{ fontFamily: H, fontSize: "17px", color: "#8B5E1F", transform: "rotate(-1deg)", display: "inline-block" }}>
-                    handa na ba kayo? 🌱
-                  </span>
-                  <span className="bento-countdown-arrow" style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "1.8px", color: "#8B5E1F" }}>
-                    BOOK NOW
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                      <polyline points="12 5 19 12 12 19" />
-                    </svg>
-                  </span>
+                <HomeCountdown target={nextEvent.date} variant="bento" />
+                <div style={{ fontFamily: B, fontSize: "12px", color: "#8B5E1F", marginTop: "12px", fontStyle: "italic" }}>
+                  handa na ba kayo?
                 </div>
               </Link>
             ) : (
               <div className="bento-tile bento-countdown" style={{ background: "#FFF3D6", border: "1px solid #F0C48A" }}>
-                <span aria-hidden="true" className="bento-grain" />
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", position: "relative" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
                   <span aria-hidden="true" className="hero-pulse" style={{ width: 8, height: 8, borderRadius: "50%", background: "#1A8040", display: "inline-block" }} />
                   <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px", color: "#8B5E1F" }}>STAY TUNED</span>
                 </div>
-                <div style={{ position: "relative", fontFamily: S, fontSize: "clamp(1.6rem, 3.6vw, 2.2rem)", color: "#8B5E1F" }}>
+                <div style={{ fontFamily: S, fontSize: "clamp(1.6rem, 3.6vw, 2.2rem)", color: "#8B5E1F" }}>
                   next drop coming
-                </div>
-                <div style={{ position: "relative", fontFamily: H, fontSize: "17px", color: "#8B5E1F", marginTop: "12px" }}>
-                  we&apos;ll announce soon
                 </div>
               </div>
             )}
@@ -249,67 +215,7 @@ export default async function HomePage() {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
           }
           .bento-tile:hover { transform: translateY(-3px) rotate(0deg) !important; box-shadow: 0 14px 30px rgba(15,42,30,0.11); }
-
-          /* Paper grain — near-invisible noise pattern that adds warmth */
-          .bento-grain {
-            position: absolute; inset: 0; pointer-events: none;
-            background-image:
-              radial-gradient(rgba(107,74,158,0.05) 1px, transparent 1px),
-              radial-gradient(rgba(232,93,117,0.04) 1px, transparent 1px);
-            background-size: 22px 22px, 34px 34px;
-            background-position: 0 0, 11px 17px;
-            opacity: 0.6;
-          }
-
-          /* Yellow tape corner peeling off the mission tile */
-          .bento-corner-tape {
-            position: absolute; top: -10px; left: 20px;
-            width: 58px; height: 20px;
-            background:
-              linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.06) 100%),
-              repeating-linear-gradient(45deg, rgba(255,255,255,0.20) 0 3px, transparent 3px 9px),
-              #FFD98A;
-            transform: rotate(-6deg);
-            box-shadow: 0 3px 6px rgba(60,40,10,0.15);
-            border-radius: 2px;
-          }
-
-          /* Hand-drawn wavy underline under specific words in the tagline */
-          .bento-underline {
-            position: relative;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 Q 25 1, 50 5 T 98 5' fill='none' stroke='%23E85D75' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat left bottom -6px / 100% 8px;
-            padding-bottom: 10px;
-          }
-
-          /* Floating drift sparkles inside vibe tile */
-          @keyframes bento-spark-drift {
-            0%,100% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 0.55; }
-            50%     { transform: translate3d(3px,-6px,0) rotate(18deg) scale(1.15); opacity: 1; }
-          }
-          .bento-spark {
-            position: absolute; z-index: 1;
-            font-family: var(--font-caveat, cursive);
-            font-size: 16px; color: #E85D75;
-            animation: bento-spark-drift 4.5s ease-in-out infinite;
-            pointer-events: none;
-          }
-
-          /* Doodle in bottom-right corner of the mission tile */
-          .bento-doodle {
-            position: absolute;
-            pointer-events: none;
-          }
-          .bento-doodle-heart {
-            bottom: 16px; right: 20px;
-            transform: rotate(8deg);
-            opacity: 0.85;
-          }
-
-          /* Countdown link hover state — arrow slides right */
-          .bento-countdown-link { cursor: pointer; }
-          .bento-countdown-link:hover .bento-countdown-arrow svg { transform: translateX(3px); }
-          .bento-countdown-arrow svg { transition: transform 0.2s ease; }
-          .bento-mission   { grid-area: mission;   transform: rotate(-0.4deg); padding-top: 44px; }
+          .bento-mission   { grid-area: mission;   transform: rotate(-0.4deg); }
           .bento-members   { grid-area: members;   transform: rotate(1.2deg); justify-content: space-between; }
           .bento-vibe      { grid-area: vibe;      transform: rotate(-1.6deg); justify-content: space-between; }
           .bento-countdown { grid-area: countdown; transform: rotate(0.6deg); justify-content: center; }
@@ -317,12 +223,12 @@ export default async function HomePage() {
           .bento-cta:hover { transform: none !important; box-shadow: none !important; }
 
           @media (prefers-reduced-motion: reduce) {
-            .hero-pulse,
-            .bento-spark { animation: none !important; }
+            .hero-pulse { animation: none !important; }
             .bento-tile { transform: none !important; }
           }
-          @media (max-width: 640px) {
-            .hero-banner { min-height: 200px; }
+          /* Tablet — 2 col grid, straightened tiles, tighter padding */
+          @media (max-width: 820px) {
+            .hero-bento-wrap { padding: 32px 20px 0 !important; }
             .hero-bento {
               grid-template-columns: repeat(2, minmax(0, 1fr));
               grid-template-areas:
@@ -330,12 +236,28 @@ export default async function HomePage() {
                 "members   vibe"
                 "countdown countdown"
                 "cta       cta";
-              gap: 10px;
+              gap: 12px;
             }
-            .bento-tile { padding: 20px 18px; border-radius: 14px; transform: none !important; }
-            .bento-mission { padding-top: 32px; }
+            .bento-tile { padding: 22px 20px; border-radius: 16px; transform: none !important; }
           }
-          @media (max-width: 560px) {
+
+          /* Phone — full single-column stack, compact tiles */
+          @media (max-width: 520px) {
+            .home-hero { padding: 0 0 16px !important; }
+            .hero-banner { min-height: 180px; }
+            .hero-bento-wrap { padding: 24px 16px 0 !important; }
+            .hero-bento {
+              grid-template-columns: 1fr !important;
+              grid-template-areas:
+                "mission"
+                "members"
+                "vibe"
+                "countdown"
+                "cta" !important;
+              gap: 10px !important;
+            }
+            .bento-tile { padding: 18px 16px !important; border-radius: 14px !important; }
+            .bento-cta > div { flex-direction: column; }
             .bento-cta > div > a { flex: 1 1 100%; justify-content: center; }
           }
         `}</style>
