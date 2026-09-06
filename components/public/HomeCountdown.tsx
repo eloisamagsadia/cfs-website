@@ -8,7 +8,7 @@ const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 interface Props {
   target: string;
   label?: string;
-  variant?: "pill" | "stat";
+  variant?: "pill" | "stat" | "bento";
 }
 
 function pad(n: number) { return n.toString().padStart(2, "0"); }
@@ -31,6 +31,19 @@ export default function HomeCountdown({ target, label = "Next event in", variant
   const secs = Math.floor((delta % 60_000) / 1000);
 
   const live = now !== null && delta > 0;
+
+  if (variant === "bento") {
+    return (
+      <div suppressHydrationWarning style={{ display: "flex", alignItems: "baseline", gap: "10px", flexWrap: "wrap", fontFamily: S, color: "#5A4020", fontVariantNumeric: "tabular-nums" }}>
+        <span style={{ fontSize: "clamp(2.4rem, 5vw, 3.4rem)", lineHeight: 1, letterSpacing: "-1px" }}>
+          {live ? days : "—"}<span style={{ fontSize: "0.5em", color: "#8B5E1F", marginLeft: "1px" }}>d</span>
+        </span>
+        <span style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", lineHeight: 1, letterSpacing: "-0.5px", color: "#8B5E1F" }}>
+          {live ? `${pad(hours)}h ${pad(mins)}m ${pad(secs)}s` : ""}
+        </span>
+      </div>
+    );
+  }
 
   if (variant === "stat") {
     return (

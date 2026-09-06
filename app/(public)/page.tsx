@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
+const H  = "var(--font-caveat, cursive)";
 
 const C = {
   paper:  "#FAFDF9",
@@ -94,82 +95,85 @@ export default async function HomePage() {
           />
         </div>
 
-        {/* Copy strip — designed layout: pull-quote → mission line →
-            3 stat index cards → CTAs → scroll cue. */}
-        <div className="hero-copy" style={{ maxWidth: "960px", margin: "0 auto", padding: "44px 24px 0", textAlign: "center" }}>
+        {/* Bento collage — asymmetric scrapbook grid of tiles.
+            Each tile has its own color, tilt, and voice so nothing
+            reads like a SaaS dashboard card. */}
+        <div className="hero-bento-wrap" style={{ maxWidth: "1080px", margin: "0 auto", padding: "44px 24px 0" }}>
+          <div className="hero-bento">
 
-          {/* Handwritten pull quote flanked by soft dividers */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "18px", margin: "0 0 14px" }}>
-            <span aria-hidden="true" style={{ display: "inline-block", width: "clamp(24px, 6vw, 60px)", height: "1px", background: "#B7CDB7" }} />
-            <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "3px" }}>THE MISSION</span>
-            <span aria-hidden="true" style={{ display: "inline-block", width: "clamp(24px, 6vw, 60px)", height: "1px", background: "#B7CDB7" }} />
-          </div>
+            {/* MISSION tile — cream paper, handwritten headline, spans 2 cols */}
+            <div className="bento-tile bento-mission" style={{ background: "#F5F7EC", border: "1px dashed #C7D5C0" }}>
+              <span aria-hidden="true" style={{ position: "absolute", top: "14px", left: "18px", fontFamily: H, fontSize: "22px", color: "#E85D75", transform: "rotate(-10deg)" }}>✦</span>
+              <div className="scrap-note" style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", color: "#1B3A2D", lineHeight: 1.1, letterSpacing: "-0.5px" }}>
+                The Ace is on her way — and we&apos;re here for her.
+              </div>
+              <p style={{ fontFamily: B, fontSize: "13.5px", color: "#4A7C59", margin: "12px 0 0", lineHeight: 1.65, maxWidth: "460px" }}>
+                A home base for Cocacolets — where we buy tickets together, throw fan events, and cheer Colet on. From anywhere in the Philippines.
+              </p>
+            </div>
 
-          <p className="scrap-note" style={{ fontSize: "clamp(1.9rem, 4.4vw, 2.8rem)", color: "#1B3A2D", margin: "0 0 14px", lineHeight: 1.1, letterSpacing: "-0.5px" }}>
-            The Ace is on her way — and we&apos;re here for her.
-          </p>
-
-          <p style={{ fontFamily: B, fontSize: "15px", color: "#4A7C59", margin: "0 auto 36px", lineHeight: 1.7, maxWidth: "540px" }}>
-            A community for Cocacolets — where we buy tickets together, throw fan events, and cheer Colet on. Come hang out.
-          </p>
-
-          {/* Stat index cards — three white paper cards with colored
-              top strips. Slight opposing tilts on desktop for a
-              scrapbook feel; straightened on mobile so nothing clips. */}
-          <div className="hero-stats" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "16px", margin: "0 0 40px" }}>
-            <div className="hero-stat hero-stat-tilt-l">
-              <span aria-hidden="true" className="hero-stat-strip" style={{ background: "#1A8040" }} />
-              <div className="hero-stat-num" style={{ fontFamily: S, color: "#1B3A2D", lineHeight: 1, letterSpacing: "-1px" }}>
+            {/* MEMBERS tile — forest-green contrast, big cream number */}
+            <div className="bento-tile bento-members" style={{ background: "#1B3A2D", color: "#F5F7EC" }}>
+              <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "2px", color: "#B7CDB7", marginBottom: "8px" }}>
+                COCACOLETS STRONG
+              </div>
+              <div style={{ fontFamily: S, fontSize: "clamp(3.2rem, 8vw, 5rem)", lineHeight: 0.95, letterSpacing: "-2px", color: "#F5F7EC" }}>
                 {(memberCount ?? 0).toLocaleString()}
               </div>
-              <div className="hero-stat-label" style={{ fontFamily: SG, fontWeight: 700, color: "#4A7C59", letterSpacing: "1.8px", textTransform: "uppercase" }}>
-                Cocacolets Strong
+              <div style={{ display: "flex", marginTop: "14px", alignItems: "center", gap: "6px" }}>
+                <div style={{ display: "flex" }}>
+                  {[0,1,2,3].map(i => (
+                    <div key={i} aria-hidden="true" style={{ width: 22, height: 22, borderRadius: "50%", background: ["#4ACB6E","#F0C48A","#F8BFC8","#B7DCF0"][i], border: "2px solid #1B3A2D", marginLeft: i === 0 ? 0 : -8 }} />
+                  ))}
+                </div>
+                <span style={{ fontFamily: B, fontSize: "11.5px", color: "#B7CDB7", marginLeft: "6px" }}>
+                  & counting
+                </span>
               </div>
             </div>
 
-            <div className="hero-stat">
-              <span aria-hidden="true" className="hero-stat-strip" style={{ background: "#E85D75" }} />
-              <div className="hero-stat-num" style={{ fontFamily: S, color: "#1B3A2D", lineHeight: 1, letterSpacing: "-1px" }}>
-                {upcomingCount}
+            {/* VIBE tile — pink pastel, big handwritten mantra */}
+            <div className="bento-tile bento-vibe" style={{ background: "#FDE9EC", border: "1px solid #F3C4CC" }}>
+              <div style={{ fontFamily: H, fontSize: "clamp(1.6rem, 3.6vw, 2.2rem)", color: "#8A2E45", lineHeight: 1.1 }}>
+                para kay Colet,<br />buong araw ✦
               </div>
-              <div className="hero-stat-label" style={{ fontFamily: SG, fontWeight: 700, color: "#4A7C59", letterSpacing: "1.8px", textTransform: "uppercase" }}>
-                Upcoming Event{upcomingCount === 1 ? "" : "s"}
+              <div style={{ fontFamily: SG, fontSize: "9.5px", fontWeight: 700, letterSpacing: "2px", color: "#B85268", marginTop: "auto", textTransform: "uppercase" }}>
+                — cocacolets mantra
               </div>
             </div>
 
-            <div className="hero-stat hero-stat-tilt-r">
-              <span aria-hidden="true" className="hero-stat-strip" style={{ background: "#E5B547" }} />
+            {/* COUNTDOWN tile — gold cream, live ticking countdown, spans 2 cols */}
+            <div className="bento-tile bento-countdown" style={{ background: "#FFF3D6", border: "1px solid #F0C48A" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+                <span aria-hidden="true" className="hero-pulse" style={{ width: 8, height: 8, borderRadius: "50%", background: "#1A8040", display: "inline-block" }} />
+                <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "2.5px", color: "#8B5E1F" }}>
+                  {nextEvent ? "NEXT EVENT IN" : "STAY TUNED"}
+                </span>
+              </div>
               {nextEvent ? (
-                <HomeCountdown target={nextEvent.date} variant="stat" />
+                <HomeCountdown target={nextEvent.date} variant="bento" />
               ) : (
-                <>
-                  <div className="hero-stat-num" style={{ fontFamily: S, color: "#1B3A2D", lineHeight: 1 }}>—</div>
-                  <div className="hero-stat-label" style={{ fontFamily: SG, fontWeight: 700, color: "#4A7C59", letterSpacing: "1.8px", textTransform: "uppercase" }}>
-                    No event yet
-                  </div>
-                </>
+                <div style={{ fontFamily: S, fontSize: "clamp(1.6rem, 3.6vw, 2.2rem)", color: "#8B5E1F" }}>
+                  next drop coming
+                </div>
               )}
+              <div style={{ fontFamily: B, fontSize: "12px", color: "#8B5E1F", marginTop: "12px", fontStyle: "italic" }}>
+                {nextEvent ? "handa na ba kayo? 🌱" : "we'll announce soon"}
+              </div>
+            </div>
+
+            {/* CTA strip — full width, ticket-stub styling */}
+            <div className="bento-tile bento-cta">
+              <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center", width: "100%" }}>
+                <Link href="/events" className="btn-fx btn-fx-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: "#1B3A2D", color: "#ffffff", padding: "14px 30px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
+                  <IconCalendar size={14} color="#ffffff" /> SEE ALL EVENTS
+                </Link>
+                <Link href="/sign-up" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #1B3A2D", padding: "13px 28px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px", boxShadow: "0 2px 6px rgba(27,58,45,0.08)" }}>
+                  <IconHeart size={14} color="#1B3A2D" /> JOIN THE FAM ✦
+                </Link>
+              </div>
             </div>
           </div>
-
-          {/* CTAs */}
-          <div className="hero-cta-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center", marginBottom: "14px" }}>
-            <Link href="/events" className="btn-fx btn-fx-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: "#1B3A2D", color: "#ffffff", padding: "14px 28px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
-              <IconCalendar size={14} color="#ffffff" /> SEE ALL EVENTS
-            </Link>
-            <Link href="/sign-up" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #1B3A2D", padding: "13px 26px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px", boxShadow: "0 2px 6px rgba(27,58,45,0.08)" }}>
-              <IconHeart size={14} color="#1B3A2D" /> JOIN THE FAM ✦
-            </Link>
-          </div>
-
-          {upcoming.length > 0 && (
-            <a href="#upcoming-events" className="hero-scroll-cue" aria-label="Scroll to upcoming events">
-              <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "2px" }}>SCROLL FOR EVENTS</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </a>
-          )}
         </div>
 
         <style>{`
@@ -179,63 +183,60 @@ export default async function HomePage() {
           }
           .hero-pulse { animation: hero-pulse 1.8s ease-out infinite; }
 
-          /* Stat index cards */
-          .hero-stat {
-            position: relative; background: #FFFFFF;
-            border: 1px solid #DDE8DD; border-radius: 14px;
-            padding: 30px 20px 22px;
-            box-shadow: 0 6px 18px rgba(15,42,30,0.06);
-            overflow: hidden; text-align: left;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+          /* Bento grid — explicit template areas for a clean asymmetric
+             layout. Desktop 3 cols:
+                mission mission members
+                vibe    countdown countdown
+                cta     cta       cta */
+          .hero-bento {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-areas:
+              "mission   mission    members"
+              "vibe      countdown  countdown"
+              "cta       cta        cta";
+            gap: 16px;
+          }
+          .bento-tile {
+            position: relative;
+            border-radius: 18px;
+            padding: 26px 24px;
+            box-shadow: 0 6px 20px rgba(15,42,30,0.07);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
             min-width: 0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
           }
-          .hero-stat:hover { transform: translateY(-3px) rotate(0deg); box-shadow: 0 12px 26px rgba(15,42,30,0.10); }
-          .hero-stat-tilt-l { transform: rotate(-1.2deg); }
-          .hero-stat-tilt-r { transform: rotate(1.2deg); }
-          .hero-stat-strip {
-            position: absolute; top: 0; left: 0; right: 0;
-            height: 6px; display: block;
-          }
-          .hero-stat-num {
-            font-size: clamp(2.4rem, 5vw, 3.4rem);
-            margin-bottom: 12px;
-          }
-          .hero-stat-label {
-            font-size: 10px;
-          }
-
-          /* Scroll cue */
-          @keyframes hero-scroll-bounce {
-            0%,100% { transform: translateY(0); }
-            50%     { transform: translateY(4px); }
-          }
-          .hero-scroll-cue {
-            display: inline-flex; flex-direction: column; align-items: center;
-            gap: 4px; margin-top: 26px; text-decoration: none;
-            animation: hero-scroll-bounce 1.6s ease-in-out infinite;
-            transition: opacity 0.15s;
-          }
-          .hero-scroll-cue:hover { opacity: 0.7; }
+          .bento-tile:hover { transform: translateY(-3px) rotate(0deg) !important; box-shadow: 0 14px 30px rgba(15,42,30,0.11); }
+          .bento-mission   { grid-area: mission;   transform: rotate(-0.4deg); padding-top: 44px; }
+          .bento-members   { grid-area: members;   transform: rotate(1.2deg); justify-content: space-between; }
+          .bento-vibe      { grid-area: vibe;      transform: rotate(-1.6deg); justify-content: space-between; }
+          .bento-countdown { grid-area: countdown; transform: rotate(0.6deg); justify-content: center; }
+          .bento-cta       { grid-area: cta;       background: transparent; box-shadow: none; padding: 8px 0 0; justify-content: center; align-items: center; }
+          .bento-cta:hover { transform: none !important; box-shadow: none !important; }
 
           @media (prefers-reduced-motion: reduce) {
-            .hero-pulse,
-            .hero-scroll-cue { animation: none !important; }
-            .hero-stat-tilt-l, .hero-stat-tilt-r { transform: none !important; }
+            .hero-pulse { animation: none !important; }
+            .bento-tile { transform: none !important; }
           }
-          /* On tall/narrow phones, the wide banner shrinks to a short
-             strip. Bump min-height so the wordmark stays legible. */
           @media (max-width: 640px) {
             .hero-banner { min-height: 200px; }
-            .hero-stats { gap: 8px !important; }
-            .hero-stat { padding: 22px 12px 16px !important; border-radius: 12px !important; }
-            .hero-stat-tilt-l, .hero-stat-tilt-r { transform: none !important; }
-            .hero-stat-num { font-size: 1.6rem !important; margin-bottom: 8px !important; }
-            .hero-stat-label { font-size: 8.5px !important; letter-spacing: 1.2px !important; }
+            .hero-bento {
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+              grid-template-areas:
+                "mission   mission"
+                "members   vibe"
+                "countdown countdown"
+                "cta       cta";
+              gap: 10px;
+            }
+            .bento-tile { padding: 20px 18px; border-radius: 14px; transform: none !important; }
+            .bento-mission { padding-top: 32px; }
           }
-          /* Buttons stack full-width on phones so both CTAs feel equally
-             tappable and the row breaks cleanly */
           @media (max-width: 560px) {
-            .hero-cta-row > a { flex: 1 1 100%; justify-content: center; }
+            .bento-cta > div > a { flex: 1 1 100%; justify-content: center; }
           }
         `}</style>
       </section>
