@@ -35,6 +35,16 @@ const icons = {
   danger:     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
   exclusive:  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
   cleanup:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>,
+  pending:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>,
+  waitlist:   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2v6l4 4-4 4v6h12v-6l-4-4 4-4V2z"/></svg>,
+  chatmod:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M8 12h8"/></svg>,
+  tags:       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>,
+  polls:      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+  faq:        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+  queue:      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>,
+  letters:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 8.5a1.5 1.5 0 0 1-1.5 1.5H14l-2 3-2-3H4.5A1.5 1.5 0 0 1 3 8.5v-3A1.5 1.5 0 0 1 4.5 4h15A1.5 1.5 0 0 1 21 5.5z"/><path d="M6 14v6"/><path d="M18 14v6"/></svg>,
+  contact:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+  newsletter: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>,
   refunds:    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 3 3 9 9 9"/></svg>,
 };
 
@@ -47,44 +57,70 @@ const sections = [
     ]
   },
   {
-    label: "MANAGE",
+    // Everything about running an event goes here — the venue-day path
+    // (check-in), the money-day path (pending & refunds), and the
+    // pre-event capacity tools (waitlist).
+    label: "EVENTS",
     items: [
-      { label: "Events",        href: "/admin/events",                 icon: icons.events },
-      { label: "Waitlist",      href: "/admin/waitlist",               icon: icons.members },
+      { label: "Events",          href: "/admin/events",                 icon: icons.events },
+      { label: "Waitlist",        href: "/admin/waitlist",               icon: icons.waitlist },
+      { label: "Check-In",        href: "/admin/check-in",               icon: icons.checkin },
+      { label: "Pending Tickets", href: "/admin/tickets-cleanup",        icon: icons.pending },
+    ]
+  },
+  {
+    // Money in / money out. Refunds live here because they can apply to
+    // any of orders / donations / tickets — this is the closest to a
+    // single "money" bucket without a fourth section.
+    label: "COMMERCE",
+    items: [
       { label: "Shop",          href: "/admin/shop",                   icon: icons.shop },
       { label: "Orders",        href: "/admin/orders",                 icon: icons.orders },
+      { label: "Shipping",      href: "/admin/shipping",               icon: icons.shipping },
+      { label: "Promo Codes",   href: "/admin/codes",                  icon: icons.codes },
       { label: "Donations",     href: "/admin/donations",              icon: icons.donations },
       { label: "Refunds",       href: "/admin/refunds",                icon: icons.refunds },
-      { label: "Members",       href: "/admin/members",                icon: icons.members },
-      { label: "Member Tags",   href: "/admin/tags",                   icon: icons.codes },
     ]
   },
   {
-    label: "CONTENT",
+    label: "MEMBERS",
+    items: [
+      { label: "Members",       href: "/admin/members",                icon: icons.members },
+      { label: "Member Tags",   href: "/admin/tags",                   icon: icons.tags },
+    ]
+  },
+  {
+    // Everything the community actually posts / interacts with, plus
+    // moderation for those surfaces.
+    label: "COMMUNITY",
     items: [
       { label: "Community",     href: "/admin/community",              icon: icons.community },
-      { label: "Chat Mod",      href: "/admin/chat",                   icon: icons.community },
-      { label: "Reports Queue", href: "/admin/community-reports",      icon: icons.support },
-      { label: "Fan Letters",   href: "/admin/fan-letters",            icon: icons.emails },
+      { label: "Chat Mod",      href: "/admin/chat",                   icon: icons.chatmod },
+      { label: "Reports Queue", href: "/admin/community-reports",      icon: icons.queue },
       { label: "Fan Wall",      href: "/admin/events/fan-submissions", icon: icons.fanwall },
+      { label: "Fan Letters",   href: "/admin/fan-letters",            icon: icons.letters },
       { label: "Projects",      href: "/admin/projects",               icon: icons.projects },
-      { label: "Reports",       href: "/admin/reports",                icon: icons.reports },
-      { label: "Polls",         href: "/admin/polls",                  icon: icons.checkin },
-      { label: "FAQ",           href: "/admin/faq",                    icon: icons.support },
+      { label: "Polls",         href: "/admin/polls",                  icon: icons.polls },
     ]
   },
   {
-    label: "TOOLS",
+    // Outbound comms — anything we push to members.
+    label: "COMMUNICATION",
     items: [
-      { label: "Check-In",      href: "/admin/check-in",               icon: icons.checkin },
-      { label: "Pending Tickets", href: "/admin/tickets-cleanup",      icon: icons.checkin },
       { label: "Notifications", href: "/admin/notifications",          icon: icons.notifs },
-      { label: "Support",       href: "/admin/support",                icon: icons.support },
-      { label: "Contact",       href: "/admin/contact",                icon: icons.emails },
-      { label: "Shipping",      href: "/admin/shipping",               icon: icons.shipping },
       { label: "Emails",        href: "/admin/emails",                 icon: icons.emails },
-      { label: "Newsletter",    href: "/admin/newsletter",             icon: icons.emails },
-      { label: "Promo Codes",   href: "/admin/codes",                  icon: icons.codes },
+      { label: "Newsletter",    href: "/admin/newsletter",             icon: icons.newsletter },
+      { label: "Contact",       href: "/admin/contact",                icon: icons.contact },
+    ]
+  },
+  {
+    // Insights + how-to. Support desk sits here because it's the
+    // support-facing docs surface, not an outbound comm channel.
+    label: "INSIGHTS & DOCS",
+    items: [
+      { label: "Reports",       href: "/admin/reports",                icon: icons.reports },
+      { label: "FAQ",           href: "/admin/faq",                    icon: icons.faq },
+      { label: "Support",       href: "/admin/support",                icon: icons.support },
       { label: "Media",         href: "/admin/media",                  icon: icons.media },
     ]
   },

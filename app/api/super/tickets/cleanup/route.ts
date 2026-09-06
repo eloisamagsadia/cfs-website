@@ -22,7 +22,7 @@ export async function GET() {
   const admin = createAdminClient();
   const [ticketsRes, lastAutoRes] = await Promise.all([
     (admin.from("event_tickets") as any)
-      .select("id, ticket_number, user_id, event_id, created_at, events:event_id(title, date)")
+      .select("id, ticket_number, user_id, event_id, created_at, events:event_id(title, date), profiles:user_id(display_name, email, avatar_url)")
       .eq("status", "pending_payment")
       .order("created_at", { ascending: false }),
     // Most recent auto-cleanup run so the panel can show "Last auto-cleanup: X ago".

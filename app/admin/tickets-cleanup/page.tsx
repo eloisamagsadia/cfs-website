@@ -13,6 +13,7 @@ type Row = {
   event_id: string;
   created_at: string;
   events?: { title: string; date: string } | null;
+  profiles?: { display_name: string | null; email: string | null; avatar_url: string | null } | null;
 };
 
 type AutoRun = { created_at: string; details?: { cancelled_count?: number; hours_cutoff?: number } | null };
