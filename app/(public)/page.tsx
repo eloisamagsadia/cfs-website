@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { IconCalendar, IconPin, IconTicket, IconUsers, IconHeart } from "@/components/shared/Icons";
+import { IconCalendar, IconPin, IconTicket, IconHeart } from "@/components/shared/Icons";
 import RealtimeRefresh from "@/components/shared/RealtimeRefresh";
 import { getColetLetters, LETTERS_MEDIUM_URL } from "@/lib/letters";
 import HomeLettersGrid from "@/components/public/HomeLettersGrid";
@@ -94,41 +94,74 @@ export default async function HomePage() {
           />
         </div>
 
-        {/* Copy strip — sits below the artwork so nothing overlaps the
-            painting. Centered, minimal, and mobile-friendly. */}
-        <div className="hero-copy" style={{ maxWidth: "760px", margin: "0 auto", padding: "32px 24px 0", textAlign: "center" }}>
-          <p className="scrap-note" style={{ fontSize: "clamp(1.5rem, 3.4vw, 2rem)", color: "#4A7C59", margin: "0 0 14px", lineHeight: 1.15 }}>
+        {/* Copy strip — designed layout: pull-quote → mission line →
+            3 stat index cards → CTAs → scroll cue. */}
+        <div className="hero-copy" style={{ maxWidth: "960px", margin: "0 auto", padding: "44px 24px 0", textAlign: "center" }}>
+
+          {/* Handwritten pull quote flanked by soft dividers */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "18px", margin: "0 0 14px" }}>
+            <span aria-hidden="true" style={{ display: "inline-block", width: "clamp(24px, 6vw, 60px)", height: "1px", background: "#B7CDB7" }} />
+            <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "3px" }}>THE MISSION</span>
+            <span aria-hidden="true" style={{ display: "inline-block", width: "clamp(24px, 6vw, 60px)", height: "1px", background: "#B7CDB7" }} />
+          </div>
+
+          <p className="scrap-note" style={{ fontSize: "clamp(1.9rem, 4.4vw, 2.8rem)", color: "#1B3A2D", margin: "0 0 14px", lineHeight: 1.1, letterSpacing: "-0.5px" }}>
             The Ace is on her way — and we&apos;re here for her.
           </p>
 
-          <p style={{ fontFamily: B, fontSize: "15px", color: "#1B3A2D", margin: "0 auto 24px", lineHeight: 1.7, maxWidth: "560px" }}>
+          <p style={{ fontFamily: B, fontSize: "15px", color: "#4A7C59", margin: "0 auto 36px", lineHeight: 1.7, maxWidth: "540px" }}>
             A community for Cocacolets — where we buy tickets together, throw fan events, and cheer Colet on. Come hang out.
           </p>
 
-          <div className="hero-cta-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center", marginBottom: "22px" }}>
-            <Link href="/events" className="btn-fx btn-fx-primary hero-cta-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: "#1B3A2D", color: "#ffffff", padding: "13px 26px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px", position: "relative", overflow: "hidden" }}>
+          {/* Stat index cards — three white paper cards with colored
+              top strips. Slight opposing tilts on desktop for a
+              scrapbook feel; straightened on mobile so nothing clips. */}
+          <div className="hero-stats" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "16px", margin: "0 0 40px" }}>
+            <div className="hero-stat hero-stat-tilt-l">
+              <span aria-hidden="true" className="hero-stat-strip" style={{ background: "#1A8040" }} />
+              <div className="hero-stat-num" style={{ fontFamily: S, color: "#1B3A2D", lineHeight: 1, letterSpacing: "-1px" }}>
+                {(memberCount ?? 0).toLocaleString()}
+              </div>
+              <div className="hero-stat-label" style={{ fontFamily: SG, fontWeight: 700, color: "#4A7C59", letterSpacing: "1.8px", textTransform: "uppercase" }}>
+                Cocacolets Strong
+              </div>
+            </div>
+
+            <div className="hero-stat">
+              <span aria-hidden="true" className="hero-stat-strip" style={{ background: "#E85D75" }} />
+              <div className="hero-stat-num" style={{ fontFamily: S, color: "#1B3A2D", lineHeight: 1, letterSpacing: "-1px" }}>
+                {upcomingCount}
+              </div>
+              <div className="hero-stat-label" style={{ fontFamily: SG, fontWeight: 700, color: "#4A7C59", letterSpacing: "1.8px", textTransform: "uppercase" }}>
+                Upcoming Event{upcomingCount === 1 ? "" : "s"}
+              </div>
+            </div>
+
+            <div className="hero-stat hero-stat-tilt-r">
+              <span aria-hidden="true" className="hero-stat-strip" style={{ background: "#E5B547" }} />
+              {nextEvent ? (
+                <HomeCountdown target={nextEvent.date} variant="stat" />
+              ) : (
+                <>
+                  <div className="hero-stat-num" style={{ fontFamily: S, color: "#1B3A2D", lineHeight: 1 }}>—</div>
+                  <div className="hero-stat-label" style={{ fontFamily: SG, fontWeight: 700, color: "#4A7C59", letterSpacing: "1.8px", textTransform: "uppercase" }}>
+                    No event yet
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* CTAs */}
+          <div className="hero-cta-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center", marginBottom: "14px" }}>
+            <Link href="/events" className="btn-fx btn-fx-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: "#1B3A2D", color: "#ffffff", padding: "14px 28px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
               <IconCalendar size={14} color="#ffffff" /> SEE ALL EVENTS
             </Link>
-            <Link href="/sign-up" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #1B3A2D", padding: "12px 24px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px", boxShadow: "0 2px 6px rgba(27,58,45,0.08)" }}>
+            <Link href="/sign-up" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #1B3A2D", padding: "13px 26px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px", boxShadow: "0 2px 6px rgba(27,58,45,0.08)" }}>
               <IconHeart size={14} color="#1B3A2D" /> JOIN THE FAM ✦
             </Link>
           </div>
 
-          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center", alignItems: "center", fontFamily: B, fontSize: "12px" }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFFFFF", border: "1px solid #DDE8DD", padding: "5px 12px", borderRadius: "999px", color: "#1B3A2D" }}>
-              <IconUsers size={12} color="#4A7C59" />
-              <strong style={{ color: "#0F2A1E" }}>{(memberCount ?? 0).toLocaleString()}</strong> members strong
-            </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFFFFF", border: "1px solid #DDE8DD", padding: "5px 12px", borderRadius: "999px", color: "#1B3A2D" }}>
-              <IconCalendar size={12} color="#4A7C59" />
-              <strong style={{ color: "#0F2A1E" }}>{upcomingCount}</strong> upcoming event{upcomingCount === 1 ? "" : "s"}
-            </span>
-            {nextEvent && (
-              <HomeCountdown target={nextEvent.date} label="Next event in" />
-            )}
-          </div>
-
-          {/* Scroll cue — soft bouncing chevron to invite the eye down */}
           {upcoming.length > 0 && (
             <a href="#upcoming-events" className="hero-scroll-cue" aria-label="Scroll to upcoming events">
               <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "2px" }}>SCROLL FOR EVENTS</span>
@@ -146,6 +179,31 @@ export default async function HomePage() {
           }
           .hero-pulse { animation: hero-pulse 1.8s ease-out infinite; }
 
+          /* Stat index cards */
+          .hero-stat {
+            position: relative; background: #FFFFFF;
+            border: 1px solid #DDE8DD; border-radius: 14px;
+            padding: 30px 20px 22px;
+            box-shadow: 0 6px 18px rgba(15,42,30,0.06);
+            overflow: hidden; text-align: left;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            min-width: 0;
+          }
+          .hero-stat:hover { transform: translateY(-3px) rotate(0deg); box-shadow: 0 12px 26px rgba(15,42,30,0.10); }
+          .hero-stat-tilt-l { transform: rotate(-1.2deg); }
+          .hero-stat-tilt-r { transform: rotate(1.2deg); }
+          .hero-stat-strip {
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 6px; display: block;
+          }
+          .hero-stat-num {
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            margin-bottom: 12px;
+          }
+          .hero-stat-label {
+            font-size: 10px;
+          }
+
           /* Scroll cue */
           @keyframes hero-scroll-bounce {
             0%,100% { transform: translateY(0); }
@@ -162,11 +220,17 @@ export default async function HomePage() {
           @media (prefers-reduced-motion: reduce) {
             .hero-pulse,
             .hero-scroll-cue { animation: none !important; }
+            .hero-stat-tilt-l, .hero-stat-tilt-r { transform: none !important; }
           }
           /* On tall/narrow phones, the wide banner shrinks to a short
              strip. Bump min-height so the wordmark stays legible. */
           @media (max-width: 640px) {
             .hero-banner { min-height: 200px; }
+            .hero-stats { gap: 8px !important; }
+            .hero-stat { padding: 22px 12px 16px !important; border-radius: 12px !important; }
+            .hero-stat-tilt-l, .hero-stat-tilt-r { transform: none !important; }
+            .hero-stat-num { font-size: 1.6rem !important; margin-bottom: 8px !important; }
+            .hero-stat-label { font-size: 8.5px !important; letter-spacing: 1.2px !important; }
           }
           /* Buttons stack full-width on phones so both CTAs feel equally
              tappable and the row breaks cleanly */
