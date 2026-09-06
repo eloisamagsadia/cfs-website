@@ -18,7 +18,6 @@ export const metadata: Metadata = {
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
-const H  = "var(--font-caveat, cursive)";
 
 const C = {
   paper:  "#FAFDF9",
@@ -84,159 +83,62 @@ export default async function HomePage() {
     <div className="scrap-paper" style={{ minHeight: "100vh" }}>
       <RealtimeRefresh tables="events" />
 
-      {/* ── HERO ── cozy scrapbook: warm lamp glow, washi tape label,
-          polaroid, framed "next event" card, subtle stamp watermark */}
-      <section className="home-hero" style={{ position: "relative", overflow: "hidden", padding: "56px 24px 72px" }}>
-        <div className="scrap-glow" />
-        <div className="scrap-glow" style={{ top: "auto", bottom: "-120px", left: "auto", right: "-120px", background: "radial-gradient(circle, rgba(240, 180, 200, 0.30), transparent 65%)" }} />
-        {/* Dot-grid texture — barely-there noise that keeps the paper
-            from feeling flat but stays out of the way. */}
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, rgba(26,128,64,0.055) 1px, transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none", maskImage: "linear-gradient(180deg, rgba(0,0,0,0.7), transparent 85%)" }} />
+      {/* ── HERO ── watercolor branding banner is the star. The artwork
+          already contains the wordmark + characters, so no h1 competes
+          with it. Copy + CTAs + proof pills sit below in a clean strip. */}
+      <section className="home-hero" style={{ position: "relative", padding: "0 0 56px" }}>
+        {/* Full-bleed watercolor banner. Aspect ratio matches the source
+            so the painting isn't cropped or letterboxed at any width. */}
+        <div className="hero-banner" style={{ position: "relative", width: "100%", aspectRatio: "1710 / 604", overflow: "hidden" }}>
+          <Image
+            src="https://media.coletfs.com/products/user_3F9O7q2MyuHGi78PSxQJR4ix5gI/u5mQXqE-UVCyWNbDnUFJZ.webp"
+            alt="Colet Fan Suporta"
+            fill
+            sizes="100vw"
+            priority
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </div>
 
-        <div className="hero-grid" style={{ position: "relative", maxWidth: "1120px", margin: "0 auto", display: "grid", gridTemplateColumns: "1.15fr 0.85fr", gap: "48px", alignItems: "center" }}>
+        {/* Copy strip — sits below the artwork so nothing overlaps the
+            painting. Centered, minimal, and mobile-friendly. */}
+        <div className="hero-copy" style={{ maxWidth: "760px", margin: "0 auto", padding: "36px 24px 0", textAlign: "center" }}>
+          <p className="scrap-note" style={{ fontSize: "clamp(1.5rem, 3.4vw, 2rem)", color: "#4A7C59", margin: "0 0 14px", lineHeight: 1.15 }}>
+            The Ace is on her way — and we&apos;re here for her.
+          </p>
 
-          {/* Left: copy + CTAs */}
-          <div>
-            <div style={{ marginBottom: "22px" }}>
-              <span className="scrap-tape scrap-tape-mint">Bini Colet Fan Society</span>
-            </div>
+          <p style={{ fontFamily: B, fontSize: "15px", color: "#1B3A2D", margin: "0 auto 24px", lineHeight: 1.7, maxWidth: "560px" }}>
+            A community for Cocacolets — where we buy tickets together, throw fan events, and cheer Colet on. Come hang out.
+          </p>
 
-            <h1 style={{ fontFamily: S, fontSize: "clamp(2.6rem, 7vw, 4.6rem)", color: "#1B3A2D", margin: "0 0 10px", lineHeight: 1.05, letterSpacing: "-1.5px" }}>
-              Colet <span style={{ position: "relative", display: "inline-block" }}>
-                Fan
-                <span aria-hidden="true" style={{ position: "absolute", top: "-14px", right: "-18px", fontFamily: H, fontSize: "1.6rem", color: "#E85D75", transform: "rotate(12deg)" }}>✦</span>
-              </span> Suporta
-            </h1>
-
-            <p className="scrap-note" style={{ fontSize: "clamp(1.5rem, 3.4vw, 2rem)", color: "#4A7C59", margin: "0 0 20px", lineHeight: 1.15 }}>
-              The Ace is on her way — and we&apos;re here for her.
-            </p>
-
-            <p className="hero-desc" style={{ fontFamily: B, fontSize: "15px", color: "#1B3A2D", maxWidth: "480px", margin: "0 0 24px", lineHeight: 1.7 }}>
-              A community for Cocacolets — where we buy tickets together, throw fan events, and cheer Colet on. Come hang out.
-            </p>
-
-            {/* CTA row */}
-            <div className="hero-cta-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "22px" }}>
-              <Link href="/events" className="btn-fx btn-fx-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: "#1B3A2D", color: "#ffffff", padding: "13px 26px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
-                <IconCalendar size={14} color="#ffffff" /> SEE ALL EVENTS
-              </Link>
-              <Link href="/sign-up" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #1B3A2D", padding: "12px 24px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px", boxShadow: "0 2px 6px rgba(27,58,45,0.08)" }}>
-                <IconHeart size={14} color="#1B3A2D" /> JOIN THE FAM ✦
-              </Link>
-            </div>
-
-            {/* Proof pills — all three get a visible pill bg so nothing
-                disappears against the cream paper. */}
-            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center", fontFamily: B, fontSize: "12px" }}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFFFFF", border: "1px solid #DDE8DD", padding: "5px 12px", borderRadius: "999px", color: "#1B3A2D" }}>
-                <IconUsers size={12} color="#4A7C59" />
-                <strong style={{ color: "#0F2A1E" }}>{(memberCount ?? 0).toLocaleString()}</strong> members strong
-              </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFFFFF", border: "1px solid #DDE8DD", padding: "5px 12px", borderRadius: "999px", color: "#1B3A2D" }}>
-                <IconCalendar size={12} color="#4A7C59" />
-                <strong style={{ color: "#0F2A1E" }}>{upcomingCount}</strong> upcoming event{upcomingCount === 1 ? "" : "s"}
-              </span>
-              {nextEvent && nextDaysAway !== null && (
-                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFF3D6", border: "1px solid #F0C48A", padding: "5px 12px", borderRadius: "999px", color: "#8B5E1F" }}>
-                  <span className="hero-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: "#1A8040" }} />
-                  Next event in <strong style={{ color: "#5A4020" }}>{nextDaysAway === 0 ? "today" : `${nextDaysAway} day${nextDaysAway === 1 ? "" : "s"}`}</strong>
-                </span>
-              )}
-            </div>
+          <div className="hero-cta-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center", marginBottom: "22px" }}>
+            <Link href="/events" className="btn-fx btn-fx-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: "#1B3A2D", color: "#ffffff", padding: "13px 26px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
+              <IconCalendar size={14} color="#ffffff" /> SEE ALL EVENTS
+            </Link>
+            <Link href="/sign-up" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #1B3A2D", padding: "12px 24px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px", boxShadow: "0 2px 6px rgba(27,58,45,0.08)" }}>
+              <IconHeart size={14} color="#1B3A2D" /> JOIN THE FAM ✦
+            </Link>
           </div>
 
-          {/* Right: framed collage — polaroid + next-event poster.
-              Card sits BEHIND polaroid on the right, polaroid pinned
-              to the LEFT so it never clips the card title. Rotating
-              "OFFICIAL FAN CLUB" stamp watermark sits deepest. */}
-          <div className="hero-collage" style={{ position: "relative", height: "460px" }}>
-
-            {/* Circular ring-text stamp watermark — deepest layer */}
-            <div aria-hidden="true" style={{ position: "absolute", top: "50%", right: "42%", transform: "translate(50%, -50%)", width: "260px", height: "260px", opacity: 0.18, pointerEvents: "none", zIndex: 0 }}>
-              <svg viewBox="0 0 260 260" width="260" height="260" style={{ animation: "hero-spin 60s linear infinite" }}>
-                <defs>
-                  <path id="stamp-ring" d="M 130,130 m -108,0 a 108,108 0 1,1 216,0 a 108,108 0 1,1 -216,0" fill="none" />
-                </defs>
-                <text style={{ fontFamily: "var(--font-space-grotesk,'Space Grotesk',sans-serif)", fontSize: "13px", fontWeight: 700, letterSpacing: "6px", fill: "#1A8040" }}>
-                  <textPath href="#stamp-ring" startOffset="0">OFFICIAL FAN CLUB ✦ EST. 2026 ✦ COLET FAN SUPORTA ✦ </textPath>
-                </text>
-              </svg>
-            </div>
-
-            {/* Framed "next event" card — anchored to the right/top so it
-                stays the primary visual weight on this side */}
-            {nextEvent ? (() => {
-              // Smart-split "Prefix | Title" so the card doesn't wrap to 5
-              // lines when the admin encodes context in the title.
-              const t: string = nextEvent.title ?? "";
-              const [pre, ...rest] = t.split(" | ");
-              const hasPrefix = rest.length > 0;
-              const eyebrow = hasPrefix ? pre.trim() : null;
-              const mainTitle = hasPrefix ? rest.join(" | ").trim() : t;
-              return (
-              <Link href={`/events/${nextEvent.id}`} className="scrap-frame btn-fx" style={{ position: "absolute", top: "80px", right: "2%", width: "300px", transform: "rotate(2.5deg)", textDecoration: "none", display: "block", zIndex: 1, borderRadius: 4 }}>
-                <div className="scrap-frame-inner" style={{ padding: "14px 14px 16px" }}>
-                  <div style={{ display: "inline-block", background: "#1A8040", color: "#ffffff", fontFamily: SG, fontSize: "9px", fontWeight: 700, letterSpacing: "1.5px", padding: "3px 10px", borderRadius: "999px", marginBottom: "10px" }}>
-                    NEXT UP
-                  </div>
-                  {eyebrow && (
-                    <div style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#1A8040", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "4px" }}>{eyebrow}</div>
-                  )}
-                  <div style={{ fontFamily: S, fontSize: "18px", color: "#1B3A2D", lineHeight: 1.2, marginBottom: "10px" }}>{mainTitle}</div>
-                  <div style={{ fontFamily: B, fontSize: "12px", color: "#1B3A2D", display: "flex", flexDirection: "column", gap: "4px" }}>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                      <IconCalendar size={11} color="#7A5A0F" />
-                      {new Date(nextEvent.date).toLocaleDateString("en-PH", { weekday: "short", month: "short", day: "numeric", timeZone: "Asia/Manila" })}
-                      {" · "}
-                      {new Date(nextEvent.date).toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Manila" })}
-                    </span>
-                    {nextEvent.location && (
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                        <IconPin size={11} color="#7A5A0F" /> {nextEvent.location}
-                      </span>
-                    )}
-                  </div>
-                  <div style={{ marginTop: "12px", paddingTop: "10px", borderTop: "1px dashed #DDE8DD", display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1A8040", letterSpacing: "1px" }}>
-                    <span>BOOK YOUR SLOT</span>
-                    <IconTicket size={12} color="#1A8040" />
-                  </div>
-                </div>
-              </Link>
-              );
-            })() : (
-              <div className="scrap-frame" style={{ position: "absolute", top: "80px", right: "2%", width: "260px", transform: "rotate(2.5deg)", zIndex: 1, borderRadius: 4 }}>
-                <div className="scrap-frame-inner" style={{ padding: "22px 18px", textAlign: "center" }}>
-                  <div className="scrap-note" style={{ fontSize: "18px", color: "#0F2A1E" }}>Next event coming soon ✦</div>
-                </div>
-              </div>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center", alignItems: "center", fontFamily: B, fontSize: "12px" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFFFFF", border: "1px solid #DDE8DD", padding: "5px 12px", borderRadius: "999px", color: "#1B3A2D" }}>
+              <IconUsers size={12} color="#4A7C59" />
+              <strong style={{ color: "#0F2A1E" }}>{(memberCount ?? 0).toLocaleString()}</strong> members strong
+            </span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFFFFF", border: "1px solid #DDE8DD", padding: "5px 12px", borderRadius: "999px", color: "#1B3A2D" }}>
+              <IconCalendar size={12} color="#4A7C59" />
+              <strong style={{ color: "#0F2A1E" }}>{upcomingCount}</strong> upcoming event{upcomingCount === 1 ? "" : "s"}
+            </span>
+            {nextEvent && nextDaysAway !== null && (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFF3D6", border: "1px solid #F0C48A", padding: "5px 12px", borderRadius: "999px", color: "#8B5E1F" }}>
+                <span className="hero-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: "#1A8040" }} />
+                Next event in <strong style={{ color: "#5A4020" }}>{nextDaysAway === 0 ? "today" : `${nextDaysAway} day${nextDaysAway === 1 ? "" : "s"}`}</strong>
+              </span>
             )}
-
-            {/* Polaroid — bottom-LEFT so it never covers the card
-                title. Layers over the stamp watermark. */}
-            <div className="scrap-polaroid scrap-polaroid-tilt-left hero-polaroid" style={{ position: "absolute", bottom: "0px", left: "0%", width: "158px", zIndex: 2, borderRadius: 2 }}>
-              <div className="scrap-polaroid-photo" style={{ borderRadius: 2, padding: 0, overflow: "hidden", position: "relative" }}>
-                <Image
-                  src="https://media.coletfs.com/products/user_3F9O7q2MyuHGi78PSxQJR4ix5gI/aYpvBMfbTeGqhSMPr4dpD.webp"
-                  alt="Colet"
-                  fill
-                  sizes="158px"
-                  priority
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-              <div className="scrap-polaroid-caption">colet ✦</div>
-            </div>
-
-            {/* Small washi note — floats above the polaroid */}
-            <div className="hero-washi-note" style={{ position: "absolute", top: "40px", left: "18%", zIndex: 3 }}>
-              <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(-8deg)" }}>cocacolets hangout</span>
-            </div>
           </div>
         </div>
 
         <style>{`
-          @keyframes hero-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
           @keyframes hero-pulse {
             0%,100% { box-shadow: 0 0 0 0 rgba(26,128,64,0.55); }
             50%     { box-shadow: 0 0 0 6px rgba(26,128,64,0);    }
@@ -244,50 +146,16 @@ export default async function HomePage() {
           .hero-pulse { animation: hero-pulse 1.8s ease-out infinite; }
           @media (prefers-reduced-motion: reduce) {
             .hero-pulse { animation: none; }
-            .hero-collage svg { animation: none !important; }
           }
-          @media (max-width: 900px) {
-            .home-hero { padding: 36px 20px 48px !important; }
-            .hero-grid { grid-template-columns: 1fr !important; gap: 28px !important; text-align: center; max-width: 100% !important; }
-            .hero-cta-row { justify-content: center; }
-            .hero-collage { height: 360px !important; max-width: 520px; margin: 0 auto; width: 100%; }
+          /* On tall/narrow phones, the wide banner shrinks to a short
+             strip. Bump min-height so the wordmark stays legible. */
+          @media (max-width: 640px) {
+            .hero-banner { min-height: 220px; }
           }
           /* Buttons stack full-width on phones so both CTAs feel equally
              tappable and the row breaks cleanly */
           @media (max-width: 560px) {
             .hero-cta-row > a { flex: 1 1 100%; justify-content: center; }
-          }
-          @media (max-width: 560px) {
-            .hero-collage {
-              height: auto !important;
-              min-height: 320px !important;
-              max-width: 100% !important;
-              display: flex !important;
-              justify-content: center;
-              align-items: center;
-              padding-top: 8px !important;
-              padding-bottom: 8px !important;
-            }
-            /* Framed card owns the mobile hero — center it, untilt slightly
-               so the wood border can't clip. */
-            .hero-collage .scrap-frame {
-              position: static !important;
-              width: 100% !important;
-              max-width: 320px !important;
-              transform: rotate(1deg) !important;
-            }
-            /* Polaroid + washi tape decorations hide on mobile — they were
-               positioned for the desktop right-anchored card layout and
-               would collide with the now-centered card. Hero still has
-               the framed NEXT UP card as the primary visual moment. */
-            .hero-collage .hero-polaroid,
-            .hero-collage .hero-washi-note,
-            .hero-collage > div[aria-hidden="true"] {
-              display: none !important;
-            }
-          }
-          @media (max-width: 380px) {
-            .hero-collage .scrap-frame { max-width: 280px !important; }
           }
         `}</style>
       </section>
@@ -311,10 +179,16 @@ export default async function HomePage() {
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
-            {upcoming.map(ev => {
+            {upcoming.map((ev, i) => {
               const date = new Date(ev.date);
+              const isNext = i === 0;
               return (
-                <Link key={ev.id} href={`/events/${ev.id}`} style={{ textDecoration: "none", display: "flex", flexDirection: "column", background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: "16px", overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)", transition: "transform 0.15s, border-color 0.15s" }} className="home-event-card">
+                <Link key={ev.id} href={`/events/${ev.id}`} style={{ textDecoration: "none", display: "flex", flexDirection: "column", background: "#ffffff", border: isNext ? "2px solid #1A8040" : `1px solid ${C.border}`, borderRadius: "16px", overflow: "hidden", boxShadow: isNext ? "0 8px 24px rgba(26,128,64,0.14)" : "0 2px 12px rgba(0,0,0,0.04)", transition: "transform 0.15s, border-color 0.15s", position: "relative" }} className="home-event-card">
+                  {isNext && (
+                    <div style={{ position: "absolute", top: "10px", right: "10px", zIndex: 2, background: "#1A8040", color: "#ffffff", fontFamily: SG, fontSize: "9px", fontWeight: 700, letterSpacing: "1.5px", padding: "4px 10px", borderRadius: "999px", boxShadow: "0 2px 6px rgba(26,128,64,0.35)" }}>
+                      NEXT UP
+                    </div>
+                  )}
                   <div style={{ aspectRatio: "16/9", background: C.mist, position: "relative", overflow: "hidden" }}>
                     {ev.banner_url ? (
                       <img src={ev.banner_url} alt={ev.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
