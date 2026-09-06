@@ -2,42 +2,33 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
 
-// Receives inbound emails from Resend Inbound. When a guest replies to
-// an admin's outgoing email, our outgoing Reply-To was tokenized as
+// Receives inbound emails and appends them to a contact_messages thread.
+// Called by our Cloudflare Email Worker (see docs/inbound-worker.md).
+// When a guest replies to an admin's outgoing email, our outgoing Reply-To
+// was tokenized as
 //    replies+<contact_message_id>@coletfs.com
-// so the "to" address on the inbound event tells us which conversation
-// to append to.
+// The Worker POSTs the parsed email here; we use the +<id> subaddress
+// to route the reply into the right conversation.
 //
-// Configuration:
-//   1. Enable Inbound for coletfs.com in Resend dashboard.
-//   2. Add MX records Resend gives you (dashboard shows exact values).
-//   3. Register this route as an inbound webhook.
-//   4. Set env RESEND_INBOUND_DOMAIN=coletfs.com and (optionally)
-//      RESEND_INBOUND_WEBHOOK_SECRET for Svix signature verification.
+// Route path kept as /resend-inbound purely for URL stability. Auth is
+// a shared secret in `x-cfs-inbound-secret`, compared against
+// CFS_INBOUND_WEBHOOK_SECRET (falls back to RESEND_INBOUND_WEBHOOK_SECRET
+// for backward compat with the old env name).
 //
-// Public route — must be added to middleware.ts publicRoutes (verified
-// by shared secret / signature instead of Clerk auth).
+// Public route — /api/webhooks(.*) is already in middleware.ts publicRoutes.
 export async function POST(req: NextRequest) {
-  const secret = process.env.RESEND_INBOUND_WEBHOOK_SECRET;
+  const secret =
+    process.env.CFS_INBOUND_WEBHOOK_SECRET ??
+    process.env.RESEND_INBOUND_WEBHOOK_SECRET ??
+    null;
 
-  // If a signing secret is configured, verify Resend's Svix signature.
-  // If not, log a warning but still accept — lets you test without setup.
   if (secret) {
-    const sigId  = req.headers.get("svix-id");
-    const sigTs  = req.headers.get("svix-timestamp");
-    const sig    = req.headers.get("svix-signature");
-    if (!sigId || !sigTs || !sig) {
-      return NextResponse.json({ error: "Missing signature headers" }, { status: 401 });
-    }
-    // Full Svix verification would need the `svix` npm package. For now
-    // we require the caller to supply the raw shared secret in a custom
-    // header — swap to Svix.verify() once the package is installed.
     const shared = req.headers.get("x-cfs-inbound-secret");
     if (shared !== secret) {
       return NextResponse.json({ error: "Bad secret" }, { status: 401 });
     }
   } else {
-    console.warn("[resend-inbound] RESEND_INBOUND_WEBHOOK_SECRET not set — accepting all requests. Set it in prod.");
+    console.warn("[inbound] CFS_INBOUND_WEBHOOK_SECRET not set — accepting all requests. Set it in prod.");
   }
 
   const body = await req.json().catch(() => null);
