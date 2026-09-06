@@ -52,12 +52,18 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 96px;
+    /* Prevent any child element (tilted frames, oversized decorations,
+       stray fixed-width blocks) from creating horizontal scroll on
+       mobile. If content genuinely needs to scroll horizontally, it
+       should live inside a .table-scroll or similar contained wrapper. */
+    overflow-x: hidden;
   }
   body {
     background-color: var(--cfs-bg);
     color: var(--cfs-cream);
     font-family: var(--font-body);
     line-height: 1.6;
+    overflow-x: hidden;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);

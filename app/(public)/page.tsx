@@ -247,9 +247,9 @@ export default async function HomePage() {
             .hero-collage svg { animation: none !important; }
           }
           @media (max-width: 900px) {
-            .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center; }
+            .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center; max-width: 100% !important; }
             .hero-cta-row { justify-content: center; }
-            .hero-collage { height: 360px !important; max-width: 520px; margin: 0 auto; }
+            .hero-collage { height: 360px !important; max-width: 520px; margin: 0 auto; width: 100%; }
           }
           /* Buttons stack full-width on phones so both CTAs feel equally
              tappable and the row breaks cleanly */
