@@ -145,7 +145,11 @@ export default function CommandPalette() {
         for (const m of (d.members ?? []) as any[]) items.push({
           key: `member:${m.id}`, group: "members", title: m.display_name ?? m.email ?? m.id.slice(0, 8),
           subtitle: [m.email, m.role, m.is_banned && "BANNED"].filter(Boolean).join(" · "),
-          href: `/admin/members/${m.id}/activity`,
+          // Palette always sends to the members list (open for admin +
+          // super_admin). The activity deep-view is owner-only and gets
+          // reached from the ACTIVITY pill on the list — the palette
+          // shouldn't be a way in for non-owners.
+          href: `/admin/members`,
           icon: <IconUser size={13} color="#1A8040" />,
           accent: "#1A8040",
         });
