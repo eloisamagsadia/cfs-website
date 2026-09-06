@@ -170,14 +170,15 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="letter-modal-title"
+            className="letter-modal"
             style={{
               position: "fixed",
               zIndex: 61,
               top: "50%", left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "calc(100vw - 24px)",
+              width: "calc(100vw - 16px)",
               maxWidth: "760px",
-              maxHeight: "calc(100vh - 24px)",
+              maxHeight: "calc(100dvh - 16px)",
               background: "#FFFFFF",
               borderRadius: 12,
               boxShadow: "0 20px 60px rgba(15,42,30,0.35)",
@@ -187,42 +188,73 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
               animation: "letterSlideIn 0.24s cubic-bezier(0.34, 1.56, 0.64, 1)",
             }}
           >
-            {/* Close */}
-            <button onClick={close} aria-label="Close"
-              style={{ position: "absolute", top: 14, right: 14, zIndex: 3, background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "50%", width: 34, height: 34, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(15,42,30,0.15)" }}>
-              <IconX size={14} color="#1B3A2D" />
-            </button>
+            {/* Sticky top bar with source label + close button — matches
+                Medium's post-open state where the origin is always visible */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px 10px 20px", borderBottom: "1px solid #F2F2F2", background: "#FFFFFF", flexShrink: 0 }}>
+              <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 12, color: "#6B6B6B", letterSpacing: "0.02em" }}>
+                Letters from Colet · Medium
+              </span>
+              <button onClick={close} aria-label="Close"
+                style={{ background: "transparent", border: "none", borderRadius: "50%", width: 34, height: 34, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#6B6B6B" }}
+                onMouseEnter={e => { e.currentTarget.style.background = "#F2F2F2"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}>
+                <IconX size={18} color="currentColor" />
+              </button>
+            </div>
 
-            {/* Scrollable content */}
+            {/* Scrollable content — reading column is narrower than the
+                modal, mirrors Medium's ~680px article width */}
             <div style={{ overflowY: "auto", overscrollBehavior: "contain", flex: 1 }}>
-              <div style={{ padding: "28px 28px 40px" }}>
+              <article className="letter-article">
 
+                {/* Title block */}
+                <header style={{ marginBottom: 24 }}>
+                  <h1 id="letter-modal-title" style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: "clamp(1.9rem, 4.4vw, 2.6rem)", fontWeight: 700, color: "#242424", lineHeight: 1.15, margin: "0 0 12px", letterSpacing: "-0.024em" }}>
+                    {open.title}
+                  </h1>
+
+                  {/* Author byline row — avatar + name + date, Medium
+                      convention */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, #A8D3B4, #4A7C59)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontWeight: 700, fontSize: 15, flexShrink: 0 }}>C</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 14, color: "#242424", fontWeight: 500 }}>
+                        Letters from Colet
+                      </span>
+                      {open.pubDate && (
+                        <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 13, color: "#6B6B6B" }}>
+                          {new Date(open.pubDate).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </header>
+
+                {/* Hero image — full-bleed to reading column, Medium style */}
                 {open.thumbnail && (
-                  <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", borderRadius: 14, overflow: "hidden", marginBottom: 22, background: "#E8F0E4" }}>
-                    <Image src={open.thumbnail} alt="" fill sizes="(max-width: 800px) 100vw, 760px" priority style={{ objectFit: "cover" }} />
+                  <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", overflow: "hidden", marginBottom: 28, background: "#F2F2F2" }}>
+                    <Image src={open.thumbnail} alt="" fill sizes="(max-width: 800px) 100vw, 680px" priority style={{ objectFit: "cover" }} />
                   </div>
                 )}
 
-                <div style={{ marginBottom: 24, paddingRight: 40 }}>
-                  <h2 id="letter-modal-title" style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: "clamp(2rem, 4.4vw, 2.7rem)", fontWeight: 700, color: "#242424", lineHeight: 1.15, margin: "0 0 10px", letterSpacing: "-0.024em" }}>
-                    {open.title}
-                  </h2>
-                  {open.pubDate && (
-                    <div style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 14, color: "#6B6B6B" }}>
-                      {new Date(open.pubDate).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}
-                    </div>
-                  )}
-                </div>
-
+                {/* Body */}
                 <div className="letter-body" dangerouslySetInnerHTML={{ __html: sanitize(stripLeadingImage(open.content, open.thumbnail)) }} />
 
-                <div style={{ marginTop: 40, paddingTop: 24, borderTop: "1px solid #E6E6E6", display: "flex", justifyContent: "center" }}>
-                  <a href={open.link} target="_blank" rel="noopener noreferrer" className="btn-fx"
-                    style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 13, fontWeight: 600, color: "#6B6B6B", background: "transparent", border: "1px solid #E6E6E6", borderRadius: 999, padding: "8px 18px", textDecoration: "none" }}>
-                    Open on Medium ↗
+                {/* Footer — subtle Medium-style attribution */}
+                <footer style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid #E6E6E6", display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #A8D3B4, #4A7C59)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontWeight: 700, fontSize: 16, flexShrink: 0 }}>C</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 14, color: "#242424", fontWeight: 600 }}>Written by Colet</span>
+                      <span style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 13, color: "#6B6B6B" }}>Letters from Colet on Medium</span>
+                    </div>
+                  </div>
+                  <a href={open.link} target="_blank" rel="noopener noreferrer"
+                    style={{ display: "inline-flex", alignItems: "center", gap: 4, fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 13, fontWeight: 500, color: "#FFFFFF", background: "#242424", border: "none", borderRadius: 999, padding: "8px 18px", textDecoration: "none" }}>
+                    Read on Medium
                   </a>
-                </div>
-              </div>
+                </footer>
+              </article>
             </div>
           </div>
 
@@ -234,6 +266,31 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
             }
             @media (prefers-reduced-motion: reduce) {
               [style*="letterFadeIn"], [style*="letterSlideIn"] { animation: none !important; }
+            }
+            /* Reading column — Medium keeps this narrower than the modal
+               so lines stay a comfortable measure (~65ch) */
+            .letter-article {
+              max-width: 680px;
+              margin: 0 auto;
+              padding: 28px 24px 48px;
+            }
+            @media (min-width: 720px) {
+              .letter-article { padding: 32px 40px 56px; }
+            }
+            @media (max-width: 480px) {
+              .letter-article { padding: 20px 18px 40px; }
+            }
+            /* Full-viewport modal on small phones so nothing scrolls under
+               the notch and everything's readable */
+            @media (max-width: 480px) {
+              .letter-modal {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                max-height: 100dvh !important;
+                border-radius: 0 !important;
+                top: 0 !important; left: 0 !important;
+                transform: none !important;
+              }
             }
           `}</style>
         </>,

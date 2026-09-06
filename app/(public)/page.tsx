@@ -241,7 +241,13 @@ export default async function HomePage() {
           @media (max-width: 560px) {
             .hero-collage { height: 320px !important; }
             .hero-collage .hero-polaroid { width: 128px !important; left: 4% !important; }
-            .hero-collage .scrap-frame { width: 230px !important; right: 4% !important; top: 60px !important; }
+            .hero-collage .scrap-frame { width: 230px !important; right: 4% !important; top: 60px !important; max-width: calc(100vw - 60px) !important; }
+          }
+          @media (max-width: 380px) {
+            section > .hero-grid { padding: 0 !important; }
+            .hero-collage { height: 300px !important; }
+            .hero-collage .hero-polaroid { width: 108px !important; }
+            .hero-collage .scrap-frame { width: 200px !important; top: 40px !important; }
           }
         `}</style>
       </section>
