@@ -82,7 +82,6 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
               </div>
             )}
             <div style={{ padding: "16px 20px 18px", display: "flex", flexDirection: "column", gap: "8px", flex: 1 }}>
-              <div className="scrap-note" style={{ fontSize: "16px", color: "#4A7C59", lineHeight: 1 }}>Dear Cocacolets ✦</div>
               <div style={{ fontFamily: S, fontSize: "17px", color: C.forest, lineHeight: 1.25 }}>{letter.title}</div>
               <p style={{ fontFamily: B, fontSize: "12.5px", color: C.muted, lineHeight: 1.65, margin: 0 }}>{letter.excerpt}</p>
               <div style={{ marginTop: "auto", paddingTop: "10px", borderTop: `1px solid ${C.border}`, display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px" }}>
@@ -98,35 +97,65 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
 
       <style>{`
         .letter-card:hover { transform: translateY(-2px); border-color: #1A8040 !important; }
-        /* Letter body typography — scoped so we only style the letter content */
-        .letter-body { font-family: ${B}; font-size: 15.5px; line-height: 1.85; color: #1B3A2D; word-wrap: break-word; overflow-wrap: anywhere; }
-        .letter-body > *:first-child { margin-top: 0; }
-        .letter-body h1, .letter-body h2, .letter-body h3, .letter-body h4 {
-          font-family: ${S}; color: #1B3A2D; margin: 26px 0 10px; line-height: 1.25; letter-spacing: -0.3px;
+        /* Medium-style reading typography — serif body, large size, generous line-height,
+           near-black text on white. Scoped to .letter-body so it never leaks into the
+           rest of the site's sans-serif layout. */
+        .letter-body {
+          font-family: 'Charter', 'Iowan Old Style', 'Georgia', 'Times New Roman', serif;
+          font-size: 20px; line-height: 1.58; color: #242424;
+          letter-spacing: -0.003em;
+          word-wrap: break-word; overflow-wrap: anywhere;
         }
-        .letter-body h1 { font-size: 1.9rem; }
-        .letter-body h2 { font-size: 1.5rem; }
-        .letter-body h3 { font-size: 1.2rem; }
-        .letter-body h4 { font-size: 1.05rem; }
-        .letter-body p { margin: 0 0 16px; }
-        .letter-body a { color: #1A8040; text-decoration: underline; }
-        .letter-body strong { color: #0F2A1E; font-weight: 700; }
+        .letter-body > *:first-child { margin-top: 0; }
+        .letter-body p, .letter-body ul, .letter-body ol { margin: 0 0 28px; }
+        .letter-body p { -webkit-font-smoothing: antialiased; }
+        .letter-body h1, .letter-body h2, .letter-body h3, .letter-body h4 {
+          font-family: 'sohne', 'Helvetica Neue', Arial, sans-serif;
+          color: #242424; font-weight: 700; letter-spacing: -0.02em;
+          margin: 40px 0 12px; line-height: 1.2;
+        }
+        .letter-body h1 { font-size: 34px; }
+        .letter-body h2 { font-size: 26px; }
+        .letter-body h3 { font-size: 22px; margin-top: 32px; }
+        .letter-body h4 { font-size: 18px; }
+        .letter-body a { color: #242424; text-decoration: underline; text-decoration-color: rgba(0,0,0,0.3); text-underline-offset: 3px; }
+        .letter-body a:hover { text-decoration-color: #242424; }
+        .letter-body strong { font-weight: 700; color: #242424; }
         .letter-body em { font-style: italic; }
-        .letter-body img { display: block; max-width: 100%; height: auto; border-radius: 12px; margin: 20px auto; }
-        .letter-body figure { margin: 22px 0; text-align: center; }
+        .letter-body img { display: block; max-width: 100%; height: auto; margin: 32px auto; }
+        .letter-body figure { margin: 32px 0; }
         .letter-body figure img { margin: 0 auto; }
-        .letter-body figcaption { font-family: ${B}; font-size: 12px; color: #7A8E7A; text-align: center; margin-top: 8px; font-style: italic; }
+        .letter-body figcaption {
+          font-family: 'sohne', 'Helvetica Neue', Arial, sans-serif;
+          font-size: 14px; color: #6B6B6B; text-align: center;
+          margin-top: 10px; line-height: 1.4;
+        }
         .letter-body blockquote {
-          margin: 22px 0; padding: 12px 20px;
-          border-left: 3px solid #1A8040; background: #F5F7EC;
-          border-radius: 0 10px 10px 0; font-style: italic;
+          margin: 28px 0; padding: 0 0 0 22px;
+          border-left: 3px solid #242424; font-style: italic;
+          font-size: 22px; line-height: 1.5; color: #242424;
         }
         .letter-body blockquote p:last-child { margin-bottom: 0; }
-        .letter-body ul, .letter-body ol { padding-left: 22px; margin: 0 0 16px; }
-        .letter-body li { margin-bottom: 6px; }
-        .letter-body hr { border: none; border-top: 1px dashed #DDE8DD; margin: 28px 0; }
-        .letter-body pre { background: #F5F7EC; padding: 14px 16px; border-radius: 10px; overflow-x: auto; font-size: 13px; }
-        .letter-body code { background: #F5F7EC; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+        .letter-body ul, .letter-body ol { padding-left: 28px; }
+        .letter-body li { margin-bottom: 8px; }
+        .letter-body li p { margin-bottom: 8px; }
+        .letter-body hr {
+          border: none; text-align: center; margin: 40px 0;
+          height: 24px; letter-spacing: 8px; color: #6B6B6B;
+        }
+        .letter-body hr::before { content: "· · ·"; font-size: 24px; }
+        .letter-body pre {
+          background: #F2F2F2; padding: 16px 20px; border-radius: 4px;
+          overflow-x: auto; font-size: 15px;
+          font-family: 'Menlo', 'Monaco', monospace;
+          margin: 0 0 28px;
+        }
+        .letter-body code {
+          background: #F2F2F2; padding: 2px 4px; border-radius: 2px;
+          font-size: 0.9em;
+          font-family: 'Menlo', 'Monaco', monospace;
+        }
+        .letter-body pre code { background: transparent; padding: 0; }
       `}</style>
 
       {open && mounted && createPortal(
@@ -149,8 +178,8 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
               width: "calc(100vw - 24px)",
               maxWidth: "760px",
               maxHeight: "calc(100vh - 24px)",
-              background: "#F5F7EC",
-              borderRadius: 20,
+              background: "#FFFFFF",
+              borderRadius: 12,
               boxShadow: "0 20px 60px rgba(15,42,30,0.35)",
               display: "flex",
               flexDirection: "column",
@@ -174,27 +203,23 @@ export default function HomeLettersGrid({ letters }: { letters: Letter[] }) {
                   </div>
                 )}
 
-                <div style={{ marginBottom: 20, paddingRight: 40 }}>
-                  <div className="scrap-note" style={{ fontSize: 20, color: "#4A7C59", marginBottom: 4, lineHeight: 1 }}>
-                    Dear Cocacolets ✦
-                  </div>
-                  <h2 id="letter-modal-title" style={{ fontFamily: S, fontSize: "clamp(1.6rem, 3.6vw, 2.2rem)", color: "#1B3A2D", lineHeight: 1.15, margin: "0 0 8px", letterSpacing: "-0.3px" }}>
+                <div style={{ marginBottom: 24, paddingRight: 40 }}>
+                  <h2 id="letter-modal-title" style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: "clamp(2rem, 4.4vw, 2.7rem)", fontWeight: 700, color: "#242424", lineHeight: 1.15, margin: "0 0 10px", letterSpacing: "-0.024em" }}>
                     {open.title}
                   </h2>
                   {open.pubDate && (
-                    <div style={{ fontFamily: B, fontSize: 12, color: "#7A8E7A" }}>
-                      Written {new Date(open.pubDate).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}
+                    <div style={{ fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 14, color: "#6B6B6B" }}>
+                      {new Date(open.pubDate).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}
                     </div>
                   )}
                 </div>
 
                 <div className="letter-body" dangerouslySetInnerHTML={{ __html: sanitize(stripLeadingImage(open.content, open.thumbnail)) }} />
 
-                <div style={{ marginTop: 32, paddingTop: 20, borderTop: "1px dashed #DDE8DD", display: "flex", flexDirection: "column", gap: 10, alignItems: "center" }}>
-                  <span className="scrap-note" style={{ fontSize: 20, color: "#4A7C59", lineHeight: 1 }}>salamat ✦</span>
+                <div style={{ marginTop: 40, paddingTop: 24, borderTop: "1px solid #E6E6E6", display: "flex", justifyContent: "center" }}>
                   <a href={open.link} target="_blank" rel="noopener noreferrer" className="btn-fx"
-                    style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#5A7A60", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 10, padding: "9px 16px", textDecoration: "none", letterSpacing: "1.2px" }}>
-                    READ ON MEDIUM ↗
+                    style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "'sohne', 'Helvetica Neue', Arial, sans-serif", fontSize: 13, fontWeight: 600, color: "#6B6B6B", background: "transparent", border: "1px solid #E6E6E6", borderRadius: 999, padding: "8px 18px", textDecoration: "none" }}>
+                    Open on Medium ↗
                   </a>
                 </div>
               </div>
