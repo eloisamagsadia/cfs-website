@@ -68,7 +68,8 @@ export default authMiddleware({
       // Super-admin-only pages that happen to live under the /admin tree.
       // Regular admins get redirected to /admin so they never land on a
       // page whose actions all 403 for them.
-      const superOnlyAdminPrefixes = ["/admin/super", "/admin/refunds"];
+      // NOTE: /admin/refunds is now open to admin — do NOT add it back.
+      const superOnlyAdminPrefixes = ["/admin/super"];
       if (role !== "super_admin" && superOnlyAdminPrefixes.some(p => pathname === p || pathname.startsWith(`${p}/`))) {
         const url = req.nextUrl.clone();
         url.pathname = "/admin";
