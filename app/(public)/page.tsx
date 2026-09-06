@@ -109,25 +109,26 @@ export default async function HomePage() {
               <Link href="/events" className="btn-fx btn-fx-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: "#1B3A2D", color: "#ffffff", padding: "13px 26px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
                 <IconCalendar size={14} color="#ffffff" /> SEE ALL EVENTS
               </Link>
-              <Link href="/sign-up" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #DDE8DD", padding: "12px 24px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
+              <Link href="/sign-up" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #1B3A2D", padding: "12px 24px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px", boxShadow: "0 2px 6px rgba(27,58,45,0.08)" }}>
                 <IconHeart size={14} color="#1B3A2D" /> JOIN THE FAM ✦
               </Link>
             </div>
 
-            {/* Proof pills */}
-            <div style={{ display: "flex", gap: "18px", flexWrap: "wrap", alignItems: "center", fontFamily: B, fontSize: "12px", color: "#1B3A2D" }}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+            {/* Proof pills — all three get a visible pill bg so nothing
+                disappears against the cream paper. */}
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center", fontFamily: B, fontSize: "12px" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFFFFF", border: "1px solid #DDE8DD", padding: "5px 12px", borderRadius: "999px", color: "#1B3A2D" }}>
                 <IconUsers size={12} color="#4A7C59" />
                 <strong style={{ color: "#0F2A1E" }}>{(memberCount ?? 0).toLocaleString()}</strong> members strong
               </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFFFFF", border: "1px solid #DDE8DD", padding: "5px 12px", borderRadius: "999px", color: "#1B3A2D" }}>
                 <IconCalendar size={12} color="#4A7C59" />
                 <strong style={{ color: "#0F2A1E" }}>{upcomingCount}</strong> upcoming event{upcomingCount === 1 ? "" : "s"}
               </span>
               {nextEvent && nextDaysAway !== null && (
-                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFF3D6", border: "1px solid #F0C48A", padding: "3px 10px", borderRadius: "999px", color: "#4A7C59" }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFF3D6", border: "1px solid #F0C48A", padding: "5px 12px", borderRadius: "999px", color: "#8B5E1F" }}>
                   <span className="hero-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: "#1A8040" }} />
-                  Next event in <strong>{nextDaysAway === 0 ? "today" : `${nextDaysAway} day${nextDaysAway === 1 ? "" : "s"}`}</strong>
+                  Next event in <strong style={{ color: "#5A4020" }}>{nextDaysAway === 0 ? "today" : `${nextDaysAway} day${nextDaysAway === 1 ? "" : "s"}`}</strong>
                 </span>
               )}
             </div>
