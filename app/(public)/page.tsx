@@ -73,10 +73,13 @@ export default async function HomePage() {
       <RealtimeRefresh tables="events" />
 
       {/* ── HERO ── cozy scrapbook: warm lamp glow, washi tape label,
-          polaroid placeholder, framed "next event" card */}
+          polaroid, framed "next event" card, subtle stamp watermark */}
       <section style={{ position: "relative", overflow: "hidden", padding: "56px 24px 72px" }}>
         <div className="scrap-glow" />
         <div className="scrap-glow" style={{ top: "auto", bottom: "-120px", left: "auto", right: "-120px", background: "radial-gradient(circle, rgba(240, 180, 200, 0.30), transparent 65%)" }} />
+        {/* Dot-grid texture — barely-there noise that keeps the paper
+            from feeling flat but stays out of the way. */}
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, rgba(26,128,64,0.055) 1px, transparent 1px)", backgroundSize: "22px 22px", pointerEvents: "none", maskImage: "linear-gradient(180deg, rgba(0,0,0,0.7), transparent 85%)" }} />
 
         <div className="hero-grid" style={{ position: "relative", maxWidth: "1120px", margin: "0 auto", display: "grid", gridTemplateColumns: "1.15fr 0.85fr", gap: "48px", alignItems: "center" }}>
 
@@ -86,8 +89,11 @@ export default async function HomePage() {
               <span className="scrap-tape scrap-tape-mint">Bini Colet Fan Society</span>
             </div>
 
-            <h1 style={{ fontFamily: S, fontSize: "clamp(2.6rem, 7vw, 4.6rem)", color: "#1B3A2D", margin: "0 0 10px", lineHeight: 1.05, letterSpacing: "-1px" }}>
-              Colet Fan Suporta
+            <h1 style={{ fontFamily: S, fontSize: "clamp(2.6rem, 7vw, 4.6rem)", color: "#1B3A2D", margin: "0 0 10px", lineHeight: 1.05, letterSpacing: "-1.5px" }}>
+              Colet <span style={{ position: "relative", display: "inline-block" }}>
+                Fan
+                <span aria-hidden="true" style={{ position: "absolute", top: "-14px", right: "-18px", fontFamily: H, fontSize: "1.6rem", color: "#E85D75", transform: "rotate(12deg)" }}>✦</span>
+              </span> Suporta
             </h1>
 
             <p className="scrap-note" style={{ fontSize: "clamp(1.5rem, 3.4vw, 2rem)", color: "#4A7C59", margin: "0 0 20px", lineHeight: 1.15 }}>
@@ -120,38 +126,35 @@ export default async function HomePage() {
               </span>
               {nextEvent && nextDaysAway !== null && (
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#FFF3D6", border: "1px solid #F0C48A", padding: "3px 10px", borderRadius: "999px", color: "#4A7C59" }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#1A8040" }} />
+                  <span className="hero-pulse" style={{ width: 6, height: 6, borderRadius: "50%", background: "#1A8040" }} />
                   Next event in <strong>{nextDaysAway === 0 ? "today" : `${nextDaysAway} day${nextDaysAway === 1 ? "" : "s"}`}</strong>
                 </span>
               )}
             </div>
           </div>
 
-          {/* Right: framed collage — polaroid + next-event poster */}
-          <div className="hero-collage" style={{ position: "relative", height: "440px" }}>
-            {/* Polaroid — top-left, tilted left */}
-            <div className="scrap-polaroid scrap-polaroid-tilt-left" style={{ position: "absolute", top: "12px", left: "8%", width: "168px", zIndex: 2, borderRadius: 2 }}>
-              <div className="scrap-polaroid-photo" style={{ borderRadius: 2, padding: 0, overflow: "hidden", position: "relative" }}>
-                <Image
-                  src="https://media.coletfs.com/products/user_3F9O7q2MyuHGi78PSxQJR4ix5gI/aYpvBMfbTeGqhSMPr4dpD.webp"
-                  alt="Colet"
-                  fill
-                  sizes="168px"
-                  priority
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-              <div className="scrap-polaroid-caption">colet ✦</div>
+          {/* Right: framed collage — polaroid + next-event poster.
+              Card sits BEHIND polaroid on the right, polaroid pinned
+              to the LEFT so it never clips the card title. Rotating
+              "OFFICIAL FAN CLUB" stamp watermark sits deepest. */}
+          <div className="hero-collage" style={{ position: "relative", height: "460px" }}>
+
+            {/* Circular ring-text stamp watermark — deepest layer */}
+            <div aria-hidden="true" style={{ position: "absolute", top: "50%", right: "42%", transform: "translate(50%, -50%)", width: "260px", height: "260px", opacity: 0.18, pointerEvents: "none", zIndex: 0 }}>
+              <svg viewBox="0 0 260 260" width="260" height="260" style={{ animation: "hero-spin 60s linear infinite" }}>
+                <defs>
+                  <path id="stamp-ring" d="M 130,130 m -108,0 a 108,108 0 1,1 216,0 a 108,108 0 1,1 -216,0" fill="none" />
+                </defs>
+                <text style={{ fontFamily: "var(--font-space-grotesk,'Space Grotesk',sans-serif)", fontSize: "13px", fontWeight: 700, letterSpacing: "6px", fill: "#1A8040" }}>
+                  <textPath href="#stamp-ring" startOffset="0">OFFICIAL FAN CLUB ✦ EST. 2026 ✦ COLET FAN SUPORTA ✦ </textPath>
+                </text>
+              </svg>
             </div>
 
-            {/* Small washi note — top-right */}
-            <div style={{ position: "absolute", top: "0px", right: "12%", zIndex: 3 }}>
-              <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(6deg)" }}>iu-ers hangout</span>
-            </div>
-
-            {/* Framed "next event" card — center-right, tilted right */}
+            {/* Framed "next event" card — anchored to the right/top so it
+                stays the primary visual weight on this side */}
             {nextEvent ? (
-              <Link href={`/events/${nextEvent.id}`} className="scrap-frame" style={{ position: "absolute", top: "90px", right: "6%", width: "295px", transform: "rotate(2.5deg)", textDecoration: "none", display: "block", zIndex: 1, borderRadius: 4 }}>
+              <Link href={`/events/${nextEvent.id}`} className="scrap-frame btn-fx" style={{ position: "absolute", top: "80px", right: "2%", width: "300px", transform: "rotate(2.5deg)", textDecoration: "none", display: "block", zIndex: 1, borderRadius: 4 }}>
                 <div className="scrap-frame-inner" style={{ padding: "14px 14px 16px" }}>
                   <div style={{ display: "inline-block", background: "#1A8040", color: "#ffffff", fontFamily: SG, fontSize: "9px", fontWeight: 700, letterSpacing: "1.5px", padding: "3px 10px", borderRadius: "999px", marginBottom: "10px" }}>
                     NEXT UP
@@ -177,24 +180,55 @@ export default async function HomePage() {
                 </div>
               </Link>
             ) : (
-              <div className="scrap-frame" style={{ position: "absolute", top: "90px", right: "6%", width: "260px", transform: "rotate(2.5deg)", zIndex: 1, borderRadius: 4 }}>
+              <div className="scrap-frame" style={{ position: "absolute", top: "80px", right: "2%", width: "260px", transform: "rotate(2.5deg)", zIndex: 1, borderRadius: 4 }}>
                 <div className="scrap-frame-inner" style={{ padding: "22px 18px", textAlign: "center" }}>
                   <div className="scrap-note" style={{ fontSize: "18px", color: "#0F2A1E" }}>Next event coming soon ✦</div>
                 </div>
               </div>
             )}
+
+            {/* Polaroid — bottom-LEFT so it never covers the card
+                title. Layers over the stamp watermark. */}
+            <div className="scrap-polaroid scrap-polaroid-tilt-left hero-polaroid" style={{ position: "absolute", bottom: "0px", left: "0%", width: "158px", zIndex: 2, borderRadius: 2 }}>
+              <div className="scrap-polaroid-photo" style={{ borderRadius: 2, padding: 0, overflow: "hidden", position: "relative" }}>
+                <Image
+                  src="https://media.coletfs.com/products/user_3F9O7q2MyuHGi78PSxQJR4ix5gI/aYpvBMfbTeGqhSMPr4dpD.webp"
+                  alt="Colet"
+                  fill
+                  sizes="158px"
+                  priority
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
+              <div className="scrap-polaroid-caption">colet ✦</div>
+            </div>
+
+            {/* Small washi note — floats above the polaroid */}
+            <div style={{ position: "absolute", top: "40px", left: "18%", zIndex: 3 }}>
+              <span className="scrap-tape scrap-tape-pink" style={{ transform: "rotate(-8deg)" }}>iu-ers hangout</span>
+            </div>
           </div>
         </div>
 
         <style>{`
+          @keyframes hero-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+          @keyframes hero-pulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(26,128,64,0.55); }
+            50%     { box-shadow: 0 0 0 6px rgba(26,128,64,0);    }
+          }
+          .hero-pulse { animation: hero-pulse 1.8s ease-out infinite; }
+          @media (prefers-reduced-motion: reduce) {
+            .hero-pulse { animation: none; }
+            .hero-collage svg { animation: none !important; }
+          }
           @media (max-width: 900px) {
             .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center; }
-            .hero-collage { height: 340px !important; max-width: 480px; margin: 0 auto; }
+            .hero-collage { height: 360px !important; max-width: 520px; margin: 0 auto; }
           }
           @media (max-width: 560px) {
-            .hero-collage { height: 300px !important; }
-            .hero-collage .scrap-polaroid { width: 130px !important; left: 4% !important; }
-            .hero-collage .scrap-frame { width: 220px !important; right: 4% !important; top: 70px !important; }
+            .hero-collage { height: 320px !important; }
+            .hero-collage .hero-polaroid { width: 128px !important; left: 4% !important; }
+            .hero-collage .scrap-frame { width: 230px !important; right: 4% !important; top: 60px !important; }
           }
         `}</style>
       </section>
