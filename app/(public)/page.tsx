@@ -86,7 +86,7 @@ export default async function HomePage() {
 
       {/* ── HERO ── cozy scrapbook: warm lamp glow, washi tape label,
           polaroid, framed "next event" card, subtle stamp watermark */}
-      <section style={{ position: "relative", overflow: "hidden", padding: "56px 24px 72px" }}>
+      <section className="home-hero" style={{ position: "relative", overflow: "hidden", padding: "56px 24px 72px" }}>
         <div className="scrap-glow" />
         <div className="scrap-glow" style={{ top: "auto", bottom: "-120px", left: "auto", right: "-120px", background: "radial-gradient(circle, rgba(240, 180, 200, 0.30), transparent 65%)" }} />
         {/* Dot-grid texture — barely-there noise that keeps the paper
@@ -112,7 +112,7 @@ export default async function HomePage() {
               The Ace is on her way — and we&apos;re here for her.
             </p>
 
-            <p style={{ fontFamily: B, fontSize: "15px", color: "#1B3A2D", maxWidth: "480px", margin: "0 0 28px", lineHeight: 1.75 }}>
+            <p className="hero-desc" style={{ fontFamily: B, fontSize: "15px", color: "#1B3A2D", maxWidth: "480px", margin: "0 0 24px", lineHeight: 1.7 }}>
               A community for Cocacolets — where we buy tickets together, throw fan events, and cheer Colet on. Come hang out.
             </p>
 
@@ -247,7 +247,8 @@ export default async function HomePage() {
             .hero-collage svg { animation: none !important; }
           }
           @media (max-width: 900px) {
-            .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; text-align: center; max-width: 100% !important; }
+            .home-hero { padding: 36px 20px 48px !important; }
+            .hero-grid { grid-template-columns: 1fr !important; gap: 28px !important; text-align: center; max-width: 100% !important; }
             .hero-cta-row { justify-content: center; }
             .hero-collage { height: 360px !important; max-width: 520px; margin: 0 auto; width: 100%; }
           }
