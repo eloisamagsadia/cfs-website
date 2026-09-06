@@ -21,11 +21,11 @@ import { notifyRefundOutcome } from "@/lib/refund-notifications";
  * entity must have a stored payment_id, PayMongo call must succeed.
  */
 
-async function requireSuper() {
+async function requireAdmin() {
   const { userId, sessionClaims } = auth();
   if (!userId) return null;
   const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== "super_admin") return null;
+  if (!["admin", "super_admin"].includes(role ?? "")) return null;
   return userId;
 }
 
@@ -54,8 +54,8 @@ async function resolvePaymentId(admin: any, entityType: string, entityId: string
 }
 
 export async function POST(req: NextRequest) {
-  const userId = await requireSuper();
-  if (!userId) return NextResponse.json({ error: "Super admin only — refunds move real money." }, { status: 403 });
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
   const body = await req.json().catch(() => ({}));
   const refund_id = String(body?.refund_id ?? "").trim();

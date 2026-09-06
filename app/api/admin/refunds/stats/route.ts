@@ -15,11 +15,11 @@ import { createAdminClient } from "@/lib/supabase/admin";
  * Super-admin only. Refunds are financial data.
  */
 
-async function requireSuper() {
+async function requireAdmin() {
   const { userId, sessionClaims } = auth();
   if (!userId) return null;
   const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== "super_admin") return null;
+  if (!["admin", "super_admin"].includes(role ?? "")) return null;
   return userId;
 }
 
@@ -47,8 +47,8 @@ function bucketDay(iso: string): string {
 }
 
 export async function GET(req: NextRequest) {
-  const userId = await requireSuper();
-  if (!userId) return NextResponse.json({ error: "Super admin only" }, { status: 403 });
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
   const range = new URL(req.url).searchParams.get("range") ?? "30d";
   const now = Date.now();

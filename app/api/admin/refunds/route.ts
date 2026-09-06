@@ -4,10 +4,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
 import { notifyRefundOutcome } from "@/lib/refund-notifications";
 
-// Refunds are financial actions. Reads (viewing the queue) are open to
-// both admin and super_admin so staff can see refund state. Writes
-// (create / patch / delete / auto-process via PayMongo) stay
-// super_admin only — those move real money.
+// Refunds are open to any admin role. Reads AND writes (create /
+// patch / delete / auto-process via PayMongo) are all permitted for
+// both admin and super_admin — the team runs the refund queue as a
+// shared workflow.
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();
   if (!userId) return null;
@@ -15,21 +15,11 @@ async function requireAdmin() {
   if (!["admin", "super_admin"].includes(role ?? "")) return null;
   return userId;
 }
-async function requireSuper() {
-  const { userId, sessionClaims } = auth();
-  if (!userId) return null;
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== "super_admin") return null;
-  return userId;
-}
 
 // GET /api/admin/refunds?status=pending
 export async function GET(req: NextRequest) {
   const userId = await requireAdmin();
   if (!userId) return NextResponse.json({ error: "Admin only" }, { status: 403 });
-
-  const { sessionClaims } = auth();
-  const callerRole = (sessionClaims?.metadata as { role?: string })?.role ?? "";
 
   const status = new URL(req.url).searchParams.get("status");
   const admin  = createAdminClient();
@@ -43,13 +33,13 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await q;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ refunds: data ?? [], callerRole });
+  return NextResponse.json({ refunds: data ?? [] });
 }
 
 // POST /api/admin/refunds  { entity_type, entity_id, amount, reason, note?, user_id? }
 export async function POST(req: NextRequest) {
-  const userId = await requireSuper();
-  if (!userId) return NextResponse.json({ error: "Super admin only" }, { status: 403 });
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
   const body = await req.json();
   const { entity_type, entity_id, amount, reason, note, user_id } = body ?? {};
@@ -75,8 +65,8 @@ export async function POST(req: NextRequest) {
 
 // PATCH /api/admin/refunds  { id, status?, paymongo_ref?, note? }
 export async function PATCH(req: NextRequest) {
-  const userId = await requireSuper();
-  if (!userId) return NextResponse.json({ error: "Super admin only" }, { status: 403 });
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
   const body = await req.json();
   const { id, status, paymongo_ref, note } = body ?? {};
@@ -153,8 +143,8 @@ export async function PATCH(req: NextRequest) {
 
 // DELETE /api/admin/refunds?id=...
 export async function DELETE(req: NextRequest) {
-  const userId = await requireSuper();
-  if (!userId) return NextResponse.json({ error: "Super admin only" }, { status: 403 });
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
   const id = new URL(req.url).searchParams.get("id");
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });

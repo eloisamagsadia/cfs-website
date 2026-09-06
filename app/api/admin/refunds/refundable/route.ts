@@ -17,17 +17,17 @@ import { createAdminClient } from "@/lib/supabase/admin";
  * Super-admin only (parity with the refunds routes).
  */
 
-async function requireSuper() {
+async function requireAdmin() {
   const { userId, sessionClaims } = auth();
   if (!userId) return null;
   const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== "super_admin") return null;
+  if (!["admin", "super_admin"].includes(role ?? "")) return null;
   return userId;
 }
 
 export async function GET(req: NextRequest) {
-  const userId = await requireSuper();
-  if (!userId) return NextResponse.json({ error: "Super admin only" }, { status: 403 });
+  const userId = await requireAdmin();
+  if (!userId) return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
   const target = new URL(req.url).searchParams.get("user_id")?.trim();
   if (!target) return NextResponse.json({ error: "user_id required" }, { status: 400 });
