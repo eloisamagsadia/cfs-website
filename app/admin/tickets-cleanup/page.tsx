@@ -31,6 +31,44 @@ function ageHours(iso: string): number {
   return Math.floor((Date.now() - new Date(iso).getTime()) / 3_600_000);
 }
 
+function ageMinutes(iso: string): number {
+  return Math.floor((Date.now() - new Date(iso).getTime()) / 60_000);
+}
+
+// Best-guess reason for why THIS specific ticket is still pending,
+// derived from how long it has been sitting. The 4 buckets match the
+// cleanup timeline: fresh (<5m in-flight), <1h (checkout window),
+// <24h (probably abandoned), >=24h (stale, cron will sweep).
+function likelyReason(iso: string): { tone: "fresh" | "watch" | "abandoned" | "stale"; label: string; hint: string } {
+  const mins = ageMinutes(iso);
+  if (mins < 5) return {
+    tone:  "fresh",
+    label: "Likely in-flight",
+    hint:  "Member is probably still on the PayMongo checkout page. Give it a few minutes before assuming they gave up.",
+  };
+  if (mins < 60) return {
+    tone:  "watch",
+    label: "Checkout closed or payment declined",
+    hint:  "Past the typical PayMongo checkout window. Most likely the member closed the tab or a card/GCash attempt was declined.",
+  };
+  if (mins < 60 * 24) return {
+    tone:  "abandoned",
+    label: "Abandoned checkout",
+    hint:  "Well past the checkout window. Member almost certainly didn't complete payment. Slot is still held against tier capacity.",
+  };
+  return {
+    tone:  "stale",
+    label: "Stale — auto-cleanup will sweep",
+    hint:  "Older than 24h. The hourly cleanup cron will cancel this on its next run. Safe to cancel manually now.",
+  };
+}
+const REASON_STYLE: Record<"fresh" | "watch" | "abandoned" | "stale", { color: string; bg: string; border: string }> = {
+  fresh:     { color: "#156530", bg: "#E8F0E4", border: "#B7D8B7" },
+  watch:     { color: "#7A5A0F", bg: "#FFF3D6", border: "#F0D889" },
+  abandoned: { color: "#B45309", bg: "#FFE8CE", border: "#F0BA75" },
+  stale:     { color: "#8A1E27", bg: "#FFE8EC", border: "#F1C0C6" },
+};
+
 export default function PendingCleanupPage() {
   const [rows, setRows] = useState<Row[]>([]);
   const [lastAuto, setLastAuto] = useState<AutoRun | null>(null);
@@ -179,15 +217,26 @@ export default function PendingCleanupPage() {
             {rows.map(r => {
               const age = ageHours(r.created_at);
               const stale = age >= (Number(hours) || 24);
+              const reason = likelyReason(r.created_at);
+              const rs = REASON_STYLE[reason.tone];
               return (
-                <div key={r.id} style={{ padding: "14px 18px", borderBottom: "1px solid #F0F4F0", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.events?.title ?? "(unknown event)"}</div>
-                    <div style={{ fontFamily: SG, fontSize: "10px", color: "#7A8E7A", letterSpacing: "1px", marginTop: "3px" }}>{r.ticket_number} · user {r.user_id.slice(0, 12)}…</div>
+                <div key={r.id} style={{ padding: "14px 18px", borderBottom: "1px solid #F0F4F0", display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{ fontFamily: B, fontSize: "13px", color: "#1B3A2D", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.events?.title ?? "(unknown event)"}</div>
+                      <div style={{ fontFamily: SG, fontSize: "10px", color: "#7A8E7A", letterSpacing: "1px", marginTop: "3px" }}>{r.ticket_number} · user {r.user_id.slice(0, 12)}…</div>
+                    </div>
+                    <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: stale ? "#CC3344" : "#4A7C59", background: stale ? "#FFE8EC" : "#E8F0E4", borderRadius: "999px", padding: "4px 10px", letterSpacing: "1.2px" }}>
+                      {age}h ago{stale ? " · STALE" : ""}
+                    </span>
                   </div>
-                  <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: stale ? "#CC3344" : "#4A7C59", background: stale ? "#FFE8EC" : "#E8F0E4", borderRadius: "999px", padding: "4px 10px", letterSpacing: "1.2px" }}>
-                    {age}h ago{stale ? " · STALE" : ""}
-                  </span>
+                  {/* Per-row why-is-it-pending badge + hint */}
+                  <div style={{ display: "flex", gap: "8px", alignItems: "flex-start", background: rs.bg, border: `1px solid ${rs.border}`, borderRadius: "8px", padding: "8px 10px" }}>
+                    <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: rs.color, background: "#ffffff", border: `1px solid ${rs.border}`, borderRadius: "999px", padding: "2px 8px", letterSpacing: "1.2px", whiteSpace: "nowrap" as const, flexShrink: 0 }}>
+                      {reason.label.toUpperCase()}
+                    </span>
+                    <span style={{ fontFamily: B, fontSize: "11px", color: rs.color, lineHeight: 1.45 }}>{reason.hint}</span>
+                  </div>
                 </div>
               );
             })}
