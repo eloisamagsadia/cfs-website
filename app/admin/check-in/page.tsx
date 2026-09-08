@@ -338,15 +338,15 @@ export default function CheckInPage() {
             ) : (
               <div style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: 12, overflow: "hidden" }}>
                 {/* Header row (desktop only) */}
-                <div className="sk-attn-head" style={{ padding: "8px 14px", background: "#F7FAF5", borderBottom: "1px solid #DDE8DD", display: "grid", gridTemplateColumns: "20px minmax(0,2fr) minmax(0,1.4fr) minmax(0,1fr) auto", gap: 12, alignItems: "center", fontFamily: R, fontSize: 9, letterSpacing: 1.5, color: "#5A7A60" }}>
+                <div className="sk-attn-head" style={{ padding: "8px 14px", background: "#F7FAF5", borderBottom: "1px solid #DDE8DD", display: "grid", gridTemplateColumns: "20px minmax(0,2fr) minmax(0,1.4fr) minmax(0,1fr) 110px", gap: 12, alignItems: "center", fontFamily: R, fontSize: 9, letterSpacing: 1.5, color: "#5A7A60" }}>
                   <span />
                   <span>NAME · TICKET</span>
                   <span>EMAIL</span>
                   <span>TIER · PAYMENT</span>
-                  <span style={{ textAlign: "right" }}>ACTION</span>
+                  <span style={{ justifySelf: "end" }}>ACTION</span>
                 </div>
                 {pagedAttendees.map((a) => (
-                  <div key={a.ticket_id} className="sk-attn-row" style={{ padding: "8px 14px", borderTop: "1px solid #EDF2ED", display: "grid", gridTemplateColumns: "20px minmax(0,2fr) minmax(0,1.4fr) minmax(0,1fr) auto", gap: 12, alignItems: "center" }}>
+                  <div key={a.ticket_id} className="sk-attn-row" style={{ padding: "8px 14px", borderTop: "1px solid #EDF2ED", display: "grid", gridTemplateColumns: "20px minmax(0,2fr) minmax(0,1.4fr) minmax(0,1fr) 110px", gap: 12, alignItems: "center" }}>
                     <div style={{ width: 8, height: 8, borderRadius: "50%", background: a.checked_in ? "#1A8040" : "#DDE8DD", justifySelf: "center" }} title={a.checked_in ? "Checked in" : "Not yet"} />
                     <div style={{ minWidth: 0 }}>
                       <div style={{ fontFamily: B, fontSize: 13, color: "#1B3A2D", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.name}</div>
