@@ -9,7 +9,7 @@ const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
-const ROLES = ["super_admin", "admin", "moderator", "sponsor", "member"];
+const ROLES = ["super_admin", "admin", "moderator", "event_staff", "sponsor", "member"];
 
 // Same hierarchy the server enforces on /api/admin/members/ban and
 // /api/super/members-role. Higher = more privileged. UI hides the
@@ -134,7 +134,7 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
   function canChangeRole(target: any) {
     if (isSuperAdmin) return true;
     if (callerRole !== "admin") return false;
-    return ["moderator", "sponsor", "member"].includes(target?.role ?? "member");
+    return ["moderator", "event_staff", "sponsor", "member"].includes(target?.role ?? "member");
   }
 
   return (

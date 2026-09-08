@@ -10,7 +10,7 @@ const db = () => createAdminClient(
 export async function POST(req: NextRequest) {
   const { userId, sessionClaims } = auth();
   const role = (sessionClaims?.metadata as any)?.role;
-  if (!userId || !["admin", "super_admin"].includes(role ?? "")) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!userId || !["admin", "super_admin", "event_staff"].includes(role ?? "")) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { ticket_id } = await req.json();
   if (!ticket_id) return NextResponse.json({ error: "Missing ticket_id" }, { status: 400 });
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const { userId, sessionClaims } = auth();
   const role = (sessionClaims?.metadata as any)?.role;
-  if (!userId || !["admin", "super_admin"].includes(role ?? "")) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!userId || !["admin", "super_admin", "event_staff"].includes(role ?? "")) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const ticket_id = new URL(req.url).searchParams.get("ticket_id");
   if (!ticket_id) return NextResponse.json({ error: "Missing ticket_id" }, { status: 400 });

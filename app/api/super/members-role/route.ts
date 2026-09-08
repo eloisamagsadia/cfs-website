@@ -9,14 +9,17 @@ const db = () => createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const VALID_ROLES = ["super_admin", "admin", "moderator", "sponsor", "member"] as const;
+const VALID_ROLES = ["super_admin", "admin", "moderator", "event_staff", "sponsor", "member"] as const;
 
 // Role hierarchy. Higher number = more privileged. Callers can only
 // grant / modify roles STRICTLY below their own tier, with two extra rules:
 //   - super_admin is grantable only by the owner (hidden super)
 //   - hidden admins are invisible → also cannot be targeted at all
+//
+// event_staff is a scoped functional role (check-in only, no admin
+// panel access). Ranked equal to sponsor so admins can freely grant it.
 const RANK: Record<string, number> = {
-  member: 1, sponsor: 2, moderator: 3, admin: 4, super_admin: 5,
+  member: 1, sponsor: 2, event_staff: 2, moderator: 3, admin: 4, super_admin: 5,
 };
 
 export async function POST(req: NextRequest) {
@@ -52,7 +55,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Only the site owner can grant super_admin" }, { status: 403 });
     }
     if (callerRole === "admin" && newRoleRank >= RANK.admin) {
-      return NextResponse.json({ error: "Admins can only assign moderator, sponsor, or member" }, { status: 403 });
+      return NextResponse.json({ error: "Admins can only assign moderator, event_staff, sponsor, or member" }, { status: 403 });
     }
     // Prevent modifying someone at or above your own tier (except owner).
     // Load the target's current role.
