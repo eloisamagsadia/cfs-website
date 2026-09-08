@@ -200,9 +200,14 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
 
       {/* Table — desktop only */}
       <div className="members-table-desktop" style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", background: "#F2F7F2", padding: "12px 20px" }}>
-          {["MEMBER", "ROLE", "JOINED", "POSTS", "BADGES", "ACTIONS"].map(h => (
-            <span key={h} style={{ fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "1.5px" }}>{h}</span>
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", background: "#F2F7F2", padding: "12px 20px", alignItems: "center" }}>
+          {["MEMBER", "ROLE", "JOINED", "POSTS", "BADGES", "ACTIONS"].map((h, idx) => (
+            <span key={h} style={{
+              fontFamily: R, fontSize: "11px", color: "#5A7A60", letterSpacing: "1.5px",
+              // POSTS + BADGES center over the numeric values below.
+              // All others left-align to match their cell content.
+              justifySelf: (idx === 3 || idx === 4) ? "center" : "start",
+            }}>{h}</span>
           ))}
         </div>
 
@@ -255,10 +260,10 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
               <span style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60" }}>{timeAgo(m.created_at)}</span>
 
               {/* Posts */}
-              <span style={{ fontFamily: R, fontSize: "13px", color: "#4A7C59" }}>{m.post_count}</span>
+              <span style={{ fontFamily: R, fontSize: "13px", color: "#4A7C59", justifySelf: "center" }}>{m.post_count}</span>
 
               {/* Badges */}
-              <span style={{ fontFamily: R, fontSize: "13px", color: "#156530" }}>{m.user_badges?.length ?? 0}</span>
+              <span style={{ fontFamily: R, fontSize: "13px", color: "#156530", justifySelf: "center" }}>{m.user_badges?.length ?? 0}</span>
 
               {/* Actions */}
               <div style={{ display: "flex", gap: "4px" }} onClick={e => e.stopPropagation()}>
