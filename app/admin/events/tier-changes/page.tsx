@@ -65,6 +65,8 @@ export default function TierChangesPage() {
   const [dirFilter, setDirFilter] = useState<Direction | "all">("all");
   const [compFilter, setCompFilter] = useState<Completion | "all">("all");
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<10 | 25 | 50 | 100>(10);
 
   useEffect(() => {
     setLoading(true); setError("");
@@ -95,6 +97,14 @@ export default function TierChangesPage() {
       );
     });
   }, [rows, dirFilter, compFilter, search]);
+
+  // Pagination — client-side over the filtered set. Reset to page 1
+  // whenever filters shrink the set below the current page window.
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  useEffect(() => { if (page > pageCount) setPage(1); }, [page, pageCount]);
+  const startIdx = (page - 1) * pageSize;
+  const paged = filtered.slice(startIdx, startIdx + pageSize);
+  useEffect(() => { setPage(1); }, [dirFilter, compFilter, search, range, pageSize]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
@@ -159,11 +169,19 @@ export default function TierChangesPage() {
 
           {/* Table */}
           <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "14px", overflow: "hidden" }}>
-            <div style={{ padding: "12px 18px", background: "#F7FAF5", borderBottom: "1px solid #E4EDE4", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ padding: "12px 18px", background: "#F7FAF5", borderBottom: "1px solid #E4EDE4", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
               <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#4A7C59", letterSpacing: "1.5px" }}>
                 <IconTicket size={12} color="#1A8040" style={{ verticalAlign: "middle", marginRight: "6px" }} />
                 {filtered.length} · {rows.length === filtered.length ? "SHOWING ALL" : `FILTERED FROM ${rows.length}`}
               </span>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <label style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "1.2px" }}>ROWS
+                  <select value={pageSize} onChange={e => setPageSize(Number(e.target.value) as 10 | 25 | 50 | 100)}
+                    style={{ marginLeft: "6px", fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "4px 8px", cursor: "pointer" }}>
+                    {[10, 25, 50, 100].map(n => <option key={n} value={n}>{n}</option>)}
+                  </select>
+                </label>
+              </div>
             </div>
             {filtered.length === 0 ? (
               <div style={{ padding: "48px 24px", textAlign: "center", fontFamily: B, color: "#7A8E7A", fontSize: "13px" }}>
@@ -180,11 +198,12 @@ export default function TierChangesPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map(r => {
+                    {paged.map((r, i) => {
                       const dm = DIR_META[r.direction];
                       const cm = COMPLETION_META[r.completion];
+                      const zebra = i % 2 === 1;
                       return (
-                        <tr key={r.id} style={{ borderBottom: "1px solid #F0F5F0" }}>
+                        <tr key={r.id} style={{ borderBottom: "1px solid #F0F5F0", background: zebra ? "#FBFDFB" : "#ffffff" }}>
                           <td style={{ padding: "12px 14px", fontFamily: B, fontSize: "11px", color: "#5A7A60", whiteSpace: "nowrap" as const }}>{timeAgo(r.at)}</td>
                           <td style={{ padding: "12px 14px" }}>
                             {r.member ? (
@@ -226,6 +245,36 @@ export default function TierChangesPage() {
                     })}
                   </tbody>
                 </table>
+              </div>
+            )}
+
+            {/* Pagination footer — only shows when we have >1 page */}
+            {filtered.length > 0 && pageCount > 1 && (
+              <div style={{ padding: "12px 18px", background: "#F7FAF5", borderTop: "1px solid #E4EDE4", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                <span style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#4A7C59", letterSpacing: "1.2px" }}>
+                  ROWS {startIdx + 1}–{Math.min(startIdx + pageSize, filtered.length)} OF {filtered.length}
+                </span>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <button onClick={() => setPage(1)} disabled={page === 1}
+                    style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: page === 1 ? "#B7C7B7" : "#1B3A2D", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "6px 10px", cursor: page === 1 ? "not-allowed" : "pointer", letterSpacing: "1.2px" }}>
+                    « FIRST
+                  </button>
+                  <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
+                    style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: page === 1 ? "#B7C7B7" : "#1B3A2D", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "6px 10px", cursor: page === 1 ? "not-allowed" : "pointer", letterSpacing: "1.2px" }}>
+                    ‹ PREV
+                  </button>
+                  <span style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", letterSpacing: "1.2px", padding: "0 6px" }}>
+                    {page} / {pageCount}
+                  </span>
+                  <button onClick={() => setPage(p => Math.min(pageCount, p + 1))} disabled={page === pageCount}
+                    style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: page === pageCount ? "#B7C7B7" : "#1B3A2D", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "6px 10px", cursor: page === pageCount ? "not-allowed" : "pointer", letterSpacing: "1.2px" }}>
+                    NEXT ›
+                  </button>
+                  <button onClick={() => setPage(pageCount)} disabled={page === pageCount}
+                    style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: page === pageCount ? "#B7C7B7" : "#1B3A2D", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "6px 10px", cursor: page === pageCount ? "not-allowed" : "pointer", letterSpacing: "1.2px" }}>
+                    LAST »
+                  </button>
+                </div>
               </div>
             )}
           </div>
