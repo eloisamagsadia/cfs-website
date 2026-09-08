@@ -15,6 +15,7 @@ export default async function MembersLayout({ children }: { children: React.Reac
   const { userId, sessionClaims } = auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role ?? "member";
   const isAdmin = ["admin", "super_admin"].includes(role);
+  const isEventStaff = !!(sessionClaims?.metadata as { is_event_staff?: boolean })?.is_event_staff;
 
   // Auto-create profile if it doesn't exist
   if (userId) {
@@ -42,7 +43,7 @@ export default async function MembersLayout({ children }: { children: React.Reac
       {ann && <AnnouncementBanner text={ann.text} color={ann.color} ctaLabel={ann.ctaLabel} ctaUrl={ann.ctaUrl} />}
       <div style={{ flex:1, maxWidth:"1280px", margin:"0 auto", width:"100%", padding:"24px 16px 90px", display:"flex", gap:"28px" }}>
         <div className="desktop-sidebar">
-          <MembersSidebar isAdmin={isAdmin} role={role}/>
+          <MembersSidebar isAdmin={isAdmin} role={role} isEventStaff={isEventStaff}/>
         </div>
         <main style={{ flex:1, minWidth:0 }}>{children}</main>
       </div>

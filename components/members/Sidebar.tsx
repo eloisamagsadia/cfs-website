@@ -93,7 +93,7 @@ function useUnreadMessages() {
   return count;
 }
 
-export default function MembersSidebar({ isAdmin = false, role = "member" }: { isAdmin?: boolean; role?: string }) {
+export default function MembersSidebar({ isAdmin = false, role = "member", isEventStaff = false }: { isAdmin?: boolean; role?: string; isEventStaff?: boolean }) {
   const unreadMessages = useUnreadMessages();
   const canSeeExclusive = ["sponsor", "admin", "super_admin"].includes(role);
   const isSuper = role === "super_admin";
@@ -123,6 +123,21 @@ export default function MembersSidebar({ isAdmin = false, role = "member" }: { i
           <div>
             <div style={{ fontFamily: R, fontSize: "9px", color: "#9AAA98", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>SPONSORS</div>
             <NavItem label="Exclusive" href="/members/exclusive" icon={icons.exclusive} />
+          </div>
+        )}
+
+        {/* Event Staff — normal members who volunteer at events. Shows
+            a dedicated section with the check-in scanner + briefing.
+            Hidden from admins (they see the full admin panel already). */}
+        {isEventStaff && !isAdmin && (
+          <div>
+            <div style={{ fontFamily: R, fontSize: "9px", color: "#9AAA98", letterSpacing: "2px", padding: "0 12px", marginBottom: "4px" }}>EVENT STAFF</div>
+            <Link href="/admin/check-in" style={{ textDecoration: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", borderRadius: "8px", background: "#EEF3FA", border: "1px solid #B7C7D9" }}>
+                <span style={{ color: "#1E4A7A" }}>{icons.exclusive}</span>
+                <span style={{ fontFamily: B, fontSize: "13px", color: "#1E4A7A" }}>Check-In Scanner</span>
+              </div>
+            </Link>
           </div>
         )}
 

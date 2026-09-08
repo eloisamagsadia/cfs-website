@@ -58,16 +58,16 @@ export default authMiddleware({
         url.searchParams.set("redirect_url", pathname);
         return NextResponse.redirect(url);
       }
-      // event_staff is a scoped functional role — event-day volunteers
-      // who can only run the check-in scanner. Anything outside
-      // /admin/check-in bounces them back to the scanner.
-      if (role === "event_staff") {
-        if (!pathname.startsWith("/admin/check-in")) {
-          const url = req.nextUrl.clone();
-          url.pathname = "/admin/check-in";
-          return NextResponse.redirect(url);
-        }
-        return NextResponse.next();
+      // Event-day volunteers: normal member accounts flagged with
+      // publicMetadata.is_event_staff. They keep the full members
+      // experience, and additionally get access to /admin/check-in
+      // ONLY. Anything else under /admin bounces them back.
+      const isEventStaff = !!(sessionClaims?.metadata as { is_event_staff?: boolean })?.is_event_staff;
+      if (isEventStaff && !["admin", "super_admin"].includes(role ?? "")) {
+        if (pathname.startsWith("/admin/check-in")) return NextResponse.next();
+        const url = req.nextUrl.clone();
+        url.pathname = "/admin/check-in";
+        return NextResponse.redirect(url);
       }
       // Reuse the `role` we already read at the top instead of re-reading
       // sessionClaims.metadata (saves the object lookup on every /admin request).
