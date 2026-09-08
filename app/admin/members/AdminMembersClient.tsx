@@ -420,28 +420,18 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
               </div>
             )}
 
-            {/* Event Staff badge toggle — grants read-only access to
-                /admin/check-in without changing the member's role.
-                Volunteer keeps their full member experience. */}
-            <div style={{ background: "#EEF3FA", border: "1px solid #B7C7D9", borderRadius: 10, padding: "12px 14px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-              <div>
-                <div style={{ fontFamily: R, fontSize: 10, color: "#1E4A7A", letterSpacing: 1.5, marginBottom: 3 }}>EVENT STAFF ACCESS</div>
-                <div style={{ fontFamily: B, fontSize: 11, color: "#5A7A60", lineHeight: 1.5 }}>Extra access to the check-in scanner + event briefing on event day. Everything else in admin stays locked.</div>
+            {/* Event Staff access is now driven by the "Event Volunteer"
+                member tag — assign that tag from the tags UI to grant
+                check-in scanner access. Just a status indicator here. */}
+            {selectedMember.is_event_staff && (
+              <div style={{ background: "#EEF3FA", border: "1px solid #B7C7D9", borderRadius: 10, padding: "10px 14px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#1E4A7A" }} />
+                <div>
+                  <div style={{ fontFamily: R, fontSize: 10, color: "#1E4A7A", letterSpacing: 1.5 }}>EVENT STAFF ACCESS · ACTIVE</div>
+                  <div style={{ fontFamily: B, fontSize: 11, color: "#5A7A60", lineHeight: 1.5 }}>Can use /admin/check-in. Remove the &quot;Event Volunteer&quot; tag to revoke.</div>
+                </div>
               </div>
-              <button onClick={async () => {
-                const enable = !selectedMember.is_event_staff;
-                const res = await fetch("/api/admin/members/event-staff", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ targetUserId: selectedMember.id, enable }),
-                });
-                if (!res.ok) { alert("Failed to update event staff flag"); return; }
-                setLocalMembers(prev => prev.map(x => x.id === selectedMember.id ? { ...x, is_event_staff: enable } : x));
-                setSelectedMember({ ...selectedMember, is_event_staff: enable });
-              }} style={{ fontFamily: R, fontSize: 10, letterSpacing: 1.2, background: selectedMember.is_event_staff ? "#1E4A7A" : "#FFFFFF", color: selectedMember.is_event_staff ? "#FFFFFF" : "#1E4A7A", border: `1.5px solid #1E4A7A`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", whiteSpace: "nowrap" }}>
-                {selectedMember.is_event_staff ? "✓ ENABLED — REVOKE" : "GRANT ACCESS"}
-              </button>
-            </div>
+            )}
           </div>
         </div>
       )}

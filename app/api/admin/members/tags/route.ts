@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
+import { isEventStaffTag, syncEventStaffFlag } from "@/lib/event-staff";
 
 async function requireAdmin() {
   const { userId, sessionClaims } = auth();
@@ -60,6 +61,13 @@ export async function POST(req: NextRequest) {
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  // If this is the special "Event Volunteer" tag, auto-grant the
+  // is_event_staff flag so they get access to /admin/check-in.
+  const { data: tagRow } = await (admin as any).from("member_tags").select("name").eq("id", tag_id).maybeSingle();
+  if (isEventStaffTag((tagRow as any)?.name)) {
+    await syncEventStaffFlag(member_id, true);
+  }
+
   await logAudit({ userId, action: "assign_tag", target_type: "profile", target_id: member_id, details: { tag_id }, req });
   return NextResponse.json({ assignment: data });
 }
@@ -77,6 +85,12 @@ export async function DELETE(req: NextRequest) {
   const admin = createAdminClient();
   const { error } = await (admin as any).from("member_tag_assignments").delete().eq("member_id", member).eq("tag_id", tag);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // If we just removed the "Event Volunteer" tag, revoke the flag.
+  const { data: tagRow } = await (admin as any).from("member_tags").select("name").eq("id", tag).maybeSingle();
+  if (isEventStaffTag((tagRow as any)?.name)) {
+    await syncEventStaffFlag(member, false);
+  }
 
   await logAudit({ userId, action: "unassign_tag", target_type: "profile", target_id: member, details: { tag_id: tag }, req });
   return NextResponse.json({ ok: true });

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth, clerkClient } from "@clerk/nextjs/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { auth } from "@clerk/nextjs/server";
 import { logAudit } from "@/lib/audit";
+import { syncEventStaffFlag } from "@/lib/event-staff";
 
 // Toggles publicMetadata.is_event_staff on a target user. Event-staff
 // flag is a per-member badge: normal member account, additionally gets
@@ -22,22 +22,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "targetUserId and enable required" }, { status: 400 });
   }
 
-  // Merge the flag into existing publicMetadata so we don't clobber
-  // role or anything else Clerk holds there.
-  try {
-    const clerkUser = await clerkClient.users.getUser(targetUserId);
-    const existingMeta = (clerkUser.publicMetadata ?? {}) as Record<string, unknown>;
-    await clerkClient.users.updateUserMetadata(targetUserId, {
-      publicMetadata: { ...existingMeta, is_event_staff: enable },
-    });
-  } catch (e: any) {
-    return NextResponse.json({ error: `Clerk update failed: ${e?.message ?? "unknown"}` }, { status: 500 });
-  }
-
-  // Mirror into profiles.is_event_staff so admin lists can filter/badge
-  // without hitting Clerk. Column added by migration below.
-  const admin = createAdminClient();
-  await (admin.from("profiles") as any).update({ is_event_staff: enable }).eq("id", targetUserId);
+  const result = await syncEventStaffFlag(targetUserId, enable);
+  if (!result.ok) return NextResponse.json({ error: result.error }, { status: 500 });
 
   await logAudit({
     userId,
