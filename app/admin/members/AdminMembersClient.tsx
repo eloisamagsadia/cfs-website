@@ -420,15 +420,65 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
               </div>
             )}
 
-            {/* Event Staff access is now driven by the "Event Volunteer"
-                member tag — assign that tag from the tags UI to grant
-                check-in scanner access. Just a status indicator here. */}
+            {/* Tag assignment — assigned tags show as removable chips,
+                unassigned tags show as add-buttons. The "Event Volunteer"
+                tag is special: assigning it also grants check-in access
+                via the is_event_staff Clerk flag (server-side sync). */}
+            {allTags.length > 0 && (
+              <div style={{ background: "#F7FAF5", border: "1px solid #DDE8DD", borderRadius: 10, padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ fontFamily: R, fontSize: 10, color: "#5A7A60", letterSpacing: 1.5 }}>TAGS</div>
+                {(tagsByMember[selectedMember.id] ?? []).length > 0 && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {(tagsByMember[selectedMember.id] ?? []).map(t => (
+                      <button key={t.id}
+                        onClick={async () => {
+                          await fetch(`/api/admin/members/tags?member_id=${selectedMember.id}&tag_id=${t.id}`, { method: "DELETE" });
+                          const next = (tagsByMember[selectedMember.id] ?? []).filter(x => x.id !== t.id);
+                          setTagsByMember(prev => ({ ...prev, [selectedMember.id]: next }));
+                          if (t.name?.trim().toLowerCase() === "event volunteer") {
+                            setLocalMembers(prev => prev.map(x => x.id === selectedMember.id ? { ...x, is_event_staff: false } : x));
+                            setSelectedMember({ ...selectedMember, is_event_staff: false });
+                          }
+                        }}
+                        style={{ fontFamily: R, fontSize: 10, color: "#FFFFFF", background: t.color ?? "#1A8040", border: `1px solid ${t.color ?? "#1A8040"}`, borderRadius: 999, padding: "4px 10px", cursor: "pointer", letterSpacing: 1, display: "inline-flex", alignItems: "center", gap: 6 }}>
+                        {t.name} <span style={{ opacity: 0.7 }}>×</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {allTags.filter(t => !(tagsByMember[selectedMember.id] ?? []).some(x => x.id === t.id)).length > 0 && (
+                  <div>
+                    <div style={{ fontFamily: B, fontSize: 10, color: "#7A8E7A", marginBottom: 4 }}>Add:</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {allTags.filter(t => !(tagsByMember[selectedMember.id] ?? []).some(x => x.id === t.id)).map(t => (
+                        <button key={t.id}
+                          onClick={async () => {
+                            await fetch(`/api/admin/members/tags`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ member_id: selectedMember.id, tag_id: t.id }) });
+                            const next = [...(tagsByMember[selectedMember.id] ?? []), { id: t.id, name: t.name, color: t.color }];
+                            setTagsByMember(prev => ({ ...prev, [selectedMember.id]: next }));
+                            if (t.name?.trim().toLowerCase() === "event volunteer") {
+                              setLocalMembers(prev => prev.map(x => x.id === selectedMember.id ? { ...x, is_event_staff: true } : x));
+                              setSelectedMember({ ...selectedMember, is_event_staff: true });
+                            }
+                          }}
+                          style={{ fontFamily: R, fontSize: 10, color: t.color ?? "#1A8040", background: "#FFFFFF", border: `1.5px dashed ${t.color ?? "#1A8040"}`, borderRadius: 999, padding: "4px 10px", cursor: "pointer", letterSpacing: 1 }}>
+                          + {t.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Event Staff status indicator — driven by the "Event Volunteer"
+                tag via the server-side sync in /api/admin/members/tags. */}
             {selectedMember.is_event_staff && (
               <div style={{ background: "#EEF3FA", border: "1px solid #B7C7D9", borderRadius: 10, padding: "10px 14px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                 <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#1E4A7A" }} />
                 <div>
                   <div style={{ fontFamily: R, fontSize: 10, color: "#1E4A7A", letterSpacing: 1.5 }}>EVENT STAFF ACCESS · ACTIVE</div>
-                  <div style={{ fontFamily: B, fontSize: 11, color: "#5A7A60", lineHeight: 1.5 }}>Can use /admin/check-in. Remove the &quot;Event Volunteer&quot; tag to revoke.</div>
+                  <div style={{ fontFamily: B, fontSize: 11, color: "#5A7A60", lineHeight: 1.5 }}>Can use /admin/check-in. Driven by the &quot;Event Volunteer&quot; tag above.</div>
                 </div>
               </div>
             )}
