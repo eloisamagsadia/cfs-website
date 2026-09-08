@@ -31,6 +31,8 @@ export default function CheckInPage() {
   const [info, setInfo] = useState<EventInfo | null>(null);
   const [attendeeQuery, setAttendeeQuery] = useState("");
   const [attendeeFilter, setAttendeeFilter] = useState<"all" | "checked" | "not">("all");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
 
   // Scanner state (existing behaviour, kept intact)
   const [result, setResult] = useState<ScanResult | null>(null);
@@ -129,6 +131,14 @@ export default function CheckInPage() {
       );
     });
   }, [info, attendeeQuery, attendeeFilter]);
+
+  // Pagination — reset to page 1 whenever the filter/search changes so
+  // the user never lands on an empty page.
+  useEffect(() => { setPage(1); }, [attendeeQuery, attendeeFilter, pageSize, eventId]);
+  const totalPages = Math.max(1, Math.ceil(filteredAttendees.length / pageSize));
+  const safePage   = Math.min(page, totalPages);
+  const pageStart  = (safePage - 1) * pageSize;
+  const pagedAttendees = filteredAttendees.slice(pageStart, pageStart + pageSize);
 
   const selectedEvent = events.find(e => e.id === eventId) ?? null;
 
@@ -327,18 +337,29 @@ export default function CheckInPage() {
               <div style={{ background: "#FFFFFF", border: "1.5px dashed #DDE8DD", borderRadius: 12, padding: 32, textAlign: "center", fontFamily: B, color: "#7A8E7A" }}>No attendees match.</div>
             ) : (
               <div style={{ background: "#FFFFFF", border: "1px solid #DDE8DD", borderRadius: 12, overflow: "hidden" }}>
-                {filteredAttendees.map((a, i) => (
-                  <div key={a.ticket_id} style={{ padding: "10px 14px", borderTop: i === 0 ? "none" : "1px solid #EDF2ED", display: "grid", gridTemplateColumns: "auto 1fr auto auto", gap: 12, alignItems: "center" }}>
-                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: a.checked_in ? "#1A8040" : "#DDE8DD" }} />
+                {/* Header row (desktop only) */}
+                <div className="sk-attn-head" style={{ padding: "8px 14px", background: "#F7FAF5", borderBottom: "1px solid #DDE8DD", display: "grid", gridTemplateColumns: "20px minmax(0,2fr) minmax(0,1.4fr) minmax(0,1fr) auto", gap: 12, alignItems: "center", fontFamily: R, fontSize: 9, letterSpacing: 1.5, color: "#5A7A60" }}>
+                  <span />
+                  <span>NAME · TICKET</span>
+                  <span>EMAIL</span>
+                  <span>TIER · PAYMENT</span>
+                  <span style={{ textAlign: "right" }}>ACTION</span>
+                </div>
+                {pagedAttendees.map((a) => (
+                  <div key={a.ticket_id} className="sk-attn-row" style={{ padding: "8px 14px", borderTop: "1px solid #EDF2ED", display: "grid", gridTemplateColumns: "20px minmax(0,2fr) minmax(0,1.4fr) minmax(0,1fr) auto", gap: 12, alignItems: "center" }}>
+                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: a.checked_in ? "#1A8040" : "#DDE8DD", justifySelf: "center" }} title={a.checked_in ? "Checked in" : "Not yet"} />
                     <div style={{ minWidth: 0 }}>
                       <div style={{ fontFamily: B, fontSize: 13, color: "#1B3A2D", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.name}</div>
-                      <div style={{ fontFamily: "'Courier New',monospace", fontSize: 11, color: "#7A8E7A" }}>{a.ticket_number}{a.email ? ` · ${a.email}` : ""}</div>
+                      <div style={{ fontFamily: "'Courier New',monospace", fontSize: 10.5, color: "#7A8E7A", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.ticket_number}</div>
                     </div>
-                    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <div style={{ fontFamily: B, fontSize: 12, color: "#5A7A60", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
+                      {a.email ?? "—"}
+                    </div>
+                    <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
                       <span style={{ fontFamily: R, fontSize: 10, color: a.tier_color, background: a.tier_color + "18", borderRadius: 6, padding: "3px 8px", letterSpacing: 1 }}>{a.tier_name}</span>
                       <span style={{ fontFamily: R, fontSize: 9, color: a.is_comp ? "#0F7A5C" : "#1A8040", background: a.is_comp ? "#DCF3E9" : "#E8F0E4", border: `1px solid ${a.is_comp ? "#0F7A5C" : "#1A8040"}40`, borderRadius: 6, padding: "3px 6px", letterSpacing: 1 }}>{a.is_comp ? "COMP" : "PAID"}</span>
                     </div>
-                    <div>
+                    <div style={{ textAlign: "right" }}>
                       {a.checked_in ? (
                         <span style={{ fontFamily: R, fontSize: 10, color: "#1A8040", letterSpacing: 1 }}>✓ IN</span>
                       ) : (
@@ -350,8 +371,43 @@ export default function CheckInPage() {
                     </div>
                   </div>
                 ))}
+                {/* Pagination footer */}
+                <div style={{ padding: "10px 14px", borderTop: "1px solid #DDE8DD", background: "#F7FAF5", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
+                  <div style={{ fontFamily: B, fontSize: 11, color: "#5A7A60" }}>
+                    Showing <strong style={{ color: "#1B3A2D" }}>{filteredAttendees.length === 0 ? 0 : pageStart + 1}–{Math.min(pageStart + pageSize, filteredAttendees.length)}</strong> of <strong style={{ color: "#1B3A2D" }}>{filteredAttendees.length}</strong>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <select value={pageSize} onChange={e => setPageSize(Number(e.target.value))}
+                      style={{ fontFamily: B, fontSize: 11, background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 6, padding: "4px 8px", color: "#1B3A2D" }}>
+                      {[10, 25, 50, 100].map(n => <option key={n} value={n}>{n} / page</option>)}
+                    </select>
+                    <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={safePage <= 1}
+                      style={{ fontFamily: R, fontSize: 10, background: "#FFFFFF", color: "#1B3A2D", border: "1.5px solid #DDE8DD", borderRadius: 6, padding: "5px 10px", cursor: safePage <= 1 ? "not-allowed" : "pointer", opacity: safePage <= 1 ? 0.4 : 1, letterSpacing: 1 }}>
+                      ← PREV
+                    </button>
+                    <span style={{ fontFamily: R, fontSize: 11, color: "#1B3A2D", letterSpacing: 1, padding: "0 4px" }}>
+                      {safePage} / {totalPages}
+                    </span>
+                    <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={safePage >= totalPages}
+                      style={{ fontFamily: R, fontSize: 10, background: "#FFFFFF", color: "#1B3A2D", border: "1.5px solid #DDE8DD", borderRadius: 6, padding: "5px 10px", cursor: safePage >= totalPages ? "not-allowed" : "pointer", opacity: safePage >= totalPages ? 0.4 : 1, letterSpacing: 1 }}>
+                      NEXT →
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
+            {/* Mobile stack: <640px hide email column and merge tier/payment into row 2. */}
+            <style dangerouslySetInnerHTML={{ __html: `
+              @media (max-width: 640px) {
+                .sk-attn-head { display: none !important; }
+                .sk-attn-row {
+                  grid-template-columns: 20px 1fr auto !important;
+                }
+                .sk-attn-row > div:nth-child(3) { display: none; }
+                .sk-attn-row > div:nth-child(4) { grid-column: 2; margin-top: 4px; }
+                .sk-attn-row > div:nth-child(5) { grid-row: 1; grid-column: 3; }
+              }
+            ` }} />
           </div>
         )
       )}
