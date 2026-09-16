@@ -15,7 +15,9 @@ export async function GET() {
   const db = createAdminClient();
   const { data: members } = await db
     .from("profiles")
-    .select("id, display_name, avatar_url, role, created_at, is_banned, image_post_count, email")
+    // is_event_staff added so /admin/members can filter by it — the flag drives
+    // check-in access and there was no way to see who holds it.
+    .select("id, display_name, avatar_url, role, created_at, is_banned, image_post_count, email, is_event_staff")
     .order("created_at", { ascending: false });
 
   // Layer 1 — hide the owner "System" from every non-owner viewer.

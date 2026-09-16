@@ -49,6 +49,8 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
   const [tagFilter, setTagFilter] = useState<string>("");
+  const [staffOnly, setStaffOnly] = useState(false);
+  const [joined, setJoined] = useState<"any" | "7d" | "30d" | "90d">("any");
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [localMembers, setLocalMembers] = useState(members);
   const [selectedMember, setSelectedMember] = useState<any>(null);
@@ -69,24 +71,47 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
     });
   }, []);
 
+  const joinedCutoff = useMemo(() => {
+    if (joined === "any") return 0;
+    const days = joined === "7d" ? 7 : joined === "30d" ? 30 : 90;
+    return Date.now() - days * 24 * 60 * 60 * 1000;
+  }, [joined]);
+
   const filtered = useMemo(() => localMembers.filter(m => {
-    const q = search.toLowerCase();
+    const q = search.trim().toLowerCase();
+    // Email was returned by the API but excluded from search, so looking a
+    // member up by the address they signed up with silently found nothing.
     const matchSearch = !q ||
       (m.display_name ?? "").toLowerCase().includes(q) ||
+      (m.email ?? "").toLowerCase().includes(q) ||
       m.id.toLowerCase().includes(q);
     const matchFilter =
       filter === "all" ? true :
       filter === "banned" ? m.is_banned :
       m.role === filter && !m.is_banned;
-    const matchTag = !tagFilter || (tagsByMember[m.id] ?? []).some(t => t.id === tagFilter);
-    return matchSearch && matchFilter && matchTag;
-  }), [localMembers, search, filter, tagFilter, tagsByMember]);
+    const matchTag   = !tagFilter || (tagsByMember[m.id] ?? []).some(t => t.id === tagFilter);
+    const matchStaff = !staffOnly || !!m.is_event_staff;
+    const matchJoined = !joinedCutoff || new Date(m.created_at).getTime() >= joinedCutoff;
+    return matchSearch && matchFilter && matchTag && matchStaff && matchJoined;
+  }), [localMembers, search, filter, tagFilter, tagsByMember, staffOnly, joinedCutoff]);
+
+  // Chip counts are computed over ALL members, not the filtered subset — a chip
+  // reading "ADMIN 3" must mean three admins exist, not three that survive the
+  // other filters currently applied.
+  const roleCount = (f: string) =>
+    f === "all" ? localMembers.length
+    : f === "banned" ? localMembers.filter(m => m.is_banned).length
+    : localMembers.filter(m => m.role === f && !m.is_banned).length;
+
+  const staffCount    = localMembers.filter(m => m.is_event_staff).length;
+  const filtersActive = !!search || filter !== "all" || !!tagFilter || staffOnly || joined !== "any";
+  const clearFilters  = () => { setSearch(""); setFilter("all"); setTagFilter(""); setStaffOnly(false); setJoined("any"); };
 
   // 640 members were rendered in one unbroken list. Paged client-side over the
   // already-filtered set; resetKey sends you back to page 1 whenever a filter
   // narrows things, so you never land on a now-empty page.
   const { page, setPage, pageSize, setPageSize, pageCount, startIdx, paged } =
-    usePagination(filtered, 25, `${search}|${filter}|${tagFilter}`);
+    usePagination(filtered, 25, `${search}|${filter}|${tagFilter}|${staffOnly}|${joined}`);
 
   async function changeRole(member: any, newRole: string) {
     setLoadingId(member.id);
@@ -169,7 +194,7 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
       {/* Search + filter */}
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
         <input value={search} onChange={e => setSearch(e.target.value)}
-          placeholder="Search by name or ID..."
+          placeholder="Search by name, email or ID..."
           style={{ flex: 1, minWidth: "200px", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
           {["all", ...ROLES.filter(r => isSuperAdmin || r !== "super_admin"), "banned"].map(f => {
@@ -179,10 +204,49 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
               <button key={f} type="button" onClick={() => setFilter(f)}
                 style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, background: active ? accent : "#F2F7F2", border: `1.5px solid ${active ? accent : "transparent"}`, color: active ? "#ffffff" : "#1B3A2D", borderRadius: "10px", padding: "8px 14px", cursor: "pointer", letterSpacing: "1.2px", outline: "none", transition: "background 0.15s, color 0.15s", boxShadow: active ? `0 2px 8px ${accent}30` : "none" }}>
                 {f === "all" ? "ALL" : ROLE_LABELS[f] ?? f.toUpperCase()}
+                <span style={{ marginLeft: "7px", fontSize: "9px", background: active ? "rgba(255,255,255,0.25)" : "rgba(26,128,64,0.12)", color: active ? "#ffffff" : accent, borderRadius: "999px", padding: "1px 6px" }}>
+                  {roleCount(f)}
+                </span>
               </button>
             );
           })}
         </div>
+      </div>
+
+      {/* Staff + joined-window filters. is_event_staff drives check-in access
+          and there was previously no way to see who holds it. */}
+      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+        <button type="button" onClick={() => setStaffOnly(v => !v)}
+          style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: staffOnly ? "#ffffff" : "#1B3A2D", background: staffOnly ? "#B78A1F" : "#F2F7F2", border: `1.5px solid ${staffOnly ? "#B78A1F" : "transparent"}`, borderRadius: "999px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1.2px" }}>
+          EVENT STAFF
+          <span style={{ marginLeft: "7px", fontSize: "9px", background: staffOnly ? "rgba(255,255,255,0.25)" : "rgba(183,138,31,0.15)", color: staffOnly ? "#ffffff" : "#B78A1F", borderRadius: "999px", padding: "1px 6px" }}>
+            {staffCount}
+          </span>
+        </button>
+
+        <label style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#5A7A60", letterSpacing: "1.2px" }}>
+          JOINED
+          <select value={joined} onChange={e => setJoined(e.target.value as "any" | "7d" | "30d" | "90d")}
+            style={{ fontFamily: SG, fontSize: "11px", fontWeight: 700, color: "#1B3A2D", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "5px 8px", cursor: "pointer" }}>
+            <option value="any">Any time</option>
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+          </select>
+        </label>
+
+        {filtersActive && (
+          <button type="button" onClick={clearFilters}
+            style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#5A7A60", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "999px", padding: "7px 14px", cursor: "pointer", letterSpacing: "1.2px", display: "inline-flex", alignItems: "center", gap: "5px" }}>
+            <IconX size={10} color="#5A7A60" /> CLEAR FILTERS
+          </button>
+        )}
+
+        <span style={{ fontFamily: B, fontSize: "11px", color: "#7A8E7A", marginLeft: "auto" }}>
+          {filtered.length === localMembers.length
+            ? `${localMembers.length} members`
+            : `${filtered.length} of ${localMembers.length} members`}
+        </span>
       </div>
 
       {/* Tag filter row */}
