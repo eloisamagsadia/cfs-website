@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyWebhookSignature } from "@/lib/paymongo";
 import { sendDonationReceipt, sendEventTicket, sendEventTicketBundle } from "@/lib/email";
 import { notifyRefundOutcome } from "@/lib/refund-notifications";
+import { decrementProductStock } from "@/lib/stock";
 import { clerkClient } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
@@ -234,9 +235,19 @@ export async function POST(req: NextRequest) {
     }
 
     if (type === "order") {
-      await (supabase.from("orders") as any)
+      // Conditional on payment_status = 'pending' so a retried webhook can't
+      // claim the same order twice — only the transition returns a row, and
+      // only that row decrements stock.
+      const { data: claimed } = await (supabase.from("orders") as any)
         .update({ payment_status: "paid", paymongo_ref: eventData.id, order_status: "processing" })
-        .eq("id", reference);
+        .eq("id", reference)
+        .eq("payment_status", "pending")
+        .select("id, items")
+        .maybeSingle();
+
+      if (claimed) {
+        await decrementProductStock(supabase, (claimed as any).items);
+      }
     }
 
     if (type === "tier_upgrade") {

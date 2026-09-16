@@ -22,13 +22,37 @@ export async function POST(req: NextRequest) {
   // be able to run a real purchase through a hidden product to test it.
   const productIds = items.map((i: any) => i.product_id).filter(Boolean);
   const { data: liveProducts } = await (supabase.from("products") as any)
-    .select("id, name, is_active")
+    .select("id, name, is_active, stock")
     .in("id", productIds);
   const unavailable = isPrivileged ? [] : (liveProducts ?? []).filter((p: any) => !p.is_active);
   if (unavailable.length || (liveProducts ?? []).length !== new Set(productIds).size) {
     const names = unavailable.map((p: any) => p.name).filter(Boolean).join(", ");
     return NextResponse.json(
       { error: names ? `No longer available: ${names}. Please remove it from your cart.` : "One or more items are no longer available." },
+      { status: 409 },
+    );
+  }
+
+  // Stock gate. Nothing checked availability before, so the shop would happily
+  // sell 10 of a 2-stock item. Quantities are summed per product so the same
+  // product listed twice can't slip past the check one row at a time.
+  const stockById = new Map<string, { name: string; stock: number }>(
+    (liveProducts ?? []).map((p: any) => [p.id, { name: p.name, stock: Number(p.stock) || 0 }]),
+  );
+  const wantedById = new Map<string, number>();
+  for (const i of items) {
+    if (!i?.product_id) continue;
+    wantedById.set(i.product_id, (wantedById.get(i.product_id) ?? 0) + (Number(i.quantity) || 0));
+  }
+  const short = Array.from(wantedById.entries())
+    .map(([id, want]) => ({ want, ...(stockById.get(id) ?? { name: "Item", stock: 0 }) }))
+    .filter(p => p.want > p.stock);
+  if (short.length) {
+    const detail = short
+      .map(p => `${p.name} (${p.stock === 0 ? "out of stock" : `only ${p.stock} left`})`)
+      .join(", ");
+    return NextResponse.json(
+      { error: `Not enough stock: ${detail}. Please adjust your cart.` },
       { status: 409 },
     );
   }

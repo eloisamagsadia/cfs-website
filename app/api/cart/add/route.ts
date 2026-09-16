@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   // that the client came from a legitimate listing. Unpublished products must
   // not be addable to a cart.
   const { data: productRaw } = await (((supabase.from("products") as any) as any) as any)
-    .select("id, is_active").eq("id", product_id).maybeSingle();
+    .select("id, name, is_active, stock").eq("id", product_id).maybeSingle();
   const product = productRaw as any;
   if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
   if (!product.is_active && !isPrivileged) {
@@ -30,6 +30,19 @@ export async function POST(req: NextRequest) {
 
   const { data: existingRaw } = await (((supabase.from("cart_items") as any) as any) as any).select("*").eq("user_id", userId).eq("product_id", product_id).maybeSingle();
   const existing = existingRaw as any;
+
+  // Catch an oversell here rather than letting the buyer fill in a whole
+  // shipping form before /api/orders/create rejects it. That remains the
+  // authoritative gate — this is the early, friendlier one.
+  const stock = Number(product.stock) || 0;
+  const wanted = (existing?.quantity ?? 0) + (Number(quantity) || 0);
+  if (wanted > stock) {
+    return NextResponse.json(
+      { error: stock === 0 ? "This product is out of stock." : `Only ${stock} left in stock.` },
+      { status: 409 },
+    );
+  }
+
   if (existing) {
     const { data, error } = await (((supabase.from("cart_items") as any) as any) as any).update({ quantity: existing.quantity + quantity }).eq("id", existing.id).select().single();
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { decrementProductStock } from "@/lib/stock";
 import { sendOrderConfirmation } from "@/lib/email";
 import { logAudit } from "@/lib/audit";
 
@@ -80,6 +81,12 @@ export async function POST(req: NextRequest) {
     notes: notes ?? null,
   }).select("*, profiles:user_id(id, display_name)").single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // A manually recorded sale moves real stock too — otherwise counts drift
+  // every time staff log a cash or in-person order.
+  if ((payment_status ?? "pending") === "paid") {
+    await decrementProductStock(admin, items);
+  }
 
   // Send order confirmation email
   try {
