@@ -112,15 +112,38 @@ export async function POST(req: NextRequest) {
   // Instead, look up the payment_transactions row by payment_link_id to get reference_id + type.
   // For link.* events, the link ID is eventData.id.
   // For payment.* events, the link ID is in eventData.attributes.source.id.
-  const linkId = eventData.id ?? eventData.attributes?.source?.id;
-  if (!linkId) return NextResponse.json({ received: true });
+  // For link.* events the link id IS eventData.id. For payment.* events
+  // eventData.id is the PAYMENT id (pay_…) and the link lives at
+  // attributes.source.id.
+  //
+  // This used to be `eventData.id ?? eventData.attributes?.source?.id`, which
+  // always picked eventData.id because it is always present. So every
+  // payment.paid event looked up a pay_… id in payment_link_id — a column that
+  // only ever holds link_… ids — found nothing, and returned 200 without
+  // marking the ticket paid. The money reached PayMongo and the ticket stayed
+  // pending, which is exactly the "pumapasok sa paymongo pero hindi
+  // nag-uupdate yung status" report from the Sept 14 event.
+  //
+  // Both candidates are tried so either event shape resolves.
+  const candidateLinkIds = [eventData.attributes?.source?.id, eventData.id].filter(Boolean);
+  if (!candidateLinkIds.length) return NextResponse.json({ received: true });
 
-  const { data: txn } = await (supabase.from("payment_transactions") as any)
+  // maybeSingle + limit rather than .single(): a duplicate payment_link_id
+  // (possible via regenerate-payment) made .single() error and silently drop
+  // the webhook the same way a miss did.
+  const { data: txnRows } = await (supabase.from("payment_transactions") as any)
     .select("reference_id, type, status")
-    .eq("payment_link_id", linkId)
-    .single();
+    .in("payment_link_id", candidateLinkIds)
+    .order("created_at", { ascending: false })
+    .limit(1);
 
-  if (!txn) return NextResponse.json({ received: true });
+  const txn = (txnRows ?? [])[0];
+  if (!txn) {
+    // Worth seeing in logs: a paid webhook we could not match is money taken
+    // with nothing updated, and it used to fail completely silently.
+    console.error("[paymongo] no payment_transactions row for", { eventType, candidateLinkIds });
+    return NextResponse.json({ received: true });
+  }
 
   if (txn.status === "paid") {
     return NextResponse.json({ received: true });

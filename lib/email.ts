@@ -15,6 +15,11 @@ const FROM_NAME = process.env.RESEND_FROM_NAME ?? "Colet Fan Suporta";
 // fetch throws, we return null so the caller falls back to its own
 // hardcoded HTML — email sending never fails because of a template issue.
 
+// Emails render on Vercel, where the runtime timezone is UTC. "en-PH" only
+// selects formatting conventions, NOT a timezone — every formatter below must
+// pass this explicitly or a 3:00 PM event renders as 7:00 AM.
+const PH_TZ = "Asia/Manila";
+
 export type EmailTemplateKey = "event_ticket" | "donation_receipt" | "order_confirmation" | "order_shipped" | "welcome";
 
 const escapeReg = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -258,6 +263,7 @@ function toGoogleCalendarDate(iso: string): string {
 
 export async function sendEventTicket({
   to, eventId, eventTitle, eventDate, eventEndDate, eventLocation, eventBanner, registrationId,
+  ticketNumber,
   tierName, subtotal, fee, amountPaid, paymentMethod, paymongoRef, paidAt,
 }: {
   to: string;
@@ -268,6 +274,9 @@ export async function sendEventTicket({
   eventLocation: string;
   eventBanner?: string;
   registrationId: string;
+  /** The human CFS-XXXX code. Without it the email can only show a truncated
+   *  UUID, which door staff cannot match and cannot type into the scanner. */
+  ticketNumber?: string;
   // Invoice fields (optional — omit for free tickets)
   tierName?: string;
   subtotal?: number;
@@ -278,12 +287,18 @@ export async function sendEventTicket({
   paidAt?: string;
 }) {
   const SITE       = process.env.NEXT_PUBLIC_SITE_URL || "https://coletfs.com";
-  const ticketCode = (registrationId ?? "").slice(0, 12).toUpperCase();
+  // Ticket numbers are CFS-KHAII-C865D4AB — 18 chars. This used to render
+  // `.slice(0, 12)` unconditionally, printing "CFS-KHAII-C": a truncated code
+  // staff could not match against the attendee list and could not type into
+  // the scanner, which needs the code in full. Only a bare UUID fallback is
+  // shortened, and only for readability.
+  const rawCode    = ((ticketNumber ?? registrationId) ?? "").toString().trim();
+  const ticketCode = /^CFS-/i.test(rawCode) ? rawCode.toUpperCase() : rawCode.slice(0, 12).toUpperCase();
   const start      = new Date(eventDate);
   const end        = eventEndDate ? new Date(eventEndDate) : new Date(start.getTime() + 3 * 60 * 60 * 1000);
 
-  const dateStr = start.toLocaleDateString("en-PH", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-  const timeStr = start.toLocaleTimeString("en-PH",  { hour: "2-digit", minute: "2-digit", hour12: true });
+  const dateStr = start.toLocaleDateString("en-PH", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: PH_TZ });
+  const timeStr = start.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", hour12: true, timeZone: PH_TZ });
 
   const qrData = eventId ? `${SITE}/verify/${registrationId}` : `TICKET:${registrationId}`;
   const qrSrc  = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encodeURIComponent(qrData)}`;
@@ -394,7 +409,7 @@ export async function sendEventTicket({
         <div style="display:inline-block;background:#FAF6EE;border:1px dashed #C7D6BE;border-radius:14px;padding:16px;">
           <img src="${qrSrc}" alt="Ticket QR" width="200" height="200" style="display:block;width:200px;height:200px;" />
         </div>
-        <div style="margin-top:14px;font-size:10px;letter-spacing:2px;color:#5A7A60;">TICKET ID</div>
+        <div style="margin-top:14px;font-size:10px;letter-spacing:2px;color:#5A7A60;">TICKET NO.</div>
         <div style="font-family:'Courier New',Courier,monospace;font-size:18px;font-weight:700;color:#1B3A2D;letter-spacing:2px;margin-top:2px;">${ticketCode}</div>
         <div style="font-size:11px;color:#7A8E7A;margin-top:8px;">Scan at the door or show this ID to the CFS crew.</div>
       </div>
@@ -502,8 +517,8 @@ export async function sendEventTicketBundle({
   const end   = eventEndDate ? new Date(eventEndDate) : new Date(start.getTime() + 3 * 60 * 60 * 1000);
   const count = tickets.length;
 
-  const dateStr = start.toLocaleDateString("en-PH", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-  const timeStr = start.toLocaleTimeString("en-PH",  { hour: "2-digit", minute: "2-digit", hour12: true });
+  const dateStr = start.toLocaleDateString("en-PH", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: PH_TZ });
+  const timeStr = start.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", hour12: true, timeZone: PH_TZ });
 
   const gcalUrl = "https://calendar.google.com/calendar/render?" + new URLSearchParams({
     action:   "TEMPLATE",
@@ -520,7 +535,9 @@ export async function sendEventTicketBundle({
     : `<div style="height:12px;background:linear-gradient(90deg,#156530 0%,#1A8040 50%,#4ACB6E 100%);border-top-left-radius:16px;border-top-right-radius:16px;"></div>`;
 
   const ticketCards = tickets.map((t, i) => {
-    const code  = (t.ticketNumber ?? t.ticketId ?? "").toString().slice(0, 12).toUpperCase();
+    // Same full-code rule as the single-ticket email above.
+    const rawB  = (t.ticketNumber ?? t.ticketId ?? "").toString().trim();
+    const code  = /^CFS-/i.test(rawB) ? rawB.toUpperCase() : rawB.slice(0, 12).toUpperCase();
     const qrData = eventId ? `${SITE}/verify/${t.ticketId}` : `TICKET:${t.ticketId}`;
     const qrSrc  = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(qrData)}`;
     return `
@@ -651,8 +668,8 @@ export async function sendDonationReceipt({
   donationId: string;
 }) {
   const now    = new Date();
-  const date   = now.toLocaleDateString("en-PH", { month: "2-digit", day: "2-digit", year: "numeric" }).replace(/\//g, "/");
-  const time   = now.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", hour12: true });
+  const date   = now.toLocaleDateString("en-PH", { month: "2-digit", day: "2-digit", year: "numeric", timeZone: PH_TZ }).replace(/\//g, "/");
+  const time   = now.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit", hour12: true, timeZone: PH_TZ });
   const refNo  = donationId.slice(0, 12).toUpperCase();
   const dash   = "- - - - - - - - - - - - - - - - - - - - - -";
   const mono   = "Courier New, Courier, Lucida Console, monospace";
