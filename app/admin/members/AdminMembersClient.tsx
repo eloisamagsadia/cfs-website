@@ -4,6 +4,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { IconX, IconCheck, IconWarning } from "@/components/shared/Icons";
 import StatBar from "@/components/shared/StatBar";
+import { usePagination, TableCountBar, TablePagination } from "@/components/shared/TablePagination";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -80,6 +81,12 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
     const matchTag = !tagFilter || (tagsByMember[m.id] ?? []).some(t => t.id === tagFilter);
     return matchSearch && matchFilter && matchTag;
   }), [localMembers, search, filter, tagFilter, tagsByMember]);
+
+  // 640 members were rendered in one unbroken list. Paged client-side over the
+  // already-filtered set; resetKey sends you back to page 1 whenever a filter
+  // narrows things, so you never land on a now-empty page.
+  const { page, setPage, pageSize, setPageSize, pageCount, startIdx, paged } =
+    usePagination(filtered, 25, `${search}|${filter}|${tagFilter}`);
 
   async function changeRole(member: any, newRole: string) {
     setLoadingId(member.id);
@@ -200,6 +207,7 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
 
       {/* Table — desktop only */}
       <div className="members-table-desktop" style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
+        <TableCountBar total={localMembers.length} filteredTotal={filtered.length} pageSize={pageSize} setPageSize={setPageSize} noun="MEMBERS" />
         <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 0.5fr 0.5fr 1.2fr", background: "#F2F7F2", padding: "12px 20px", alignItems: "center" }}>
           {["MEMBER", "ROLE", "JOINED", "POSTS", "BADGES", "ACTIONS"].map((h, idx) => (
             <span key={h} style={{
@@ -215,7 +223,7 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
           <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>No members found.</div>
         )}
 
-        {filtered.map((m: any, i: number) => {
+        {paged.map((m: any, i: number) => {
           const isLoading = loadingId === m.id;
           const roleColor = ROLE_COLORS[m.role] ?? "#5A7A60";
           const canChange = canChangeRole(m);
@@ -294,6 +302,8 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
             </div>
           );
         })}
+
+        <TablePagination page={page} setPage={setPage} pageCount={pageCount} startIdx={startIdx} pageSize={pageSize} filteredTotal={filtered.length} />
       </div>
 
       {/* Cards — mobile only */}
@@ -301,7 +311,7 @@ export default function AdminMembersClient({ members, callerRole, callerIsOwner 
         {filtered.length === 0 && (
           <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>No members found.</div>
         )}
-        {filtered.map((m: any) => {
+        {paged.map((m: any) => {
           const isLoading = loadingId === m.id;
           const roleColor = ROLE_COLORS[m.role] ?? "#5A7A60";
           const canChange = canChangeRole(m);

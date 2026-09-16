@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import { usePagination, TableCountBar, TablePagination } from "@/components/shared/TablePagination";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -221,11 +222,14 @@ export default function AuditPage() {
   const [categoryFilter, setCat]    = useState<CategoryFilter>("all");
   const [timeWindow, setTimeWindow] = useState<TimeWindow>("all");
   const [expanded, setExpanded]     = useState<Set<string>>(new Set());
+  // Real row count in audit_log vs how many we actually fetched — the page
+  // says so out loud rather than implying it shows everything.
+  const [total, setTotal]           = useState(0);
 
   useEffect(() => {
     fetch("/api/super/audit-log")
       .then(r => r.json())
-      .then(d => { if (d.error) setError(d.error); else setLogs(d.logs ?? []); })
+      .then(d => { if (d.error) setError(d.error); else { setLogs(d.logs ?? []); setTotal(d.total ?? 0); } })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
@@ -280,6 +284,12 @@ export default function AuditPage() {
     { key: "all", label: "All time" },
   ];
 
+  // Client-side paging over the filtered set — 1,000 entries in one unbroken
+  // scroll was the complaint. resetKey returns to page 1 whenever a filter
+  // narrows the list, so you never land on a now-empty page.
+  const { page, setPage, pageSize, setPageSize, pageCount, startIdx, paged } =
+    usePagination(filtered, 25, `${search}|${categoryFilter}|${timeWindow}`);
+
   const categoryChips: { key: CategoryFilter; label: string; count: number }[] = [
     { key: "all",     label: "Everything",   count: logs.length },
     { key: "auth",    label: "Sign-ins",     count: counts.auth },
@@ -296,7 +306,10 @@ export default function AuditPage() {
       <div>
         <h1 style={{ fontFamily: R, fontSize: "1.6rem", color: "#156530", letterSpacing: "3px", marginBottom: "4px" }}>ACTIVITY LOG</h1>
         <p style={{ fontFamily: B, fontSize: "13px", color: "#4A7C59" }}>
-          Everything people do on the site — sign-ins, purchases, posts, admin actions. Showing {filtered.length} of {logs.length}.
+          Everything people do on the site — sign-ins, purchases, posts, admin actions.{" "}
+          {total > logs.length
+            ? `Newest ${logs.length.toLocaleString()} of ${total.toLocaleString()} entries.`
+            : `${total.toLocaleString()} entries.`}
         </p>
       </div>
 
@@ -340,6 +353,9 @@ export default function AuditPage() {
 
       {/* Log list */}
       <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "14px", overflow: "hidden" }}>
+        {!loading && logs.length > 0 && (
+          <TableCountBar total={logs.length} filteredTotal={filtered.length} pageSize={pageSize} setPageSize={setPageSize} noun="ENTRIES" />
+        )}
         {loading ? (
           <div style={{ padding: "48px", textAlign: "center", fontFamily: SG, letterSpacing: "2px", color: "#7A8E7A" }}>LOADING…</div>
         ) : filtered.length === 0 ? (
@@ -347,7 +363,7 @@ export default function AuditPage() {
             {logs.length === 0 ? "Nothing has happened yet." : "No matches for the current filters."}
           </div>
         ) : (
-          filtered.map((log, i) => {
+          paged.map((log, i) => {
             const info = friendly(log.action);
             const cat = CATEGORY_META[info.category];
             const isExpanded = expanded.has(log.id);
@@ -431,6 +447,8 @@ export default function AuditPage() {
             );
           })
         )}
+
+        <TablePagination page={page} setPage={setPage} pageCount={pageCount} startIdx={startIdx} pageSize={pageSize} filteredTotal={filtered.length} />
       </div>
     </div>
   );

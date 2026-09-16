@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import { IconCamera, IconCheck, IconTrash, IconSparkle, IconX } from "@/components/shared/Icons";
+import { usePagination, TableCountBar, TablePagination } from "@/components/shared/TablePagination";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -77,6 +78,11 @@ export default function EventTicketsPage() {
   }, [event_id]);
 
   const filtered = filter === "all" ? tickets : tickets.filter(t => t.status === filter);
+
+  // A sold-out event is 300+ tickets in one scroll. Paged client-side over the
+  // filtered set; resetKey returns to page 1 when the status filter changes.
+  const { page, setPage, pageSize, setPageSize, pageCount, startIdx, paged } =
+    usePagination(filtered, 25, filter);
   const counts = {
     all: tickets.length,
     active: tickets.filter(t => t.status === "active").length,
@@ -285,7 +291,10 @@ export default function EventTicketsPage() {
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          {filtered.map(ticket => {
+          <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
+            <TableCountBar total={tickets.length} filteredTotal={filtered.length} pageSize={pageSize} setPageSize={setPageSize} noun="TICKETS" />
+          </div>
+          {paged.map(ticket => {
             const color = STATUS_COLORS[ticket.status] ?? "#5A7A60";
             const canCancel = ticket.status === "active" || ticket.status === "pending_payment";
             const isComp = ticket?.qr_data?.comp_source === "admin_manual";
@@ -352,6 +361,10 @@ export default function EventTicketsPage() {
               </div>
             );
           })}
+
+          <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
+            <TablePagination page={page} setPage={setPage} pageCount={pageCount} startIdx={startIdx} pageSize={pageSize} filteredTotal={filtered.length} />
+          </div>
         </div>
       )}
 
