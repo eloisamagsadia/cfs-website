@@ -16,6 +16,16 @@ export async function POST(req: NextRequest) {
 
   const supabase = createAdminClient();
 
+  // Quantities arrive from the client. A negative one would shrink the stock
+  // check's running total and pass, so reject the shape before using it.
+  const badQty = items.find((i: any) => {
+    const q = Number(i?.quantity);
+    return !Number.isInteger(q) || q < 1 || q > 999;
+  });
+  if (badQty) {
+    return NextResponse.json({ error: "Each item quantity must be a whole number between 1 and 999." }, { status: 400 });
+  }
+
   // Last line of defence for hidden products: the client posts whatever it
   // had in memory, so a cart loaded before the product was hidden would
   // otherwise still place an order for it. Admins are exempt — they need to

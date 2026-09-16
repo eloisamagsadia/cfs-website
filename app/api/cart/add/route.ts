@@ -16,6 +16,14 @@ export async function POST(req: NextRequest) {
   const { product_id, quantity = 1, variant = null } = await req.json();
   if (!product_id) return NextResponse.json({ error: "Missing product_id" }, { status: 400 });
 
+  // Quantity is client-supplied. Without this a negative value sails past the
+  // stock check below (wanted < stock), landing a negative quantity in the
+  // cart and a negative line total at checkout.
+  const qty = Number(quantity);
+  if (!Number.isInteger(qty) || qty < 1 || qty > 999) {
+    return NextResponse.json({ error: "Quantity must be a whole number between 1 and 999." }, { status: 400 });
+  }
+
   // The product detail page can be reached by direct URL, and listings are the
   // only place is_active is filtered — so validate here rather than trusting
   // that the client came from a legitimate listing. Unpublished products must
@@ -35,7 +43,7 @@ export async function POST(req: NextRequest) {
   // shipping form before /api/orders/create rejects it. That remains the
   // authoritative gate — this is the early, friendlier one.
   const stock = Number(product.stock) || 0;
-  const wanted = (existing?.quantity ?? 0) + (Number(quantity) || 0);
+  const wanted = (existing?.quantity ?? 0) + qty;
   if (wanted > stock) {
     return NextResponse.json(
       { error: stock === 0 ? "This product is out of stock." : `Only ${stock} left in stock.` },
@@ -44,12 +52,12 @@ export async function POST(req: NextRequest) {
   }
 
   if (existing) {
-    const { data, error } = await (((supabase.from("cart_items") as any) as any) as any).update({ quantity: existing.quantity + quantity }).eq("id", existing.id).select().single();
+    const { data, error } = await (((supabase.from("cart_items") as any) as any) as any).update({ quantity: existing.quantity + qty }).eq("id", existing.id).select().single();
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ cartItem: data });
   }
 
-  const { data, error } = await (((supabase.from("cart_items") as any) as any) as any).insert({ user_id: userId, product_id, quantity, variant }).select().single();
+  const { data, error } = await (((supabase.from("cart_items") as any) as any) as any).insert({ user_id: userId, product_id, quantity: qty, variant }).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ cartItem: data });
 }

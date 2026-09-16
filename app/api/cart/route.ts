@@ -35,6 +35,24 @@ export async function PATCH(req: NextRequest) {
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id, quantity } = await req.json();
-  const { data } = await admin().from("cart_items").update({ quantity }).eq("id", id).eq("user_id", userId).select().single();
+  // Same client-supplied quantity hazard as /api/cart/add — this handler had
+  // no validation at all, so a negative or fractional value went straight in.
+  const qty = Number(quantity);
+  if (!Number.isInteger(qty) || qty < 1 || qty > 999) {
+    return NextResponse.json({ error: "Quantity must be a whole number between 1 and 999." }, { status: 400 });
+  }
+  const { data: row } = await admin()
+    .from("cart_items").select("product_id").eq("id", id).eq("user_id", userId).maybeSingle();
+  if (!row) return NextResponse.json({ error: "Cart item not found" }, { status: 404 });
+  const { data: prod } = await admin()
+    .from("products").select("stock").eq("id", (row as any).product_id).maybeSingle();
+  const stock = Number((prod as any)?.stock) || 0;
+  if (qty > stock) {
+    return NextResponse.json(
+      { error: stock === 0 ? "This product is out of stock." : `Only ${stock} left in stock.` },
+      { status: 409 },
+    );
+  }
+  const { data } = await admin().from("cart_items").update({ quantity: qty }).eq("id", id).eq("user_id", userId).select().single();
   return NextResponse.json({ cartItem: data });
 }
