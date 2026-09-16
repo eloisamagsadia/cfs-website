@@ -9,30 +9,39 @@ export async function GET(req: NextRequest) {
   const region = searchParams.get("region");
   const weight = searchParams.get("weight");
 
-  // Calculate shipping for a specific region + weight
+  // Calculate shipping for a specific region + weight.
+  //
+  // This used to match with .lt(weight_from, w).gte(weight_to, w) and treat
+  // *any* miss as "over the heaviest band". A weight of 0 matches no band
+  // (weight_from 0 < 0 is false), so a zero-weight cart was billed the
+  // heaviest rate — ₱425 instead of ₱125 in Metro Manila. An unknown region
+  // fell through the same path and silently returned 0, i.e. free shipping.
+  // Both cases are now distinguished explicitly.
   if (region && weight) {
-    const w = parseFloat(weight);
-    const { data, error } = await (db() as any)
+    const w = Number.parseFloat(weight);
+    const { data: bandsRaw, error } = await (db() as any)
       .from("shipping_rates")
-      .select("rate")
+      .select("rate, weight_from, weight_to")
       .eq("region", region)
       .eq("is_active", true)
-      .lt("weight_from", w)
-      .gte("weight_to", w)
-      .single();
-    if (error || !data) {
-      // If over 10kg, get the highest rate
-      const { data: max } = await (db() as any)
-        .from("shipping_rates")
-        .select("rate")
-        .eq("region", region)
-        .eq("is_active", true)
-        .order("weight_to", { ascending: false })
-        .limit(1)
-        .single();
-      return NextResponse.json({ rate: max?.rate ?? 0 });
+      .order("weight_from", { ascending: true });
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+    const bands = (bandsRaw ?? []) as { rate: number; weight_from: number; weight_to: number }[];
+    if (!bands.length) {
+      return NextResponse.json({ error: `No shipping rates configured for "${region}".` }, { status: 400 });
     }
-    return NextResponse.json({ rate: data.rate });
+
+    // Weightless or unparseable: bill the lightest band, never the heaviest.
+    if (!Number.isFinite(w) || w <= 0) {
+      return NextResponse.json({ rate: bands[0].rate });
+    }
+
+    const match = bands.find(b => w > b.weight_from && w <= b.weight_to);
+    if (match) return NextResponse.json({ rate: match.rate });
+
+    // Genuinely above the heaviest band — the original intent of the fallback.
+    return NextResponse.json({ rate: bands[bands.length - 1].rate });
   }
 
   // Return all rates

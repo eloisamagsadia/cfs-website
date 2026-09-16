@@ -17,9 +17,12 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [shippingFee, setShippingFee] = useState(0);
+  // null = not calculated yet. Starting at 0 meant an uncalculated cart
+  // looked like free shipping in the totals.
+  const [shippingFee, setShippingFee] = useState<number | null>(null);
   const [loadingShipping, setLoadingShipping] = useState(false);
-  const [form, setForm] = useState({ full_name:"", phone:"", street:"", barangay:"", city:"", province:"", region:"Metro Manila", zip_code:"" });
+  const [shippingError, setShippingError] = useState("");
+  const [form, setForm] = useState({ full_name:"", phone:"", street:"", barangay:"", city:"", province:"", region:"", zip_code:"" });
   const [method, setMethod] = useState<PaymentMethod>("gcash");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const router = useRouter();
@@ -35,17 +38,32 @@ export default function CheckoutPage() {
     const data = await res.json();
     setItems(data.items ?? []);
     setLoading(false);
-    fetchShipping("Metro Manila", data.items ?? []);
+    // No region guess here — the buyer picks one, then we price it. Defaulting
+    // to Metro Manila quietly undercharged everyone who never opened the menu.
   }
 
   async function fetchShipping(region: string, cartItems: any[]) {
     if (!region || !cartItems.length) return;
     setLoadingShipping(true);
+    setShippingError("");
     const totalWeight = cartItems.reduce((sum: number, i: any) => sum + ((i.products?.weight_kg ?? 0.5) * i.quantity), 0);
-    const res = await fetch(`/api/shipping?region=${encodeURIComponent(region)}&weight=${totalWeight.toFixed(2)}`);
-    const data = await res.json();
-    setShippingFee(data.rate ?? 0);
-    setLoadingShipping(false);
+    try {
+      const res = await fetch(`/api/shipping?region=${encodeURIComponent(region)}&weight=${totalWeight.toFixed(2)}`);
+      const data = await res.json();
+      if (!res.ok || typeof data.rate !== "number") {
+        // Leave the fee uncalculated rather than defaulting to 0 — a failed
+        // lookup must not quietly become free shipping.
+        setShippingFee(null);
+        setShippingError(data.error ?? "Couldn't calculate shipping for that region.");
+      } else {
+        setShippingFee(data.rate);
+      }
+    } catch {
+      setShippingFee(null);
+      setShippingError("Couldn't calculate shipping. Please try again.");
+    } finally {
+      setLoadingShipping(false);
+    }
   }
 
   function update(field: string, value: string) {
@@ -54,14 +72,18 @@ export default function CheckoutPage() {
   }
 
   const subtotal = items.reduce((s: number, i: any) => s + (i.products?.price ?? 0) * i.quantity, 0);
-  const beforeFee = subtotal + shippingFee;
+  const shippingReady = shippingFee !== null;
+  const beforeFee = subtotal + (shippingFee ?? 0);
   const paymongoFee = calculateFee(beforeFee, method);
   const total = beforeFee + paymongoFee;
   const fmt = (n: number) => n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   async function handleCheckout() {
-    if (!form.full_name || !form.phone || !form.street || !form.city || !form.province) {
+    if (!form.full_name || !form.phone || !form.street || !form.city || !form.province || !form.region) {
       setError("Please fill in all required fields."); return;
+    }
+    if (!shippingReady) {
+      setError(shippingError || "Please wait for shipping to be calculated."); return;
     }
     if (!termsAccepted) {
       setError("Please accept the Terms & Conditions to continue."); return;
@@ -164,8 +186,9 @@ export default function CheckoutPage() {
           </div>
           <div className="stack-md" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"14px" }}>
             <div>
-              <label style={labelStyle}>Region</label>
+              <label style={labelStyle}>Region *</label>
               <select style={inputStyle} value={form.region} onChange={e=>update("region",e.target.value)}>
+                <option value="">Select region…</option>
                 {SHIPPING_REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
               </select>
             </div>
@@ -191,8 +214,11 @@ export default function CheckoutPage() {
             </div>
             <div style={{ display:"flex", justifyContent:"space-between" }}>
               <span style={{ fontFamily:B, fontSize:"12px", color:"#4A7C59" }}>Shipping</span>
-              <span style={{ fontFamily:B, fontSize:"12px", color:"#1B3A2D" }}>{loadingShipping ? "..." : `₱${shippingFee.toLocaleString()}`}</span>
+              <span style={{ fontFamily:B, fontSize:"12px", color: shippingReady ? "#1B3A2D" : "#7A8E7A" }}>{loadingShipping ? "..." : shippingReady ? `₱${(shippingFee as number).toLocaleString()}` : "Select region"}</span>
             </div>
+            {shippingError && (
+              <div style={{ fontFamily:B, fontSize:"11px", color:"#CC3344", lineHeight:1.5 }}>{shippingError}</div>
+            )}
             <div style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
               <span style={{ fontFamily:B, fontSize:"11px", color:"#5A7A60", letterSpacing:"1px", textTransform:"uppercase" }}>Payment method</span>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:"6px" }}>
@@ -229,7 +255,7 @@ export default function CheckoutPage() {
               I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color:"#1A8040", textDecoration:"underline" }}>Terms &amp; Conditions</a> and understand orders are non-refundable once shipped.
             </span>
           </label>
-          <button onClick={handleCheckout} disabled={submitting || !termsAccepted} style={{ position:"relative", display:"block", width:"100%", background:"transparent", border:"none", cursor: submitting || !termsAccepted ? "not-allowed" : "pointer", padding:0, opacity: submitting || !termsAccepted ? 0.6 : 1 }}>
+          <button onClick={handleCheckout} disabled={submitting || !termsAccepted || !shippingReady} style={{ position:"relative", display:"block", width:"100%", background:"transparent", border:"none", cursor: submitting || !termsAccepted || !shippingReady ? "not-allowed" : "pointer", padding:0, opacity: submitting || !termsAccepted || !shippingReady ? 0.6 : 1 }}>
             <span style={{ position:"absolute", top:"3px", left:"3px", width:"100%", height:"100%", background:"#080F06", borderRadius:"6px", display:"block" }}/>
             <span style={{ position:"relative", display:"block", background:"#1A8040", border:"2px solid #1B3A2D", borderRadius:"6px", padding:"12px", textAlign:"center" }}>
               <span style={{ fontFamily:R, fontSize:"13px", color:"#1B3A2D", letterSpacing:"2px" }}>PAY P{fmt(total)}</span>
