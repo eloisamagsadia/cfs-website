@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import ColetCharacter from "@/components/illustrations/ColetCharacter";
 import { IconCalendar, IconShoppingBag, IconHeart, IconMail } from "@/components/shared/Icons";
 
 export const metadata: Metadata = {
@@ -30,23 +29,18 @@ export default function NotFound() {
       <div className="nf-wrap" style={{ width: "100%", maxWidth: "1080px", margin: "0 auto", padding: "0 24px" }}>
         <div className="nf-bento">
 
-          {/* OOPS tile — cream paper, Colet + handwritten headline, spans wide */}
+          {/* OOPS tile — cream paper, handwritten headline, spans wide */}
           <div className="nf-tile nf-oops" style={{ background: "#F5F7EC", border: "1px dashed #C7D5C0" }}>
-            <div className="nf-oops-inner">
-              <div className="nf-coco">
-                <ColetCharacter height={150} />
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "2px", color: "#4A7C59", marginBottom: "10px" }}>
+                PAGE NOT FOUND
               </div>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "2px", color: "#4A7C59", marginBottom: "10px" }}>
-                  PAGE NOT FOUND
-                </div>
-                <div className="scrap-note" style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", color: "#1B3A2D", lineHeight: 1.1, letterSpacing: "-0.5px" }}>
-                  Ay, wrong turn — this page isn&apos;t on the setlist.
-                </div>
-                <p style={{ fontFamily: B, fontSize: "13.5px", color: "#4A7C59", margin: "14px 0 0", lineHeight: 1.65, maxWidth: "460px" }}>
-                  The link may be old, or the page has moved. Everything else is still right where you left it.
-                </p>
+              <div className="scrap-note" style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", color: "#1B3A2D", lineHeight: 1.1, letterSpacing: "-0.5px" }}>
+                Ay, wrong turn — this page isn&apos;t on the setlist.
               </div>
+              <p style={{ fontFamily: B, fontSize: "13.5px", color: "#4A7C59", margin: "14px 0 0", lineHeight: 1.65, maxWidth: "460px" }}>
+                The link may be old, or the page has moved. Everything else is still right where you left it.
+              </p>
             </div>
           </div>
 
@@ -126,13 +120,8 @@ export default function NotFound() {
         .nf-link { justify-content: center; }
         .nf-link-icon { margin-bottom: 10px; }
 
-        /* Colet sits beside the copy on desktop, above it when narrow */
-        .nf-oops-inner { display: flex; align-items: center; gap: 22px; }
-        .nf-coco { flex: 0 0 auto; }
-
         @media (prefers-reduced-motion: reduce) {
           .nf-tile { transform: none !important; }
-          .nf-coco svg { animation: none !important; }
         }
 
         /* Tablet — 2 col grid, straightened tiles, tighter padding */
@@ -172,10 +161,7 @@ export default function NotFound() {
              phone layout into a long scroll of near-empty cards. */
           .nf-link { flex-direction: row; align-items: center; justify-content: flex-start; gap: 12px; padding: 14px 16px !important; }
           .nf-link-icon { margin-bottom: 0; }
-          .nf-oops-inner { flex-direction: column; text-align: center; gap: 10px; }
-          .nf-oops-inner .scrap-note { font-size: 1.7rem !important; }
-          .nf-oops-inner p { margin-left: auto; margin-right: auto; }
-          .nf-coco svg { height: 118px; width: auto; }
+          .nf-oops .scrap-note { font-size: 1.7rem !important; }
           .nf-code > div:nth-of-type(2) { font-size: 3.2rem !important; }
           .nf-cta { padding: 0 !important; }
           /* nowrap matters: a column flex container that still wraps will
