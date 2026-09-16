@@ -20,6 +20,7 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const [placed, setPlaced] = useState<"any" | "7d" | "30d" | "90d">("any");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
   const [bulkMsg, setBulkMsg]   = useState("");
@@ -32,29 +33,56 @@ export default function AdminOrdersPage() {
 
   useEffect(() => { refresh().finally(() => setLoading(false)); }, []);
 
+  // One predicate per filter key, shared by the chips and their counts — a chip
+  // can never disagree with the rows it produces. DELIVERED and CANCELLED were
+  // missing entirely: those orders existed but could not be isolated.
+  // NEEDS TRACKING is the operational one — shipped with no tracking number is
+  // exactly the set a customer emails about.
+  const MATCHERS: Record<string, (o: any) => boolean> = {
+    all:        () => true,
+    unpaid:     o => o.payment_status === "pending",
+    paid:       o => o.payment_status === "paid",
+    processing: o => o.order_status === "processing",
+    shipped:    o => o.order_status === "shipped",
+    delivered:  o => o.order_status === "delivered",
+    cancelled:  o => o.order_status === "cancelled",
+    untracked:  o => o.order_status === "shipped" && !o.tracking_number,
+  };
+
+  const placedCutoff = useMemo(() => {
+    if (placed === "any") return 0;
+    const days = placed === "7d" ? 7 : placed === "30d" ? 30 : 90;
+    return Date.now() - days * 24 * 60 * 60 * 1000;
+  }, [placed]);
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return orders.filter(o => {
-      const passFilter =
-        filter === "all" ? true :
-        filter === "unpaid" ? o.payment_status === "pending" :
-        filter === "paid" ? o.payment_status === "paid" :
-        filter === "processing" ? o.order_status === "processing" :
-        filter === "shipped" ? o.order_status === "shipped" : true;
-      if (!passFilter) return false;
+      if (!(MATCHERS[filter] ?? MATCHERS.all)(o)) return false;
+      if (placedCutoff && new Date(o.created_at).getTime() < placedCutoff) return false;
       if (!q) return true;
+      // Tracking number included so "where is TRK123" is answerable by pasting
+      // the number a customer quotes.
       return o.id.toLowerCase().includes(q)
           || (o.profiles?.display_name ?? "").toLowerCase().includes(q)
           || (o.shipping_address?.full_name ?? "").toLowerCase().includes(q)
-          || (o.shipping_address?.city ?? "").toLowerCase().includes(q);
+          || (o.shipping_address?.city ?? "").toLowerCase().includes(q)
+          || (o.tracking_number ?? "").toLowerCase().includes(q)
+          || (o.courier ?? "").toLowerCase().includes(q);
     });
-  }, [orders, filter, search]);
+  }, [orders, filter, search, placedCutoff]);
+
+  // Counts over ALL orders, not the filtered subset, so a chip states how many
+  // exist rather than how many survive the other filters.
+  const countFor = (key: string) => orders.filter(MATCHERS[key] ?? MATCHERS.all).length;
+  const filtersActive = !!search || filter !== "all" || placed !== "any";
+  const clearFilters  = () => { setSearch(""); setFilter("all"); setPlaced("any"); };
 
   // Orders is empty today but grows one row per sale. Paging it now means the
   // page never becomes the problem later. resetKey returns to page 1 whenever
   // the status filter or search narrows the list.
   const { page, setPage, pageSize, setPageSize, pageCount, startIdx, paged } =
-    usePagination(filtered, 25, `${filter}|${search}`);
+    usePagination(filtered, 25, `${filter}|${search}|${placed}`);
 
   function toggleOne(id: string) {
     setSelected(prev => { const c = new Set(prev); if (c.has(id)) c.delete(id); else c.add(id); return c; });
@@ -101,6 +129,9 @@ export default function AdminOrdersPage() {
     { key: "paid", label: "PAID" },
     { key: "processing", label: "PROCESSING" },
     { key: "shipped", label: "SHIPPED" },
+    { key: "untracked", label: "NEEDS TRACKING" },
+    { key: "delivered", label: "DELIVERED" },
+    { key: "cancelled", label: "CANCELLED" },
   ];
 
   return (
@@ -132,13 +163,42 @@ export default function AdminOrdersPage() {
 
       {/* Filters + search */}
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
-        {FILTERS.map(f => (
-          <button key={f.key} type="button" onClick={() => setFilter(f.key)} style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `1.5px solid ${filter === f.key ? "#1A8040" : "#DDE8DD"}`, background: filter === f.key ? "#1A8040" : "transparent", color: filter === f.key ? "#ffffff" : "#5A7A60", cursor: "pointer", outline: "none" }}>
-            {f.label}
-          </button>
-        ))}
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search order id / customer / city…"
+        {FILTERS.map(f => {
+          const active = filter === f.key;
+          // Orders needing tracking are a to-do, not a status — amber marks it.
+          const accent = f.key === "untracked" ? "#B78A1F" : f.key === "cancelled" ? "#CC3344" : "#1A8040";
+          const n = countFor(f.key);
+          return (
+            <button key={f.key} type="button" onClick={() => setFilter(f.key)}
+              style={{ fontFamily: R, fontSize: "11px", letterSpacing: "1px", padding: "6px 14px", borderRadius: "20px", border: `1.5px solid ${active ? accent : "#DDE8DD"}`, background: active ? accent : "transparent", color: active ? "#ffffff" : "#5A7A60", cursor: "pointer", outline: "none", display: "inline-flex", alignItems: "center", gap: "7px" }}>
+              {f.label}
+              <span style={{ fontFamily: B, fontSize: "10px", fontWeight: 700, background: active ? "rgba(255,255,255,0.25)" : `${accent}18`, color: active ? "#ffffff" : accent, borderRadius: "999px", padding: "1px 7px" }}>
+                {n}
+              </span>
+            </button>
+          );
+        })}
+
+        <label style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#5A7A60", letterSpacing: 1.2 }}>
+          PLACED
+          <select value={placed} onChange={e => setPlaced(e.target.value as "any" | "7d" | "30d" | "90d")}
+            style={{ fontFamily: SG, fontSize: 11, fontWeight: 700, color: "#1B3A2D", background: "#ffffff", border: "1.5px solid #DDE8DD", borderRadius: 8, padding: "5px 8px", cursor: "pointer" }}>
+            <option value="any">Any time</option>
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+          </select>
+        </label>
+
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search order id / customer / city / tracking…"
           style={{ flex: 1, minWidth: 200, background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 8, padding: "8px 12px", color: "#1B3A2D", fontFamily: B, fontSize: 13, outline: "none" }} />
+
+        {filtersActive && (
+          <button type="button" onClick={clearFilters}
+            style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#5A7A60", background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: 999, padding: "7px 14px", cursor: "pointer", letterSpacing: 1.2 }}>
+            CLEAR FILTERS
+          </button>
+        )}
       </div>
 
       {/* Bulk action bar */}
