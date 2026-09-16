@@ -4,8 +4,14 @@ import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
   const supabase = createAdminClient();
-  const { userId } = auth();
+  const { userId, sessionClaims } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Admins/super_admins can buy hidden products so the full purchase
+  // workflow stays testable while the shop is closed to the public.
+  // Mirrors the preview rule on the product detail page.
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const isPrivileged = role === "admin" || role === "super_admin";
 
   const { product_id, quantity = 1, variant = null } = await req.json();
   if (!product_id) return NextResponse.json({ error: "Missing product_id" }, { status: 400 });
@@ -18,7 +24,7 @@ export async function POST(req: NextRequest) {
     .select("id, is_active").eq("id", product_id).maybeSingle();
   const product = productRaw as any;
   if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
-  if (!product.is_active) {
+  if (!product.is_active && !isPrivileged) {
     return NextResponse.json({ error: "This product is not available." }, { status: 403 });
   }
 

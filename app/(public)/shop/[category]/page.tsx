@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import { IconShoppingBag } from "@/components/shared/Icons";
 import Link from "next/link";
@@ -14,7 +15,13 @@ export default async function ShopCategoryPage({ params }:{ params:{ category:st
   const allCategories = allCategoriesRaw as any;
   const category = (allCategories ?? []).find((c:any) => c.slug === params.category);
   if (!category) notFound();
-  const { data: productsRaw } = await (((supabase.from("products") as any) as any) as any).select("*").eq("category_id", category.id).eq("is_active", true).order("created_at",{ascending:false});
+  // Admins see hidden products (tagged HIDDEN) so the buy flow stays
+  // testable from the real listing while the shop is closed to the public.
+  const { sessionClaims } = auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const isPrivileged = role === "admin" || role === "super_admin";
+  const catQuery = (((supabase.from("products") as any) as any) as any).select("*").eq("category_id", category.id).order("created_at",{ascending:false});
+  const { data: productsRaw } = await (isPrivileged ? catQuery : catQuery.eq("is_active", true));
   const products = productsRaw as any;
   const accent = COLORS[params.category] ?? COLORS.default;
   return (
@@ -50,6 +57,7 @@ export default async function ShopCategoryPage({ params }:{ params:{ category:st
                   <div style={{position:"relative",background:"#FFFFFF",border:"2px solid #DDE8DD",borderRadius:"12px",overflow:"hidden",zIndex:1}}>
                     <div style={{height:"220px",background:"#F2F7F2",overflow:"hidden",position:"relative"}}>
                       {p.images?.[0]?<img src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} loading="lazy"/>:<div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}><IconShoppingBag size={48} color="#DDE8DD" /></div>}
+                      {p.is_active===false&&<div style={{position:"absolute",top:"8px",left:"8px",zIndex:2,background:"#B45309",borderRadius:"999px",padding:"3px 10px",fontFamily:R,fontSize:"9px",color:"#FFFFFF",letterSpacing:"1.2px"}}>HIDDEN</div>}
                       {p.stock===0&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.55)",display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{fontFamily:R,fontSize:"13px",color:"#CC3344",background:"#FFE8EC",border:"1.5px solid #CC3344",borderRadius:"6px",padding:"6px 14px",letterSpacing:"1px"}}>OUT OF STOCK</span></div>}
                       {p.stock>0&&p.stock<=5&&<div style={{position:"absolute",top:"8px",right:"8px",background:"#1A8040",border:"1.5px solid #DDE8DD",borderRadius:"4px",padding:"2px 8px",fontFamily:R,fontSize:"9px",color:"#FFFFFF",letterSpacing:"1px"}}>ONLY {p.stock} LEFT</div>}
                     </div>

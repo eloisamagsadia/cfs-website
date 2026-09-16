@@ -8,10 +8,19 @@ const admin = () => createClient(
 );
 
 export async function GET(req: NextRequest) {
-  const { userId } = auth();
+  const { userId, sessionClaims } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { data } = await admin().from("cart_items").select("*, products(name,price,images)").eq("user_id", userId);
-  return NextResponse.json({ items: data ?? [] });
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const isPrivileged = role === "admin" || role === "super_admin";
+  const { data } = await admin().from("cart_items").select("*, products(name,price,images,is_active)").eq("user_id", userId);
+  // A product hidden after it was added to a cart must drop out of that
+  // cart too, otherwise "hidden from the shop" still checks out. The
+  // cart_items row is left alone, so the item returns if it's unhidden.
+  // Admins keep hidden items so they can test the purchase flow.
+  const items = isPrivileged
+    ? (data ?? [])
+    : (data ?? []).filter((i: any) => i.products?.is_active !== false);
+  return NextResponse.json({ items });
 }
 
 export async function DELETE(req: NextRequest) {

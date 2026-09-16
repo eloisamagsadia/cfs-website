@@ -4,8 +4,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
 
 export async function POST(req: NextRequest) {
-  const { userId } = auth();
+  const { userId, sessionClaims } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const isPrivileged = role === "admin" || role === "super_admin";
 
   const { items, subtotal, shipping_fee, total, shipping_address } = await req.json();
   if (!items?.length || !shipping_address) {
@@ -13,6 +15,23 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = createAdminClient();
+
+  // Last line of defence for hidden products: the client posts whatever it
+  // had in memory, so a cart loaded before the product was hidden would
+  // otherwise still place an order for it. Admins are exempt — they need to
+  // be able to run a real purchase through a hidden product to test it.
+  const productIds = items.map((i: any) => i.product_id).filter(Boolean);
+  const { data: liveProducts } = await (supabase.from("products") as any)
+    .select("id, name, is_active")
+    .in("id", productIds);
+  const unavailable = isPrivileged ? [] : (liveProducts ?? []).filter((p: any) => !p.is_active);
+  if (unavailable.length || (liveProducts ?? []).length !== new Set(productIds).size) {
+    const names = unavailable.map((p: any) => p.name).filter(Boolean).join(", ");
+    return NextResponse.json(
+      { error: names ? `No longer available: ${names}. Please remove it from your cart.` : "One or more items are no longer available." },
+      { status: 409 },
+    );
+  }
 
   const { data: order, error } = await (supabase.from("orders") as any)
     .insert({
