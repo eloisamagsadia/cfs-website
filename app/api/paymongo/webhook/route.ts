@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyWebhookSignature } from "@/lib/paymongo";
-import { sendDonationReceipt, sendEventTicket, sendEventTicketBundle } from "@/lib/email";
+import { sendDonationReceipt, sendEventTicket, sendEventTicketBundle, sendOrderConfirmation } from "@/lib/email";
 import { notifyRefundOutcome } from "@/lib/refund-notifications";
-import { decrementProductStock } from "@/lib/stock";
+import { decrementProductStock, restockProductStock, coversWholeOrder } from "@/lib/stock";
 import { clerkClient } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
@@ -55,7 +55,19 @@ export async function POST(req: NextRequest) {
       // Same downstream sync as the admin PATCH handler — mirror it so
       // webhook-completed refunds behave identically to manually-marked ones.
       if (row.entity_type === "order") {
-        await (supabase.from("orders") as any).update({ payment_status: "refunded" }).eq("id", row.entity_id);
+        // Claim the transition so a replayed refund webhook can't restock twice.
+        const { data: refunded } = await (supabase.from("orders") as any)
+          .update({ payment_status: "refunded" })
+          .eq("id", row.entity_id)
+          .neq("payment_status", "refunded")
+          .select("id, items, total")
+          .maybeSingle();
+        // Refunded goods were still counted as sold — put them back, but only
+        // for a full refund. Restocking every item on a partial refund would
+        // inflate inventory and let the shop oversell again.
+        if (refunded && coversWholeOrder(row.amount, (refunded as any).total)) {
+          await restockProductStock(supabase, (refunded as any).items);
+        }
       } else if (row.entity_type === "donation") {
         await (supabase.from("donations") as any).update({ status: "refunded" }).eq("id", row.entity_id);
       } else if (row.entity_type === "event_registration") {
@@ -242,11 +254,38 @@ export async function POST(req: NextRequest) {
         .update({ payment_status: "paid", paymongo_ref: eventData.id, order_status: "processing" })
         .eq("id", reference)
         .eq("payment_status", "pending")
-        .select("id, items")
+        .select("id, items, user_id, total, shipping_address")
         .maybeSingle();
 
       if (claimed) {
-        await decrementProductStock(supabase, (claimed as any).items);
+        const order = claimed as any;
+        await decrementProductStock(supabase, order.items);
+
+        // Buyers of a shop order got no receipt at all — tickets and donations
+        // both send one, and /payment/success promises an email. Sent from the
+        // same claim branch so a retried webhook can't email twice.
+        try {
+          const { data: profile } = await (supabase.from("profiles") as any)
+            .select("email").eq("id", order.user_id).maybeSingle();
+          let email = (profile as any)?.email as string | null;
+          if (!email && order.user_id) {
+            try {
+              const clerkUser = await clerkClient.users.getUser(order.user_id);
+              email = clerkUser.emailAddresses[0]?.emailAddress ?? null;
+            } catch {}
+          }
+          if (email) {
+            await sendOrderConfirmation({
+              to: email,
+              orderId: order.id,
+              items: order.items ?? [],
+              total: order.total ?? 0,
+              shippingAddress: order.shipping_address ?? {},
+            });
+          }
+        } catch (e) {
+          console.error("Failed to send order confirmation email:", e);
+        }
       }
     }
 

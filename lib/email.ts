@@ -95,8 +95,15 @@ export async function sendOrderConfirmation({
   total: number;
   shippingAddress: any;
 }) {
+  // Cart rows carry the product as a joined `products` object; rows stored on
+  // orders.items are flattened to {name, unit_price}. Accept either, otherwise
+  // an order emailed from the webhook renders as "Item x 2" at P0.
   const itemRows = items
-    .map(i => `<tr><td style="padding:6px 0;color:#1B3A2D;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;">${i.products?.name ?? "Item"} × ${i.quantity}</td><td style="padding:6px 0;color:#1A8040;text-align:right;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:600;">₱${((i.products?.price ?? 0) * i.quantity).toLocaleString()}</td></tr>`)
+    .map(i => {
+      const name  = i.products?.name ?? i.name ?? "Item";
+      const price = Number(i.products?.price ?? i.unit_price ?? 0);
+      return `<tr><td style="padding:6px 0;color:#1B3A2D;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;">${name} × ${i.quantity}</td><td style="padding:6px 0;color:#1A8040;text-align:right;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:600;">₱${(price * i.quantity).toLocaleString()}</td></tr>`;
+    })
     .join("");
 
   const orderShortId = orderId.slice(0, 8).toUpperCase();

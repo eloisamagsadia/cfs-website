@@ -23,7 +23,23 @@ export function toStockItems(items: any[]): StockLineItem[] {
  * caller's request. Returns whether the atomic path was used.
  */
 export async function decrementProductStock(supabase: any, items: any[]): Promise<{ ok: boolean; atomic: boolean }> {
-  const stockItems = toStockItems(items);
+  return applyStockDelta(supabase, items, -1);
+}
+
+/**
+ * Puts stock back — used when an order is refunded. Refunding previously only
+ * flipped payment_status, so refunded goods stayed deducted from inventory.
+ * Same guarantees as decrementProductStock: never throws.
+ */
+export async function restockProductStock(supabase: any, items: any[]): Promise<{ ok: boolean; atomic: boolean }> {
+  return applyStockDelta(supabase, items, +1);
+}
+
+// sign -1 removes stock, +1 returns it. The SQL function computes
+// GREATEST(stock - qty, 0), so a negated quantity adds stock back and the
+// clamp can't bite (the subtraction is of a negative number).
+async function applyStockDelta(supabase: any, items: any[], sign: -1 | 1): Promise<{ ok: boolean; atomic: boolean }> {
+  const stockItems = toStockItems(items).map(i => ({ ...i, quantity: i.quantity * sign }));
   if (!stockItems.length) return { ok: true, atomic: true };
 
   try {
@@ -47,4 +63,21 @@ export async function decrementProductStock(supabase: any, items: any[]): Promis
     console.error("stock decrement fallback failed:", e?.message);
     return { ok: false, atomic: false };
   }
+}
+
+/**
+ * True when a refund covers the whole order, i.e. restocking every line item
+ * is correct. A refund with no recorded amount is treated as full, since that
+ * is the common case; a smaller amount is a partial refund and is left for
+ * staff to reconcile rather than guessing which items came back.
+ */
+export function coversWholeOrder(refundAmount: unknown, orderTotal: unknown): boolean {
+  // Checked before Number(), because Number(null) is 0 — a finite value that
+  // would read as "refunded nothing" and wrongly suppress the restock.
+  if (refundAmount === null || refundAmount === undefined || refundAmount === "") return true;
+  const amount = Number(refundAmount);
+  const total  = Number(orderTotal);
+  if (!Number.isFinite(amount)) return true;
+  if (!Number.isFinite(total) || total <= 0) return true;
+  return amount >= total - 0.01; // tolerate rounding on the peso amount
 }

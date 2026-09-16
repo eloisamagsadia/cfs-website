@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { restockProductStock, coversWholeOrder } from "@/lib/stock";
 import { logAudit } from "@/lib/audit";
 import { notifyRefundOutcome } from "@/lib/refund-notifications";
 
@@ -88,8 +89,22 @@ export async function PATCH(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   // If we just marked an order refund complete, sync the order payment_status.
+  // Conditional on the row not already being refunded so marking the same
+  // refund complete twice can't restock twice.
   if (status === "completed" && (data as any)?.entity_type === "order") {
-    await (admin as any).from("orders").update({ payment_status: "refunded" }).eq("id", (data as any).entity_id);
+    const { data: refunded } = await (admin as any)
+      .from("orders")
+      .update({ payment_status: "refunded" })
+      .eq("id", (data as any).entity_id)
+      .neq("payment_status", "refunded")
+      .select("id, items, total")
+      .maybeSingle();
+    // Refunded goods go back into stock — otherwise inventory only ever
+    // shrinks and staff have to correct it by hand. Full refunds only; a
+    // partial refund would otherwise restock items the buyer kept.
+    if (refunded && coversWholeOrder((data as any).amount, (refunded as any).total)) {
+      await restockProductStock(admin, (refunded as any).items);
+    }
   }
   if (status === "completed" && (data as any)?.entity_type === "donation") {
     await (admin as any).from("donations").update({ status: "refunded" }).eq("id", (data as any).entity_id);
