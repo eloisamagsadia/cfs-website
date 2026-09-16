@@ -26,14 +26,39 @@ export async function GET() {
     .order("created_at", { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // Aggregate raised amount per drive from allocations
-  const { data: allocs } = await (admin as any)
+  // Aggregate raised amount per drive from allocations.
+  //
+  // The status filter is load-bearing. Allocation rows are written in
+  // /api/paymongo/create-link at CHECKOUT-CREATION time, before any money
+  // moves — so the table also contains rows for abandoned checkouts
+  // (status "pending"), failed payments ("failed"), unapproved manual
+  // transfers ("pending_manual"), cancellations and refunds. Summing every
+  // row, as this did before, reported money that was never received.
+  //
+  // Only "completed" is real. Filtering by the parent's status also means a
+  // later refund stops counting automatically, with no cleanup pass needed —
+  // the webhook flips donations.status to "refunded" and the total corrects
+  // itself.
+  //
+  // Allocation.amount is derived from donation_amount, not amount, so it
+  // already excludes the PayMongo fee the donor paid on top. A drive shows
+  // what reached the cause, not what left the donor's wallet.
+  const { data: allocs, error: allocErr } = await (admin as any)
     .from("donation_drive_allocations")
-    .select("drive_id, amount");
+    .select("drive_id, amount, donations!inner(status)")
+    .eq("donations.status", "completed");
+
+  // A failed aggregate must not render as "₱0 raised", which reads as a real
+  // figure. Surface it instead so the number is never quietly wrong.
+  if (allocErr) return NextResponse.json({ error: allocErr.message }, { status: 500 });
+
   const raisedMap = new Map<string, number>();
   for (const a of (allocs ?? []) as any[]) {
     raisedMap.set(a.drive_id, (raisedMap.get(a.drive_id) ?? 0) + Number(a.amount ?? 0));
   }
+  // Progress % is intentionally not returned — app/super/donation-drives/page.tsx
+  // already derives it from raised + target_amount, with the same clamping.
+  // Two implementations of one number is how they drift apart.
   const withRaised = (drives ?? []).map((d: any) => ({ ...d, raised: raisedMap.get(d.id) ?? 0 }));
   return NextResponse.json({ drives: withRaised });
 }
