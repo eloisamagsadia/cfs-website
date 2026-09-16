@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, DM_Serif_Display, Barlow, Caveat } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/next";
 import PageViewTracker from "@/components/shared/PageViewTracker";
 import MaintenanceGate from "@/components/shared/MaintenanceGate";
 import "./globals.css";
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               },
             }}
           />
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
