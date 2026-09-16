@@ -3,10 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { filterHiddenFromList } from "@/lib/hidden-admins";
 
-const db = () => createAdminClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+const db = () => createAdminClient();
 
 export async function GET(req: NextRequest) {
   const { userId } = auth();
