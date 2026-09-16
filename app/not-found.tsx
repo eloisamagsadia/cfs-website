@@ -11,108 +11,177 @@ export const metadata: Metadata = {
 const S  = "var(--font-dm-serif,'DM Serif Display',serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
 const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
+const H  = "var(--font-caveat, cursive)";
 
-// Same pastel scrapbook palette as the home hero bento — cream paper,
-// pink, amber, mint — so a wrong URL still looks like the same website.
-const quickLinks = [
-  { href: "/events",  label: "Events",  note: "What's coming up", icon: <IconCalendar size={16} color="#1A6E0E" />,  bg: "#F5F7EC", border: "1px dashed #C7D5C0", ink: "#1B3A2D", sub: "#4A7C59", tilt: "-1.4deg" },
-  { href: "/shop",    label: "Shop",    note: "Merch & bundles",  icon: <IconShoppingBag size={16} color="#B85268" />, bg: "#FDE9EC", border: "1px solid #F3C4CC",  ink: "#8A2E45", sub: "#B85268", tilt: "1deg"    },
-  { href: "/support", label: "Support", note: "Help the cause",   icon: <IconHeart size={16} color="#8B5E1F" />,       bg: "#FFF3D6", border: "1px solid #F0C48A",  ink: "#8B5E1F", sub: "#A8762F", tilt: "-0.7deg" },
-  { href: "/contact", label: "Contact", note: "Talk to us",       icon: <IconMail size={16} color="#1E5A2E" />,        bg: "#EAF4EA", border: "1px solid #C7DFC7",  ink: "#1B3A2D", sub: "#4A7C59", tilt: "1.3deg"  },
+// Same four destinations, styled as bento tiles in the home hero's
+// palette — cream paper, pink, amber, mint.
+const links = [
+  { area: "events",  href: "/events",  label: "EVENTS",  note: "What's coming up", icon: <IconCalendar size={15} color="#1A6E0E" />,     bg: "#F5F7EC", border: "1px dashed #C7D5C0", ink: "#1B3A2D", sub: "#4A7C59" },
+  { area: "shop",    href: "/shop",    label: "SHOP",    note: "Merch & bundles",  icon: <IconShoppingBag size={15} color="#B85268" />,  bg: "#FDE9EC", border: "1px solid #F3C4CC",  ink: "#8A2E45", sub: "#B85268" },
+  { area: "support", href: "/support", label: "SUPPORT", note: "Help the cause",   icon: <IconHeart size={15} color="#8B5E1F" />,        bg: "#FFF3D6", border: "1px solid #F0C48A",  ink: "#8B5E1F", sub: "#A8762F" },
+  { area: "contact", href: "/contact", label: "CONTACT", note: "Talk to us",       icon: <IconMail size={15} color="#1E5A2E" />,         bg: "#EAF4EA", border: "1px solid #C7DFC7",  ink: "#1B3A2D", sub: "#4A7C59" },
 ];
 
 export default function NotFound() {
   return (
-    <div style={{ minHeight: "100vh", background: "#FAFDF9", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "56px 24px", position: "relative", overflow: "hidden" }}>
-      {/* Soft radial glow behind the whole composition */}
-      <div aria-hidden style={{ position: "absolute", top: "36%", left: "50%", transform: "translate(-50%, -50%)", width: "780px", height: "780px", background: "radial-gradient(circle, #E4F0E4 0%, transparent 65%)", pointerEvents: "none" }} />
+    <div className="scrap-paper" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 0" }}>
+      {/* Bento collage — same asymmetric scrapbook grid as the home hero,
+          so a dead URL still lands somewhere that looks like the site. */}
+      <div className="nf-wrap" style={{ width: "100%", maxWidth: "1080px", margin: "0 auto", padding: "0 24px" }}>
+        <div className="nf-bento">
 
-      {/* Concentric rings — same motif as the maintenance screen */}
-      {[560, 400, 260].map((size) => (
-        <div key={size} aria-hidden style={{ position: "absolute", top: "36%", left: "50%", transform: "translate(-50%, -50%)", width: `${size}px`, height: `${size}px`, borderRadius: "50%", border: "1px solid #DDE8DD", pointerEvents: "none" }} />
-      ))}
+          {/* OOPS tile — cream paper, Colet + handwritten headline, spans wide */}
+          <div className="nf-tile nf-oops" style={{ background: "#F5F7EC", border: "1px dashed #C7D5C0" }}>
+            <div className="nf-oops-inner">
+              <div className="nf-coco">
+                <ColetCharacter height={150} />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "2px", color: "#4A7C59", marginBottom: "10px" }}>
+                  PAGE NOT FOUND
+                </div>
+                <div className="scrap-note" style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", color: "#1B3A2D", lineHeight: 1.1, letterSpacing: "-0.5px" }}>
+                  Ay, wrong turn — this page isn&apos;t on the setlist.
+                </div>
+                <p style={{ fontFamily: B, fontSize: "13.5px", color: "#4A7C59", margin: "14px 0 0", lineHeight: 1.65, maxWidth: "460px" }}>
+                  The link may be old, or the page has moved. Everything else is still right where you left it.
+                </p>
+              </div>
+            </div>
+          </div>
 
-      <div style={{ position: "relative", width: "100%", maxWidth: "640px", textAlign: "center" }}>
-        {/* Eyebrow */}
-        <div style={{ display: "inline-block", fontFamily: B, fontSize: "10px", color: "#4A7C59", letterSpacing: "3px", textTransform: "uppercase", border: "1px solid #DDE8DD", borderRadius: "20px", padding: "5px 18px", background: "#F2F7F2", marginBottom: "24px" }}>
-          Error 404
-        </div>
+          {/* CODE tile — forest-green contrast, big cream number */}
+          <div className="nf-tile nf-code" style={{ background: "#1B3A2D", color: "#F5F7EC" }}>
+            <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, letterSpacing: "2px", color: "#B7CDB7", marginBottom: "8px" }}>
+              ERROR CODE
+            </div>
+            <div style={{ fontFamily: S, fontSize: "clamp(3.2rem, 8vw, 5rem)", lineHeight: 0.95, letterSpacing: "-2px", color: "#F5F7EC" }}>
+              404
+            </div>
+            <div style={{ fontFamily: H, fontSize: "1.35rem", color: "#B7CDB7", marginTop: "auto", paddingTop: "14px" }}>
+              nawala ka yata ✦
+            </div>
+          </div>
 
-        {/* The number, with Colet standing in place of the zero */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "2px", marginBottom: "2px" }}>
-          <span className="nf-digit" style={{ fontFamily: S, fontSize: "clamp(5.5rem, 23vw, 10.5rem)", color: "#1B3A2D", lineHeight: 0.9, letterSpacing: "-4px" }}>4</span>
-          <span className="nf-coco" style={{ display: "inline-flex", alignItems: "flex-end", margin: "0 -4px 4px" }}>
-            <ColetCharacter height={156} />
-          </span>
-          <span className="nf-digit" style={{ fontFamily: S, fontSize: "clamp(5.5rem, 23vw, 10.5rem)", color: "#1B3A2D", lineHeight: 0.9, letterSpacing: "-4px" }}>4</span>
-        </div>
-
-        {/* Handwritten aside on the site's underline-tape treatment */}
-        <div style={{ marginBottom: "20px" }}>
-          <span className="scrap-tape scrap-tape-mint" style={{ fontSize: "clamp(1.25rem, 5vw, 1.7rem)" }}>
-            ay, wrong turn!
-          </span>
-        </div>
-
-        <h1 style={{ fontFamily: S, fontSize: "clamp(1.6rem, 6vw, 2.4rem)", color: "#1B3A2D", margin: "0 0 12px", lineHeight: 1.15, letterSpacing: "-0.5px" }}>
-          This page isn&apos;t on the setlist.
-        </h1>
-
-        <p style={{ fontFamily: B, fontSize: "14px", color: "#7A8E7A", margin: "0 auto 30px", maxWidth: "400px", lineHeight: 1.8 }}>
-          The link may be old, or the page has moved. Everything else is still
-          right where you left it.
-        </p>
-
-        {/* Primary actions — site-standard button treatments */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "center", marginBottom: "42px" }}>
-          <Link href="/" className="btn-fx btn-fx-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#FFFFFF", background: "#1B3A2D", padding: "14px 30px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
-            BACK TO HOME
-          </Link>
-          <Link href="/events" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #1B3A2D", padding: "13px 28px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px", boxShadow: "0 2px 6px rgba(27,58,45,0.08)" }}>
-            <IconCalendar size={14} /> SEE EVENTS
-          </Link>
-        </div>
-
-        <p style={{ fontFamily: B, fontSize: "10px", color: "#7A8E7A", letterSpacing: "2px", textTransform: "uppercase", margin: "0 0 16px" }}>
-          Or try one of these
-        </p>
-
-        {/* Tilted pastel tiles, same family as the home hero bento */}
-        <div className="nf-links">
-          {quickLinks.map((l) => (
-            <Link key={l.href} href={l.href} className="nf-tile" style={{ transform: `rotate(${l.tilt})`, background: l.bg, border: l.border, borderRadius: "14px", padding: "16px 12px", textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px", boxShadow: "0 4px 14px rgba(15,42,30,0.06)" }}>
-              <span style={{ display: "inline-flex" }}>{l.icon}</span>
-              <span style={{ fontFamily: SG, fontSize: "12px", fontWeight: 700, letterSpacing: "1px", color: l.ink }}>{l.label}</span>
-              <span style={{ fontFamily: B, fontSize: "11px", color: l.sub }}>{l.note}</span>
+          {/* LINK tiles — one per destination, each in its own color */}
+          {links.map((l) => (
+            <Link key={l.href} href={l.href} className={`nf-tile nf-link nf-${l.area}`} style={{ gridArea: l.area, background: l.bg, border: l.border, textDecoration: "none" }}>
+              <span className="nf-link-icon" style={{ display: "inline-flex" }}>{l.icon}</span>
+              <span className="nf-link-text">
+                <span style={{ display: "block", fontFamily: SG, fontSize: "11px", fontWeight: 700, letterSpacing: "1.5px", color: l.ink }}>{l.label}</span>
+                <span style={{ display: "block", fontFamily: B, fontSize: "12px", color: l.sub, marginTop: "4px" }}>{l.note}</span>
+              </span>
             </Link>
           ))}
-        </div>
 
-        <p style={{ fontFamily: B, fontSize: "11px", color: "#5A7A60", letterSpacing: "1.5px", marginTop: "34px" }}>
-          COLET FAN SUPORTA
-        </p>
+          {/* CTA strip — full width, same treatment as the home hero */}
+          <div className="nf-tile nf-cta">
+            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center", width: "100%" }}>
+              <Link href="/" className="btn-fx btn-fx-primary" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, background: "#1B3A2D", color: "#ffffff", padding: "14px 30px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px" }}>
+                BACK TO HOME
+              </Link>
+              <Link href="/events" className="btn-fx btn-fx-ghost" style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: SG, fontSize: "13px", fontWeight: 700, color: "#1B3A2D", background: "#FFFFFF", border: "1.5px solid #1B3A2D", padding: "13px 28px", borderRadius: "10px", textDecoration: "none", letterSpacing: "1.5px", boxShadow: "0 2px 6px rgba(27,58,45,0.08)" }}>
+                <IconCalendar size={14} /> SEE EVENTS
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
 
       <style>{`
-        .nf-links {
+        .nf-bento {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 10px;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-areas:
+            "oops   oops  oops    code"
+            "events shop  support contact"
+            "cta    cta   cta     cta";
+          gap: 16px;
         }
         .nf-tile {
+          position: relative;
+          border-radius: 18px;
+          padding: 26px 24px;
+          box-shadow: 0 6px 20px rgba(15,42,30,0.07);
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          min-width: 0;
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .nf-tile:hover {
-          transform: translateY(-4px) rotate(0deg) !important;
-          box-shadow: 0 10px 24px rgba(15,42,30,0.13);
-        }
-        @media (max-width: 560px) {
-          .nf-links { grid-template-columns: repeat(2, 1fr); }
-          .nf-coco svg { height: 108px; width: auto; }
-        }
+        .nf-tile:hover { transform: translateY(-3px) rotate(0deg) !important; box-shadow: 0 14px 30px rgba(15,42,30,0.11); }
+
+        .nf-oops    { grid-area: oops; transform: rotate(-0.4deg); }
+        .nf-code    { grid-area: code; transform: rotate(1.2deg); justify-content: space-between; }
+        .nf-events  { transform: rotate(-1.6deg); }
+        .nf-shop    { transform: rotate(0.8deg); }
+        .nf-support { transform: rotate(-0.7deg); }
+        .nf-contact { transform: rotate(1.4deg); }
+        .nf-cta     { grid-area: cta; background: transparent; box-shadow: none; padding: 8px 0 0; justify-content: center; align-items: center; }
+        .nf-cta:hover { transform: none !important; box-shadow: none !important; }
+
+        /* Link tiles carry little copy — center it so they don't read
+           as half-empty next to the content-heavy tiles. */
+        .nf-link { justify-content: center; }
+        .nf-link-icon { margin-bottom: 10px; }
+
+        /* Colet sits beside the copy on desktop, above it when narrow */
+        .nf-oops-inner { display: flex; align-items: center; gap: 22px; }
+        .nf-coco { flex: 0 0 auto; }
+
         @media (prefers-reduced-motion: reduce) {
           .nf-tile { transform: none !important; }
           .nf-coco svg { animation: none !important; }
+        }
+
+        /* Tablet — 2 col grid, straightened tiles, tighter padding */
+        @media (max-width: 820px) {
+          .nf-bento {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-areas:
+              "oops    oops"
+              "code    code"
+              "events  shop"
+              "support contact"
+              "cta     cta";
+            gap: 12px;
+          }
+          .nf-tile { padding: 22px 20px; border-radius: 16px; transform: none !important; }
+          .nf-cta  { padding: 4px 0 0 !important; }
+          .nf-cta > div { align-items: center !important; }
+        }
+
+        /* Phone — single-column stack, Colet centered above the copy */
+        @media (max-width: 520px) {
+          .nf-wrap { padding: 0 16px; }
+          .nf-bento {
+            grid-template-columns: 1fr !important;
+            grid-template-areas:
+              "oops"
+              "code"
+              "events"
+              "shop"
+              "support"
+              "contact"
+              "cta" !important;
+            gap: 10px !important;
+          }
+          .nf-tile { padding: 18px 16px !important; border-radius: 14px !important; }
+          /* Link tiles go horizontal so four of them don't turn the
+             phone layout into a long scroll of near-empty cards. */
+          .nf-link { flex-direction: row; align-items: center; justify-content: flex-start; gap: 12px; padding: 14px 16px !important; }
+          .nf-link-icon { margin-bottom: 0; }
+          .nf-oops-inner { flex-direction: column; text-align: center; gap: 10px; }
+          .nf-oops-inner .scrap-note { font-size: 1.7rem !important; }
+          .nf-oops-inner p { margin-left: auto; margin-right: auto; }
+          .nf-coco svg { height: 118px; width: auto; }
+          .nf-code > div:nth-of-type(2) { font-size: 3.2rem !important; }
+          .nf-cta { padding: 0 !important; }
+          /* nowrap matters: a column flex container that still wraps will
+             spill the second button into a new column instead of stacking. */
+          .nf-cta > div { flex-direction: column; flex-wrap: nowrap !important; gap: 10px !important; }
+          .nf-cta > div > a { flex: 0 0 auto; width: 100%; justify-content: center; padding: 12px 22px !important; font-size: 12px !important; }
         }
       `}</style>
     </div>
