@@ -25,7 +25,10 @@ export async function GET(req: NextRequest) {
     (admin.from("notifications") as any).select("*", { count: "exact", head: true }),
     (admin.from("notifications") as any).select("*", { count: "exact", head: true }).eq("is_read", true),
     (admin.from("notifications") as any).select("type, is_read"),
-    (admin.from("notifications") as any).select("*").order("created_at", { ascending: false }).limit(20),
+    // Was .limit(20) against a 664-row table — the history panel showed the
+    // newest 20 and gave no hint the other 644 existed. Raised and paginated
+    // client-side; `total` above is what lets the UI say which it is showing.
+    (admin.from("notifications") as any).select("*").order("created_at", { ascending: false }).limit(500),
   ]);
 
   const totalCount = total ?? 0;

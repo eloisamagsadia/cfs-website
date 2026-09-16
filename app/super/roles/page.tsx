@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { SkListLoading } from "@/components/shared/Skeleton";
+import { usePagination, TableCountBar, TablePagination } from "@/components/shared/TablePagination";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -14,6 +15,7 @@ export default function RolesPage() {
   const [members, setMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState<string>("all");
   const [updating, setUpdating] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -64,11 +66,28 @@ export default function RolesPage() {
     setConfirmDelete(null);
   }
 
-  const filtered = members.filter(m =>
-    m.display_name?.toLowerCase().includes(search.toLowerCase()) ||
-    m.email?.toLowerCase().includes(search.toLowerCase()) ||
-    m.id.includes(search)
-  );
+  // Counts drive the chip badges and are computed over ALL members, not the
+  // searched subset — a chip reading "ADMIN 3" should mean three admins exist,
+  // not three that happen to match the current search box.
+  const roleCounts = ROLES.reduce((acc, r) => {
+    acc[r] = members.filter(m => (m.role ?? "member") === r).length;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const filtered = members.filter(m => {
+    if (roleFilter !== "all" && (m.role ?? "member") !== roleFilter) return false;
+    const q = search.trim().toLowerCase();
+    if (!q) return true;
+    return (m.display_name?.toLowerCase().includes(q) ?? false)
+        || (m.email?.toLowerCase().includes(q) ?? false)
+        || m.id.toLowerCase().includes(q);
+  });
+
+  // Role Management listed all 640 members, each with its own select and
+  // delete button. Paged over the searched set; resetKey returns to page 1
+  // when the search narrows things.
+  const { page, setPage, pageSize, setPageSize, pageCount, startIdx, paged } =
+    usePagination(filtered, 25, `${search}|${roleFilter}`);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -91,7 +110,37 @@ export default function RolesPage() {
       <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name or email..."
         style={{ background: "#FFFFFF", border: "1.5px solid #DDE8DD", borderRadius: "8px", padding: "10px 14px", color: "#1B3A2D", fontFamily: B, fontSize: "13px", outline: "none" }} />
 
+      {/* Role filter — the page managed roles but gave no way to see just one.
+          Finding the 3 admins among 640 members meant scrolling or guessing a
+          search term. Counts come from the full set so a chip always states how
+          many exist, regardless of what is typed in the search box. */}
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+        {[{ key: "all", label: "ALL", count: members.length },
+          ...ROLES.map(r => ({ key: r, label: r.replace("_", " ").toUpperCase(), count: roleCounts[r] ?? 0 }))
+        ].map(c => {
+          const active = roleFilter === c.key;
+          const tone = c.key === "all" ? "#1B3A2D" : (ROLE_COLORS[c.key] ?? "#5A7A60");
+          return (
+            <button key={c.key} type="button" onClick={() => setRoleFilter(c.key)}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: "7px",
+                fontFamily: R, fontSize: "10px", letterSpacing: "1.3px",
+                color: active ? "#FFFFFF" : tone,
+                background: active ? tone : "#FFFFFF",
+                border: `1.5px solid ${active ? tone : "#DDE8DD"}`,
+                borderRadius: "999px", padding: "7px 14px", cursor: "pointer",
+              }}>
+              {c.label}
+              <span style={{ fontFamily: B, fontSize: "10px", fontWeight: 700, background: active ? "rgba(255,255,255,0.25)" : "#F2F7F2", color: active ? "#FFFFFF" : tone, borderRadius: "999px", padding: "1px 7px" }}>
+                {c.count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
       <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
+        <TableCountBar total={members.length} filteredTotal={filtered.length} pageSize={pageSize} setPageSize={setPageSize} noun="MEMBERS" />
         <div style={{ background: "#F2F7F2", padding: "10px 20px", display: "grid", gridTemplateColumns: "2fr 1fr 1fr auto", gap: "12px" }}>
           {["MEMBER", "CURRENT ROLE", "CHANGE ROLE", ""].map(h => (
             <span key={h} style={{ fontFamily: R, fontSize: "10px", color: "#5A7A60", letterSpacing: "1.5px" }}>{h}</span>
@@ -101,8 +150,8 @@ export default function RolesPage() {
         {loading ? (
           <SkListLoading rows={5} />
         ) : filtered.length === 0 ? (
-          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>No members found</div>
-        ) : filtered.map((m, i) => (
+          <div style={{ padding: "40px", textAlign: "center", fontFamily: B, fontSize: "13px", color: "#5A7A60" }}>No members match this filter.</div>
+        ) : paged.map((m, i) => (
           <div key={m.id} style={{ padding: "12px 20px", borderTop: "1px solid #DDE8DD", background: i % 2 === 0 ? "#FFFFFF" : "#EDF7ED", display: "grid", gridTemplateColumns: "2fr 1fr 1fr auto", gap: "12px", alignItems: "center" }}>
             {/* Member info */}
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -148,6 +197,8 @@ export default function RolesPage() {
             )}
           </div>
         ))}
+
+        <TablePagination page={page} setPage={setPage} pageCount={pageCount} startIdx={startIdx} pageSize={pageSize} filteredTotal={filtered.length} />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { IconMegaphone, IconTicket, IconShoppingBag, IconStar, IconClipboard, IconMessage, IconUser, IconHeart, IconBell, IconWarning, IconCheck } from "@/components/shared/Icons";
+import { usePagination, TableCountBar, TablePagination } from "@/components/shared/TablePagination";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -52,6 +53,13 @@ export default function AdminNotificationsPage() {
   const [events, setEvents] = useState<any[]>([]);
   const [memberSearch, setMemberSearch] = useState("");
   const [broadcasts, setBroadcasts] = useState<any[]>([]);
+
+  // Notification history: the API returns the newest 500 of `stats.total`.
+  // Paged so the panel stays short, with the real total shown so nobody
+  // assumes 500 is all of them.
+  const recentAll: any[] = stats?.recent ?? [];
+  const { page, setPage, pageSize, setPageSize, pageCount, startIdx, paged } =
+    usePagination(recentAll, 10);
 
   useEffect(() => { loadStats(); loadMembers(); loadEvents(); loadBroadcasts(); }, []);
 
@@ -304,9 +312,17 @@ export default function AdminNotificationsPage() {
       {/* Recent history */}
       {stats?.recent?.length > 0 && (
         <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", padding: "20px" }}>
-          <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "2px", marginBottom: "14px" }}>RECENT NOTIFICATIONS</div>
+          <div style={{ fontFamily: R, fontSize: "12px", color: "#1B3A2D", letterSpacing: "2px", marginBottom: "6px" }}>RECENT NOTIFICATIONS</div>
+          <div style={{ fontFamily: B, fontSize: "11px", color: "#7A8E7A", marginBottom: "12px" }}>
+            {stats.total > recentAll.length
+              ? `Newest ${recentAll.length.toLocaleString()} of ${Number(stats.total).toLocaleString()} sent.`
+              : `${Number(stats.total ?? 0).toLocaleString()} sent.`}
+          </div>
+          <div style={{ marginBottom: "10px", border: "1px solid #DDE8DD", borderRadius: "10px", overflow: "hidden" }}>
+            <TableCountBar total={recentAll.length} filteredTotal={recentAll.length} pageSize={pageSize} setPageSize={setPageSize} noun="SHOWN" />
+          </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            {stats.recent.map((n: any) => (
+            {paged.map((n: any) => (
               <div key={n.id} style={{ display: "flex", gap: "10px", alignItems: "center", padding: "10px 0", borderBottom: "1px solid #DDE8DD" }}>
                 <span style={{ flexShrink: 0 }}>{TYPE_ICON_COMPONENTS[n.type] ?? <IconBell size={14} color="#4A7C59" />}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -321,6 +337,9 @@ export default function AdminNotificationsPage() {
                 </div>
               </div>
             ))}
+          </div>
+          <div style={{ marginTop: "10px", border: "1px solid #DDE8DD", borderRadius: "10px", overflow: "hidden" }}>
+            <TablePagination page={page} setPage={setPage} pageCount={pageCount} startIdx={startIdx} pageSize={pageSize} filteredTotal={recentAll.length} />
           </div>
         </div>
       )}

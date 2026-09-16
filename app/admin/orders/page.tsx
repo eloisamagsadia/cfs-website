@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import AdminActionButton from "@/components/shared/AdminActionButton";
 import StatBar from "@/components/shared/StatBar";
 import { IconPrinter } from "@/components/shared/Icons";
+import { usePagination, TableCountBar, TablePagination } from "@/components/shared/TablePagination";
 
 const R  = "var(--font-righteous,'Righteous',sans-serif)";
 const B  = "var(--font-barlow,'Barlow',sans-serif)";
@@ -48,6 +49,12 @@ export default function AdminOrdersPage() {
           || (o.shipping_address?.city ?? "").toLowerCase().includes(q);
     });
   }, [orders, filter, search]);
+
+  // Orders is empty today but grows one row per sale. Paging it now means the
+  // page never becomes the problem later. resetKey returns to page 1 whenever
+  // the status filter or search narrows the list.
+  const { page, setPage, pageSize, setPageSize, pageCount, startIdx, paged } =
+    usePagination(filtered, 25, `${filter}|${search}`);
 
   function toggleOne(id: string) {
     setSelected(prev => { const c = new Set(prev); if (c.has(id)) c.delete(id); else c.add(id); return c; });
@@ -175,7 +182,10 @@ export default function AdminOrdersPage() {
               Select all {filtered.length}
             </label>
           )}
-          {filtered.map((o: any) => (
+          <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
+            <TableCountBar total={orders.length} filteredTotal={filtered.length} pageSize={pageSize} setPageSize={setPageSize} noun="ORDERS" />
+          </div>
+          {paged.map((o: any) => (
             <div key={o.id} style={{ background: "#FFFFFF", border: `2px solid ${selected.has(o.id) ? "#F0D889" : "#DDE8DD"}`, borderRadius: "12px", padding: "14px 20px", display: "flex", gap: "16px", alignItems: "center" }}>
               <input type="checkbox" checked={selected.has(o.id)} onChange={() => toggleOne(o.id)} onClick={e => e.stopPropagation()}
                 style={{ flexShrink: 0, cursor: "pointer" }} />
@@ -205,6 +215,9 @@ export default function AdminOrdersPage() {
               NO ORDERS {filter !== "all" ? `WITH STATUS "${filter.toUpperCase()}"` : "YET"}
             </div>
           )}
+          <div style={{ background: "#FFFFFF", border: "2px solid #DDE8DD", borderRadius: "12px", overflow: "hidden" }}>
+            <TablePagination page={page} setPage={setPage} pageCount={pageCount} startIdx={startIdx} pageSize={pageSize} filteredTotal={filtered.length} />
+          </div>
         </div>
       )}
     </div>
