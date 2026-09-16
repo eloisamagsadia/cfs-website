@@ -23,15 +23,23 @@ const CAT_COLORS: Record<string, string> = {
 
 export async function generateMetadata({ params }: { params: { category: string; id: string } }): Promise<Metadata> {
   const supabase = createAdminClient();
-  const { data: pRaw } = await (((supabase.from("products") as any) as any) as any).select("name, description").eq("id", params.id).maybeSingle();
+  // is_active filter matters here too — without it an inactive product's name
+  // and description leak through the page title / meta description even when
+  // the page body itself 404s.
+  const { data: pRaw } = await (((supabase.from("products") as any) as any) as any).select("name, description").eq("id", params.id).eq("is_active", true).maybeSingle();
   const p = pRaw as any;
   return { title: p?.name ?? "Product", description: p?.description ?? "" };
 }
 
 export default async function ProductDetailPage({ params }: { params: { category: string; id: string } }) {
   const supabase = createAdminClient();
-  const { userId } = auth();
+  const { userId, sessionClaims } = auth();
   const user = userId ? { id: userId } : null;
+
+  // Admins/super_admins can preview unpublished products, mirroring the
+  // soft-launch preview rule in middleware.ts. Everyone else gets a 404.
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const isPrivileged = role === "admin" || role === "super_admin";
 
   const [{ data: product, error: productError }, { data: category }] = await Promise.all([
     (((supabase.from("products") as any) as any) as any).select("*, product_categories(name,slug)").eq("id", params.id).maybeSingle(),
@@ -40,6 +48,10 @@ export default async function ProductDetailPage({ params }: { params: { category
   if (productError) console.error("Product query error:", productError);
 
   if (!product) { console.error("Product not found:", params.id); notFound(); }
+
+  // Listings filter on is_active, but fetching by id does not — so without this
+  // a direct link to a deactivated product would still render publicly.
+  if (!product.is_active && !isPrivileged) notFound();
 
   // Related products
   const { data: related } = await supabase
