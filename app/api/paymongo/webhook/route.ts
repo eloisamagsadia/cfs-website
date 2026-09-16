@@ -309,7 +309,12 @@ export async function POST(req: NextRequest) {
             .select("user_id, event_id, ticket_number")
             .eq("id", reference)
             .maybeSingle();
-          const { data: tier } = await (supabase.from("event_ticket_tiers") as any)
+          // Was "event_ticket_tiers", which does not exist — the table is
+          // `event_tiers`. The query 404'd, tier came back null, and every
+          // upgrade notice silently fell back to the generic wording without
+          // the tier name. Caught by the generated types; the stub's
+          // Record<string, any> accepted any table name at all.
+          const { data: tier } = await (supabase.from("event_tiers") as any)
             .select("name")
             .eq("id", newTierId)
             .maybeSingle();

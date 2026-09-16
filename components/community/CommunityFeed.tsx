@@ -40,13 +40,13 @@ export default function CommunityFeed({ initialPosts, categories, currentUser }:
     const channel = supabase
       .channel("community_feed_realtime")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "community_posts" }, async (payload) => {
-        if (payload.new.is_hidden) return;
-        const { data } = await supabase
-          .from("community_posts")
-          .select("*, profiles:user_id(id,display_name,avatar_url,role), community_reactions(id,user_id,reaction_type), community_comments(id)")
-          .eq("id", payload.new.id).single();
-        if (!data) return;
-        if (data.user_id === currentUser.id) return;
+        // payload.new IS the inserted row, so user_id is already here — the
+        // line above already trusts it for is_hidden. This used to re-fetch the
+        // post with three embeds purely to compare one column, a round-trip per
+        // insert for data we were handed.
+        const row = payload.new as { is_hidden?: boolean; user_id?: string };
+        if (row.is_hidden) return;
+        if (row.user_id === currentUser.id) return;
         setNewPostAlert(n => n + 1);
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "community_posts" }, (payload) => {

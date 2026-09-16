@@ -27,16 +27,16 @@ export default async function CommunityPage() {
     { count: statsCount },
     { data: recentLetters },
   ] = await Promise.all([
-    supabase.from("profiles" as any).select("*").eq("id", userId).single(),
+    supabase.from("profiles").select("*").eq("id", userId).single(),
     supabase
-      .from("community_posts" as any)
+      .from("community_posts")
       .select("*, profiles:user_id(id,display_name,avatar_url,role), community_reactions(id,user_id,reaction_type), community_comments(id), community_reposts(id,user_id)")
       .eq("is_hidden", false)
       .order("is_pinned", { ascending: false }).order("created_at", { ascending: false })
       .limit(20),
-    createAdminClient().from("community_categories" as any).select("*"),
-    createAdminClient().from("community_posts" as any).select("*", { count: "exact", head: true }).eq("is_hidden", false),
-    createAdminClient().from("fan_letters" as any).select("id,title,content,created_at,profiles:user_id(display_name,avatar_url)").eq("is_approved", true).order("created_at", { ascending: false }).limit(5),
+    createAdminClient().from("community_categories").select("*"),
+    createAdminClient().from("community_posts").select("*", { count: "exact", head: true }).eq("is_hidden", false),
+    createAdminClient().from("fan_letters").select("id,title,content,created_at,profiles:user_id(display_name,avatar_url)").eq("is_approved", true).order("created_at", { ascending: false }).limit(5),
   ]);
 
   return (

@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    // No explicit target meant TS defaulted to ES5, so every `[...new Set()]`
+    // was a type error even though Next/SWC compiles it fine. ES2017 matches
+    // what Next.js emits and what Node runs.
+    "target": "ES2017",
+    "downlevelIteration": true,
     "lib": [
       "dom",
       "dom.iterable",
