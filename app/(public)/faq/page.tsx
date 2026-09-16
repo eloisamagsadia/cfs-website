@@ -83,7 +83,7 @@ export default function PublicFaqPage() {
             we've got you ✦
           </p>
           <p style={{ fontFamily: B, fontSize: "14px", color: "#1B3A2D", maxWidth: "520px", margin: "0 auto", lineHeight: 1.7 }}>
-            Common stuff kaFAMs ask. Can't find your answer? <a href="/support" style={{ color: "#1A8040", fontWeight: 600 }}>Reach out</a> and we'll help.
+            Common stuff Cocacolets ask. Can't find your answer? <a href="/support" style={{ color: "#1A8040", fontWeight: 600 }}>Reach out</a> and we'll help.
           </p>
         </div>
 

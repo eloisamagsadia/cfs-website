@@ -4,6 +4,7 @@ import { getEffectiveUserId } from "@/lib/effective-user";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { IconShoppingBag } from "@/components/shared/Icons";
+import { courierLabel, resolveTrackingUrl } from "@/lib/couriers";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -70,6 +71,27 @@ export default async function MyOrdersPage() {
                     {items.length} item{items.length !== 1 ? "s" : ""}
                   </span>
                 </div>
+
+                {/* Tracking — shown whenever a number exists. The link is
+                    optional: for a courier we don't recognise the member still
+                    gets the name and number to look up themselves. */}
+                {order.tracking_number && (
+                  <div style={{ marginTop:"12px", paddingTop:"12px", borderTop:"1px dashed #DDE8DD", display:"flex", gap:"10px", alignItems:"center", flexWrap:"wrap" }}>
+                    <div>
+                      <div style={{ fontFamily:R, fontSize:"10px", color:"#5A7A60", letterSpacing:"1px", marginBottom:"2px" }}>
+                        TRACKING{order.courier ? ` · ${courierLabel(order.courier).toUpperCase()}` : ""}
+                      </div>
+                      <div style={{ fontFamily:B, fontSize:"13px", color:"#1B3A2D", fontWeight:600, letterSpacing:"0.4px" }}>{order.tracking_number}</div>
+                    </div>
+                    {resolveTrackingUrl(order.courier, order.tracking_number, order.tracking_url) && (
+                      <a href={resolveTrackingUrl(order.courier, order.tracking_number, order.tracking_url)!}
+                         target="_blank" rel="noopener noreferrer"
+                         style={{ marginLeft:"auto", fontFamily:R, fontSize:"11px", color:"#ffffff", background:"#1A8040", textDecoration:"none", borderRadius:"20px", padding:"7px 16px", letterSpacing:"1.2px" }}>
+                        TRACK →
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { IconPrinter } from "@/components/shared/Icons";
+import { COURIERS, findCourier, resolveTrackingUrl } from "@/lib/couriers";
 
 const R = "var(--font-righteous,'Righteous',sans-serif)";
 const B = "var(--font-barlow,'Barlow',sans-serif)";
@@ -23,6 +24,9 @@ export default function AdminOrderDetailPage() {
   const [success, setSuccess] = useState("");
   const [orderStatus, setOrderStatus] = useState("");
   const [paymentStatus, setPaymentStatus] = useState("");
+  const [courier, setCourier] = useState("");
+  const [trackingNumber, setTrackingNumber] = useState("");
+  const [trackingUrl, setTrackingUrl] = useState("");
   const [refundOpen, setRefundOpen] = useState(false);
   const [refundAmount, setRefundAmount] = useState("");
   const [refundReason, setRefundReason] = useState("");
@@ -69,6 +73,9 @@ export default function AdminOrderDetailPage() {
       setOrder(d.order);
       setOrderStatus(d.order?.order_status ?? "pending");
       setPaymentStatus(d.order?.payment_status ?? "pending");
+      setCourier(d.order?.courier ?? "");
+      setTrackingNumber(d.order?.tracking_number ?? "");
+      setTrackingUrl(d.order?.tracking_url ?? "");
       setLoading(false);
     }).catch(() => { setError("Failed to load order"); setLoading(false); });
   }, [id]);
@@ -78,7 +85,14 @@ export default function AdminOrderDetailPage() {
     try {
       const res = await fetch("/api/admin/orders", {
         method: "PATCH", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, order_status: orderStatus, payment_status: paymentStatus }),
+        body: JSON.stringify({
+          id,
+          order_status: orderStatus,
+          payment_status: paymentStatus,
+          courier,
+          tracking_number: trackingNumber,
+          tracking_url: trackingUrl,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update");
@@ -95,6 +109,14 @@ export default function AdminOrderDetailPage() {
   if (!order) return <div style={{ fontFamily: R, color: "#CC3344", padding: "40px" }}>Order not found.</div>;
 
   const addr = order.shipping_address;
+
+  // autoTrackingUrl tells the UI whether we can build the link ourselves; when
+  // we can't, the manual URL field appears. previewUrl is exactly what the
+  // member's email will contain, so staff can click it before saving.
+  const autoTrackingUrl = findCourier(courier) && trackingNumber.trim()
+    ? resolveTrackingUrl(courier, trackingNumber, null)
+    : null;
+  const previewUrl = resolveTrackingUrl(courier, trackingNumber, trackingUrl);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "800px" }}>
@@ -210,6 +232,65 @@ export default function AdminOrderDetailPage() {
             ))}
           </div>
         </div>
+
+        {/* Tracking — only relevant once the parcel is actually moving.
+            Courier is free text with a datalist of suggestions, so any courier
+            works; a recognised name auto-builds the tracking link and the URL
+            field is only needed for couriers we don't know. */}
+        {(orderStatus === "shipped" || orderStatus === "delivered") && (
+          <div style={{ borderTop: "1px dashed #DDE8DD", paddingTop: "18px", display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={{ fontFamily: B, fontSize: "12px", color: "#5A7A60", letterSpacing: "1px" }}>TRACKING</div>
+
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              <div style={{ flex: "1 1 200px" }}>
+                <label style={{ display: "block", fontFamily: B, fontSize: "10px", color: "#7A8E7A", letterSpacing: "1px", marginBottom: "4px" }}>COURIER</label>
+                <input list="courier-options" value={courier} onChange={e => setCourier(e.target.value)}
+                  placeholder="e.g. J&T Express"
+                  style={{ width: "100%", fontFamily: B, fontSize: "13px", padding: "9px 12px", border: "2px solid #DDE8DD", borderRadius: "8px", color: "#1B3A2D", outline: "none", boxSizing: "border-box" }} />
+                <datalist id="courier-options">
+                  {COURIERS.map(c => <option key={c.slug} value={c.name} />)}
+                </datalist>
+              </div>
+
+              <div style={{ flex: "1 1 200px" }}>
+                <label style={{ display: "block", fontFamily: B, fontSize: "10px", color: "#7A8E7A", letterSpacing: "1px", marginBottom: "4px" }}>TRACKING NUMBER</label>
+                <input value={trackingNumber} onChange={e => setTrackingNumber(e.target.value)}
+                  placeholder="e.g. 630012345678"
+                  style={{ width: "100%", fontFamily: B, fontSize: "13px", padding: "9px 12px", border: "2px solid #DDE8DD", borderRadius: "8px", color: "#1B3A2D", outline: "none", boxSizing: "border-box" }} />
+              </div>
+            </div>
+
+            {/* Only surfaced when we can't build the link ourselves. */}
+            {!autoTrackingUrl && trackingNumber.trim() && (
+              <div>
+                <label style={{ display: "block", fontFamily: B, fontSize: "10px", color: "#7A8E7A", letterSpacing: "1px", marginBottom: "4px" }}>
+                  TRACKING URL (optional — we don&apos;t recognise this courier)
+                </label>
+                <input value={trackingUrl} onChange={e => setTrackingUrl(e.target.value)}
+                  placeholder="https://courier.example/track?id=..."
+                  style={{ width: "100%", fontFamily: B, fontSize: "13px", padding: "9px 12px", border: "2px solid #DDE8DD", borderRadius: "8px", color: "#1B3A2D", outline: "none", boxSizing: "border-box" }} />
+              </div>
+            )}
+
+            {previewUrl && (
+              <a href={previewUrl} target="_blank" rel="noopener noreferrer"
+                style={{ fontFamily: B, fontSize: "12px", color: "#1A8040", wordBreak: "break-all" }}>
+                Link the member will get: {previewUrl} ↗
+              </a>
+            )}
+
+            {!order.shipped_at && orderStatus === "shipped" && (
+              <div style={{ fontFamily: B, fontSize: "11px", color: "#B45309", background: "#FFF7ED", border: "1px solid #FDBA74", borderRadius: "8px", padding: "8px 12px" }}>
+                Saving now emails the member their tracking details. This is sent once.
+              </div>
+            )}
+            {order.shipped_at && (
+              <div style={{ fontFamily: B, fontSize: "11px", color: "#7A8E7A" }}>
+                Shipped notice already emailed on {new Date(order.shipped_at).toLocaleString("en-PH", { timeZone: "Asia/Manila" })}. Editing tracking here will not re-send.
+              </div>
+            )}
+          </div>
+        )}
 
         <button onClick={handleSave} disabled={saving} style={{ alignSelf: "flex-start", position: "relative", display: "inline-block", cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1 }}>
           <span style={{ position: "absolute", top: "3px", left: "3px", width: "100%", height: "100%", background: "#080F06", borderRadius: "6px" }} />

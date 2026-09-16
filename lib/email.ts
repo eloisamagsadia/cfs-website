@@ -15,7 +15,7 @@ const FROM_NAME = process.env.RESEND_FROM_NAME ?? "Colet Fan Suporta";
 // fetch throws, we return null so the caller falls back to its own
 // hardcoded HTML — email sending never fails because of a template issue.
 
-export type EmailTemplateKey = "event_ticket" | "donation_receipt" | "order_confirmation" | "welcome";
+export type EmailTemplateKey = "event_ticket" | "donation_receipt" | "order_confirmation" | "order_shipped" | "welcome";
 
 const escapeReg = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -156,6 +156,88 @@ export async function sendOrderConfirmation({
         <p style="color:#5A7A50;font-size:12px;text-align:center;">
           Thank you for supporting Colet Fan Suporta! ♥<br/>
           For questions, contact us on our social media channels.
+        </p>
+      </div>
+    `;
+
+  await resend.emails.send({
+    from: `${FROM_NAME} <${FROM}>`,
+    to,
+    subject,
+    html,
+  });
+}
+
+// ─── ORDER SHIPPED ────────────────────────────────────────────────────────────
+// Sent once, when an order transitions into `shipped`. Courier-agnostic: the
+// tracking URL may be absent entirely (unknown courier, no URL pasted), in
+// which case the member gets the courier name and number to look up themselves
+// rather than a dead link.
+export async function sendOrderShipped({
+  to, orderId, courier, trackingNumber, trackingUrl, shippingAddress,
+}: {
+  to: string;
+  orderId: string;
+  courier?: string | null;
+  trackingNumber?: string | null;
+  trackingUrl?: string | null;
+  shippingAddress?: any;
+}) {
+  const orderShortId = orderId.slice(0, 8).toUpperCase();
+  const courierName  = courier?.trim() || "our courier";
+  const hasNumber    = !!trackingNumber?.trim();
+
+  // Rendered here rather than in the template so the three states (link +
+  // number / number only / neither) stay in one place.
+  const trackingBlock = hasNumber
+    ? `<div style="background:#F2F7F2;border:1px solid #DDE8DD;border-radius:12px;padding:18px;margin-bottom:20px;">
+         <p style="margin:0 0 6px;color:#7A8E7A;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:1.5px;font-weight:700;">TRACKING NUMBER</p>
+         <p style="margin:0 0 4px;color:#1B3A2D;font-family:'Helvetica Neue',Arial,sans-serif;font-size:18px;font-weight:700;letter-spacing:0.5px;">${escapeHtml(trackingNumber!.trim())}</p>
+         <p style="margin:0 0 ${trackingUrl ? "14px" : "0"};color:#5A7A60;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;">via ${escapeHtml(courierName)}</p>
+         ${trackingUrl
+           ? `<a href="${escapeHtml(trackingUrl)}" style="display:inline-block;background:#1A8040;color:#ffffff;text-decoration:none;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;padding:11px 22px;border-radius:10px;">TRACK MY ORDER →</a>`
+           : `<p style="margin:0;color:#7A8E7A;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;">Enter this number on the ${escapeHtml(courierName)} website to follow your parcel.</p>`}
+       </div>`
+    : `<div style="background:#F2F7F2;border:1px solid #DDE8DD;border-radius:12px;padding:18px;margin-bottom:20px;">
+         <p style="margin:0;color:#1B3A2D;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;">Your parcel is on its way with ${escapeHtml(courierName)}.</p>
+       </div>`;
+
+  const vars = {
+    order_short_id:  orderShortId,
+    courier:         courierName,
+    tracking_number: trackingNumber?.trim() ?? "",
+    tracking_url:    trackingUrl ?? "",
+    tracking_block:  trackingBlock,
+    ship_name:       shippingAddress?.full_name ?? "",
+  };
+
+  let subject: string | null = null;
+  let html:    string | null = null;
+
+  const stored = await loadTemplate("order_shipped");
+  if (stored?.html) {
+    subject = applyVars(stored.subject, vars, { plaintext: true });
+    html    = applyVars(stored.html, vars);
+  }
+
+  subject = subject ?? `✦ Your order #${orderShortId} has shipped!`;
+  html    = html    ?? `
+      <div style="background:#FAFDF9;padding:32px;font-family:'Helvetica Neue',Arial,sans-serif;max-width:600px;margin:0 auto;">
+        <div style="text-align:center;margin-bottom:24px;">
+          <h1 style="color:#1A8040;font-size:26px;letter-spacing:4px;margin:0;">CFS</h1>
+          <p style="color:#7A8E7A;margin:4px 0;font-size:13px;">Colet Fan Suporta</p>
+        </div>
+        <div style="background:#ffffff;border:1px solid #DDE8DD;border-radius:16px;padding:26px;">
+          <h2 style="color:#1B3A2D;font-size:19px;letter-spacing:1px;margin:0 0 6px;">YOUR ORDER IS ON THE WAY ✦</h2>
+          <p style="color:#5A7A60;font-size:14px;margin:0 0 20px;">Order <strong style="color:#1A8040;">#${orderShortId}</strong></p>
+          ${trackingBlock}
+          <p style="color:#7A8E7A;font-size:12px;margin:0;line-height:1.7;">
+            Delivery times vary by courier and location. If your parcel hasn't arrived when you expect it,
+            reply to this email or message us and we'll chase it up.
+          </p>
+        </div>
+        <p style="color:#7A8E7A;font-size:12px;text-align:center;margin-top:22px;">
+          Salamat for supporting Colet Fan Suporta! ♥
         </p>
       </div>
     `;

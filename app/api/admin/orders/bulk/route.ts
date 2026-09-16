@@ -4,6 +4,14 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { logAudit } from "@/lib/audit";
 
 // PATCH /api/admin/orders/bulk  { ids: string[], order_status?, payment_status? }
+//
+// Bulk deliberately does NOT stamp orders.shipped_at or send the shipped email,
+// because a bulk action carries no per-order tracking number and a "shipped"
+// notice with nothing to track is worse than none. shipped_at stays NULL, so
+// the single-order PATCH still treats the later save — the one that adds the
+// tracking number — as the ship transition and sends the email then.
+// Members are not left in the dark meanwhile: the in-app order_update
+// notification below fires on bulk too.
 export async function PATCH(req: NextRequest) {
   const { userId, sessionClaims } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
