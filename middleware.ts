@@ -29,9 +29,9 @@ export default authMiddleware({
     const role = (sessionClaims?.metadata as { role?: string })?.role;
     const isPrivileged = role === "admin" || role === "super_admin";
 
-    // Soft launch: only the events page is public. Other public sections are
+    // Soft launch: /events and /shop are public. The remaining sections are
     // hidden until they're ready. Admins/super_admins can still preview.
-    const gatedPrefixes = ["/donate", "/shop", "/reports", "/projects"];
+    const gatedPrefixes = ["/donate", "/reports", "/projects"];
     if (!isPrivileged && gatedPrefixes.some(p => pathname === p || pathname.startsWith(`${p}/`))) {
       const url = req.nextUrl.clone();
       url.pathname = "/";

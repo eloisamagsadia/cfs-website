@@ -10,6 +10,7 @@ const B = "var(--font-barlow,'Barlow',sans-serif)";
 
 const navLinks = [
   { label: "EVENTS",   href: "/events" },
+  { label: "SHOP",     href: "/shop" },
 ];
 
 const admin = () => createAdminClient(
