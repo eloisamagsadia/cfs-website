@@ -83,7 +83,14 @@ export default async function AnalyticsPage() {
     } catch { return fallback; }
   };
 
-  const [membersRes, signupsRes, paidTicketsRes, donationsRes, ordersRes, eventsListRes] = await Promise.all([
+  // The `donations` table is deliberately NOT queried. Donations have not
+  // launched on this site, and the table holds only seed rows (6, all dated
+  // 2026-06-16) whose PayMongo link refs are from a dev session. Counting them
+  // reported revenue that never happened. The rows are left untouched in the
+  // database — this is a reporting decision, not a deletion. The DONATIONS tile
+  // below renders a hardcoded zero; wire it to a real sum when donations go
+  // live, and add it to totalRevenue at the same time.
+  const [membersRes, signupsRes, paidTicketsRes, ordersRes, eventsListRes] = await Promise.all([
     safe(db.from("profiles").select("*", { count: "exact", head: true }) as any, { count: 0 } as any),
     safe(db.from("profiles").select("created_at").gte("created_at", cutoffISO) as any, { data: [] } as any),
     // event_tickets carries no amount column — a ticket's price lives on its
@@ -92,7 +99,6 @@ export default async function AnalyticsPage() {
     safe((db as any).from("event_tickets")
       .select("created_at, event_id, payment_status, event_tiers(price)")
       .eq("payment_status", "paid"), { data: [] } as any),
-    safe((db as any).from("donations").select("created_at, amount, donation_amount, status").eq("status", "completed"), { data: [] } as any),
     safe((db as any).from("orders").select("created_at, total, payment_status").eq("payment_status", "paid"), { data: [] } as any),
     safe((db as any).from("events").select("id, title").order("date", { ascending: false }).limit(100), { data: [] } as any),
   ]);
@@ -100,25 +106,21 @@ export default async function AnalyticsPage() {
   const totalMembers  = ((membersRes as any).count as number | null) ?? 0;
   const recentSignups = ((signupsRes as any).data as any[] | null) ?? [];
   const paidTickets   = ((paidTicketsRes as any).data as any[] | null) ?? [];
-  const donations     = ((donationsRes as any).data as any[] | null) ?? [];
   const orders        = ((ordersRes as any).data as any[] | null) ?? [];
   const eventsList    = ((eventsListRes as any).data as any[] | null) ?? [];
 
   const ticketPrice   = (t: any) => Number(t?.event_tiers?.price ?? 0);
-  const donationValue = (d: any) => Number(d?.donation_amount ?? d?.amount ?? 0);
 
   // ── Money ──
   const ticketRevenue   = paidTickets.reduce((s, t) => s + ticketPrice(t), 0);
-  const donationRevenue = donations.reduce((s, d) => s + donationValue(d), 0);
   const shopRevenue     = orders.reduce((s, o) => s + Number(o?.total ?? 0), 0);
-  const totalRevenue    = ticketRevenue + donationRevenue + shopRevenue;
+  const totalRevenue    = ticketRevenue + shopRevenue;
 
   // ── 30-day series ──
   const signupSeries   = buildSeries(recentSignups, "created_at");
   const ticketSeries   = buildSeries(paidTickets, "created_at", ticketPrice);
-  const donationSeries = buildSeries(donations, "created_at", donationValue);
   const shopSeries     = buildSeries(orders, "created_at", (o) => Number(o?.total ?? 0));
-  const revenueSeries  = mergeSeries(ticketSeries, donationSeries, shopSeries);
+  const revenueSeries  = mergeSeries(ticketSeries, shopSeries);
 
   const revenue30 = revenueSeries.reduce((s, p) => s + p.value, 0);
   const signups30 = signupSeries.reduce((s, p) => s + p.value, 0);
@@ -145,7 +147,13 @@ export default async function AnalyticsPage() {
     { label: "TOTAL REVENUE",  value: peso(totalRevenue),    sub: `${peso(revenue30)} in last 30d`,                 color: "#1B3A2D", icon: <IconHeart size={16} color="#1B3A2D" /> },
     { label: "EVENT TICKETS",  value: peso(ticketRevenue),   sub: `${paidTickets.length.toLocaleString()} paid`,     color: "#156530", icon: <IconTicket size={16} color="#156530" /> },
     { label: "SHOP",           value: peso(shopRevenue),     sub: `${orders.length.toLocaleString()} paid orders`,   color: "#7A5A0F", icon: <IconCart size={16} color="#7A5A0F" /> },
-    { label: "DONATIONS",      value: peso(donationRevenue), sub: `${donations.length.toLocaleString()} completed`,  color: "#B78A1F", icon: <IconHeart size={16} color="#B78A1F" /> },
+    // Donations have not launched on this site yet. Shown as a deliberate zero
+    // rather than omitted, so the stream is visible as "not started" instead of
+    // looking like an oversight. The literal 0 is intentional: the `donations`
+    // table contains only seed rows (6, all dated 2026-06-16) and reading it
+    // would report revenue that never happened. When donations go live, swap
+    // this back to a real sum and add it to totalRevenue.
+    { label: "DONATIONS",      value: peso(0),               sub: "not launched yet",                               color: "#B78A1F", icon: <IconHeart size={16} color="#B78A1F" /> },
     { label: "MEMBERS",        value: totalMembers.toLocaleString(), sub: `${signups30} new · 30d`,                  color: "#1A8040", icon: <IconUsers size={16} color="#1A8040" /> },
   ];
 
@@ -154,7 +162,7 @@ export default async function AnalyticsPage() {
       {/* Re-render on any change to the tables these numbers come from.
           Requires supabase/migrations/realtime_analytics_tables.sql — without
           it the page still renders correct figures, it just won't self-update. */}
-      <RealtimeRefresh tables={["profiles", "event_tickets", "donations", "orders"]} channel="super-analytics" />
+      <RealtimeRefresh tables={["profiles", "event_tickets", "orders"]} channel="super-analytics" />
 
       {/* Header */}
       <div style={{ background: "#ffffff", border: "1px solid #DDE8DD", borderRadius: "14px", padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "14px", flexWrap: "wrap" }}>
