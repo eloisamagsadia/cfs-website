@@ -151,14 +151,14 @@ export default function ReconciliationPage() {
                   <code style={{ fontFamily: "'Courier New',monospace", fontSize: 10, color: "#9AAE9A" }}>{r.reference_id.slice(0, 8)}</code>
 
                   {r.href ? (
-                    <Link href={r.href} title="See this member's tickets, orders and donations"
+                    <Link href={r.href} title="Open the record this payment should have produced"
                       style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#1A8040", textDecoration: "none", letterSpacing: 1.2, whiteSpace: "nowrap" }}>
-                      VIEW MEMBER →
+                      {r.type === "order" ? "VIEW ORDER →" : "VIEW TICKETS →"}
                     </Link>
                   ) : (
-                    // No user on the transaction (old orphaned rows) — say so
-                    // rather than showing a button that goes nowhere.
-                    <span style={{ fontFamily: B, fontSize: 10, color: "#B7C7B7", whiteSpace: "nowrap" }}>no member</span>
+                    // Nothing was ever created, so there is nothing to open.
+                    // Saying so beats a button that leads somewhere useless.
+                    <span style={{ fontFamily: B, fontSize: 10, color: "#B7C7B7", whiteSpace: "nowrap" }}>nothing to open</span>
                   )}
                 </div>
               );

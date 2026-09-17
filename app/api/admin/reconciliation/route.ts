@@ -14,13 +14,19 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 const db = () => createAdminClient();
 
-// Every flagged row boils down to one question: what happened to this person?
-// The member activity page answers it — their tickets, orders, donations and
-// notifications in one place. Pointing at /admin/events instead just dropped
-// an admin into a list of every event with no idea which row to look at.
-// Null when the transaction has no user (old orphaned test rows), so the button
-// is hidden rather than linking nowhere.
-const memberHref = (userId: string | null) => (userId ? `/admin/members/${userId}/activity` : null);
+// Link to the record the money should have produced, not to a person.
+//
+// This previously pointed at /admin/members/<id>/activity, which was wrong:
+// that endpoint is owner-only by design (see the comment in
+// app/api/admin/members/activity/route.ts), so every admin who is not the site
+// owner followed the link into a dead page. A reconciliation view that only
+// one account can act on is not much of a safety net.
+//
+// /admin/events/<id>/tickets and /admin/orders/<id> are open to any admin and
+// land on the exact row in question, which is more useful than a person page
+// anyway. Null when there is nothing to open, so the UI can say so.
+const ticketHref = (eventId: string | null | undefined) =>
+  eventId ? `/admin/events/${eventId}/tickets` : null;
 
 type Row = {
   id: string;
@@ -52,7 +58,7 @@ export async function GET() {
       (supabase as any).from("payment_transactions")
         .select("id, reference_id, type, status, amount, created_at, paid_at, user_id")
         .order("created_at", { ascending: false }),
-      (supabase as any).from("event_tickets").select("id, bundle_id, status, payment_status, ticket_number"),
+      (supabase as any).from("event_tickets").select("id, bundle_id, status, payment_status, ticket_number, event_id"),
       (supabase as any).from("orders").select("id, payment_status, order_status"),
       (supabase as any).from("donations").select("id, status"),
       (supabase as any).from("profiles").select("id, display_name, role"),
@@ -92,7 +98,7 @@ export async function GET() {
       // the member is fine, our bookkeeping is not. Worth surfacing.
       const rows = byBundle.get(t.reference_id) ?? (byId.has(t.reference_id) ? [byId.get(t.reference_id)] : []);
       if (rows.length && rows.some((r: any) => r.payment_status === "paid")) {
-        unresolved.push({ ...base, reason: "Transaction still pending but the ticket is paid — bookkeeping mismatch", href: memberHref(base.user_id) });
+        unresolved.push({ ...base, reason: "Transaction still pending but the ticket is paid — bookkeeping mismatch", href: ticketHref(rows[0]?.event_id) });
       } else {
         // Abandoned checkout. Expected and high-volume: if these were alarms
         // the page would cry wolf and nobody would read it.
@@ -106,19 +112,19 @@ export async function GET() {
     if (t.type === "ticket") {
       const rows = byBundle.get(t.reference_id) ?? (byId.has(t.reference_id) ? [byId.get(t.reference_id)] : []);
       if (!rows.length) {
-        unresolved.push({ ...base, reason: "Paid, but no ticket exists for this reference", href: memberHref(base.user_id) });
+        unresolved.push({ ...base, reason: "Paid, but no ticket exists for this reference", href: null });
       } else if (!rows.some((r: any) => r.payment_status === "paid")) {
         const states = rows.map((r: any) => `${r.ticket_number}: ${r.status}`).join(", ");
-        unresolved.push({ ...base, reason: `Paid, but the ticket is not (${states})`, href: memberHref(base.user_id) });
+        unresolved.push({ ...base, reason: `Paid, but the ticket is not (${states})`, href: ticketHref(rows[0]?.event_id) });
       } else matched += 1;
     } else if (t.type === "order") {
       const o = orderById.get(t.reference_id);
-      if (!o) unresolved.push({ ...base, reason: "Paid, but no order exists for this reference", href: memberHref(base.user_id) });
+      if (!o) unresolved.push({ ...base, reason: "Paid, but no order exists for this reference", href: null });
       else if (o.payment_status !== "paid") unresolved.push({ ...base, reason: `Paid, but the order is "${o.payment_status}"`, href: `/admin/orders/${o.id}` });
       else matched += 1;
     } else if (t.type === "donation") {
       const d = donationById.get(t.reference_id);
-      if (!d) unresolved.push({ ...base, reason: "Paid, but no donation exists for this reference", href: memberHref(base.user_id) });
+      if (!d) unresolved.push({ ...base, reason: "Paid, but no donation exists for this reference", href: null });
       else if (d.status !== "completed") unresolved.push({ ...base, reason: `Paid, but the donation is "${d.status}"`, href: `/admin/donations` });
       else matched += 1;
     } else if (t.type === "tier_upgrade") {
@@ -126,8 +132,8 @@ export async function GET() {
       // paid ticket — an upgrade against a cancelled ticket means money taken
       // for a seat that no longer exists.
       const tk = byId.get(t.reference_id);
-      if (!tk) unresolved.push({ ...base, reason: "Upgrade paid, but the ticket no longer exists", href: memberHref(base.user_id) });
-      else if (tk.status === "cancelled") unresolved.push({ ...base, reason: `Upgrade paid, but ticket ${tk.ticket_number} is cancelled`, href: memberHref(base.user_id) });
+      if (!tk) unresolved.push({ ...base, reason: "Upgrade paid, but the ticket no longer exists", href: null });
+      else if (tk.status === "cancelled") unresolved.push({ ...base, reason: `Upgrade paid, but ticket ${tk.ticket_number} is cancelled`, href: ticketHref(tk.event_id) });
       else matched += 1;
     } else matched += 1;
   }
