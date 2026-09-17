@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import FileUpload from "@/components/admin/FileUpload";
 import { IconX } from "@/components/shared/Icons";
@@ -13,6 +13,18 @@ export default function AdminShopCreatePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({ name: "", description: "", price: "", stock: "", category_id: "", is_active: true, is_preorder: false, preorder_note: "" });
+  const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
+
+  // Categories are chosen from a list, not pasted as a UUID. A mistyped or
+  // blank category_id produces a product that never shows under any shop
+  // filter, which is not obvious until someone goes looking for it.
+  useEffect(() => {
+    fetch("/api/admin/product-categories")
+      .then(r => r.json())
+      .then(d => setCategories(d.categories ?? []))
+      .catch(() => setCategories([]));
+  }, []);
+
   const [images, setImages] = useState<string[]>([]);
   const [variants, setVariants] = useState<Variant[]>([]);
   const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
@@ -25,6 +37,7 @@ export default function AdminShopCreatePage() {
     setError("");
     if (!form.name.trim()) return setError("Product name is required.");
     if (!form.price || isNaN(Number(form.price))) return setError("Valid price is required.");
+    if (!form.category_id) return setError("Pick a category — products without one never appear under any shop filter.");
     setLoading(true);
     try {
       const res = await fetch("/api/admin/products", {
@@ -65,7 +78,18 @@ export default function AdminShopCreatePage() {
           <div><label style={labelStyle}>STOCK</label><input style={inputStyle} type="number" min="0" placeholder="0" value={form.stock} onChange={e => set("stock", e.target.value)} /></div>
         </div>
 
-        <div><label style={labelStyle}>CATEGORY ID</label><input style={inputStyle} placeholder="UUID from product_categories" value={form.category_id} onChange={e => set("category_id", e.target.value)} /></div>
+        <div>
+          <label style={labelStyle}>CATEGORY *</label>
+          <select style={inputStyle} value={form.category_id} onChange={e => set("category_id", e.target.value)}>
+            <option value="">— Select a category —</option>
+            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+          {!categories.length && (
+            <div style={{ fontFamily: B, fontSize: "11px", color: "#B45309", marginTop: "4px" }}>
+              Couldn&apos;t load categories. Refresh, or create one under Super → Categories first.
+            </div>
+          )}
+        </div>
 
         {/* Image uploads */}
         <div>
