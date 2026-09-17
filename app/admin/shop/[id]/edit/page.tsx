@@ -12,14 +12,14 @@ export default function AdminEditProductPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [uploading, setUploading] = useState<number | null>(null);
-  const [form, setForm] = useState({ name:"", description:"", price:"", stock:"", weight_kg:"0.5", is_active:true, images:[""] });
+  const [form, setForm] = useState({ name:"", description:"", price:"", stock:"", weight_kg:"0.5", is_active:true, is_preorder:false, preorder_note:"", images:[""] });
   useEffect(() => { loadProduct(); }, []);
   async function loadProduct() {
     const res = await fetch("/api/admin/products?id=" + params.id);
     const data = await res.json();
     if (!res.ok || !data.product) { setError("Failed to load: " + (data.error ?? "not found")); setLoading(false); return; }
     const p = data.product;
-    setForm({ name:p.name??"", description:p.description??"", price:String(p.price??""), stock:String(p.stock??""), weight_kg:String(p.weight_kg??0.5), is_active:p.is_active??true, images:p.images?.length?p.images:[""] });
+    setForm({ name:p.name??"", description:p.description??"", price:String(p.price??""), stock:String(p.stock??""), weight_kg:String(p.weight_kg??0.5), is_active:p.is_active??true, is_preorder:p.is_preorder??false, preorder_note:p.preorder_note??"", images:p.images?.length?p.images:[""] });
     setLoading(false);
   }
   function upd(k: string, v: any){setForm(p=>({...p,[k]:v}));}
@@ -28,7 +28,7 @@ export default function AdminEditProductPage() {
     setSaving(true);setError("");setSuccess("");
     const res = await fetch("/api/admin/products?id=" + params.id, {
       method:"PUT", headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({name:form.name,description:form.description||null,price:Number(form.price),stock:Number(form.stock)||0,weight_kg:Number(form.weight_kg)||0.5,is_active:form.is_active,images:form.images.filter(Boolean)})
+      body:JSON.stringify({name:form.name,description:form.description||null,price:Number(form.price),stock:Number(form.stock)||0,weight_kg:Number(form.weight_kg)||0.5,is_active:form.is_active,is_preorder:form.is_preorder,preorder_note:form.preorder_note.trim()||null,images:form.images.filter(Boolean)})
     });
     const data = await res.json();
     setSaving(false);
@@ -113,6 +113,19 @@ export default function AdminEditProductPage() {
             <input type="checkbox" checked={form.is_active} onChange={e=>upd("is_active",e.target.checked)} style={{width:"18px",height:"18px",accentColor:"#1A8040"}}/>
             <span style={{fontFamily:R,fontSize:"12px",color:"#4A7C59"}}>ACTIVE IN SHOP</span>
           </label>
+
+          {/* Pre-order — DIR merch shipped later but the shop gave no signal,
+              so buyers expected it immediately. Note is free text because
+              fan-merch timelines are estimates, not promises. */}
+          <label style={{display:"flex",alignItems:"center",gap:"10px",cursor:"pointer"}}>
+            <input type="checkbox" checked={form.is_preorder} onChange={e=>upd("is_preorder",e.target.checked)} style={{width:"18px",height:"18px",accentColor:"#7A5AB8"}}/>
+            <span style={{fontFamily:R,fontSize:"12px",color:form.is_preorder?"#5B3F94":"#4A7C59"}}>PRE-ORDER (ships later)</span>
+          </label>
+          {form.is_preorder && (
+            <input value={form.preorder_note} onChange={e=>upd("preorder_note",e.target.value)}
+              placeholder="e.g. Ships early October, ~3 weeks after the window closes"
+              style={{fontFamily:B,fontSize:"12px",padding:"9px 12px",border:"1.5px solid #D9CCF0",borderRadius:"8px",color:"#1B3A2D",outline:"none",width:"100%",boxSizing:"border-box"}}/>
+          )}
           <div style={{display:"flex",gap:"10px",paddingTop:"10px",borderTop:"1px solid #DDE8DD"}}>
             <button onClick={handleSave} disabled={saving} style={{flex:1,fontFamily:R,fontSize:"12px",background:saving?"#F2F7F2":"#1A8040",color:saving?"#5A7A60":"#FFFFFF",border:"2px solid #1B3A2D",borderRadius:"6px",padding:"10px",cursor:"pointer"}}>{saving?"SAVING...":"SAVE"}</button>
             <button onClick={handleDelete} style={{fontFamily:R,fontSize:"11px",background:"transparent",border:"1.5px solid #CC3344",borderRadius:"6px",color:"#CC3344",padding:"10px 14px",cursor:"pointer"}}>DELETE</button>

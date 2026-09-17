@@ -12,7 +12,7 @@ export default function AdminShopCreatePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [form, setForm] = useState({ name: "", description: "", price: "", stock: "", category_id: "", is_active: true });
+  const [form, setForm] = useState({ name: "", description: "", price: "", stock: "", category_id: "", is_active: true, is_preorder: false, preorder_note: "" });
   const [images, setImages] = useState<string[]>([]);
   const [variants, setVariants] = useState<Variant[]>([]);
   const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
@@ -107,6 +107,29 @@ export default function AdminShopCreatePage() {
 
         {/* Active toggle */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+
+        {/* Pre-order — buyers assumed DIR merch shipped immediately because the
+            shop gave no signal. The note is free text: fan-merch timelines are
+            estimates, and a date field renders as a promise. */}
+        <div style={{ borderTop: "1px dashed #DDE8DD", paddingTop: "16px", display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <button type="button" onClick={() => set("is_preorder", !form.is_preorder)}
+              style={{ width: "44px", height: "24px", borderRadius: "12px", border: "none", cursor: "pointer", background: form.is_preorder ? "#7A5AB8" : "#DDE8DD", position: "relative", transition: "background 0.2s" }}>
+              <span style={{ position: "absolute", top: "3px", left: form.is_preorder ? "22px" : "3px", width: "18px", height: "18px", borderRadius: "50%", background: "#FFFFFF", transition: "left 0.2s" }} />
+            </button>
+            <span style={{ fontFamily: B, fontSize: "13px", color: form.is_preorder ? "#5B3F94" : "#5A7A60" }}>
+              {form.is_preorder ? "Pre-order — buyers are told it ships later" : "In stock — ships as normal"}
+            </span>
+          </div>
+          {form.is_preorder && (
+            <div>
+              <label style={labelStyle}>PRE-ORDER NOTE (optional)</label>
+              <input style={inputStyle} placeholder="e.g. Ships early October, about 3 weeks after the window closes"
+                value={form.preorder_note} onChange={e => set("preorder_note", e.target.value)} />
+            </div>
+          )}
+        </div>
+
           <button onClick={() => set("is_active", !form.is_active)} style={{ width: "44px", height: "24px", borderRadius: "12px", border: "none", cursor: "pointer", background: form.is_active ? "#1A8040" : "#DDE8DD", position: "relative", transition: "background 0.2s" }}>
             <span style={{ position: "absolute", top: "3px", left: form.is_active ? "22px" : "3px", width: "18px", height: "18px", borderRadius: "50%", background: "#1B3A2D", transition: "left 0.2s" }} />
           </button>

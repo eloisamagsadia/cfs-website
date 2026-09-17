@@ -44,7 +44,7 @@ export default function ShopBrowser({ products }: { products: any[] }) {
       if (!q) return true;
       const name = (p.name ?? "").toLowerCase();
       const cat  = (p.product_categories?.name ?? "").toLowerCase();
-      return name.includes(q) || cat.includes(q);
+      return name.includes(q) || cat.includes(q) || (p.is_preorder && "pre-order preorder".includes(q));
     });
   }, [products, filter, search]);
 
@@ -165,7 +165,14 @@ export default function ShopBrowser({ products }: { products: any[] }) {
                         <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: "#B45309", borderRadius: "999px", padding: "3px 10px", letterSpacing: "1.5px", boxShadow: "0 4px 12px rgba(0,0,0,0.35)" }}>HIDDEN</span>
                       </div>
                     )}
-                    <div style={{ position: "absolute", top: "10px", right: "10px", zIndex: 2 }}>
+                    <div style={{ position: "absolute", top: "10px", right: "10px", zIndex: 2, display: "flex", flexDirection: "column", gap: "5px", alignItems: "flex-end" }}>
+                      {/* Pre-order first: it changes what the buyer is agreeing
+                          to, so it must be legible before the stock pill. */}
+                      {p.is_preorder && (
+                        <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: "#7A5AB8", borderRadius: "999px", padding: "3px 10px", letterSpacing: "1.5px", boxShadow: "0 4px 12px rgba(0,0,0,0.35)" }}>
+                          PRE-ORDER
+                        </span>
+                      )}
                       <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: outOfStock ? "#CC3344" : lowStock ? "#B78A1F" : C.green, borderRadius: "999px", padding: "3px 10px", letterSpacing: "1.5px", boxShadow: "0 4px 12px rgba(0,0,0,0.35)" }}>
                         {outOfStock ? "SOLD OUT" : lowStock ? `ONLY ${p.stock} LEFT` : "IN STOCK"}
                       </span>

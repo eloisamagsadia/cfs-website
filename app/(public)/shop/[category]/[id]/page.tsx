@@ -102,6 +102,11 @@ export default async function ProductDetailPage({ params }: { params: { category
             {/* Price */}
             <div style={{ display: "flex", alignItems: "baseline", gap: "12px" }}>
               <span style={{ fontFamily: S, fontSize: "2rem", color: C.forest }}> ₱{Number(product.price).toLocaleString()}</span>
+              {product.is_preorder && (
+                <span style={{ fontFamily: SG, fontSize: "9px", fontWeight: 700, color: "#ffffff", background: "#7A5AB8", borderRadius: "999px", padding: "3px 10px", letterSpacing: "1.5px", marginRight: "8px" }}>
+                  PRE-ORDER
+                </span>
+              )}
               {inStock
                 ? <span style={{ fontFamily: B, fontSize: "12px", color: "#1A8040" }}>{product.stock <= 5 ? `Only ${product.stock} left!` : "In stock"}</span>
                 : <span style={{ fontFamily: B, fontSize: "12px", color: "#CC3344" }}>Out of stock</span>
@@ -137,7 +142,17 @@ export default async function ProductDetailPage({ params }: { params: { category
             <div style={{ height: "1px", background: C.border }}/>
 
             {/* Add to cart */}
-            <AddToCartButton
+            {product.is_preorder && (
+                <div style={{ background: "#F3EEFB", border: "1px solid #D9CCF0", borderRadius: "12px", padding: "12px 14px", marginBottom: "14px" }}>
+                  <div style={{ fontFamily: SG, fontSize: "10px", fontWeight: 700, color: "#5B3F94", letterSpacing: "1.4px", marginBottom: "4px" }}>THIS IS A PRE-ORDER</div>
+                  <div style={{ fontFamily: B, fontSize: "12px", color: "#4A3A66", lineHeight: 1.65 }}>
+                    {product.preorder_note?.trim()
+                      ? product.preorder_note
+                      : "This item isn't shipped straight away — it's produced after the pre-order window closes. We'll email you the tracking details once it's on its way."}
+                  </div>
+                </div>
+              )}
+              <AddToCartButton
               productId={product.id}
               isLoggedIn={!!user}
               inStock={inStock}
