@@ -10,7 +10,7 @@ const SG = "var(--font-space-grotesk,'Space Grotesk',sans-serif)";
 
 type Row = {
   id: string; type: string; amount: number; created_at: string; paid_at: string | null;
-  reference_id: string; buyer: string | null; buyer_role: string | null; reason: string; href: string | null; attempts?: number;
+  reference_id: string; buyer: string | null; buyer_role: string | null; user_id: string | null; reason: string; href: string | null; attempts?: number;
 };
 
 const peso = (n: number) => `₱${Math.round(n).toLocaleString()}`;
@@ -150,8 +150,15 @@ export default function ReconciliationPage() {
 
                   <code style={{ fontFamily: "'Courier New',monospace", fontSize: 10, color: "#9AAE9A" }}>{r.reference_id.slice(0, 8)}</code>
 
-                  {r.href && (
-                    <Link href={r.href} style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#1A8040", textDecoration: "none", letterSpacing: 1.2 }}>OPEN →</Link>
+                  {r.href ? (
+                    <Link href={r.href} title="See this member's tickets, orders and donations"
+                      style={{ fontFamily: SG, fontSize: 10, fontWeight: 700, color: "#1A8040", textDecoration: "none", letterSpacing: 1.2, whiteSpace: "nowrap" }}>
+                      VIEW MEMBER →
+                    </Link>
+                  ) : (
+                    // No user on the transaction (old orphaned rows) — say so
+                    // rather than showing a button that goes nowhere.
+                    <span style={{ fontFamily: B, fontSize: 10, color: "#B7C7B7", whiteSpace: "nowrap" }}>no member</span>
                   )}
                 </div>
               );

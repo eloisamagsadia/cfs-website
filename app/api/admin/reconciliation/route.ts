@@ -14,6 +14,14 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 const db = () => createAdminClient();
 
+// Every flagged row boils down to one question: what happened to this person?
+// The member activity page answers it — their tickets, orders, donations and
+// notifications in one place. Pointing at /admin/events instead just dropped
+// an admin into a list of every event with no idea which row to look at.
+// Null when the transaction has no user (old orphaned test rows), so the button
+// is hidden rather than linking nowhere.
+const memberHref = (userId: string | null) => (userId ? `/admin/members/${userId}/activity` : null);
+
 type Row = {
   id: string;
   type: string;
@@ -23,6 +31,7 @@ type Row = {
   reference_id: string;
   buyer: string | null;
   buyer_role: string | null;
+  user_id: string | null;
   /** Why this was flagged, in words a human can act on. */
   reason: string;
   /** Deep link to whatever the money should have produced. */
@@ -75,6 +84,7 @@ export async function GET() {
       reference_id: t.reference_id,
       buyer: prof?.display_name ?? null,
       buyer_role: prof?.role ?? null,
+      user_id: t.user_id ?? null,
     };
 
     if (t.status !== "paid") {
@@ -82,7 +92,7 @@ export async function GET() {
       // the member is fine, our bookkeeping is not. Worth surfacing.
       const rows = byBundle.get(t.reference_id) ?? (byId.has(t.reference_id) ? [byId.get(t.reference_id)] : []);
       if (rows.length && rows.some((r: any) => r.payment_status === "paid")) {
-        unresolved.push({ ...base, reason: "Transaction still pending but the ticket is paid — bookkeeping mismatch", href: null });
+        unresolved.push({ ...base, reason: "Transaction still pending but the ticket is paid — bookkeeping mismatch", href: memberHref(base.user_id) });
       } else {
         // Abandoned checkout. Expected and high-volume: if these were alarms
         // the page would cry wolf and nobody would read it.
@@ -96,19 +106,19 @@ export async function GET() {
     if (t.type === "ticket") {
       const rows = byBundle.get(t.reference_id) ?? (byId.has(t.reference_id) ? [byId.get(t.reference_id)] : []);
       if (!rows.length) {
-        unresolved.push({ ...base, reason: "Paid, but no ticket exists for this reference", href: null });
+        unresolved.push({ ...base, reason: "Paid, but no ticket exists for this reference", href: memberHref(base.user_id) });
       } else if (!rows.some((r: any) => r.payment_status === "paid")) {
         const states = rows.map((r: any) => `${r.ticket_number}: ${r.status}`).join(", ");
-        unresolved.push({ ...base, reason: `Paid, but the ticket is not (${states})`, href: `/admin/events` });
+        unresolved.push({ ...base, reason: `Paid, but the ticket is not (${states})`, href: memberHref(base.user_id) });
       } else matched += 1;
     } else if (t.type === "order") {
       const o = orderById.get(t.reference_id);
-      if (!o) unresolved.push({ ...base, reason: "Paid, but no order exists for this reference", href: null });
+      if (!o) unresolved.push({ ...base, reason: "Paid, but no order exists for this reference", href: memberHref(base.user_id) });
       else if (o.payment_status !== "paid") unresolved.push({ ...base, reason: `Paid, but the order is "${o.payment_status}"`, href: `/admin/orders/${o.id}` });
       else matched += 1;
     } else if (t.type === "donation") {
       const d = donationById.get(t.reference_id);
-      if (!d) unresolved.push({ ...base, reason: "Paid, but no donation exists for this reference", href: null });
+      if (!d) unresolved.push({ ...base, reason: "Paid, but no donation exists for this reference", href: memberHref(base.user_id) });
       else if (d.status !== "completed") unresolved.push({ ...base, reason: `Paid, but the donation is "${d.status}"`, href: `/admin/donations` });
       else matched += 1;
     } else if (t.type === "tier_upgrade") {
@@ -116,8 +126,8 @@ export async function GET() {
       // paid ticket — an upgrade against a cancelled ticket means money taken
       // for a seat that no longer exists.
       const tk = byId.get(t.reference_id);
-      if (!tk) unresolved.push({ ...base, reason: "Upgrade paid, but the ticket no longer exists", href: null });
-      else if (tk.status === "cancelled") unresolved.push({ ...base, reason: `Upgrade paid, but ticket ${tk.ticket_number} is cancelled`, href: `/admin/events` });
+      if (!tk) unresolved.push({ ...base, reason: "Upgrade paid, but the ticket no longer exists", href: memberHref(base.user_id) });
+      else if (tk.status === "cancelled") unresolved.push({ ...base, reason: `Upgrade paid, but ticket ${tk.ticket_number} is cancelled`, href: memberHref(base.user_id) });
       else matched += 1;
     } else matched += 1;
   }
