@@ -57,6 +57,7 @@ const NAV_LINKS: { title: string; href: string; keywords?: string }[] = [
 // entries that would redirect or 403.
 const SUPER_NAV_LINKS: { title: string; href: string; keywords?: string }[] = [
   { title: "Refunds",             href: "/admin/refunds",            keywords: "money back financial" },
+  { title: "Reconciliation",      href: "/admin/reconciliation",     keywords: "paid unmatched missing payment mismatch audit money" },
   { title: "Super Admin",         href: "/super",                    keywords: "system command" },
   { title: "Audit Log",           href: "/super/audit",              keywords: "history trail" },
   { title: "Analytics",           href: "/super/analytics",          keywords: "charts stats" },
